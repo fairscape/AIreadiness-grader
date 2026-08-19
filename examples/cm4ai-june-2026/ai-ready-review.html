@@ -34,7 +34,15 @@
   .inventory { background: var(--card); border: 1px solid var(--line);
                border-radius: 2px; padding: 8px 12px; margin: 12px 0;
                font-size: 0.85rem; }
-  .inventory td { padding: 1px 14px 1px 0; }
+  .inventory table { border-collapse: collapse; margin-top: 6px; }
+  .inventory th { text-align: left; padding: 2px 14px 3px 0;
+                  font-size: 0.72rem; text-transform: uppercase;
+                  letter-spacing: 0.05em; color: var(--muted);
+                  font-weight: 600; border-bottom: 1px solid var(--line); }
+  .inventory td { padding: 2px 14px 2px 0; border-bottom: 1px dotted #ececea; }
+  .inventory tr:last-child td { border-bottom: 0; }
+  .inventory td.num { text-align: right; }
+  .inventory th.num { text-align: right; }
 
   .criterion { background: var(--card); border: 1px solid var(--line);
                border-radius: 2px; padding: 10px 14px 8px; margin: 0 0 10px; }
@@ -147,11 +155,17 @@
     <strong>Crate inventory</strong> — 56,986 entities
     (Dataset: 53,877, Experiment: 1,874, BioChemEntity: 602, Sample: 452, Computation: 102, Person: 38, Schema: 18, DefinedTerm: 13, Instrument: 5, Software: 4, Other: 1)
     <table>
+      <tr>
+        <th>Sub-crate</th>
+        <th>Location</th>
+        <th class="num">Entities</th>
+        <th>Links</th>
+      </tr>
       
       <tr>
         <td>EndoTag AP-MS Profiling of Chromatin Modifier Interactome Rewiring...</td>
         <td class="mono" style="font-size:0.78rem">AP-MS/apms-paclitaxel-rocrate/</td>
-        <td>854 entities</td>
+        <td class="num">854</td>
         <td>
           <a href="../../../CM4AIJuneRelease/AP-MS/apms-paclitaxel-rocrate/ro-crate-prov-graph.html">evidence graph</a> 
           <a href="../../../CM4AIJuneRelease/AP-MS/apms-paclitaxel-rocrate/ro-crate-preview.html">preview</a>
@@ -161,7 +175,7 @@
       <tr>
         <td>EndoTag-AP-MS Profiling of Chromatin Modifier Interactome Rewiring...</td>
         <td class="mono" style="font-size:0.78rem">AP-MS/apms-vorinostat-rocrate/</td>
-        <td>1,069 entities</td>
+        <td class="num">1,069</td>
         <td>
           <a href="../../../CM4AIJuneRelease/AP-MS/apms-vorinostat-rocrate/ro-crate-prov-graph.html">evidence graph</a> 
           <a href="../../../CM4AIJuneRelease/AP-MS/apms-vorinostat-rocrate/ro-crate-preview.html">preview</a>
@@ -171,7 +185,7 @@
       <tr>
         <td>Paclitaxel IF Images</td>
         <td class="mono" style="font-size:0.78rem">Images/paclitaxel/</td>
-        <td>18,627 entities</td>
+        <td class="num">18,627</td>
         <td>
           <a href="../../../CM4AIJuneRelease/Images/paclitaxel/ro-crate-prov-graph.html">evidence graph</a> 
           <a href="../../../CM4AIJuneRelease/Images/paclitaxel/ro-crate-preview.html">preview</a>
@@ -181,7 +195,7 @@
       <tr>
         <td>Untreated IF Images</td>
         <td class="mono" style="font-size:0.78rem">Images/untreated/</td>
-        <td>16,847 entities</td>
+        <td class="num">16,847</td>
         <td>
           <a href="../../../CM4AIJuneRelease/Images/untreated/ro-crate-prov-graph.html">evidence graph</a> 
           <a href="../../../CM4AIJuneRelease/Images/untreated/ro-crate-preview.html">preview</a>
@@ -191,7 +205,7 @@
       <tr>
         <td>Vorinostat IF Images</td>
         <td class="mono" style="font-size:0.78rem">Images/vorinostat/</td>
-        <td>18,791 entities</td>
+        <td class="num">18,791</td>
         <td>
           <a href="../../../CM4AIJuneRelease/Images/vorinostat/ro-crate-prov-graph.html">evidence graph</a> 
           <a href="../../../CM4AIJuneRelease/Images/vorinostat/ro-crate-preview.html">preview</a>
@@ -201,7 +215,7 @@
       <tr>
         <td>SEC-MS characterization of KOLF2 neuronal and cardiomyocyte differentiation</td>
         <td class="mono" style="font-size:0.78rem">mass-spec/iPSCs/</td>
-        <td>885 entities</td>
+        <td class="num">885</td>
         <td>
           <a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/ro-crate-prov-graph.html">evidence graph</a> <a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/parental-rep1-F01-evidence-graph.html">evidence graph</a> 
           <a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/ro-crate-preview.html">preview</a>
@@ -211,7 +225,7 @@
       <tr>
         <td>SEC-MS of MDA-MB468 following treatment of vorinostat or paclitaxel.</td>
         <td class="mono" style="font-size:0.78rem">mass-spec/cancer-cells/</td>
-        <td>54 entities</td>
+        <td class="num">54</td>
         <td>
           <a href="../../../CM4AIJuneRelease/mass-spec/cancer-cells/ro-crate-prov-graph.html">evidence graph</a> 
           <a href="../../../CM4AIJuneRelease/mass-spec/cancer-cells/ro-crate-preview.html">preview</a>
@@ -221,7 +235,7 @@
       <tr>
         <td>Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells -...</td>
         <td class="mono" style="font-size:0.78rem">Perturb-Seq/sra/</td>
-        <td>764 entities</td>
+        <td class="num">764</td>
         <td>
           <a href="../../../CM4AIJuneRelease/Perturb-Seq/sra/ro-crate-prov-graph.html">evidence graph</a> 
           <a href="../../../CM4AIJuneRelease/Perturb-Seq/sra/ro-crate-preview.html">preview</a>
@@ -231,7 +245,7 @@
       <tr>
         <td>Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells -...</td>
         <td class="mono" style="font-size:0.78rem">Perturb-Seq/cell-atlas/</td>
-        <td>7 entities</td>
+        <td class="num">7</td>
         <td>
           <a href="../../../CM4AIJuneRelease/Perturb-Seq/cell-atlas/ro-crate-prov-graph.html">evidence graph</a> 
           <a href="../../../CM4AIJuneRelease/Perturb-Seq/cell-atlas/ro-crate-preview.html">preview</a>

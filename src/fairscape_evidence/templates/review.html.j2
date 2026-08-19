@@ -34,7 +34,15 @@
   .inventory { background: var(--card); border: 1px solid var(--line);
                border-radius: 2px; padding: 8px 12px; margin: 12px 0;
                font-size: 0.85rem; }
-  .inventory td { padding: 1px 14px 1px 0; }
+  .inventory table { border-collapse: collapse; margin-top: 6px; }
+  .inventory th { text-align: left; padding: 2px 14px 3px 0;
+                  font-size: 0.72rem; text-transform: uppercase;
+                  letter-spacing: 0.05em; color: var(--muted);
+                  font-weight: 600; border-bottom: 1px solid var(--line); }
+  .inventory td { padding: 2px 14px 2px 0; border-bottom: 1px dotted #ececea; }
+  .inventory tr:last-child td { border-bottom: 0; }
+  .inventory td.num { text-align: right; }
+  .inventory th.num { text-align: right; }
 
   .criterion { background: var(--card); border: 1px solid var(--line);
                border-radius: 2px; padding: 10px 14px 8px; margin: 0 0 10px; }
@@ -136,11 +144,17 @@
     <strong>Crate inventory</strong> — {{ "{:,}".format(p.inventory.entities) }} entities
     ({% for t, n in p.inventory.by_type | dictsort(false, 'value') | reverse %}{{ t }}: {{ "{:,}".format(n) }}{% if not loop.last %}, {% endif %}{% endfor %})
     <table>
+      <tr>
+        <th>Sub-crate</th>
+        <th>Location</th>
+        <th class="num">Entities</th>
+        <th>Links</th>
+      </tr>
       {% for s in p.inventory.sub_crates %}
       <tr>
         <td>{{ s.name | truncate(70) }}</td>
         <td class="mono" style="font-size:0.78rem">{{ s.dir }}/</td>
-        <td>{{ "{:,}".format(s.entities) }} entities</td>
+        <td class="num">{{ "{:,}".format(s.entities) }}</td>
         <td>
           {% for g in s.prov_graphs %}<a href="{{ g | href }}">evidence graph</a> {% endfor %}
           {% if s.preview %}<a href="{{ s.preview | href }}">preview</a>{% endif %}
