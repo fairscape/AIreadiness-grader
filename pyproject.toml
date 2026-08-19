@@ -12,13 +12,15 @@ dependencies = [
     "fairscape-cli>=1.2.9",
     "pydantic-ai>=0.0.14",
     "pyyaml",
+    "jinja2",
 ]
 
 [project.scripts]
 fairscape-grade = "fairscape_wizard.grade:main"
+fairscape-evidence = "fairscape_evidence.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/fairscape_wizard"]
+packages = ["src/fairscape_wizard", "src/fairscape_evidence"]
 
 # rubric_eval imports extract.py and reads the 28 rubric YAMLs at runtime. They
 # live outside the package tree (shared with grade.py), so bundle the directory

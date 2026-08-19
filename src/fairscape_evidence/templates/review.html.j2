@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Readiness Review — {{ p.crate.name }}</title>
+<style>
+  :root {
+    --ink: #1a1a1a; --muted: #6b6b6b; --line: #d9d9d9; --bg: #fafaf8;
+    --card: #ffffff; --accent: #b45309; --ok: #15803d; --bad: #b91c1c;
+    --unknown: #6b6b6b; --gate: #7c2d12;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.55 "Source Sans 3", "Segoe UI", system-ui, sans-serif; }
+  .mono { font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+          font-size: 0.86em; }
+  a { color: var(--accent); }
+  header { border-bottom: 2px solid var(--ink); padding: 28px 0 18px;
+           background: var(--card); }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  h2 { font-size: 1.2rem; border-bottom: 1px solid var(--line);
+       padding-bottom: 6px; margin: 40px 0 14px; }
+  .meta { color: var(--muted); font-size: 0.9rem; }
+  .badge { display: inline-block; border: 1px solid var(--gate);
+           color: var(--gate); border-radius: 2px; font-size: 0.72rem;
+           padding: 0 6px; margin-left: 8px; vertical-align: 2px;
+           text-transform: uppercase; letter-spacing: 0.05em; }
+  .toplinks { margin-top: 10px; font-size: 0.92rem; }
+  .toplinks a { margin-right: 16px; }
+  nav.toc { margin: 22px 0; font-size: 0.92rem; }
+  nav.toc a { margin-right: 14px; white-space: nowrap; }
+  .inventory { background: var(--card); border: 1px solid var(--line);
+               border-radius: 2px; padding: 12px 16px; margin: 20px 0;
+               font-size: 0.92rem; }
+  .inventory td { padding: 2px 18px 2px 0; }
+  .criterion { background: var(--card); border: 1px solid var(--line);
+               border-radius: 2px; padding: 18px 20px; margin: 0 0 22px; }
+  .criterion h3 { margin: 0 0 2px; font-size: 1.05rem; }
+  .practice { color: var(--muted); font-style: italic; margin: 6px 0 10px; }
+  .questions { margin: 8px 0; padding-left: 20px; }
+  .questions li { margin-bottom: 3px; }
+  details.scoring { margin: 10px 0; }
+  details.scoring summary { cursor: pointer; color: var(--muted);
+                            font-size: 0.9rem; }
+  table.scores { border-collapse: collapse; margin: 8px 0; width: 100%; }
+  table.scores td { border: 1px solid var(--line); padding: 6px 10px;
+                    vertical-align: top; font-size: 0.9rem; }
+  table.scores td.n { width: 2.2em; text-align: center; font-weight: 700; }
+  .evidence { margin-top: 12px; }
+  .evidence h4 { margin: 0 0 8px; font-size: 0.8rem; text-transform: uppercase;
+                 letter-spacing: 0.06em; color: var(--muted); }
+  .item { display: flex; gap: 14px; padding: 6px 0;
+          border-top: 1px dotted var(--line); }
+  .item .label { flex: 0 0 300px; color: var(--muted); font-size: 0.9rem; }
+  .item .value { flex: 1; min-width: 0; white-space: pre-wrap;
+                 overflow-wrap: break-word; }
+  .item .detail { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+  .yes { color: var(--ok); font-weight: 600; }
+  .no { color: var(--bad); font-weight: 600; }
+  .na { color: var(--unknown); }
+  .pct-bar { display: inline-block; width: 140px; height: 8px;
+             background: #eee; border-radius: 2px; margin-right: 8px;
+             vertical-align: 1px; }
+  .pct-bar span { display: block; height: 100%; background: var(--accent);
+                  border-radius: 2px; }
+  details.entity pre { background: #f4f4f2; border: 1px solid var(--line);
+                       border-radius: 2px; padding: 10px; overflow-x: auto;
+                       font-size: 0.78rem; max-height: 380px; }
+  details.entity summary { cursor: pointer; color: var(--accent); }
+  ul.plain { margin: 0; padding-left: 18px; }
+  .grade { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line);
+           font-size: 0.92rem; }
+  .grade label { margin-right: 14px; cursor: pointer; }
+  .grade textarea { width: 100%; margin-top: 8px; border: 1px solid var(--line);
+                    border-radius: 2px; padding: 6px; font: inherit;
+                    font-size: 0.9rem; min-height: 2.4em; }
+  .exportbar { position: sticky; bottom: 0; background: var(--card);
+               border-top: 1px solid var(--line); padding: 10px 0;
+               margin-top: 40px; }
+  .exportbar button { background: var(--accent); color: #fff; border: 0;
+                      border-radius: 2px; padding: 8px 16px; font: inherit;
+                      cursor: pointer; }
+  .exportbar .status { margin-left: 12px; color: var(--muted);
+                       font-size: 0.9rem; }
+  .error { color: var(--bad); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>AI-Readiness Human Review</h1>
+    <div class="meta">
+      {{ p.rubric }} · generated {{ p.generated }}
+      {%- if not p.network_checks %} · <strong>network checks disabled</strong>{% endif %}
+    </div>
+    <div style="margin-top:10px">
+      <strong>{{ p.crate.name }}</strong><br>
+      <span class="mono">{{ p.crate["@id"] }}</span>
+      <span class="meta"> · {{ p.crate.identifier }} · published {{ p.crate.datePublished }}</span>
+    </div>
+    <div class="toplinks">
+      {% for d in p.artifacts.datasheets %}
+        <a href="{{ d | href }}">Datasheet — {{ d }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="toc">
+    {% for s in p.sections %}
+      <a href="#sec{{ s.number }}">{{ s.number }}. {{ s.title }}{% if s.gating %} *{% endif %}</a>
+    {% endfor %}
+  </nav>
+
+  <div class="inventory">
+    <strong>Crate inventory</strong> — {{ "{:,}".format(p.inventory.entities) }} entities
+    ({% for t, n in p.inventory.by_type | dictsort(false, 'value') | reverse %}{{ t }}: {{ "{:,}".format(n) }}{% if not loop.last %}, {% endif %}{% endfor %})
+    <table>
+      {% for s in p.inventory.sub_crates %}
+      <tr>
+        <td>{{ s.name }}</td>
+        <td class="mono" style="font-size:0.8rem">{{ s.dir }}/</td>
+        <td>{{ "{:,}".format(s.entities) }} entities</td>
+        <td>
+          {% for g in s.prov_graphs %}<a href="{{ g | href }}">evidence graph</a> {% endfor %}
+          {% if s.preview %}<a href="{{ s.preview | href }}">preview</a>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  {% for s in p.sections %}
+  <h2 id="sec{{ s.number }}">{{ s.number }}. {{ s.title }}
+    {% if s.gating %}<span class="badge">Gating</span>{% endif %}
+  </h2>
+
+    {% for c in s.criteria %}
+    <div class="criterion" id="c{{ c.id | replace('.', '-') }}">
+      <h3>{{ c.id }} {{ c.name }}
+        {% if c.gating %}<span class="badge">Gating</span>{% endif %}
+      </h3>
+      <div class="practice">{{ c.practice }}</div>
+      <ul class="questions">
+        {% for q in c.questions %}<li>{{ q }}</li>{% endfor %}
+      </ul>
+
+      <details class="scoring" open>
+        <summary>Scoring definitions</summary>
+        <table class="scores">
+          {% for score in ["2", "1", "0"] if score in c.scoring %}
+          <tr><td class="n">{{ score }}</td><td>{{ c.scoring[score] }}</td></tr>
+          {% endfor %}
+        </table>
+        {% if c.notes %}<div class="meta">{{ c.notes }}</div>{% endif %}
+        {% if c.gating_note %}<div class="meta">{{ c.gating_note }}</div>{% endif %}
+      </details>
+
+      <div class="evidence">
+        <h4>Evidence extracted from the crate</h4>
+        {% if c.error %}<div class="error">extraction failed: {{ c.error }}</div>{% endif %}
+        {% for item in c.evidence %}
+        <div class="item">
+          <div class="label">{{ item.label }}</div>
+          <div class="value">
+            {% if item.kind == "bool" %}
+              {% if item.value is true %}<span class="yes">✓ Yes</span>
+              {% elif item.value is false %}<span class="no">✗ No</span>
+              {% else %}<span class="na">— not checked</span>{% endif %}
+            {% elif item.kind == "count" %}
+              <strong>{{ "{:,}".format(item.value) }}</strong>{% if item.of is defined %} of {{ "{:,}".format(item.of) }}{% endif %}
+            {% elif item.kind == "percent" %}
+              {% if item.value is not none %}
+                <span class="pct-bar"><span style="width:{{ [item.value, 100] | min }}%"></span></span>
+                <strong>{{ item.value }}%</strong>
+                <span class="meta">({{ "{:,}".format(item.n) }} of {{ "{:,}".format(item.total) }})</span>
+              {% else %}<span class="na">— no denominator</span>{% endif %}
+            {% elif item.kind == "link" %}
+              {% if item.value %}<a href="{{ item.value | href }}">{{ item.text | default(item.value, true) }}</a>
+              {% else %}<span class="na">none</span>{% endif %}
+            {% elif item.kind == "links" %}
+              {% if item.value %}
+                <ul class="plain">
+                {% for l in item.value %}
+                  <li>{% if l.href %}<a href="{{ l.href | href }}">{{ l.text | default(l.href, true) }}</a>{% else %}{{ l.text }}{% endif %}</li>
+                {% endfor %}
+                </ul>
+              {% else %}<span class="na">none</span>{% endif %}
+            {% elif item.kind == "list" %}
+              {% if item.value %}
+                <ul class="plain">{% for v in item.value %}<li>{{ v }}</li>{% endfor %}</ul>
+              {% else %}<span class="na">none</span>{% endif %}
+            {% elif item.kind == "entity" %}
+              {% if item.value %}
+                <details class="entity"><summary>{{ item.value.name | default(item.value["@id"], true) | default("view entity", true) }}</summary>
+                  <pre>{{ item.value | tojson_pretty }}</pre></details>
+              {% else %}<span class="na">none found</span>{% endif %}
+            {% else %}
+              {% if item.value %}{{ item.value }}{% else %}<span class="na">not provided</span>{% endif %}
+            {% endif %}
+            {% if item.detail %}<div class="detail">{{ item.detail }}</div>{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="grade" data-criterion="{{ c.id }}">
+        <strong>Your score:</strong>
+        {% for opt in ["2", "1", "0", "N/A"] %}
+          <label><input type="radio" name="score-{{ c.id }}" value="{{ opt }}"> {{ opt }}</label>
+        {% endfor %}
+        <textarea placeholder="Reviewer notes for {{ c.id }} {{ c.name }}…"></textarea>
+      </div>
+    </div>
+    {% endfor %}
+  {% endfor %}
+
+  <div class="exportbar">
+    <button id="export">Copy scores as JSON</button>
+    <span class="status" id="export-status"></span>
+  </div>
+</div>
+
+<script>
+document.getElementById('export').addEventListener('click', function () {
+  var out = { crate: {{ p.crate["@id"] | tojson }}, scores: {} };
+  document.querySelectorAll('.grade').forEach(function (g) {
+    var id = g.dataset.criterion;
+    var checked = g.querySelector('input:checked');
+    out.scores[id] = {
+      score: checked ? checked.value : null,
+      notes: g.querySelector('textarea').value || null
+    };
+  });
+  var text = JSON.stringify(out, null, 2);
+  navigator.clipboard.writeText(text).then(function () {
+    document.getElementById('export-status').textContent =
+      'copied ' + Object.keys(out.scores).length + ' criteria to clipboard';
+  }, function () {
+    document.getElementById('export-status').textContent =
+      'clipboard blocked — JSON logged to console';
+    console.log(text);
+  });
+});
+</script>
+
+</body>
+</html>

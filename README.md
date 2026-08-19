@@ -10,6 +10,40 @@ that crate against the 28 AI-Ready rubrics.
 - **Grader** — `rubrics/ai-ready/` (the 28 rubric YAMLs + the deterministic
   `extract.py` evidence extractors) plus the `fairscape_wizard` Python helper
   module that drives them.
+- **Evidence presentation** (this branch) — `src/fairscape_evidence/`, a fresh
+  extraction → transformation → presentation pipeline that builds the evidence
+  document requested by *Rubric for Human Review of AI.docx*. See
+  [Evidence presentation](#evidence-presentation) below.
+
+## Evidence presentation
+
+```
+fairscape-evidence /path/to/crate -o out/          # or: PYTHONPATH=src python3 -m fairscape_evidence.cli
+fairscape-evidence /path/to/crate --no-network     # skip URL / registry lookups
+```
+
+Writes two files built from the same presentation dict — no scoring in either:
+
+| Output | Audience |
+| --- | --- |
+| `ai-ready-presentation.json` | evidence handed to an LLM grader |
+| `ai-ready-review.html` | human reviewer: rubric text + scoring defs + evidence, score radios with a copy-as-JSON export |
+
+Layout of `src/fairscape_evidence/`:
+
+| File | Stage |
+| --- | --- |
+| `rubric_defs.yaml` | rubric text transcribed from the docx (practice / questions / 0-1-2 rules) — edit rubric wording here |
+| `crate.py` | extraction: one pass over root + sub-crates, aggregates + bounded samples (50k-entity crates stay cheap) |
+| `sections/*.py` | one module per rubric section; each criterion is an `extract_` / `transform_` / `present_` trio |
+| `known.py` | reference tables: PID schemes, re3data-style repo hosts, ontology hosts, HL7 confidentiality codes, vendor formats |
+| `network.py` | optional lookups: URL resolution, re3data search, DOI content negotiation; timeouts report as inconclusive |
+| `pipeline.py` / `render.py` / `templates/review.html.j2` | assembly and the Jinja HTML |
+
+Datasheet (`ro-crate-datasheet.html`) and every sub-crate evidence graph
+(`ro-crate-prov-graph.html`, `*-evidence-graph.html`) are discovered on disk and
+linked from both outputs. `examples/cm4ai-june-2026/` holds the output for the
+CM4AI June 2026 release.
 
 ## Launching the wizard
 
