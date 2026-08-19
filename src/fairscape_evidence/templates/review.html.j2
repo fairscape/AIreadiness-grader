@@ -12,78 +12,91 @@
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink);
-         font: 15px/1.55 "Source Sans 3", "Segoe UI", system-ui, sans-serif; }
+         font: 14px/1.45 "Source Sans 3", "Segoe UI", system-ui, sans-serif; }
   .mono { font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
           font-size: 0.86em; }
   a { color: var(--accent); }
-  header { border-bottom: 2px solid var(--ink); padding: 28px 0 18px;
+  header { border-bottom: 2px solid var(--ink); padding: 16px 0 12px;
            background: var(--card); }
-  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-  h1 { font-size: 1.5rem; margin: 0 0 4px; }
-  h2 { font-size: 1.2rem; border-bottom: 1px solid var(--line);
-       padding-bottom: 6px; margin: 40px 0 14px; }
-  .meta { color: var(--muted); font-size: 0.9rem; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  h1 { font-size: 1.25rem; margin: 0 0 2px; }
+  h2 { font-size: 1.05rem; border-bottom: 1px solid var(--line);
+       padding-bottom: 4px; margin: 26px 0 10px; }
+  .meta { color: var(--muted); font-size: 0.85rem; }
   .badge { display: inline-block; border: 1px solid var(--gate);
-           color: var(--gate); border-radius: 2px; font-size: 0.72rem;
-           padding: 0 6px; margin-left: 8px; vertical-align: 2px;
+           color: var(--gate); border-radius: 2px; font-size: 0.68rem;
+           padding: 0 5px; margin-left: 8px; vertical-align: 2px;
            text-transform: uppercase; letter-spacing: 0.05em; }
-  .toplinks { margin-top: 10px; font-size: 0.92rem; }
+  .toplinks { margin-top: 6px; font-size: 0.88rem; }
   .toplinks a { margin-right: 16px; }
-  nav.toc { margin: 22px 0; font-size: 0.92rem; }
-  nav.toc a { margin-right: 14px; white-space: nowrap; }
+  nav.toc { margin: 14px 0; font-size: 0.88rem; }
+  nav.toc a { margin-right: 12px; white-space: nowrap; }
   .inventory { background: var(--card); border: 1px solid var(--line);
-               border-radius: 2px; padding: 12px 16px; margin: 20px 0;
-               font-size: 0.92rem; }
-  .inventory td { padding: 2px 18px 2px 0; }
+               border-radius: 2px; padding: 8px 12px; margin: 12px 0;
+               font-size: 0.85rem; }
+  .inventory td { padding: 1px 14px 1px 0; }
+
   .criterion { background: var(--card); border: 1px solid var(--line);
-               border-radius: 2px; padding: 18px 20px; margin: 0 0 22px; }
-  .criterion h3 { margin: 0 0 2px; font-size: 1.05rem; }
-  .practice { color: var(--muted); font-style: italic; margin: 6px 0 10px; }
-  .questions { margin: 8px 0; padding-left: 20px; }
-  .questions li { margin-bottom: 3px; }
-  details.scoring { margin: 10px 0; }
-  details.scoring summary { cursor: pointer; color: var(--muted);
-                            font-size: 0.9rem; }
-  table.scores { border-collapse: collapse; margin: 8px 0; width: 100%; }
-  table.scores td { border: 1px solid var(--line); padding: 6px 10px;
-                    vertical-align: top; font-size: 0.9rem; }
-  table.scores td.n { width: 2.2em; text-align: center; font-weight: 700; }
-  .evidence { margin-top: 12px; }
-  .evidence h4 { margin: 0 0 8px; font-size: 0.8rem; text-transform: uppercase;
-                 letter-spacing: 0.06em; color: var(--muted); }
-  .item { display: flex; gap: 14px; padding: 6px 0;
-          border-top: 1px dotted var(--line); }
-  .item .label { flex: 0 0 300px; color: var(--muted); font-size: 0.9rem; }
+               border-radius: 2px; padding: 10px 14px 8px; margin: 0 0 10px; }
+  .criterion h3 { margin: 0; font-size: 0.98rem; display: inline; }
+  .practice { color: var(--muted); font-style: italic; margin: 2px 0 6px;
+              font-size: 0.85rem; }
+  details.questions { margin: 0 0 6px; font-size: 0.85rem; }
+  details.questions summary { cursor: pointer; color: var(--muted); }
+  details.questions ul { margin: 4px 0 2px; padding-left: 20px; }
+
+  .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+            margin: 6px 0 8px; }
+  .scores > div { border: 1px solid var(--line); border-radius: 2px;
+                  padding: 4px 8px; font-size: 0.8rem; line-height: 1.35;
+                  color: #333; background: #fcfcfa; }
+  .scores .n { font-weight: 700; margin-right: 6px; font-size: 0.9rem; }
+  .rubric-note { color: var(--muted); font-size: 0.78rem; margin: -2px 0 6px; }
+
+  .evidence { border-top: 1px solid var(--line); padding-top: 4px; }
+  .item { display: flex; gap: 12px; padding: 2px 0; font-size: 0.86rem;
+          border-top: 1px dotted #ececea; }
+  .item:first-child { border-top: 0; }
+  .item .label { flex: 0 0 290px; color: var(--muted); }
   .item .value { flex: 1; min-width: 0; white-space: pre-wrap;
                  overflow-wrap: break-word; }
-  .item .detail { color: var(--muted); font-size: 0.85rem; margin-top: 2px; }
+  .detail { color: var(--muted); font-size: 0.8rem; display: inline;
+            margin-left: 6px; }
+  .detail::before { content: "— "; }
   .yes { color: var(--ok); font-weight: 600; }
   .no { color: var(--bad); font-weight: 600; }
   .na { color: var(--unknown); }
-  .pct-bar { display: inline-block; width: 140px; height: 8px;
-             background: #eee; border-radius: 2px; margin-right: 8px;
+  .pct-bar { display: inline-block; width: 90px; height: 7px;
+             background: #eee; border-radius: 2px; margin-right: 6px;
              vertical-align: 1px; }
   .pct-bar span { display: block; height: 100%; background: var(--accent);
                   border-radius: 2px; }
+  details.entity { display: inline; }
   details.entity pre { background: #f4f4f2; border: 1px solid var(--line);
-                       border-radius: 2px; padding: 10px; overflow-x: auto;
-                       font-size: 0.78rem; max-height: 380px; }
+                       border-radius: 2px; padding: 8px; overflow-x: auto;
+                       font-size: 0.75rem; max-height: 320px; margin: 4px 0; }
   details.entity summary { cursor: pointer; color: var(--accent); }
-  ul.plain { margin: 0; padding-left: 18px; }
-  .grade { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line);
-           font-size: 0.92rem; }
-  .grade label { margin-right: 14px; cursor: pointer; }
-  .grade textarea { width: 100%; margin-top: 8px; border: 1px solid var(--line);
-                    border-radius: 2px; padding: 6px; font: inherit;
-                    font-size: 0.9rem; min-height: 2.4em; }
+  ul.plain { margin: 0; padding-left: 16px; }
+  ul.plain li { margin: 0; }
+  .longtext { display: inline; }
+  .longtext summary { cursor: pointer; display: inline; color: inherit; }
+  .longtext summary .more { color: var(--accent); font-size: 0.8rem; }
+  .longtext[open] summary .head { display: none; }
+
+  .grade { margin-top: 6px; padding-top: 5px; border-top: 1px solid var(--line);
+           font-size: 0.85rem; display: flex; align-items: center; gap: 10px; }
+  .grade label { cursor: pointer; white-space: nowrap; }
+  .grade input[type="text"] { flex: 1; border: 1px solid var(--line);
+                              border-radius: 2px; padding: 3px 6px;
+                              font: inherit; font-size: 0.85rem; }
   .exportbar { position: sticky; bottom: 0; background: var(--card);
-               border-top: 1px solid var(--line); padding: 10px 0;
-               margin-top: 40px; }
+               border-top: 1px solid var(--line); padding: 8px 0;
+               margin-top: 28px; }
   .exportbar button { background: var(--accent); color: #fff; border: 0;
-                      border-radius: 2px; padding: 8px 16px; font: inherit;
+                      border-radius: 2px; padding: 6px 14px; font: inherit;
                       cursor: pointer; }
   .exportbar .status { margin-left: 12px; color: var(--muted);
-                       font-size: 0.9rem; }
+                       font-size: 0.85rem; }
   .error { color: var(--bad); }
 </style>
 </head>
@@ -96,8 +109,8 @@
       {{ p.rubric }} · generated {{ p.generated }}
       {%- if not p.network_checks %} · <strong>network checks disabled</strong>{% endif %}
     </div>
-    <div style="margin-top:10px">
-      <strong>{{ p.crate.name }}</strong><br>
+    <div style="margin-top:6px">
+      <strong>{{ p.crate.name }}</strong>
       <span class="mono">{{ p.crate["@id"] }}</span>
       <span class="meta"> · {{ p.crate.identifier }} · published {{ p.crate.datePublished }}</span>
     </div>
@@ -123,8 +136,8 @@
     <table>
       {% for s in p.inventory.sub_crates %}
       <tr>
-        <td>{{ s.name }}</td>
-        <td class="mono" style="font-size:0.8rem">{{ s.dir }}/</td>
+        <td>{{ s.name | truncate(70) }}</td>
+        <td class="mono" style="font-size:0.78rem">{{ s.dir }}/</td>
         <td>{{ "{:,}".format(s.entities) }} entities</td>
         <td>
           {% for g in s.prov_graphs %}<a href="{{ g | href }}">evidence graph</a> {% endfor %}
@@ -142,79 +155,83 @@
 
     {% for c in s.criteria %}
     <div class="criterion" id="c{{ c.id | replace('.', '-') }}">
-      <h3>{{ c.id }} {{ c.name }}
-        {% if c.gating %}<span class="badge">Gating</span>{% endif %}
-      </h3>
+      <h3>{{ c.id }} {{ c.name }}</h3>
+      {% if c.gating %}<span class="badge">Gating</span>{% endif %}
       <div class="practice">{{ c.practice }}</div>
-      <ul class="questions">
-        {% for q in c.questions %}<li>{{ q }}</li>{% endfor %}
-      </ul>
-
-      <details class="scoring" open>
-        <summary>Scoring definitions</summary>
-        <table class="scores">
-          {% for score in ["2", "1", "0"] if score in c.scoring %}
-          <tr><td class="n">{{ score }}</td><td>{{ c.scoring[score] }}</td></tr>
-          {% endfor %}
-        </table>
-        {% if c.notes %}<div class="meta">{{ c.notes }}</div>{% endif %}
-        {% if c.gating_note %}<div class="meta">{{ c.gating_note }}</div>{% endif %}
+      <details class="questions">
+        <summary>Questions ({{ c.questions | length }})</summary>
+        <ul>{% for q in c.questions %}<li>{{ q }}</li>{% endfor %}</ul>
       </details>
 
+      <div class="scores">
+        {% for score in ["2", "1", "0"] if score in c.scoring %}
+        <div><span class="n">{{ score }}</span>{{ c.scoring[score] }}</div>
+        {% endfor %}
+      </div>
+      {% if c.notes %}<div class="rubric-note">{{ c.notes }}</div>{% endif %}
+      {% if c.gating_note %}<div class="rubric-note">{{ c.gating_note }}</div>{% endif %}
+
       <div class="evidence">
-        <h4>Evidence extracted from the crate</h4>
         {% if c.error %}<div class="error">extraction failed: {{ c.error }}</div>{% endif %}
         {% for item in c.evidence %}
         <div class="item">
           <div class="label">{{ item.label }}</div>
           <div class="value">
-            {% if item.kind == "bool" %}
+            {%- if item.kind == "bool" -%}
               {% if item.value is true %}<span class="yes">✓ Yes</span>
               {% elif item.value is false %}<span class="no">✗ No</span>
               {% else %}<span class="na">— not checked</span>{% endif %}
-            {% elif item.kind == "count" %}
+            {%- elif item.kind == "count" -%}
               <strong>{{ "{:,}".format(item.value) }}</strong>{% if item.of is defined %} of {{ "{:,}".format(item.of) }}{% endif %}
-            {% elif item.kind == "percent" %}
+            {%- elif item.kind == "percent" -%}
               {% if item.value is not none %}
                 <span class="pct-bar"><span style="width:{{ [item.value, 100] | min }}%"></span></span>
                 <strong>{{ item.value }}%</strong>
                 <span class="meta">({{ "{:,}".format(item.n) }} of {{ "{:,}".format(item.total) }})</span>
               {% else %}<span class="na">— no denominator</span>{% endif %}
-            {% elif item.kind == "link" %}
+            {%- elif item.kind == "link" -%}
               {% if item.value %}<a href="{{ item.value | href }}">{{ item.text | default(item.value, true) }}</a>
               {% else %}<span class="na">none</span>{% endif %}
-            {% elif item.kind == "links" %}
+            {%- elif item.kind == "links" -%}
               {% if item.value %}
                 <ul class="plain">
                 {% for l in item.value %}
-                  <li>{% if l.href %}<a href="{{ l.href | href }}">{{ l.text | default(l.href, true) }}</a>{% else %}{{ l.text }}{% endif %}</li>
+                  <li>{% if l.href %}<a href="{{ l.href | href }}">{{ l.text | default(l.href, true) }}</a>{% else %}{{ l.text | linkify }}{% endif %}</li>
                 {% endfor %}
                 </ul>
               {% else %}<span class="na">none</span>{% endif %}
-            {% elif item.kind == "list" %}
+            {%- elif item.kind == "list" -%}
               {% if item.value %}
-                <ul class="plain">{% for v in item.value %}<li>{{ v }}</li>{% endfor %}</ul>
+                {% if item.value | length == 1 %}{{ item.value[0] | linkify }}
+                {% else %}<ul class="plain">{% for v in item.value %}<li>{{ v | linkify }}</li>{% endfor %}</ul>{% endif %}
               {% else %}<span class="na">none</span>{% endif %}
-            {% elif item.kind == "entity" %}
+            {%- elif item.kind == "entity" -%}
               {% if item.value %}
                 <details class="entity"><summary>{{ item.value.name | default(item.value["@id"], true) | default("view entity", true) }}</summary>
-                  <pre>{{ item.value | tojson_pretty }}</pre></details>
+                  <pre>{{ item.value | tojson_pretty | linkify }}</pre></details>
               {% else %}<span class="na">none found</span>{% endif %}
-            {% else %}
-              {% if item.value %}{{ item.value }}{% else %}<span class="na">not provided</span>{% endif %}
-            {% endif %}
-            {% if item.detail %}<div class="detail">{{ item.detail }}</div>{% endif %}
+            {%- else -%}
+              {% if item.value %}
+                {% if item.value | length > 260 %}
+                  <details class="longtext">
+                    <summary><span class="head">{{ item.value | truncate(240, False, '…') | linkify }}</span> <span class="more">[{{ "{:,}".format(item.value | length) }} chars — expand]</span></summary>
+                    {{- item.value | linkify -}}
+                  </details>
+                {% else %}{{ item.value | linkify }}{% endif %}
+              {% else %}<span class="na">not provided</span>{% endif %}
+            {%- endif -%}
+            {%- if item.detail %}<span class="detail">{{ item.detail | linkify }}</span>{% endif -%}
           </div>
         </div>
         {% endfor %}
       </div>
 
       <div class="grade" data-criterion="{{ c.id }}">
-        <strong>Your score:</strong>
+        <strong>Score:</strong>
         {% for opt in ["2", "1", "0", "N/A"] %}
           <label><input type="radio" name="score-{{ c.id }}" value="{{ opt }}"> {{ opt }}</label>
         {% endfor %}
-        <textarea placeholder="Reviewer notes for {{ c.id }} {{ c.name }}…"></textarea>
+        <input type="text" placeholder="reviewer notes…">
       </div>
     </div>
     {% endfor %}
@@ -234,7 +251,7 @@ document.getElementById('export').addEventListener('click', function () {
     var checked = g.querySelector('input:checked');
     out.scores[id] = {
       score: checked ? checked.value : null,
-      notes: g.querySelector('textarea').value || null
+      notes: g.querySelector('input[type=text]').value || null
     };
   });
   var text = JSON.stringify(out, null, 2);

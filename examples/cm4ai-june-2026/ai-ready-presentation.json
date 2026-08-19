@@ -1,6 +1,6 @@
 {
   "rubric": "Rubric for Human Review of AI-readiness Evaluation Criteria, v1.0 (2026-08-14)",
-  "generated": "2026-08-19 13:08 UTC",
+  "generated": "2026-08-19 13:45 UTC",
   "network_checks": true,
   "crate": {
     "@id": "ark:59853/rocrate-cell-maps-for-artificial-intelligence-June-2026-data-release",
@@ -203,8 +203,8 @@
             {
               "label": "Identifier resolves",
               "kind": "bool",
-              "value": null,
-              "detail": "timed out — inconclusive"
+              "value": true,
+              "detail": "HTTP 202"
             },
             {
               "label": "Publisher",
@@ -1774,11 +1774,11 @@
               "kind": "links",
               "value": [
                 {
-                  "href": "doi: https://doi.org/10.1101/2024.05.21.589311",
-                  "text": "Clark T, Parker J, Al Manir S, et al. (2024) Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines. bioRxiv 2024.05.21.589311; doi: https://doi.org/10.1101/2024. …[truncated, 232 chars total]"
+                  "href": "https://doi.org/10.1101/2024.05.21.589311",
+                  "text": "Clark T, Parker J, Al Manir S, et al. (2024) Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines. bioRxiv 2024.05.21.589311; doi: …[truncated, 232 chars total]"
                 },
                 {
-                  "href": "doi: https://doi.org/10.1101/2024.11.03.621734",
+                  "href": "https://doi.org/10.1101/2024.11.03.621734",
                   "text": "Nourreddine S, et al. (2024) A Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells. bioRxiv 2024.05.21.589311; doi: https://doi.org/10.1101/2024.11.03.621734"
                 },
                 {
@@ -1934,8 +1934,7 @@
             {
               "label": "DMP link resolves: https://dataverse.lib.virginia.edu/",
               "kind": "bool",
-              "value": null,
-              "detail": "timed out — inconclusive"
+              "value": true
             }
           ]
         },
@@ -2012,7 +2011,7 @@
               "label": "Permitted uses stated",
               "kind": "bool",
               "value": true,
-              "detail": "AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable biologically- …[truncated, 438 chars total]"
+              "detail": "AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable …[truncated, 438 chars total]"
             },
             {
               "label": "Prohibited uses stated",
@@ -2222,8 +2221,7 @@
             {
               "label": "DMP link resolves",
               "kind": "bool",
-              "value": null,
-              "detail": "timed out — inconclusive"
+              "value": true
             },
             {
               "label": "Terms of access (conditionsOfAccess)",
@@ -2575,8 +2573,8 @@
               "kind": "list",
               "value": [
                 "Spectronaut: Spectronaut is a commercial software package developed by Biognosys for the analysis of mass spectrometry-based proteomics data, particularly for Data-Independent Acquisition (DIA) experiments.",
-                "Unknown SEC analysis tool: Placeholder for the downstream SEC quantification tool that produced sec.csv. The MassIVE upload MSV000100676 does not record which software was used; the column set (fractionMass, log2MassNumber, intensity_interpolated, …[truncated, 401 chars total]",
-                "Spectronaut: Spectronaut is a commercial software package developed by Biognosys for the analysis of mass spectrometry-based proteomics data. It is particularly known for its capabilities in processing Data-Independent Acquisition (D …[truncated, 363 chars total]"
+                "Unknown SEC analysis tool: Placeholder for the downstream SEC quantification tool that produced sec.csv. The MassIVE upload MSV000100676 does not record which software was used; the column set (fractionMass, log2MassNumber, …[truncated, 401 chars total]",
+                "Spectronaut: Spectronaut is a commercial software package developed by Biognosys for the analysis of mass spectrometry-based proteomics data. It is particularly known for its capabilities in processing Data-Independent Acquisition …[truncated, 363 chars total]"
               ]
             }
           ]

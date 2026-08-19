@@ -85,7 +85,11 @@ def clip(value, limit=TRUNCATE_AT):
         value = "; ".join(str(v) for v in value)
     value = str(value)
     if len(value) > limit:
-        return value[:limit].rstrip() + f" …[truncated, {len(value)} chars total]"
+        cut = value[:limit]
+        # break at whitespace so URLs and words aren't sliced mid-way
+        if " " in cut[limit // 2:]:
+            cut = cut[:cut.rfind(" ")]
+        return cut.rstrip() + f" …[truncated, {len(value)} chars total]"
     return value
 
 

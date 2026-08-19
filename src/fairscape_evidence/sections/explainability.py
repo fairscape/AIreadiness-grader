@@ -16,7 +16,17 @@ DATASHEET_FIELDS = [
     ("conditionsOfAccess", "Conditions of access"),
 ]
 
-URL_RE = re.compile(r"https?://[^\s\"\')\]]+|doi:\s?\S+|10\.\d{4,9}/\S+")
+URL_RE = re.compile(r"https?://[^\s\"\')\]]+|\bdoi:\s?\S+|\b10\.\d{4,9}/\S+")
+
+
+def _normalize_link(link):
+    """Turn a matched reference into a resolvable URL."""
+    link = link.rstrip(".,;")
+    if link.lower().startswith("doi:"):
+        link = link[4:].strip()
+    if link.startswith("10."):
+        link = "https://doi.org/" + link
+    return link
 
 # --- 3.a Data documentation template ---------------------------------------
 
@@ -70,7 +80,7 @@ def transform_3b(ctx, raw):
     for pub in raw["publications"]:
         found = URL_RE.findall(str(pub))
         pub_links.append({"text": ev.clip(pub, 220),
-                          "href": found[0].rstrip(".,;") if found else None})
+                          "href": _normalize_link(found[0]) if found else None})
     return {**raw, "pub_links": pub_links}
 
 
