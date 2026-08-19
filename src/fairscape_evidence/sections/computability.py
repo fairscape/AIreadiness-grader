@@ -48,12 +48,12 @@ def present_6a(facts):
     return [
         ev.listing("conformsTo declarations (metadata descriptor + root)",
                    facts["conforms"]),
-        ev.listing("Recognized standards in @context / conformsTo",
-                   sorted(facts["standards"])),
-        ev.flag("Deterministic validator known for the declared standards",
-                bool(facts["validators"]),
-                detail="; ".join(sorted(facts["validators"])) or
-                       "none matched — an unlisted validator may still exist"),
+        ev.sub(ev.listing("Recognized standards in @context / conformsTo",
+                          sorted(facts["standards"]))),
+        ev.sub(ev.flag("Deterministic validator known for the declared standards",
+                       bool(facts["validators"]),
+                       detail="; ".join(sorted(facts["validators"])) or
+                              "none matched — an unlisted validator may still exist")),
         ev.count("Machine-readable schema entities", facts["schema_total"]),
         ev.listing("File formats present",
                    [f"{f}: {n}" for f, n in
@@ -96,26 +96,26 @@ def present_6b(facts):
     items = [
         ev.percent("Datasets with a distribution link (contentUrl)",
                    facts["dataset_with_contenturl"], facts["dataset_total"]),
-        ev.percent("Datasets with a REMOTE distribution link "
-                   "(http/ftp/s3-style)", facts["dataset_with_remote_url"],
-                   facts["dataset_total"],
-                   detail="the rest are file:// paths inside the crate or "
-                          "embargoed placeholders"),
-        ev.listing("Protocols used by distribution links",
-                   [f"{p}: {n} files" for p, n in
-                    sorted(facts["protocols"].items(), key=lambda kv: -kv[1])],
-                   detail="file = paths inside the crate; none = placeholder "
-                          "values such as 'Embargoed'"),
-        ev.listing("Distribution hosts",
-                   [f"{h}: {n} files" for h, n in
-                    sorted(facts["hosts"].items(), key=lambda kv: -kv[1])[:10]]),
+        ev.sub(ev.percent("Datasets with a REMOTE distribution link "
+                          "(http/ftp/s3-style)", facts["dataset_with_remote_url"],
+                          facts["dataset_total"],
+                          detail="the rest are file:// paths inside the crate "
+                                 "or embargoed placeholders")),
+        ev.sub(ev.listing("Protocols used by distribution links",
+                          [f"{p}: {n} files" for p, n in
+                           sorted(facts["protocols"].items(), key=lambda kv: -kv[1])],
+                          detail="file = paths inside the crate; none = "
+                                 "placeholder values such as 'Embargoed'")),
+        ev.sub(ev.listing("Distribution hosts",
+                          [f"{h}: {n} files" for h, n in
+                           sorted(facts["hosts"].items(), key=lambda kv: -kv[1])[:10]])),
         ev.text("Access instructions (conditionsOfAccess)",
                 ev.clip(facts["conditions"])),
     ]
     for chk in facts["checks"]:
-        items.append(ev.flag(f"Sample host reachable: {chk['url']}",
-                             chk.get("ok") if chk.get("checked") else None,
-                             detail=chk.get("note")))
+        items.append(ev.sub(ev.flag(f"Sample host reachable: {chk['url']}",
+                                    chk.get("ok") if chk.get("checked") else None,
+                                    detail=chk.get("note"))))
     return items
 
 
@@ -162,9 +162,9 @@ def present_6c(facts):
                                          key=lambda kv: -kv[1])[:8]) or None),
         ev.percent("Computations with a container declared (usedContainer)",
                    facts["with_container"], facts["computation_total"]),
-        ev.entity("Example computation (environment description)",
-                  facts["computation"]),
-        ev.listing("Software descriptions", sw_descriptions),
+        ev.sub(ev.entity("Example computation (environment description)",
+                         facts["computation"])),
+        ev.sub(ev.listing("Software descriptions", sw_descriptions)),
     ]
 
 
@@ -194,7 +194,7 @@ def present_6d(facts):
         ev.flag("Datasets with split-like names (train/test/validation/holdout)",
                 facts["split_count"] > 0,
                 detail=f"{facts['split_count']} matches" if facts["split_count"] else None),
-        ev.listing("Split-named datasets", facts["split_names"]),
+        ev.sub(ev.listing("Split-named datasets", facts["split_names"])),
         ev.text("Sampling strategies (d4d:samplingStrategies)",
                 ev.clip(facts["sampling"])),
         ev.text("Withheld / missing information",
@@ -202,6 +202,6 @@ def present_6d(facts):
         ev.text("Preprocessing protocol (rai:dataPreprocessingProtocol)",
                 ev.clip(facts["preprocessing"])),
         ev.entity("Example / synthetic dataset provided", facts["example_dataset"]),
-        ev.entity("Structural example — schema entity (documents exact "
-                  "record structure)", facts["schema_sample"]),
+        ev.sub(ev.entity("Structural example — schema entity (documents exact "
+                         "record structure)", facts["schema_sample"])),
     ]

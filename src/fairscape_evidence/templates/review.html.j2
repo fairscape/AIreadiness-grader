@@ -57,7 +57,9 @@
   .item { display: flex; gap: 12px; padding: 2px 0; font-size: 0.86rem;
           border-top: 1px dotted #ececea; }
   .item:first-child { border-top: 0; }
-  .item .label { flex: 0 0 290px; color: var(--muted); }
+  .item .label { flex: 0 0 290px; color: var(--ink); font-weight: 600; }
+  .item.sub .label { color: var(--muted); font-weight: 400;
+                     padding-left: 16px; }
   .item .value { flex: 1; min-width: 0; overflow-wrap: break-word; }
   .pre { white-space: pre-line; }
   .detail { color: var(--muted); font-size: 0.8rem; display: inline;
@@ -174,7 +176,7 @@
       <div class="evidence">
         {% if c.error %}<div class="error">extraction failed: {{ c.error }}</div>{% endif %}
         {% for item in c.evidence %}
-        <div class="item">
+        <div class="item{% if item.sub %} sub{% endif %}">
           <div class="label">{{ item.label }}</div>
           {#- every branch below is whitespace-controlled: any stray template
               newline/indent inside .value shows up as visible spacing -#}

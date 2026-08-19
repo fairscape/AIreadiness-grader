@@ -1,6 +1,6 @@
 {
   "rubric": "Rubric for Human Review of AI-readiness Evaluation Criteria, v1.0 (2026-08-14)",
-  "generated": "2026-08-19 14:01 UTC",
+  "generated": "2026-08-19 14:14 UTC",
   "network_checks": true,
   "crate": {
     "@id": "ark:59853/rocrate-cell-maps-for-artificial-intelligence-June-2026-data-release",
@@ -198,13 +198,15 @@
               "label": "Persistent identifier present",
               "kind": "bool",
               "value": true,
-              "detail": "scheme: DOI"
+              "detail": "scheme: DOI",
+              "sub": true
             },
             {
               "label": "Identifier resolves",
               "kind": "bool",
               "value": true,
-              "detail": "HTTP 202"
+              "detail": "HTTP 202",
+              "sub": true
             },
             {
               "label": "Publisher",
@@ -215,13 +217,15 @@
               "label": "Publisher is a recognized repository",
               "kind": "bool",
               "value": true,
-              "detail": "Dataverse"
+              "detail": "Dataverse",
+              "sub": true
             },
             {
               "label": "Publisher found in re3data",
               "kind": "bool",
               "value": true,
-              "detail": "LibraData"
+              "detail": "LibraData",
+              "sub": true
             }
           ],
           "gating_note": "Scoring threshold for gating is all 2's for FAIRness."
@@ -250,7 +254,8 @@
               "label": "Descriptive metadata fetchable via PID alone",
               "kind": "bool",
               "value": true,
-              "detail": "application/ld+json"
+              "detail": "application/ld+json",
+              "sub": true
             },
             {
               "label": "Metadata returned by the PID resolver",
@@ -719,7 +724,8 @@
                   }
                 ]
               },
-              "detail": "truncated to descriptive fields"
+              "detail": "truncated to descriptive fields",
+              "sub": true
             },
             {
               "label": "@context vocabularies of the crate metadata",
@@ -795,12 +801,14 @@
             {
               "label": "Datasets linked to a schema",
               "kind": "count",
-              "value": 212
+              "value": 212,
+              "sub": true
             },
             {
               "label": "Parquet-format datasets (embedded schema)",
               "kind": "count",
-              "value": 0
+              "value": 0,
+              "sub": true
             },
             {
               "label": "Example schema entity",
@@ -838,7 +846,8 @@
                   "Tech_replicates_url_params": "{…}"
                 },
                 "additionalProperties": true
-              }
+              },
+              "sub": true
             }
           ]
         },
@@ -866,12 +875,14 @@
               "label": "License is a well-known open license",
               "kind": "bool",
               "value": true,
-              "detail": "CC BY-NC-SA 4.0"
+              "detail": "CC BY-NC-SA 4.0",
+              "sub": true
             },
             {
               "label": "License link resolves",
               "kind": "bool",
-              "value": true
+              "value": true,
+              "sub": true
             },
             {
               "label": "Conditions of access / DUA terms",
@@ -881,7 +892,8 @@
             {
               "label": "AI/ML explicitly mentioned in license or use terms",
               "kind": "bool",
-              "value": false
+              "value": false,
+              "sub": true
             }
           ],
           "notes": "There is no intermediate \"1\" grade for this criterion."
@@ -914,31 +926,6 @@
               "value": 100.0,
               "n": 53874,
               "total": 53877
-            },
-            {
-              "label": "Ground-truth elements present as structured entities",
-              "kind": "list",
-              "value": [
-                "samples: yes",
-                "instruments: yes",
-                "experiments: yes",
-                "datasets_with_provenance: yes"
-              ]
-            },
-            {
-              "label": "Sample entities",
-              "kind": "count",
-              "value": 452
-            },
-            {
-              "label": "Instrument entities",
-              "kind": "count",
-              "value": 5
-            },
-            {
-              "label": "Experiment entities",
-              "kind": "count",
-              "value": 1874
             },
             {
               "label": "Example dataset with provenance links",
@@ -983,7 +970,36 @@
                   }
                 ],
                 "contentSize": "879 MB"
-              }
+              },
+              "sub": true
+            },
+            {
+              "label": "Ground-truth elements present as structured entities",
+              "kind": "list",
+              "value": [
+                "samples: yes",
+                "instruments: yes",
+                "experiments: yes",
+                "datasets_with_provenance: yes"
+              ]
+            },
+            {
+              "label": "Sample entities",
+              "kind": "count",
+              "value": 452,
+              "sub": true
+            },
+            {
+              "label": "Instrument entities",
+              "kind": "count",
+              "value": 5,
+              "sub": true
+            },
+            {
+              "label": "Experiment entities",
+              "kind": "count",
+              "value": 1874,
+              "sub": true
             },
             {
               "label": "Example sample entity",
@@ -1037,7 +1053,8 @@
                     "@id": "ark:59853/dataset-msv000101915-44b97023d35b4bf7"
                   }
                 ]
-              }
+              },
+              "sub": true
             },
             {
               "label": "Example instrument entity",
@@ -1060,7 +1077,8 @@
                 "isPartOf": [],
                 "fairscapeVersion": "1.1.3",
                 "metadataType": "https://w3id.org/EVI#Instrument"
-              }
+              },
+              "sub": true
             }
           ]
         },
@@ -1090,14 +1108,16 @@
               "kind": "percent",
               "value": 100.0,
               "n": 1976,
-              "total": 1976
+              "total": 1976,
+              "sub": true
             },
             {
               "label": "Computations linked to software",
               "kind": "percent",
               "value": 100.0,
               "n": 102,
-              "total": 102
+              "total": 102,
+              "sub": true
             },
             {
               "label": "Example transformation step",
@@ -1169,7 +1189,8 @@
                   "…(+854 more)"
                 ],
                 "evi:annotatedBy": []
-              }
+              },
+              "sub": true
             },
             {
               "label": "Evidence graphs (visual provenance per sub-crate)",
@@ -1242,29 +1263,34 @@
               "label": "Archived with a PID (Zenodo / Software Heritage / DOI / PyPI)",
               "kind": "count",
               "value": 0,
-              "of": 4
+              "of": 4,
+              "sub": true
             },
             {
               "label": "Mutable code hosting only (GitHub and the like)",
               "kind": "count",
               "value": 0,
-              "of": 4
+              "of": 4,
+              "sub": true
             },
             {
               "label": "No download/repository link",
               "kind": "count",
               "value": 4,
-              "of": 4
+              "of": 4,
+              "sub": true
             },
             {
               "label": "Archived software",
               "kind": "list",
-              "value": []
+              "value": [],
+              "sub": true
             },
             {
               "label": "Code-hosted software",
               "kind": "list",
-              "value": []
+              "value": [],
+              "sub": true
             },
             {
               "label": "Software without links",
@@ -1274,7 +1300,8 @@
                 "Unknown SEC analysis tool — https://massive.ucsd.edu/ProteoSAFe/QueryMSV?id=MSV000100676",
                 "Spectronaut — https://biognosys.com/software/spectronaut/",
                 "Cell Ranger — https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest, https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger"
-              ]
+              ],
+              "sub": true
             }
           ]
         },
@@ -1302,7 +1329,8 @@
               "kind": "percent",
               "value": 80.9,
               "n": 38,
-              "total": 47
+              "total": 47,
+              "sub": true
             },
             {
               "label": "Authors with PIDs (first 10)",
@@ -1318,7 +1346,8 @@
                 "Forget, A (https://orcid.org/0000-0003-0223-0312)",
                 "Gao, J (https://orcid.org/0000-0002-6311-3526)",
                 "Hansen, JN (https://orcid.org/0000-0002-4650-9094)"
-              ]
+              ],
+              "sub": true
             },
             {
               "label": "Authors named in free text only",
@@ -1333,7 +1362,8 @@
                 "Pan, E",
                 "Polacco, B",
                 "Zhang, Y"
-              ]
+              ],
+              "sub": true
             },
             {
               "label": "Principal investigator",
@@ -1356,7 +1386,8 @@
             {
               "label": "Organizations identified with ROR PIDs",
               "kind": "bool",
-              "value": false
+              "value": false,
+              "sub": true
             }
           ]
         }
@@ -1438,7 +1469,8 @@
                 "Proteomics — http://edamontology.org/topic_0121",
                 "RNA-Seq — http://edamontology.org/topic_3170",
                 "Functional genomics — http://edamontology.org/topic_3320"
-              ]
+              ],
+              "sub": true
             }
           ]
         },
@@ -1467,7 +1499,8 @@
             {
               "label": "Example summary-statistics reference",
               "kind": "entity",
-              "value": null
+              "value": null,
+              "sub": true
             },
             {
               "label": "Missing-data statement (rai:dataCollectionMissingData)",
@@ -1513,7 +1546,8 @@
               "value": 8.7,
               "detail": "51,436 image datasets excluded — image files don't take a data dictionary; a schema covering a format class covers every file in that class",
               "n": 212,
-              "total": 2441
+              "total": 2441,
+              "sub": true
             },
             {
               "label": "Standard vocabulary bindings populated",
@@ -1576,7 +1610,8 @@
                   "Tech_replicates_url_params": "{…}"
                 },
                 "additionalProperties": true
-              }
+              },
+              "sub": true
             }
           ],
           "notes": "A standard vocabulary is one registered in NCBO BioPortal, EBI Ontology Lookup Service, or OBO Foundry. A vocabulary binding must be populated in the deposited instance (capability alone scores 1). Scoring may be per format class, and a sidecar covering a class covers every file in it. Formats named are examples, not an enumeration."
@@ -1605,7 +1640,8 @@
             {
               "label": "Bias description present and substantive-length",
               "kind": "bool",
-              "value": true
+              "value": true,
+              "sub": true
             },
             {
               "label": "Missing-data reasons (rai:dataCollectionMissingData)",
@@ -1615,7 +1651,8 @@
             {
               "label": "Missingness explanation present and substantive-length",
               "kind": "bool",
-              "value": true
+              "value": true,
+              "sub": true
             },
             {
               "label": "Completeness statement",
@@ -1653,13 +1690,14 @@
             {
               "label": "QC language found in metadata",
               "kind": "bool",
-              "value": false
+              "value": false,
+              "sub": true
             },
             {
               "label": "QC description link resolves: https://doi.org/10.1101/2024.05.21.589311",
               "kind": "bool",
-              "value": false,
-              "detail": "HTTP 429"
+              "value": true,
+              "sub": true
             }
           ],
           "notes": "Adequacy (1 vs 2) is a domain-expert determination."
@@ -1705,42 +1743,50 @@
             {
               "label": "Missing sections",
               "kind": "list",
-              "value": []
+              "value": [],
+              "sub": true
             },
             {
               "label": "Section — Collection",
               "kind": "text",
-              "value": "Data collection processes are generally described in Clark T et al. (2024) \"Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines\" bioRxiv 2024.05.21.589311; doi: https://doi.org/10.1101/2024.05.21.589311. Additional data collection details will be subsequently published once finalized. "
+              "value": "Data collection processes are generally described in Clark T et al. (2024) \"Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines\" bioRxiv 2024.05.21.589311; doi: https://doi.org/10.1101/2024.05.21.589311. Additional data collection details will be subsequently published once finalized. ",
+              "sub": true
             },
             {
               "label": "Section — Use cases",
               "kind": "text",
-              "value": "AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable biologically-driven, interpretable ML applications, for example as proposed in Ma et al. 2018 (PMID: 29505029) and Kuenzi et al. 2020 (PMID: 33096023)."
+              "value": "AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable biologically-driven, interpretable ML applications, for example as proposed in Ma et al. 2018 (PMID: 29505029) and Kuenzi et al. 2020 (PMID: 33096023).",
+              "sub": true
             },
             {
               "label": "Section — Limitations",
               "kind": "text",
-              "value": "This is an interim release. It does not contain predicted cell maps, which will be added in future releases. The current release is most suitable for bioinformatics analysis of the individual datasets. Requires domain expertise for meaningful analysis."
+              "value": "This is an interim release. It does not contain predicted cell maps, which will be added in future releases. The current release is most suitable for bioinformatics analysis of the individual datasets. Requires domain expertise for meaningful analysis.",
+              "sub": true
             },
             {
               "label": "Section — Biases",
               "kind": "text",
-              "value": "Data in this release was derived from commercially available de-identified human cell lines, and does not represent all biological variants which may be seen in the population at large."
+              "value": "Data in this release was derived from commercially available de-identified human cell lines, and does not represent all biological variants which may be seen in the population at large.",
+              "sub": true
             },
             {
               "label": "Section — Release/maintenance plan",
               "kind": "text",
-              "value": "Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the https://dataverse.lib.virginia.edu/, supported by committed institutional funds."
+              "value": "Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the https://dataverse.lib.virginia.edu/, supported by committed institutional funds.",
+              "sub": true
             },
             {
               "label": "Section — License",
               "kind": "text",
-              "value": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+              "value": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+              "sub": true
             },
             {
               "label": "Section — Conditions of access",
               "kind": "text",
-              "value": "Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection."
+              "value": "Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.",
+              "sub": true
             }
           ]
         },
@@ -1776,7 +1822,8 @@
             {
               "label": "Both appropriate and inappropriate uses stated",
               "kind": "bool",
-              "value": true
+              "value": true,
+              "sub": true
             },
             {
               "label": "Prior publications listed",
@@ -1803,7 +1850,8 @@
                   "href": "https://www.nature.com/articles/s41586-025-08878-3",
                   "text": "Schaffer LV, Hu M, Qian G, et al. Multimodal cell maps as a foundation for structural and functional genomics. Nature [Internet]. 2025 Apr 9; Available from: https://www.nature.com/articles/s41586-025-08878-3"
                 }
-              ]
+              ],
+              "sub": true
             }
           ],
           "notes": "\"Link to prior analyses\" is N/A if the dataset is newly released with no published analyses - its absence doesn't count against the score."
@@ -1832,7 +1880,8 @@
             {
               "label": "Embargoed datasets excluded from the denominator",
               "kind": "count",
-              "value": 283
+              "value": 283,
+              "sub": true
             },
             {
               "label": "Example entity with a checksum",
@@ -1876,7 +1925,8 @@
                     "@id": "ark:59853/computation-perturbation-cell-atlas-data-processing-Cmx85JtSguG"
                   }
                 ]
-              }
+              },
+              "sub": true
             }
           ]
         }
@@ -1923,7 +1973,8 @@
             {
               "label": "Human subjects exemption",
               "kind": "text",
-              "value": "Exempt — research with commercially available de-identified human cell lines does not constitute human subjects research."
+              "value": "Exempt — research with commercially available de-identified human cell lines does not constitute human subjects research.",
+              "sub": true
             },
             {
               "label": "Informed consent",
@@ -1938,7 +1989,8 @@
             {
               "label": "IRB / ethics-review references found",
               "kind": "bool",
-              "value": false
+              "value": false,
+              "sub": true
             },
             {
               "label": "Management plan (rai:dataReleaseMaintenancePlan)",
@@ -1948,7 +2000,8 @@
             {
               "label": "DMP link resolves: https://dataverse.lib.virginia.edu/",
               "kind": "bool",
-              "value": true
+              "value": true,
+              "sub": true
             }
           ]
         },
@@ -2065,7 +2118,8 @@
               "label": "Value is an HL7 v3-Confidentiality code",
               "kind": "bool",
               "value": true,
-              "detail": "matches code 'U' in http://terminology.hl7.org/ValueSet/v3-Confidentiality"
+              "detail": "matches code 'U' in http://terminology.hl7.org/ValueSet/v3-Confidentiality",
+              "sub": true
             },
             {
               "label": "De-identification statement",
@@ -2109,7 +2163,8 @@
               "label": "Identifier is a PID",
               "kind": "bool",
               "value": true,
-              "detail": "scheme: DOI"
+              "detail": "scheme: DOI",
+              "sub": true
             },
             {
               "label": "Recognized archives detected (publisher + content hosts)",
@@ -2162,19 +2217,22 @@
               "kind": "list",
               "value": [
                 "https://figshare.com — Figshare: 2 files"
-              ]
+              ],
+              "sub": true
             },
             {
               "label": "Unrecognized hosts",
               "kind": "list",
-              "value": []
+              "value": [],
+              "sub": true
             },
             {
               "label": "Dataset files on recognized repository hosts",
               "kind": "percent",
               "value": 100.0,
               "n": 2155,
-              "total": 2155
+              "total": 2155,
+              "sub": true
             },
             {
               "label": "Domain hint — collection types",
@@ -2202,7 +2260,8 @@
                 "machine learning",
                 "mass spectroscopy",
                 "MDA-MB-468"
-              ]
+              ],
+              "sub": true
             }
           ]
         },
@@ -2230,12 +2289,20 @@
               "label": "DMP link extracted from the plan",
               "kind": "link",
               "value": "https://dataverse.lib.virginia.edu/",
-              "text": "https://dataverse.lib.virginia.edu/"
+              "text": "https://dataverse.lib.virginia.edu/",
+              "sub": true
             },
             {
               "label": "DMP link resolves",
               "kind": "bool",
-              "value": true
+              "value": true,
+              "sub": true
+            },
+            {
+              "label": "Governance plan present",
+              "kind": "bool",
+              "value": true,
+              "sub": true
             },
             {
               "label": "Terms of access (conditionsOfAccess)",
@@ -2245,22 +2312,19 @@
             {
               "label": "License",
               "kind": "text",
-              "value": "https://creativecommons.org/licenses/by-nc-sa/4.0/"
+              "value": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+              "sub": true
+            },
+            {
+              "label": "Terms of access present",
+              "kind": "bool",
+              "value": true,
+              "sub": true
             },
             {
               "label": "Responsible party",
               "kind": "text",
               "value": "Jilian Parker; Trey Ideker; tideker@health.ucsd.edu"
-            },
-            {
-              "label": "Governance plan present",
-              "kind": "bool",
-              "value": true
-            },
-            {
-              "label": "Terms of access present",
-              "kind": "bool",
-              "value": true
             }
           ]
         },
@@ -2294,7 +2358,8 @@
             {
               "label": "hasPart references on the root",
               "kind": "count",
-              "value": 70
+              "value": 70,
+              "sub": true
             },
             {
               "label": "Evidence graphs (machine-derived association views)",
@@ -2379,13 +2444,15 @@
               "value": [
                 "RO-Crate",
                 "schema.org"
-              ]
+              ],
+              "sub": true
             },
             {
               "label": "Deterministic validator known for the declared standards",
               "kind": "bool",
               "value": true,
-              "detail": "JSON Schema — any JSON Schema validator (e.g. python-jsonschema); RO-Crate profile — rocrate-validator / ro-crate-py"
+              "detail": "JSON Schema — any JSON Schema validator (e.g. python-jsonschema); RO-Crate profile — rocrate-validator / ro-crate-py",
+              "sub": true
             },
             {
               "label": "Machine-readable schema entities",
@@ -2442,7 +2509,8 @@
               "value": 4.0,
               "detail": "the rest are file:// paths inside the crate or embargoed placeholders",
               "n": 2155,
-              "total": 53877
+              "total": 53877,
+              "sub": true
             },
             {
               "label": "Protocols used by distribution links",
@@ -2453,7 +2521,8 @@
                 "none: 283 files",
                 "https: 2 files"
               ],
-              "detail": "file = paths inside the crate; none = placeholder values such as 'Embargoed'"
+              "detail": "file = paths inside the crate; none = placeholder values such as 'Embargoed'",
+              "sub": true
             },
             {
               "label": "Distribution hosts",
@@ -2461,7 +2530,8 @@
               "value": [
                 "ftp://massive-ftp.ucsd.edu: 2153 files",
                 "https://figshare.com: 2 files"
-              ]
+              ],
+              "sub": true
             },
             {
               "label": "Access instructions (conditionsOfAccess)",
@@ -2471,7 +2541,8 @@
             {
               "label": "Sample host reachable: https://figshare.com/",
               "kind": "bool",
-              "value": true
+              "value": true,
+              "sub": true
             }
           ]
         },
@@ -2580,7 +2651,8 @@
                   "…(+854 more)"
                 ],
                 "evi:annotatedBy": []
-              }
+              },
+              "sub": true
             },
             {
               "label": "Software descriptions",
@@ -2589,7 +2661,8 @@
                 "Spectronaut: Spectronaut is a commercial software package developed by Biognosys for the analysis of mass spectrometry-based proteomics data, particularly for Data-Independent Acquisition (DIA) experiments.",
                 "Unknown SEC analysis tool: Placeholder for the downstream SEC quantification tool that produced sec.csv. The MassIVE upload MSV000100676 does not record which software was used; the column set (fractionMass, log2MassNumber, …[truncated, 401 chars total]",
                 "Spectronaut: Spectronaut is a commercial software package developed by Biognosys for the analysis of mass spectrometry-based proteomics data. It is particularly known for its capabilities in processing Data-Independent Acquisition …[truncated, 363 chars total]"
-              ]
+              ],
+              "sub": true
             }
           ]
         },
@@ -2617,7 +2690,8 @@
             {
               "label": "Split-named datasets",
               "kind": "list",
-              "value": []
+              "value": [],
+              "sub": true
             },
             {
               "label": "Sampling strategies (d4d:samplingStrategies)",
@@ -2675,7 +2749,8 @@
                   "Tech_replicates_url_params": "{…}"
                 },
                 "additionalProperties": true
-              }
+              },
+              "sub": true
             }
           ],
           "notes": "\"Splits\" is N/A where the dataset has no defined splits; the withholding and example components still apply. Score on the applicable elements."

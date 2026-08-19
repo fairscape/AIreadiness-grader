@@ -38,8 +38,9 @@ def present_2a(facts):
         ev.flag("Controlled-vocabulary terms present", bool(facts["terms"]),
                 detail=f"{len(facts['mesh'])} MeSH terms of "
                        f"{len(facts['terms'])} DefinedTerms"),
-        ev.listing("Controlled-vocabulary terms",
-                   [f"{t['name']} — {t['@id']}" for t in facts["terms"][:10]]),
+        ev.sub(ev.listing("Controlled-vocabulary terms",
+                          [f"{t['name']} — {t['@id']}"
+                           for t in facts["terms"][:10]])),
     ]
 
 
@@ -68,7 +69,8 @@ def present_2b(facts):
     return [
         ev.percent("Datasets with summary statistics (hasSummaryStatistics)",
                    facts["with_stats"], facts["dataset_total"]),
-        ev.entity("Example summary-statistics reference", facts["example"]),
+        ev.sub(ev.entity("Example summary-statistics reference",
+                         facts["example"])),
         ev.text("Missing-data statement (rai:dataCollectionMissingData)",
                 ev.clip(facts["missing_data"])),
         ev.listing("Tabular formats in the crate (N/A applies only if none)",
@@ -107,13 +109,14 @@ def present_2c(facts):
     return [
         ev.count("Machine-readable schema entities (EVI:Schema, JSON Schema "
                  "dialect)", facts["schema_total"]),
-        ev.percent("Non-image datasets linked to a schema",
-                   facts["dataset_with_schema_ref"],
-                   facts["schema_denominator"],
-                   detail=f"{facts['dataset_image_total']:,} image datasets "
-                          "excluded — image files don't take a data "
-                          "dictionary; a schema covering a format class "
-                          "covers every file in that class"),
+        ev.sub(ev.percent("Non-image datasets linked to a schema",
+                          facts["dataset_with_schema_ref"],
+                          facts["schema_denominator"],
+                          detail=f"{facts['dataset_image_total']:,} image "
+                                 "datasets excluded — image files don't take "
+                                 "a data dictionary; a schema covering a "
+                                 "format class covers every file in that "
+                                 "class")),
         ev.flag("Standard vocabulary bindings populated",
                 bool(facts["vocab_found"]),
                 detail=", ".join(f"{k} ({n})" for k, n in
@@ -122,7 +125,7 @@ def present_2c(facts):
         ev.listing("File formats present (format-class view)",
                    [f"{f}: {n}" for f, n in
                     sorted(facts["formats"].items(), key=lambda kv: -kv[1])]),
-        ev.entity("Example schema entity", facts["schema_sample"]),
+        ev.sub(ev.entity("Example schema entity", facts["schema_sample"])),
     ]
 
 
@@ -149,12 +152,12 @@ def transform_2d(ctx, raw):
 def present_2d(facts):
     return [
         ev.text("Bias description (rai:dataBiases)", ev.clip(facts["biases"])),
-        ev.flag("Bias description present and substantive-length",
-                facts["biases_substantive"]),
+        ev.sub(ev.flag("Bias description present and substantive-length",
+                       facts["biases_substantive"])),
         ev.text("Missing-data reasons (rai:dataCollectionMissingData)",
                 ev.clip(facts["missing"])),
-        ev.flag("Missingness explanation present and substantive-length",
-                facts["missing_substantive"]),
+        ev.sub(ev.flag("Missingness explanation present and substantive-length",
+                       facts["missing_substantive"])),
         ev.text("Completeness statement", ev.clip(facts["completeness"])),
     ]
 
@@ -189,11 +192,12 @@ def present_2e(facts):
         ev.text("Collection / QC description (rai:dataCollection)",
                 ev.clip(facts["collection"])),
         ev.text("Missing-data handling", ev.clip(facts["missing"])),
-        ev.flag("QC language found in metadata", bool(facts["qc_hits"]),
-                detail=", ".join(facts["qc_hits"]) or None),
+        ev.sub(ev.flag("QC language found in metadata", bool(facts["qc_hits"]),
+                       detail=", ".join(facts["qc_hits"]) or None)),
     ]
     for chk in facts["link_checks"]:
-        items.append(ev.flag(f"QC description link resolves: {chk['url']}",
-                             chk.get("ok") if chk.get("checked") else None,
-                             detail=chk.get("note")))
+        items.append(ev.sub(ev.flag(
+            f"QC description link resolves: {chk['url']}",
+            chk.get("ok") if chk.get("checked") else None,
+            detail=chk.get("note"))))
     return items

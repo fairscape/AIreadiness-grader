@@ -83,22 +83,22 @@ def present_0a(facts):
     re3 = facts["re3data"]
     items = [
         ev.text("Identifier", facts["identifier"]),
-        ev.flag("Persistent identifier present", bool(facts["pid_scheme"]),
-                detail=f"scheme: {facts['pid_scheme']}" if facts["pid_scheme"] else None),
+        ev.sub(ev.flag("Persistent identifier present", bool(facts["pid_scheme"]),
+                       detail=f"scheme: {facts['pid_scheme']}" if facts["pid_scheme"] else None)),
     ]
     if res:
-        items.append(ev.flag("Identifier resolves", res.get("ok"),
-                             detail=res.get("note") or f"HTTP {res.get('status')}"))
+        items.append(ev.sub(ev.flag("Identifier resolves", res.get("ok"),
+                                    detail=res.get("note") or f"HTTP {res.get('status')}")))
     items += [
         ev.text("Publisher", facts["publisher"]),
-        ev.flag("Publisher is a recognized repository", bool(facts["known_repo"]),
-                detail=facts["known_repo"]),
-        ev.flag(
+        ev.sub(ev.flag("Publisher is a recognized repository",
+                       bool(facts["known_repo"]), detail=facts["known_repo"])),
+        ev.sub(ev.flag(
             "Publisher found in re3data",
             bool(re3["matches"]) if re3.get("checked") else None,
             detail=(", ".join(re3["matches"][:3]) if re3.get("matches")
                     else re3.get("note") or f"query: {re3.get('query')}"),
-        ),
+        )),
     ]
     return items
 
@@ -128,19 +128,20 @@ def present_0b(facts):
     fetched = facts["fetched"]
     items = [
         ev.text("Identifier used for lookup", facts["identifier"]),
-        ev.flag(
+        ev.sub(ev.flag(
             "Descriptive metadata fetchable via PID alone",
             fetched.get("ok") if fetched.get("checked") else None,
             detail=fetched.get("format") or fetched.get("note"),
-        ),
+        )),
     ]
     if fetched.get("metadata"):
         meta = fetched["metadata"]
         keep = {k: meta[k] for k in
                 ("@context", "@type", "name", "title", "publisher", "identifier",
                  "datePublished", "license", "author", "creator") if k in meta}
-        items.append(ev.entity("Metadata returned by the PID resolver", keep,
-                               detail="truncated to descriptive fields"))
+        items.append(ev.sub(ev.entity("Metadata returned by the PID resolver",
+                                      keep,
+                                      detail="truncated to descriptive fields")))
     return items + _vocab_evidence(facts["vocabs"], facts["vocab_found"])
 
 
@@ -182,10 +183,11 @@ def present_0c(facts):
         ev.listing("Subject terms on the root (about)", facts["about_ids"][:8]),
         ev.count("Machine-readable schema entities (EVI:Schema)",
                  facts["schema_total"]),
-        ev.count("Datasets linked to a schema", facts["dataset_with_schema_ref"]),
-        ev.count("Parquet-format datasets (embedded schema)",
-                 facts["parquet_count"]),
-        ev.entity("Example schema entity", facts["schema_sample"]),
+        ev.sub(ev.count("Datasets linked to a schema",
+                        facts["dataset_with_schema_ref"])),
+        ev.sub(ev.count("Parquet-format datasets (embedded schema)",
+                        facts["parquet_count"])),
+        ev.sub(ev.entity("Example schema entity", facts["schema_sample"])),
     ]
 
 
@@ -229,19 +231,21 @@ def present_0d(facts):
     items = [
         ev.link("License", facts["license_url"],
                 display=facts["license_name"] or facts["license_url"]),
-        ev.flag("License is a well-known open license",
-                bool(facts["license_name"]), detail=facts["license_name"]),
+        ev.sub(ev.flag("License is a well-known open license",
+                       bool(facts["license_name"]), detail=facts["license_name"])),
     ]
     if res:
-        items.append(ev.flag("License link resolves", res.get("ok") if res.get("checked") else None,
-                             detail=res.get("note")))
+        items.append(ev.sub(ev.flag("License link resolves",
+                                    res.get("ok") if res.get("checked") else None,
+                                    detail=res.get("note"))))
     items += [
         ev.text("Conditions of access / DUA terms", ev.clip(facts["conditions"])),
-        ev.flag("AI/ML explicitly mentioned in license or use terms",
-                bool(facts["mentions"]),
-                detail="context excerpts below" if facts["mentions"] else None),
+        ev.sub(ev.flag("AI/ML explicitly mentioned in license or use terms",
+                       bool(facts["mentions"]),
+                       detail="context excerpts below" if facts["mentions"] else None)),
     ]
     if facts["mentions"]:
-        items.append(ev.listing("AI/ML mention excerpts (for the reviewer's call)",
-                                facts["mentions"]))
+        items.append(ev.sub(ev.listing(
+            "AI/ML mention excerpts (for the reviewer's call)",
+            facts["mentions"])))
     return items

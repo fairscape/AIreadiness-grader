@@ -54,10 +54,10 @@ def present_3a(facts):
                  [{"href": p, "text": p} for p in facts["datasheets"]]),
         ev.count("Machine-readable datasheet sections populated",
                  len(facts["populated"]), of=len(DATASHEET_FIELDS)),
-        ev.listing("Missing sections", facts["missing"]),
+        ev.sub(ev.listing("Missing sections", facts["missing"])),
     ]
     for label, value in facts["populated"].items():
-        items.append(ev.text(f"Section — {label}", ev.clip(value, 700)))
+        items.append(ev.sub(ev.text(f"Section — {label}", ev.clip(value, 700))))
     return items
 
 
@@ -93,11 +93,11 @@ def present_3b(facts):
         ev.text("Limitations / inappropriate uses (rai:dataLimitations)",
                 ev.clip(facts["limitations"])),
         ev.text("Prohibited uses", ev.clip(facts["prohibited"])),
-        ev.flag("Both appropriate and inappropriate uses stated",
-                bool(facts["use_cases"]) and bool(
-                    facts["limitations"] or facts["prohibited"])),
+        ev.sub(ev.flag("Both appropriate and inappropriate uses stated",
+                       bool(facts["use_cases"]) and bool(
+                           facts["limitations"] or facts["prohibited"]))),
         ev.count("Prior publications listed", len(facts["publications"])),
-        ev.links("Prior publications", pubs),
+        ev.sub(ev.links("Prior publications", pubs)),
     ]
 
 
@@ -127,7 +127,7 @@ def present_3c(facts):
     return [
         ev.percent("Hash coverage (datasets + software, embargoed excluded)",
                    facts["hashed"], facts["denominator"]),
-        ev.count("Embargoed datasets excluded from the denominator",
-                 facts["embargoed"]),
-        ev.entity("Example entity with a checksum", facts["example"]),
+        ev.sub(ev.count("Embargoed datasets excluded from the denominator",
+                        facts["embargoed"])),
+        ev.sub(ev.entity("Example entity with a checksum", facts["example"])),
     ]

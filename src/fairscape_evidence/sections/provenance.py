@@ -39,15 +39,15 @@ def present_1a(facts):
     return [
         ev.percent("Datasets carrying provenance links (EVI/PROV terms)",
                    facts["dataset_with_prov"], facts["dataset_total"]),
+        ev.sub(ev.entity("Example dataset with provenance links",
+                         facts["input_dataset"])),
         ev.listing("Ground-truth elements present as structured entities",
                    [f"{k}: {'yes' if v else 'no'}" for k, v in gt.items()]),
-        ev.count("Sample entities", facts["sample_count"]),
-        ev.count("Instrument entities", facts["instrument_count"]),
-        ev.count("Experiment entities", facts["experiment_count"]),
-        ev.entity("Example dataset with provenance links",
-                  facts["input_dataset"]),
-        ev.entity("Example sample entity", facts["biosample"]),
-        ev.entity("Example instrument entity", facts["instrument"]),
+        ev.sub(ev.count("Sample entities", facts["sample_count"])),
+        ev.sub(ev.count("Instrument entities", facts["instrument_count"])),
+        ev.sub(ev.count("Experiment entities", facts["experiment_count"])),
+        ev.sub(ev.entity("Example sample entity", facts["biosample"])),
+        ev.sub(ev.entity("Example instrument entity", facts["instrument"])),
     ]
 
 
@@ -77,12 +77,12 @@ def present_1b(facts):
                  facts["activity_total"],
                  detail=f"{facts['computation_total']} computations, "
                         f"{facts['experiment_total']} experiments"),
-        ev.percent("Steps with inputs and outputs declared",
-                   facts["with_io"], facts["activity_total"]),
-        ev.percent("Computations linked to software",
-                   facts["computation_with_software"],
-                   facts["computation_total"]),
-        ev.entity("Example transformation step", facts["computation"]),
+        ev.sub(ev.percent("Steps with inputs and outputs declared",
+                          facts["with_io"], facts["activity_total"])),
+        ev.sub(ev.percent("Computations linked to software",
+                          facts["computation_with_software"],
+                          facts["computation_total"])),
+        ev.sub(ev.entity("Example transformation step", facts["computation"])),
         ev.links("Evidence graphs (visual provenance per sub-crate)",
                  facts["graphs"]),
     ]
@@ -121,15 +121,15 @@ def present_1c(facts):
 
     return [
         ev.count("Software entities", facts["software_total"]),
-        ev.count("Archived with a PID (Zenodo / Software Heritage / DOI / PyPI)",
-                 len(facts["archived"]), of=facts["software_total"]),
-        ev.count("Mutable code hosting only (GitHub and the like)",
-                 len(facts["code_hosted"]), of=facts["software_total"]),
-        ev.count("No download/repository link", len(facts["unhosted"]),
-                 of=facts["software_total"]),
-        ev.listing("Archived software", fmt(facts["archived"])),
-        ev.listing("Code-hosted software", fmt(facts["code_hosted"])),
-        ev.listing("Software without links", fmt(facts["unhosted"])),
+        ev.sub(ev.count("Archived with a PID (Zenodo / Software Heritage / DOI / PyPI)",
+                        len(facts["archived"]), of=facts["software_total"])),
+        ev.sub(ev.count("Mutable code hosting only (GitHub and the like)",
+                        len(facts["code_hosted"]), of=facts["software_total"])),
+        ev.sub(ev.count("No download/repository link", len(facts["unhosted"]),
+                        of=facts["software_total"])),
+        ev.sub(ev.listing("Archived software", fmt(facts["archived"]))),
+        ev.sub(ev.listing("Code-hosted software", fmt(facts["code_hosted"]))),
+        ev.sub(ev.listing("Software without links", fmt(facts["unhosted"]))),
     ]
 
 
@@ -176,14 +176,15 @@ def transform_1d(ctx, raw):
 def present_1d(facts):
     return [
         ev.flag("Key actors identified", facts["total"] > 0),
-        ev.percent("Authors identified with a PID (ORCID)",
-                   len(facts["with_pid"]), facts["total"]),
-        ev.listing("Authors with PIDs (first 10)", facts["with_pid"][:10]),
-        ev.listing("Authors named in free text only", facts["free_text"][:10]),
+        ev.sub(ev.percent("Authors identified with a PID (ORCID)",
+                          len(facts["with_pid"]), facts["total"])),
+        ev.sub(ev.listing("Authors with PIDs (first 10)", facts["with_pid"][:10])),
+        ev.sub(ev.listing("Authors named in free text only",
+                          facts["free_text"][:10])),
         ev.text("Principal investigator", facts["pi"]),
         ev.text("Contact", facts["contact"]),
         ev.listing("Organizations (root isPartOf)", facts["orgs"]),
-        ev.flag("Organizations identified with ROR PIDs",
-                bool(facts["ror_orgs"]),
-                detail=", ".join(facts["ror_orgs"]) or None),
+        ev.sub(ev.flag("Organizations identified with ROR PIDs",
+                       bool(facts["ror_orgs"]),
+                       detail=", ".join(facts["ror_orgs"]) or None)),
     ]

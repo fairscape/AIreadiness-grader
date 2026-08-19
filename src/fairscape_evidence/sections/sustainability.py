@@ -39,8 +39,8 @@ def transform_5a(ctx, raw):
 def present_5a(facts):
     return [
         ev.text("Identifier", facts["identifier"]),
-        ev.flag("Identifier is a PID", bool(facts["pid_scheme"]),
-                detail=f"scheme: {facts['pid_scheme']}" if facts["pid_scheme"] else None),
+        ev.sub(ev.flag("Identifier is a PID", bool(facts["pid_scheme"]),
+                       detail=f"scheme: {facts['pid_scheme']}" if facts["pid_scheme"] else None)),
         ev.listing("Recognized archives detected (publisher + content hosts)",
                    facts["archives"]),
         ev.percent("Datasets with a contentUrl (data parked somewhere)",
@@ -94,12 +94,12 @@ def present_5b(facts):
         ev.text("Publisher repository", str(facts["publisher"]),
                 detail=facts["publisher_repo"]),
         ev.listing("Specialist (domain) hosts", fmt(facts["specialist"])),
-        ev.listing("Generalist repository hosts", fmt(facts["generalist"])),
-        ev.listing("Unrecognized hosts", fmt(facts["unrecognized"])),
-        ev.percent("Dataset files on recognized repository hosts",
-                   facts["in_recognized"], facts["total_urls"]),
+        ev.sub(ev.listing("Generalist repository hosts", fmt(facts["generalist"]))),
+        ev.sub(ev.listing("Unrecognized hosts", fmt(facts["unrecognized"]))),
+        ev.sub(ev.percent("Dataset files on recognized repository hosts",
+                          facts["in_recognized"], facts["total_urls"])),
         ev.listing("Domain hint — collection types", facts["collection_type"]),
-        ev.listing("Domain hint — keywords", facts["keywords"][:15]),
+        ev.sub(ev.listing("Domain hint — keywords", facts["keywords"][:15])),
     ]
 
 
@@ -131,24 +131,24 @@ def present_5c(facts):
     items = [
         ev.text("Governance / maintenance plan",
                 ev.clip(facts["maintenance_plan"])),
-        ev.link("DMP link extracted from the plan", facts["dmp_link"],
-                display=facts["dmp_link"] or "none found"),
+        ev.sub(ev.link("DMP link extracted from the plan", facts["dmp_link"],
+                       display=facts["dmp_link"] or "none found")),
     ]
     if facts["dmp_check"]:
         chk = facts["dmp_check"]
-        items.append(ev.flag("DMP link resolves",
-                             chk.get("ok") if chk.get("checked") else None,
-                             detail=chk.get("note")))
+        items.append(ev.sub(ev.flag("DMP link resolves",
+                                    chk.get("ok") if chk.get("checked") else None,
+                                    detail=chk.get("note"))))
     items += [
+        ev.sub(ev.flag("Governance plan present", facts["has_plan"])),
         ev.text("Terms of access (conditionsOfAccess)",
                 ev.clip(facts["conditions"])),
-        ev.text("License", facts["license"]),
+        ev.sub(ev.text("License", facts["license"])),
+        ev.sub(ev.flag("Terms of access present", facts["has_terms"])),
         ev.text("Responsible party",
                 "; ".join(str(x) for x in
                           [facts["governance"], facts["pi"], facts["contact"]]
                           if x)),
-        ev.flag("Governance plan present", facts["has_plan"]),
-        ev.flag("Terms of access present", facts["has_terms"]),
     ]
     return items
 
@@ -179,7 +179,8 @@ def present_5d(facts):
                    facts["entity_total"]),
         ev.count("Sub-crates linked from the parent and present",
                  facts["subcrates_found"], of=facts["subcrates_referenced"]),
-        ev.count("hasPart references on the root", facts["haspart_count"]),
+        ev.sub(ev.count("hasPart references on the root",
+                        facts["haspart_count"])),
         ev.links("Evidence graphs (machine-derived association views)",
                  facts["graphs"]),
     ]

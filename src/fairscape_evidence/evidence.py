@@ -13,7 +13,19 @@ same structure, so keep kinds to this small set:
   links    list of {href, text}
   list     list of short strings
   entity   a trimmed JSON-LD entity, shown collapsible in HTML
+
+Items are *primary* by default — each one a new piece of actual evidence,
+rendered with a bold label. Wrap an item in `sub(...)` when it is a derived
+check or breakdown of the evidence right above it (pattern tests, registry
+lookups, examples); those render indented and lighter so the reviewer's eye
+lands on the primary pieces first.
 """
+
+
+def sub(item):
+    """Mark an item as derived from the primary evidence above it."""
+    item["sub"] = True
+    return item
 
 
 def text(label, value, detail=None):

@@ -52,20 +52,20 @@ def present_4a(facts):
                 ev.clip(facts["collection"])),
         ev.text("Ethics reviewers (ethicalReview)", ev.clip(facts["ethical_review"])),
         ev.text("Human subjects research", ev.clip(facts["human_subjects"])),
-        ev.text("Human subjects exemption", ev.clip(facts["exemption"])),
+        ev.sub(ev.text("Human subjects exemption", ev.clip(facts["exemption"]))),
         ev.text("Informed consent", ev.clip(facts["consent"])),
         ev.text("At-risk populations", ev.clip(facts["at_risk"])),
-        ev.flag("IRB / ethics-review references found",
-                bool(facts["irb"] or facts["irb_signals"]),
-                detail=", ".join(facts["irb_signals"]) or None),
+        ev.sub(ev.flag("IRB / ethics-review references found",
+                       bool(facts["irb"] or facts["irb_signals"]),
+                       detail=", ".join(facts["irb_signals"]) or None)),
         ev.text("Management plan (rai:dataReleaseMaintenancePlan)",
                 ev.clip(facts["maintenance_plan"])),
     ]
     if facts["dmp_check"]:
         chk = facts["dmp_check"]
-        items.append(ev.flag(f"DMP link resolves: {chk['url']}",
-                             chk.get("ok") if chk.get("checked") else None,
-                             detail=chk.get("note")))
+        items.append(ev.sub(ev.flag(f"DMP link resolves: {chk['url']}",
+                                    chk.get("ok") if chk.get("checked") else None,
+                                    detail=chk.get("note"))))
     return items
 
 
@@ -152,12 +152,12 @@ def transform_4d(ctx, raw):
 def present_4d(facts):
     return [
         ev.text("Confidentiality level", facts["confidentiality"]),
-        ev.flag("Value is an HL7 v3-Confidentiality code",
-                bool(facts["hl7_code"]),
-                detail=(f"matches code '{facts['hl7_code']}' in "
-                        "http://terminology.hl7.org/ValueSet/v3-Confidentiality"
-                        if facts["hl7_code"] else
-                        "prose value — compare against U/L/M/N/R/V display names")),
+        ev.sub(ev.flag("Value is an HL7 v3-Confidentiality code",
+                       bool(facts["hl7_code"]),
+                       detail=(f"matches code '{facts['hl7_code']}' in "
+                               "http://terminology.hl7.org/ValueSet/v3-Confidentiality"
+                               if facts["hl7_code"] else
+                               "prose value — compare against U/L/M/N/R/V display names"))),
         ev.text("De-identification statement", ev.clip(facts["deidentified"])),
         ev.text("Personal/sensitive information statement",
                 ev.clip(facts["sensitive"])),
