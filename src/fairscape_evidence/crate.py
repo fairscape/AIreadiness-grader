@@ -40,6 +40,7 @@ SCHEMA_REF_FIELDS = ["EVI:Schema", "evi:Schema", "hasSchema", "dataSchema"]
 SUMMARY_STATS_FIELDS = ["hasSummaryStatistics", "hasSummaryStats"]
 
 SPLIT_NAME_RE = re.compile(r"\b(train(ing)?|test|validation|valid|holdout|hold-out|split)\b", re.I)
+_IMAGE_FORMAT_RE = re.compile(r"image/|jpe?g|png|tiff?\b|gif|bmp", re.I)
 EXAMPLE_NAME_RE = re.compile(r"\b(example|synthetic)\b", re.I)
 
 _TYPE_TOKENS = {
@@ -144,13 +145,14 @@ class CrateStats:
         self.dataset_with_summary_stats = 0
         self.dataset_split_names = []          # bounded
         self.dataset_split_count = 0
+        self.dataset_image_total = 0           # image-format datasets
 
         self.software_total = 0
         self.software_with_hash = 0
         self.software_entities = []            # trimmed, bounded
 
         self.activity_total = 0                # Computation + Experiment
-        self.activity_with_software = 0
+        self.computation_with_software = 0
         self.activity_with_io = 0
         self.activity_with_container = 0
         self.computation_total = 0
@@ -365,8 +367,11 @@ class CrateBundle:
 
         fmt = e.get("format")
         if fmt:
-            for f in as_list(fmt):
-                stats.formats[str(f)] += 1
+            fmt_strs = [str(f) for f in as_list(fmt)]
+            for f in fmt_strs:
+                stats.formats[f] += 1
+            if any(_IMAGE_FORMAT_RE.search(f) for f in fmt_strs):
+                stats.dataset_image_total += 1
 
         name = str(e.get("name", ""))
         if SPLIT_NAME_RE.search(name):
@@ -382,11 +387,11 @@ class CrateBundle:
         if ctype == "Computation":
             stats.computation_total += 1
             stats.add_sample("computation", e)
+            if e.get("usedSoftware"):
+                stats.computation_with_software += 1
         else:
             stats.experiment_total += 1
             stats.add_sample("experiment", e)
-        if e.get("usedSoftware"):
-            stats.activity_with_software += 1
         if e.get("usedContainer"):
             stats.activity_with_container += 1
         if has_any(e, ACTIVITY_INPUT_FIELDS) and has_any(e, ACTIVITY_OUTPUT_FIELDS):

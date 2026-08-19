@@ -1,6 +1,6 @@
 {
   "rubric": "Rubric for Human Review of AI-readiness Evaluation Criteria, v1.0 (2026-08-14)",
-  "generated": "2026-08-19 13:45 UTC",
+  "generated": "2026-08-19 14:01 UTC",
   "network_checks": true,
   "crate": {
     "@id": "ark:59853/rocrate-cell-maps-for-artificial-intelligence-June-2026-data-release",
@@ -729,6 +729,12 @@
                 "https://w3id.org/EVI#"
               ],
               "detail": "schema.org / EVI here means the metadata follows a standard vocabulary"
+            },
+            {
+              "label": "Standard vocabulary references found in metadata",
+              "kind": "bool",
+              "value": true,
+              "detail": "Cellosaurus (274 refs), UniProt (127 refs), MeSH (35 refs), OBO Foundry PURL (18 refs)"
             }
           ]
         },
@@ -753,7 +759,16 @@
               "value": true
             },
             {
-              "label": "Standard vocabularies referenced",
+              "label": "@context vocabularies of the crate metadata",
+              "kind": "list",
+              "value": [
+                "https://schema.org/",
+                "https://w3id.org/EVI#"
+              ],
+              "detail": "schema.org / EVI here means the metadata follows a standard vocabulary"
+            },
+            {
+              "label": "Standard vocabulary references found in metadata",
               "kind": "bool",
               "value": true,
               "detail": "Cellosaurus (274 refs), UniProt (127 refs), MeSH (35 refs), OBO Foundry PURL (18 refs)"
@@ -1078,12 +1093,11 @@
               "total": 1976
             },
             {
-              "label": "Steps linked to software",
+              "label": "Computations linked to software",
               "kind": "percent",
-              "value": 5.2,
-              "detail": "experiments link instruments/samples instead of software, so judge software links against computations",
+              "value": 100.0,
               "n": 102,
-              "total": 1976
+              "total": 102
             },
             {
               "label": "Example transformation step",
@@ -1494,12 +1508,12 @@
               "value": 18
             },
             {
-              "label": "Datasets linked to a schema",
+              "label": "Non-image datasets linked to a schema",
               "kind": "percent",
-              "value": 0.4,
-              "detail": "a schema covering a format class covers every file in that class — judge per class, not per file",
+              "value": 8.7,
+              "detail": "51,436 image datasets excluded — image files don't take a data dictionary; a schema covering a format class covers every file in that class",
               "n": 212,
-              "total": 53877
+              "total": 2441
             },
             {
               "label": "Standard vocabulary bindings populated",

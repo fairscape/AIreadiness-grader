@@ -58,8 +58,8 @@
           border-top: 1px dotted #ececea; }
   .item:first-child { border-top: 0; }
   .item .label { flex: 0 0 290px; color: var(--muted); }
-  .item .value { flex: 1; min-width: 0; white-space: pre-wrap;
-                 overflow-wrap: break-word; }
+  .item .value { flex: 1; min-width: 0; overflow-wrap: break-word; }
+  .pre { white-space: pre-line; }
   .detail { color: var(--muted); font-size: 0.8rem; display: inline;
             margin-left: 6px; }
   .detail::before { content: "— "; }
@@ -158,7 +158,7 @@
       <h3>{{ c.id }} {{ c.name }}</h3>
       {% if c.gating %}<span class="badge">Gating</span>{% endif %}
       <div class="practice">{{ c.practice }}</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions ({{ c.questions | length }})</summary>
         <ul>{% for q in c.questions %}<li>{{ q }}</li>{% endfor %}</ul>
       </details>
@@ -176,51 +176,48 @@
         {% for item in c.evidence %}
         <div class="item">
           <div class="label">{{ item.label }}</div>
+          {#- every branch below is whitespace-controlled: any stray template
+              newline/indent inside .value shows up as visible spacing -#}
           <div class="value">
             {%- if item.kind == "bool" -%}
-              {% if item.value is true %}<span class="yes">✓ Yes</span>
-              {% elif item.value is false %}<span class="no">✗ No</span>
-              {% else %}<span class="na">— not checked</span>{% endif %}
+              {%- if item.value is true -%}<span class="yes">✓ Yes</span>
+              {%- elif item.value is false -%}<span class="no">✗ No</span>
+              {%- else -%}<span class="na">— not checked</span>{%- endif -%}
             {%- elif item.kind == "count" -%}
-              <strong>{{ "{:,}".format(item.value) }}</strong>{% if item.of is defined %} of {{ "{:,}".format(item.of) }}{% endif %}
+              <strong>{{ "{:,}".format(item.value) }}</strong>
+              {%- if item.of is defined %} of {{ "{:,}".format(item.of) }}{% endif -%}
             {%- elif item.kind == "percent" -%}
-              {% if item.value is not none %}
-                <span class="pct-bar"><span style="width:{{ [item.value, 100] | min }}%"></span></span>
-                <strong>{{ item.value }}%</strong>
-                <span class="meta">({{ "{:,}".format(item.n) }} of {{ "{:,}".format(item.total) }})</span>
-              {% else %}<span class="na">— no denominator</span>{% endif %}
+              {%- if item.value is not none -%}
+                <span class="pct-bar"><span style="width:{{ [item.value, 100] | min }}%"></span></span> <strong>{{ item.value }}%</strong> <span class="meta">({{ "{:,}".format(item.n) }} of {{ "{:,}".format(item.total) }})</span>
+              {%- else -%}<span class="na">— no denominator</span>{%- endif -%}
             {%- elif item.kind == "link" -%}
-              {% if item.value %}<a href="{{ item.value | href }}">{{ item.text | default(item.value, true) }}</a>
-              {% else %}<span class="na">none</span>{% endif %}
+              {%- if item.value -%}<a href="{{ item.value | href }}">{{ item.text | default(item.value, true) }}</a>
+              {%- else -%}<span class="na">none</span>{%- endif -%}
             {%- elif item.kind == "links" -%}
-              {% if item.value %}
+              {%- if item.value -%}
                 <ul class="plain">
-                {% for l in item.value %}
+                {%- for l in item.value -%}
                   <li>{% if l.href %}<a href="{{ l.href | href }}">{{ l.text | default(l.href, true) }}</a>{% else %}{{ l.text | linkify }}{% endif %}</li>
-                {% endfor %}
+                {%- endfor -%}
                 </ul>
-              {% else %}<span class="na">none</span>{% endif %}
+              {%- else -%}<span class="na">none</span>{%- endif -%}
             {%- elif item.kind == "list" -%}
-              {% if item.value %}
-                {% if item.value | length == 1 %}{{ item.value[0] | linkify }}
-                {% else %}<ul class="plain">{% for v in item.value %}<li>{{ v | linkify }}</li>{% endfor %}</ul>{% endif %}
-              {% else %}<span class="na">none</span>{% endif %}
+              {%- if item.value -%}
+                {%- if item.value | length == 1 -%}{{ item.value[0] | linkify }}
+                {%- else -%}<ul class="plain">{% for v in item.value %}<li>{{ v | linkify }}</li>{% endfor %}</ul>{%- endif -%}
+              {%- else -%}<span class="na">none</span>{%- endif -%}
             {%- elif item.kind == "entity" -%}
-              {% if item.value %}
-                <details class="entity"><summary>{{ item.value.name | default(item.value["@id"], true) | default("view entity", true) }}</summary>
-                  <pre>{{ item.value | tojson_pretty | linkify }}</pre></details>
-              {% else %}<span class="na">none found</span>{% endif %}
+              {%- if item.value -%}
+                <details class="entity"><summary>{{ item.value.name | default(item.value["@id"], true) | default("view entity", true) }}</summary><pre>{{ item.value | tojson_pretty | linkify }}</pre></details>
+              {%- else -%}<span class="na">none found</span>{%- endif -%}
             {%- else -%}
-              {% if item.value %}
-                {% if item.value | length > 260 %}
-                  <details class="longtext">
-                    <summary><span class="head">{{ item.value | truncate(240, False, '…') | linkify }}</span> <span class="more">[{{ "{:,}".format(item.value | length) }} chars — expand]</span></summary>
-                    {{- item.value | linkify -}}
-                  </details>
-                {% else %}{{ item.value | linkify }}{% endif %}
-              {% else %}<span class="na">not provided</span>{% endif %}
+              {%- if item.value -%}
+                {%- if item.value | length > 260 -%}
+                  <details class="longtext"><summary><span class="head">{{ item.value | truncate(240, False, '…') | linkify }}</span> <span class="more">[{{ "{:,}".format(item.value | length) }} chars — expand]</span></summary><span class="pre">{{ item.value | linkify }}</span></details>
+                {%- else -%}<span class="pre">{{ item.value | linkify }}</span>{%- endif -%}
+              {%- else -%}<span class="na">not provided</span>{%- endif -%}
             {%- endif -%}
-            {%- if item.detail %}<span class="detail">{{ item.detail | linkify }}</span>{% endif -%}
+            {%- if item.detail %} <span class="detail">{{ item.detail | linkify }}</span>{% endif -%}
           </div>
         </div>
         {% endfor %}

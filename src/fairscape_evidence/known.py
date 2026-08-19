@@ -116,6 +116,16 @@ ONTOLOGY_HOSTS = {
     "ncithesaurus": "NCI Thesaurus",
 }
 
+
+def summarize_vocab_hits(vocab_hits):
+    """Collapse raw host-fragment hit counts into {vocabulary label: count},
+    highest first."""
+    found = {}
+    for host, n in vocab_hits.items():
+        label = ONTOLOGY_HOSTS.get(host, host)
+        found[label] = found.get(label, 0) + n
+    return dict(sorted(found.items(), key=lambda kv: -kv[1]))
+
 # @context / conformsTo namespaces that are recognized metadata standards.
 STANDARD_NAMESPACES = {
     "schema.org": "schema.org",

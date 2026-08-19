@@ -4,7 +4,7 @@ import re
 
 from .. import evidence as ev
 from ..crate import as_list
-from ..known import ONTOLOGY_HOSTS
+from ..known import summarize_vocab_hits
 
 # --- 2.a Semantics ---------------------------------------------------------
 
@@ -85,6 +85,7 @@ def extract_2c(ctx):
         "schema_total": stats.schema_total,
         "dataset_with_schema_ref": stats.dataset_with_schema_ref,
         "dataset_total": stats.dataset_total,
+        "dataset_image_total": stats.dataset_image_total,
         "schema_sample": stats.sample("schema"),
         "vocab_hits": dict(stats.vocab_hits),
         "formats": dict(stats.formats),
@@ -92,21 +93,27 @@ def extract_2c(ctx):
 
 
 def transform_2c(ctx, raw):
-    vocab_found = {}
-    for host, n in raw["vocab_hits"].items():
-        label = ONTOLOGY_HOSTS.get(host, host)
-        vocab_found[label] = vocab_found.get(label, 0) + n
-    return {**raw, "vocab_found": vocab_found}
+    # image files (jpeg/png/tiff...) don't take a data dictionary, so they
+    # are excluded from the schema-coverage denominator
+    return {
+        **raw,
+        "vocab_found": summarize_vocab_hits(raw["vocab_hits"]),
+        "schema_denominator": max(0, raw["dataset_total"]
+                                  - raw["dataset_image_total"]),
+    }
 
 
 def present_2c(facts):
     return [
         ev.count("Machine-readable schema entities (EVI:Schema, JSON Schema "
                  "dialect)", facts["schema_total"]),
-        ev.percent("Datasets linked to a schema",
-                   facts["dataset_with_schema_ref"], facts["dataset_total"],
-                   detail="a schema covering a format class covers every file "
-                          "in that class — judge per class, not per file"),
+        ev.percent("Non-image datasets linked to a schema",
+                   facts["dataset_with_schema_ref"],
+                   facts["schema_denominator"],
+                   detail=f"{facts['dataset_image_total']:,} image datasets "
+                          "excluded — image files don't take a data "
+                          "dictionary; a schema covering a format class "
+                          "covers every file in that class"),
         ev.flag("Standard vocabulary bindings populated",
                 bool(facts["vocab_found"]),
                 detail=", ".join(f"{k} ({n})" for k, n in

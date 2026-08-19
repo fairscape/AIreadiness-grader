@@ -58,8 +58,8 @@
           border-top: 1px dotted #ececea; }
   .item:first-child { border-top: 0; }
   .item .label { flex: 0 0 290px; color: var(--muted); }
-  .item .value { flex: 1; min-width: 0; white-space: pre-wrap;
-                 overflow-wrap: break-word; }
+  .item .value { flex: 1; min-width: 0; overflow-wrap: break-word; }
+  .pre { white-space: pre-line; }
   .detail { color: var(--muted); font-size: 0.8rem; display: inline;
             margin-left: 6px; }
   .detail::before { content: "— "; }
@@ -106,7 +106,7 @@
   <div class="wrap">
     <h1>AI-Readiness Human Review</h1>
     <div class="meta">
-      Rubric for Human Review of AI-readiness Evaluation Criteria, v1.0 (2026-08-14) · generated 2026-08-19 13:45 UTC
+      Rubric for Human Review of AI-readiness Evaluation Criteria, v1.0 (2026-08-14) · generated 2026-08-19 14:01 UTC
     </div>
     <div style="margin-top:6px">
       <strong>Cell Maps for Artificial Intelligence - June 2026 Data Release (Beta)</strong>
@@ -249,7 +249,7 @@
       <h3>0.a Findable</h3>
       
       <div class="practice">Deposit datasets in a searchable FAIR-compliant data repository.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (3)</summary>
         <ul><li>Does the dataset have a resolvable PID: ARK, CSTR, DOI, IGSN, PURL, URN, HDL?</li><li>Does the dataset have a compact ID whose prefix is registered with identifiers.org (e.g., ena.embl:ERP001234, geo:GSE68086, dbgap:phs000001)?</li><li>Is the dataset deposited in a repository listed in re3data or FAIRsharing?</li></ul>
       </details>
@@ -270,41 +270,27 @@
         
         
         <div class="item">
-          <div class="label">Identifier</div>
-          <div class="value">
-                <a href="https://doi.org/10.18130/V3/HIGT4C">https://doi.org/10.18130/V3/HIGT4C</a>
-              </div>
+          <div class="label">Identifier</div><div class="value"><span class="pre"><a href="https://doi.org/10.18130/V3/HIGT4C">https://doi.org/10.18130/V3/HIGT4C</a></span></div>
         </div>
         
         <div class="item">
-          <div class="label">Persistent identifier present</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">scheme: DOI</span></div>
+          <div class="label">Persistent identifier present</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">scheme: DOI</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Identifier resolves</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">HTTP 202</span></div>
+          <div class="label">Identifier resolves</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">HTTP 202</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Publisher</div>
-          <div class="value">
-                <a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>
-              </div>
+          <div class="label">Publisher</div><div class="value"><span class="pre"><a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a></span></div>
         </div>
         
         <div class="item">
-          <div class="label">Publisher is a recognized repository</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">Dataverse</span></div>
+          <div class="label">Publisher is a recognized repository</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Dataverse</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Publisher found in re3data</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">LibraData</span></div>
+          <div class="label">Publisher found in re3data</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">LibraData</span></div>
         </div>
         
       </div>
@@ -328,7 +314,7 @@
       <h3>0.b Accessible</h3>
       
       <div class="practice">Descriptive metadata should always be available and accessible, even if the dataset is restricted, unavailable, or de-accessioned. Ensure metadata conforms to standards such as DCAT (Data Catalog Vocabulary), Datacite schema, and/or schema.org.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (2)</summary>
         <ul><li>Is descriptive metadata available via PID or compact ID lookup independently of the dataset, i.e., even if the dataset is restricted or de-accessioned?</li><li>Does descriptive metadata conform to a standard metadata vocabulary such as DCAT 3, Datacite schema (datacite.org), schema.org, and/or bioschemas.org?</li></ul>
       </details>
@@ -349,23 +335,15 @@
         
         
         <div class="item">
-          <div class="label">Identifier used for lookup</div>
-          <div class="value">
-                <a href="https://doi.org/10.18130/V3/HIGT4C">https://doi.org/10.18130/V3/HIGT4C</a>
-              </div>
+          <div class="label">Identifier used for lookup</div><div class="value"><span class="pre"><a href="https://doi.org/10.18130/V3/HIGT4C">https://doi.org/10.18130/V3/HIGT4C</a></span></div>
         </div>
         
         <div class="item">
-          <div class="label">Descriptive metadata fetchable via PID alone</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">application/ld+json</span></div>
+          <div class="label">Descriptive metadata fetchable via PID alone</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">application/ld+json</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Metadata returned by the PID resolver</div>
-          <div class="value">
-                <details class="entity"><summary>Cell Maps for Artificial Intelligence - June 2026 Data Release (Beta)</summary>
-                  <pre>{
+          <div class="label">Metadata returned by the PID resolver</div><div class="value"><details class="entity"><summary>Cell Maps for Artificial Intelligence - June 2026 Data Release (Beta)</summary><pre>{
   &#34;@context&#34;: &#34;<a href="http://schema.org">http://schema.org</a>&#34;,
   &#34;@type&#34;: &#34;Dataset&#34;,
   &#34;name&#34;: &#34;Cell Maps for Artificial Intelligence - June 2026 Data Release (Beta)&#34;,
@@ -828,15 +806,15 @@
       &#34;@id&#34;: &#34;<a href="https://orcid.org/0000-0002-1708-8454">https://orcid.org/0000-0002-1708-8454</a>&#34;
     }
   ]
-}</pre></details>
-              <span class="detail">truncated to descriptive fields</span></div>
+}</pre></details> <span class="detail">truncated to descriptive fields</span></div>
         </div>
         
         <div class="item">
-          <div class="label">@context vocabularies of the crate metadata</div>
-          <div class="value">
-                <ul class="plain"><li><a href="https://schema.org/">https://schema.org/</a></li><li><a href="https://w3id.org/EVI#">https://w3id.org/EVI#</a></li></ul>
-              <span class="detail">schema.org / EVI here means the metadata follows a standard vocabulary</span></div>
+          <div class="label">@context vocabularies of the crate metadata</div><div class="value"><ul class="plain"><li><a href="https://schema.org/">https://schema.org/</a></li><li><a href="https://w3id.org/EVI#">https://w3id.org/EVI#</a></li></ul> <span class="detail">schema.org / EVI here means the metadata follows a standard vocabulary</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Standard vocabulary references found in metadata</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Cellosaurus (274 refs), UniProt (127 refs), MeSH (35 refs), OBO Foundry PURL (18 refs)</span></div>
         </div>
         
       </div>
@@ -860,7 +838,7 @@
       <h3>0.c Interoperable</h3>
       
       <div class="practice">Wherever possible, provide data and metadata using formally defined specifications for digital objects.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (2)</summary>
         <ul><li>Is metadata presented using one of the following formal interoperable specifications, such as JSON-LD, RDF, or OWL, referencing at least one standard vocabulary such as SNOMED, LOINC, UBERON, OBI, etc.?</li><li>Is metadata provided using a machine-readable schema such as JSON + JSON Schema, XML + XSD, Parquet with embedded schema, or Frictionless Data?</li></ul>
       </details>
@@ -881,44 +859,35 @@
         
         
         <div class="item">
-          <div class="label">Metadata is JSON-LD (formal interoperable specification)</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">Metadata is JSON-LD (formal interoperable specification)</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Standard vocabularies referenced</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">Cellosaurus (274 refs), UniProt (127 refs), MeSH (35 refs), OBO Foundry PURL (18 refs)</span></div>
+          <div class="label">@context vocabularies of the crate metadata</div><div class="value"><ul class="plain"><li><a href="https://schema.org/">https://schema.org/</a></li><li><a href="https://w3id.org/EVI#">https://w3id.org/EVI#</a></li></ul> <span class="detail">schema.org / EVI here means the metadata follows a standard vocabulary</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Subject terms on the root (about)</div>
-          <div class="value">
-                <ul class="plain"><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D001943">https://meshb.nlm.nih.gov/record/ui?ui=D001943</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D057026">https://meshb.nlm.nih.gov/record/ui?ui=D057026</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D064113">https://meshb.nlm.nih.gov/record/ui?ui=D064113</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D013058">https://meshb.nlm.nih.gov/record/ui?ui=D013058</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D005453">https://meshb.nlm.nih.gov/record/ui?ui=D005453</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D017239">https://meshb.nlm.nih.gov/record/ui?ui=D017239</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D000077337">https://meshb.nlm.nih.gov/record/ui?ui=D000077337</a></li><li><a href="http://edamontology.org/topic_0121">http://edamontology.org/topic_0121</a></li></ul>
-              </div>
+          <div class="label">Standard vocabulary references found in metadata</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Cellosaurus (274 refs), UniProt (127 refs), MeSH (35 refs), OBO Foundry PURL (18 refs)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Machine-readable schema entities (EVI:Schema)</div>
-          <div class="value"><strong>18</strong></div>
+          <div class="label">Subject terms on the root (about)</div><div class="value"><ul class="plain"><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D001943">https://meshb.nlm.nih.gov/record/ui?ui=D001943</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D057026">https://meshb.nlm.nih.gov/record/ui?ui=D057026</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D064113">https://meshb.nlm.nih.gov/record/ui?ui=D064113</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D013058">https://meshb.nlm.nih.gov/record/ui?ui=D013058</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D005453">https://meshb.nlm.nih.gov/record/ui?ui=D005453</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D017239">https://meshb.nlm.nih.gov/record/ui?ui=D017239</a></li><li><a href="https://meshb.nlm.nih.gov/record/ui?ui=D000077337">https://meshb.nlm.nih.gov/record/ui?ui=D000077337</a></li><li><a href="http://edamontology.org/topic_0121">http://edamontology.org/topic_0121</a></li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Datasets linked to a schema</div>
-          <div class="value"><strong>212</strong></div>
+          <div class="label">Machine-readable schema entities (EVI:Schema)</div><div class="value"><strong>18</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">Parquet-format datasets (embedded schema)</div>
-          <div class="value"><strong>0</strong></div>
+          <div class="label">Datasets linked to a schema</div><div class="value"><strong>212</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">Example schema entity</div>
-          <div class="value">
-                <details class="entity"><summary>summary.tsv schema</summary>
-                  <pre>{
+          <div class="label">Parquet-format datasets (embedded schema)</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Example schema entity</div><div class="value"><details class="entity"><summary>summary.tsv schema</summary><pre>{
   &#34;@id&#34;: &#34;ark:59853/schema-summary-tsv-schema-20260522-092748&#34;,
   &#34;@context&#34;: {
     &#34;@vocab&#34;: &#34;<a href="https://schema.org/">https://schema.org/</a>&#34;,
@@ -951,8 +920,7 @@
     &#34;Tech_replicates_url_params&#34;: &#34;{…}&#34;
   },
   &#34;additionalProperties&#34;: true
-}</pre></details>
-              </div>
+}</pre></details></div>
         </div>
         
       </div>
@@ -976,7 +944,7 @@
       <h3>0.d Reusable</h3>
       
       <div class="practice">Attach a clear and accessible data usage license that allows the responsible use of AI/ML applications or link to a Data Use Agreement (DUA).</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (2)</summary>
         <ul><li>Does the metadata reference a clear and accessible data usage license such as a Creative Commons license (CC-BY, CC-BY-SA, etc.), public domain dedication, or a Data Use Agreement?</li><li>Does the license or DUA prohibit use of the data in AI/ML applications?</li></ul>
       </details>
@@ -995,34 +963,23 @@
         
         
         <div class="item">
-          <div class="label">License</div>
-          <div class="value"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>
-              </div>
+          <div class="label">License</div><div class="value"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></div>
         </div>
         
         <div class="item">
-          <div class="label">License is a well-known open license</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">CC BY-NC-SA 4.0</span></div>
+          <div class="label">License is a well-known open license</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">CC BY-NC-SA 4.0</span></div>
         </div>
         
         <div class="item">
-          <div class="label">License link resolves</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">License link resolves</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Conditions of access / DUA terms</div>
-          <div class="value">
-                Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.
-              </div>
+          <div class="label">Conditions of access / DUA terms</div><div class="value"><span class="pre">Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">AI/ML explicitly mentioned in license or use terms</div>
-          <div class="value"><span class="no">✗ No</span>
-              </div>
+          <div class="label">AI/ML explicitly mentioned in license or use terms</div><div class="value"><span class="no">✗ No</span></div>
         </div>
         
       </div>
@@ -1052,7 +1009,7 @@
       <h3>1.a Transparent</h3>
       
       <div class="practice">Identify data sources traceable to a reasonable ground truth, e.g., clinical data from EHR at a given hospital, clinical trials, or laboratory data.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (2)</summary>
         <ul><li>Does the metadata identify the data's source specifically enough to reach a real-world, trustworthy ground truth? E.g., a named EHR/hospital, a named drug trial, a named lab; for experimental labs, the ground truth must include samples, instruments, reagents, and generated dataset.</li><li>Is the source metadata provided in machine-readable form? Valid ontologies are: W3C PROV-O, PROV-DM, or a derivation of either, e.g., EVI, CPM, PAV.</li></ul>
       </details>
@@ -1073,41 +1030,27 @@
         
         
         <div class="item">
-          <div class="label">Datasets carrying provenance links (EVI/PROV terms)</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:100.0%"></span></span>
-                <strong>100.0%</strong>
-                <span class="meta">(53,874 of 53,877)</span>
-              </div>
+          <div class="label">Datasets carrying provenance links (EVI/PROV terms)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(53,874 of 53,877)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Ground-truth elements present as structured entities</div>
-          <div class="value">
-                <ul class="plain"><li>samples: yes</li><li>instruments: yes</li><li>experiments: yes</li><li>datasets_with_provenance: yes</li></ul>
-              </div>
+          <div class="label">Ground-truth elements present as structured entities</div><div class="value"><ul class="plain"><li>samples: yes</li><li>instruments: yes</li><li>experiments: yes</li><li>datasets_with_provenance: yes</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Sample entities</div>
-          <div class="value"><strong>452</strong></div>
+          <div class="label">Sample entities</div><div class="value"><strong>452</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">Instrument entities</div>
-          <div class="value"><strong>5</strong></div>
+          <div class="label">Instrument entities</div><div class="value"><strong>5</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">Experiment entities</div>
-          <div class="value"><strong>1,874</strong></div>
+          <div class="label">Experiment entities</div><div class="value"><strong>1,874</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">Example dataset with provenance links</div>
-          <div class="value">
-                <details class="entity"><summary>exLewis009053.raw</summary>
-                  <pre>{
+          <div class="label">Example dataset with provenance links</div><div class="value"><details class="entity"><summary>exLewis009053.raw</summary><pre>{
   &#34;@id&#34;: &#34;ark:59853/dataset-msv000101915-7c441f304dddb5e2&#34;,
   &#34;name&#34;: &#34;exLewis009053.raw&#34;,
   &#34;@type&#34;: [
@@ -1147,15 +1090,11 @@
     }
   ],
   &#34;contentSize&#34;: &#34;879 MB&#34;
-}</pre></details>
-              </div>
+}</pre></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Example sample entity</div>
-          <div class="value">
-                <details class="entity"><summary>MDA-MB-468 ATM-tagged + DMSO</summary>
-                  <pre>{
+          <div class="label">Example sample entity</div><div class="value"><details class="entity"><summary>MDA-MB-468 ATM-tagged + DMSO</summary><pre>{
   &#34;@id&#34;: &#34;ark:59853/sample-msv000101915-atm-dmso&#34;,
   &#34;name&#34;: &#34;MDA-MB-468 ATM-tagged + DMSO&#34;,
   &#34;@type&#34;: [
@@ -1204,15 +1143,11 @@
       &#34;@id&#34;: &#34;ark:59853/dataset-msv000101915-44b97023d35b4bf7&#34;
     }
   ]
-}</pre></details>
-              </div>
+}</pre></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Example instrument entity</div>
-          <div class="value">
-                <details class="entity"><summary>Orbitrap Exploris 480</summary>
-                  <pre>{
+          <div class="label">Example instrument entity</div><div class="value"><details class="entity"><summary>Orbitrap Exploris 480</summary><pre>{
   &#34;@id&#34;: &#34;ark:59853/instrument-msv000101915-1&#34;,
   &#34;name&#34;: &#34;Orbitrap Exploris 480&#34;,
   &#34;@type&#34;: [
@@ -1230,8 +1165,7 @@
   &#34;isPartOf&#34;: [],
   &#34;fairscapeVersion&#34;: &#34;1.1.3&#34;,
   &#34;metadataType&#34;: &#34;<a href="https://w3id.org/EVI#Instrument">https://w3id.org/EVI#Instrument</a>&#34;
-}</pre></details>
-              </div>
+}</pre></details></div>
         </div>
         
       </div>
@@ -1255,7 +1189,7 @@
       <h3>1.b Traceable</h3>
       
       <div class="practice">Identify important data transformation steps, with links to software, at an appropriate level of detail, using a machine-readable representation, such as W3C PROV-O or EVI.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (2)</summary>
         <ul><li>Have you described the key steps from a reliable data origin (e.g., raw data from a reliable source with accompanying metadata about how the data were generated) to data provided for analyses? Have you included links to the software that was used?</li><li>Have you utilized valid ontologies such as W3C PROV-O, PROV-DM, or a derivation of either, e.g., EVI, CPM? (PAV is not allowed as it does not provide step tracing and is single-source only.)</li></ul>
       </details>
@@ -1276,33 +1210,19 @@
         
         
         <div class="item">
-          <div class="label">Transformation steps (Computation + Experiment entities)</div>
-          <div class="value"><strong>1,976</strong><span class="detail">102 computations, 1874 experiments</span></div>
+          <div class="label">Transformation steps (Computation + Experiment entities)</div><div class="value"><strong>1,976</strong> <span class="detail">102 computations, 1874 experiments</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Steps with inputs and outputs declared</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:100.0%"></span></span>
-                <strong>100.0%</strong>
-                <span class="meta">(1,976 of 1,976)</span>
-              </div>
+          <div class="label">Steps with inputs and outputs declared</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(1,976 of 1,976)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Steps linked to software</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:5.2%"></span></span>
-                <strong>5.2%</strong>
-                <span class="meta">(102 of 1,976)</span>
-              <span class="detail">experiments link instruments/samples instead of software, so judge software links against computations</span></div>
+          <div class="label">Computations linked to software</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(102 of 102)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Example transformation step</div>
-          <div class="value">
-                <details class="entity"><summary>MSstats across all KOLF2 SEC-MS fractions</summary>
-                  <pre>{
+          <div class="label">Example transformation step</div><div class="value"><details class="entity"><summary>MSstats across all KOLF2 SEC-MS fractions</summary><pre>{
   &#34;@id&#34;: &#34;ark:59853/computation-msv000100676-MSstats&#34;,
   &#34;name&#34;: &#34;MSstats across all KOLF2 SEC-MS fractions&#34;,
   &#34;@type&#34;: [
@@ -1369,37 +1289,11 @@
     &#34;…(+854 more)&#34;
   ],
   &#34;evi:annotatedBy&#34;: []
-}</pre></details>
-              </div>
+}</pre></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Evidence graphs (visual provenance per sub-crate)</div>
-          <div class="value">
-                <ul class="plain">
-                
-                  <li><a href="../../../CM4AIJuneRelease/AP-MS/apms-paclitaxel-rocrate/ro-crate-prov-graph.html">EndoTag AP-MS Profiling of Chromatin Modifier Interactome Rewiring in MDA-MB-468 Cells Upon Paclitaxel Perturbation — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/AP-MS/apms-vorinostat-rocrate/ro-crate-prov-graph.html">EndoTag-AP-MS Profiling of Chromatin Modifier Interactome Rewiring in MDA-MB-468 Cells Upon Vorinostat Perturbation — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/Images/paclitaxel/ro-crate-prov-graph.html">Paclitaxel IF Images — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/Images/untreated/ro-crate-prov-graph.html">Untreated IF Images — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/Images/vorinostat/ro-crate-prov-graph.html">Vorinostat IF Images — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/ro-crate-prov-graph.html">SEC-MS characterization of KOLF2 neuronal and cardiomyocyte differentiation — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/parental-rep1-F01-evidence-graph.html">SEC-MS characterization of KOLF2 neuronal and cardiomyocyte differentiation — parental-rep1-F01-evidence-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/mass-spec/cancer-cells/ro-crate-prov-graph.html">SEC-MS of MDA-MB468 following treatment of vorinostat or paclitaxel. — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/Perturb-Seq/sra/ro-crate-prov-graph.html">Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells - Raw Sequence Data — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/Perturb-Seq/cell-atlas/ro-crate-prov-graph.html">Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells - Perturb Seq — ro-crate-prov-graph.html</a></li>
-                
-                </ul>
-              </div>
+          <div class="label">Evidence graphs (visual provenance per sub-crate)</div><div class="value"><ul class="plain"><li><a href="../../../CM4AIJuneRelease/AP-MS/apms-paclitaxel-rocrate/ro-crate-prov-graph.html">EndoTag AP-MS Profiling of Chromatin Modifier Interactome Rewiring in MDA-MB-468 Cells Upon Paclitaxel Perturbation — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/AP-MS/apms-vorinostat-rocrate/ro-crate-prov-graph.html">EndoTag-AP-MS Profiling of Chromatin Modifier Interactome Rewiring in MDA-MB-468 Cells Upon Vorinostat Perturbation — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/Images/paclitaxel/ro-crate-prov-graph.html">Paclitaxel IF Images — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/Images/untreated/ro-crate-prov-graph.html">Untreated IF Images — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/Images/vorinostat/ro-crate-prov-graph.html">Vorinostat IF Images — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/ro-crate-prov-graph.html">SEC-MS characterization of KOLF2 neuronal and cardiomyocyte differentiation — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/parental-rep1-F01-evidence-graph.html">SEC-MS characterization of KOLF2 neuronal and cardiomyocyte differentiation — parental-rep1-F01-evidence-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/mass-spec/cancer-cells/ro-crate-prov-graph.html">SEC-MS of MDA-MB468 following treatment of vorinostat or paclitaxel. — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/Perturb-Seq/sra/ro-crate-prov-graph.html">Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells - Raw Sequence Data — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/Perturb-Seq/cell-atlas/ro-crate-prov-graph.html">Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells - Perturb Seq — ro-crate-prov-graph.html</a></li></ul></div>
         </div>
         
       </div>
@@ -1423,7 +1317,7 @@
       <h3>1.c Interpretable</h3>
       
       <div class="practice">Make software for key data transformation and analysis steps available in a sustainable repository.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (1)</summary>
         <ul><li>Is the software for key transformation/analysis steps deposited where it will persist and is citable?</li></ul>
       </details>
@@ -1444,40 +1338,31 @@
         
         
         <div class="item">
-          <div class="label">Software entities</div>
-          <div class="value"><strong>4</strong></div>
+          <div class="label">Software entities</div><div class="value"><strong>4</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">Archived with a PID (Zenodo / Software Heritage / DOI / PyPI)</div>
-          <div class="value"><strong>0</strong> of 4</div>
+          <div class="label">Archived with a PID (Zenodo / Software Heritage / DOI / PyPI)</div><div class="value"><strong>0</strong> of 4</div>
         </div>
         
         <div class="item">
-          <div class="label">Mutable code hosting only (GitHub and the like)</div>
-          <div class="value"><strong>0</strong> of 4</div>
+          <div class="label">Mutable code hosting only (GitHub and the like)</div><div class="value"><strong>0</strong> of 4</div>
         </div>
         
         <div class="item">
-          <div class="label">No download/repository link</div>
-          <div class="value"><strong>4</strong> of 4</div>
+          <div class="label">No download/repository link</div><div class="value"><strong>4</strong> of 4</div>
         </div>
         
         <div class="item">
-          <div class="label">Archived software</div>
-          <div class="value"><span class="na">none</span></div>
+          <div class="label">Archived software</div><div class="value"><span class="na">none</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Code-hosted software</div>
-          <div class="value"><span class="na">none</span></div>
+          <div class="label">Code-hosted software</div><div class="value"><span class="na">none</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Software without links</div>
-          <div class="value">
-                <ul class="plain"><li>Spectronaut — <a href="https://biognosys.com/software/spectronaut/">https://biognosys.com/software/spectronaut/</a></li><li>Unknown SEC analysis tool — <a href="https://massive.ucsd.edu/ProteoSAFe/QueryMSV?id=MSV000100676">https://massive.ucsd.edu/ProteoSAFe/QueryMSV?id=MSV000100676</a></li><li>Spectronaut — <a href="https://biognosys.com/software/spectronaut/">https://biognosys.com/software/spectronaut/</a></li><li>Cell Ranger — <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest">https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest</a>, <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger">https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger</a></li></ul>
-              </div>
+          <div class="label">Software without links</div><div class="value"><ul class="plain"><li>Spectronaut — <a href="https://biognosys.com/software/spectronaut/">https://biognosys.com/software/spectronaut/</a></li><li>Unknown SEC analysis tool — <a href="https://massive.ucsd.edu/ProteoSAFe/QueryMSV?id=MSV000100676">https://massive.ucsd.edu/ProteoSAFe/QueryMSV?id=MSV000100676</a></li><li>Spectronaut — <a href="https://biognosys.com/software/spectronaut/">https://biognosys.com/software/spectronaut/</a></li><li>Cell Ranger — <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest">https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest</a>, <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger">https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger</a></li></ul></div>
         </div>
         
       </div>
@@ -1501,7 +1386,7 @@
       <h3>1.d Key actors identified</h3>
       
       <div class="practice">Identify people and organizations responsible for obtaining and processing the data, the samples, and subject groups involved in producing the data. Reference these parties along with other dataset metadata.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (1)</summary>
         <ul><li>Does the metadata identify the key actors? "Key actors" are the people and organizations who obtained and processed the data/samples and who recruited the participants.</li></ul>
       </details>
@@ -1522,59 +1407,35 @@
         
         
         <div class="item">
-          <div class="label">Key actors identified</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">Key actors identified</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Authors identified with a PID (ORCID)</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:80.9%"></span></span>
-                <strong>80.9%</strong>
-                <span class="meta">(38 of 47)</span>
-              </div>
+          <div class="label">Authors identified with a PID (ORCID)</div><div class="value"><span class="pct-bar"><span style="width:80.9%"></span></span> <strong>80.9%</strong> <span class="meta">(38 of 47)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Authors with PIDs (first 10)</div>
-          <div class="value">
-                <ul class="plain"><li>Clark, T (<a href="https://orcid.org/0000-0003-4060-7360">https://orcid.org/0000-0003-4060-7360</a>)</li><li>Parker, J (<a href="https://orcid.org/0000-0003-4535-3486">https://orcid.org/0000-0003-4535-3486</a>)</li><li>Al Manir, S (<a href="https://orcid.org/0000-0003-4647-3877">https://orcid.org/0000-0003-4647-3877</a>)</li><li>Ballllosero Navarro, F (<a href="https://orcid.org/0000-0002-4180-422X">https://orcid.org/0000-0002-4180-422X</a>)</li><li>Churas, CP (<a href="https://orcid.org/0000-0001-9998-705X">https://orcid.org/0000-0001-9998-705X</a>)</li><li>Dailamy, A (<a href="https://orcid.org/0000-0002-6711-8260">https://orcid.org/0000-0002-6711-8260</a>)</li><li>Doctor, Y (<a href="https://orcid.org/0009-0009-0483-7506">https://orcid.org/0009-0009-0483-7506</a>)</li><li>Forget, A (<a href="https://orcid.org/0000-0003-0223-0312">https://orcid.org/0000-0003-0223-0312</a>)</li><li>Gao, J (<a href="https://orcid.org/0000-0002-6311-3526">https://orcid.org/0000-0002-6311-3526</a>)</li><li>Hansen, JN (<a href="https://orcid.org/0000-0002-4650-9094">https://orcid.org/0000-0002-4650-9094</a>)</li></ul>
-              </div>
+          <div class="label">Authors with PIDs (first 10)</div><div class="value"><ul class="plain"><li>Clark, T (<a href="https://orcid.org/0000-0003-4060-7360">https://orcid.org/0000-0003-4060-7360</a>)</li><li>Parker, J (<a href="https://orcid.org/0000-0003-4535-3486">https://orcid.org/0000-0003-4535-3486</a>)</li><li>Al Manir, S (<a href="https://orcid.org/0000-0003-4647-3877">https://orcid.org/0000-0003-4647-3877</a>)</li><li>Ballllosero Navarro, F (<a href="https://orcid.org/0000-0002-4180-422X">https://orcid.org/0000-0002-4180-422X</a>)</li><li>Churas, CP (<a href="https://orcid.org/0000-0001-9998-705X">https://orcid.org/0000-0001-9998-705X</a>)</li><li>Dailamy, A (<a href="https://orcid.org/0000-0002-6711-8260">https://orcid.org/0000-0002-6711-8260</a>)</li><li>Doctor, Y (<a href="https://orcid.org/0009-0009-0483-7506">https://orcid.org/0009-0009-0483-7506</a>)</li><li>Forget, A (<a href="https://orcid.org/0000-0003-0223-0312">https://orcid.org/0000-0003-0223-0312</a>)</li><li>Gao, J (<a href="https://orcid.org/0000-0002-6311-3526">https://orcid.org/0000-0002-6311-3526</a>)</li><li>Hansen, JN (<a href="https://orcid.org/0000-0002-4650-9094">https://orcid.org/0000-0002-4650-9094</a>)</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Authors named in free text only</div>
-          <div class="value">
-                <ul class="plain"><li>Axelsson, U</li><li>Chinn, B</li><li>Fall, J</li><li>Johannesson, A</li><li>Khaliq, H</li><li>Muralidharan, M</li><li>Pan, E</li><li>Polacco, B</li><li>Zhang, Y</li></ul>
-              </div>
+          <div class="label">Authors named in free text only</div><div class="value"><ul class="plain"><li>Axelsson, U</li><li>Chinn, B</li><li>Fall, J</li><li>Johannesson, A</li><li>Khaliq, H</li><li>Muralidharan, M</li><li>Pan, E</li><li>Polacco, B</li><li>Zhang, Y</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Principal investigator</div>
-          <div class="value">
-                Trey Ideker
-              </div>
+          <div class="label">Principal investigator</div><div class="value"><span class="pre">Trey Ideker</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Contact</div>
-          <div class="value">
-                tideker@health.ucsd.edu
-              </div>
+          <div class="label">Contact</div><div class="value"><span class="pre">tideker@health.ucsd.edu</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Organizations (root isPartOf)</div>
-          <div class="value">
-                <ul class="plain"><li>ark:59853/organization-university-of-california-san-diego-T4a649a1RtE</li><li>ark:59853/project-cell-maps-for-artificial-intelligence-qTdsTBd3FtA</li></ul>
-              </div>
+          <div class="label">Organizations (root isPartOf)</div><div class="value"><ul class="plain"><li>ark:59853/organization-university-of-california-san-diego-T4a649a1RtE</li><li>ark:59853/project-cell-maps-for-artificial-intelligence-qTdsTBd3FtA</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Organizations identified with ROR PIDs</div>
-          <div class="value"><span class="no">✗ No</span>
-              </div>
+          <div class="label">Organizations identified with ROR PIDs</div><div class="value"><span class="no">✗ No</span></div>
         </div>
         
       </div>
@@ -1604,7 +1465,7 @@
       <h3>2.a Semantics</h3>
       
       <div class="practice">Use comprehensive descriptive metadata for datasets, including a detailed abstract, dataset keywords, and subject-specific vocabularies (e.g., MeSH) to enable detailed search and discovery.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (1)</summary>
         <ul><li>Does the metadata support search and discovery through a substantive abstract, keywords, and subject-specific controlled-vocabulary terms?</li></ul>
       </details>
@@ -1625,33 +1486,19 @@
         
         
         <div class="item">
-          <div class="label">Dataset abstract/description</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">This dataset is the June 2026 Data Release of Cell Maps for Artificial Intelligence (CM4AI; CM4AI.org), the Functional Genomics Grand Challenge in the NIH Bridge2AI program. This Beta release includes perturb-seq data in undifferentiated…</span> <span class="more">[928 chars — expand]</span></summary>This dataset is the June 2026 Data Release of Cell Maps for Artificial Intelligence (CM4AI; CM4AI.org), the Functional Genomics Grand Challenge in the NIH Bridge2AI program. This Beta release includes perturb-seq data in undifferentiated KOLF2.1J iPSCs; SEC-MS data in undifferentiated KOLF2.1J iPSCs and iPSC-derived NPCs, neurons, and cardiomyocytes; AP-MS data in MDA-MB-468 breast cancer cells in the presence of chemotherapy (vorinostat and paclitaxel); and IF images in MDA-MB-468 breast cancer cells in the presence and absence of chemotherapy (vorinostat and paclitaxel). CM4AI output data are packaged with provenance graphs and rich metadata as AI-ready datasets in RO-Crate format using the FAIRSCAPE framework. Data presented here will be augmented regularly through the end of the project. CM4AI is a collaboration of UCSD, UCSF, Stanford, UVA, Yale, UA Birmingham, Simon Fraser University, and the Hastings Center.</details>
-                
-              <span class="detail">928 chars</span></div>
+          <div class="label">Dataset abstract/description</div><div class="value"><details class="longtext"><summary><span class="head">This dataset is the June 2026 Data Release of Cell Maps for Artificial Intelligence (CM4AI; CM4AI.org), the Functional Genomics Grand Challenge in the NIH Bridge2AI program. This Beta release includes perturb-seq data in undifferentiated…</span> <span class="more">[928 chars — expand]</span></summary><span class="pre">This dataset is the June 2026 Data Release of Cell Maps for Artificial Intelligence (CM4AI; CM4AI.org), the Functional Genomics Grand Challenge in the NIH Bridge2AI program. This Beta release includes perturb-seq data in undifferentiated KOLF2.1J iPSCs; SEC-MS data in undifferentiated KOLF2.1J iPSCs and iPSC-derived NPCs, neurons, and cardiomyocytes; AP-MS data in MDA-MB-468 breast cancer cells in the presence of chemotherapy (vorinostat and paclitaxel); and IF images in MDA-MB-468 breast cancer cells in the presence and absence of chemotherapy (vorinostat and paclitaxel). CM4AI output data are packaged with provenance graphs and rich metadata as AI-ready datasets in RO-Crate format using the FAIRSCAPE framework. Data presented here will be augmented regularly through the end of the project. CM4AI is a collaboration of UCSD, UCSF, Stanford, UVA, Yale, UA Birmingham, Simon Fraser University, and the Hastings Center.</span></details> <span class="detail">928 chars</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Keywords</div>
-          <div class="value">
-                <ul class="plain"><li>AI</li><li>affinity purification</li><li>AP-MS</li><li>artificial intelligence</li><li>breast cancer</li><li>Bridge2AI</li><li>cardiomyocyte</li><li>CM4AI</li><li>CRISPR/Cas9</li><li>induced pluripotent stem cell</li><li>iPSC</li><li>KOLF2.1J</li><li>machine learning</li><li>mass spectroscopy</li><li>MDA-MB-468</li><li>neural progenitor cell</li><li>NPC</li><li>neuron</li><li>paclitaxel</li><li>perturb-seq</li><li>perturbation sequencing</li><li>protein-protein interaction</li><li>protein localization</li><li>single-cell RNA sequencing</li><li>scRNAseq</li></ul>
-              </div>
+          <div class="label">Keywords</div><div class="value"><ul class="plain"><li>AI</li><li>affinity purification</li><li>AP-MS</li><li>artificial intelligence</li><li>breast cancer</li><li>Bridge2AI</li><li>cardiomyocyte</li><li>CM4AI</li><li>CRISPR/Cas9</li><li>induced pluripotent stem cell</li><li>iPSC</li><li>KOLF2.1J</li><li>machine learning</li><li>mass spectroscopy</li><li>MDA-MB-468</li><li>neural progenitor cell</li><li>NPC</li><li>neuron</li><li>paclitaxel</li><li>perturb-seq</li><li>perturbation sequencing</li><li>protein-protein interaction</li><li>protein localization</li><li>single-cell RNA sequencing</li><li>scRNAseq</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Controlled-vocabulary terms present</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">7 MeSH terms of 13 DefinedTerms</span></div>
+          <div class="label">Controlled-vocabulary terms present</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">7 MeSH terms of 13 DefinedTerms</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Controlled-vocabulary terms</div>
-          <div class="value">
-                <ul class="plain"><li>Breast Neoplasms — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D001943">https://meshb.nlm.nih.gov/record/ui?ui=D001943</a></li><li>Induced Pluripotent Stem Cells — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D057026">https://meshb.nlm.nih.gov/record/ui?ui=D057026</a></li><li>CRISPR-Cas Systems — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D064113">https://meshb.nlm.nih.gov/record/ui?ui=D064113</a></li><li>Mass Spectrometry — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D013058">https://meshb.nlm.nih.gov/record/ui?ui=D013058</a></li><li>Fluorescent Antibody Technique — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D005453">https://meshb.nlm.nih.gov/record/ui?ui=D005453</a></li><li>Paclitaxel — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D017239">https://meshb.nlm.nih.gov/record/ui?ui=D017239</a></li><li>Vorinostat — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D000077337">https://meshb.nlm.nih.gov/record/ui?ui=D000077337</a></li><li>Proteomics — <a href="http://edamontology.org/topic_0121">http://edamontology.org/topic_0121</a></li><li>RNA-Seq — <a href="http://edamontology.org/topic_3170">http://edamontology.org/topic_3170</a></li><li>Functional genomics — <a href="http://edamontology.org/topic_3320">http://edamontology.org/topic_3320</a></li></ul>
-              </div>
+          <div class="label">Controlled-vocabulary terms</div><div class="value"><ul class="plain"><li>Breast Neoplasms — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D001943">https://meshb.nlm.nih.gov/record/ui?ui=D001943</a></li><li>Induced Pluripotent Stem Cells — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D057026">https://meshb.nlm.nih.gov/record/ui?ui=D057026</a></li><li>CRISPR-Cas Systems — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D064113">https://meshb.nlm.nih.gov/record/ui?ui=D064113</a></li><li>Mass Spectrometry — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D013058">https://meshb.nlm.nih.gov/record/ui?ui=D013058</a></li><li>Fluorescent Antibody Technique — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D005453">https://meshb.nlm.nih.gov/record/ui?ui=D005453</a></li><li>Paclitaxel — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D017239">https://meshb.nlm.nih.gov/record/ui?ui=D017239</a></li><li>Vorinostat — <a href="https://meshb.nlm.nih.gov/record/ui?ui=D000077337">https://meshb.nlm.nih.gov/record/ui?ui=D000077337</a></li><li>Proteomics — <a href="http://edamontology.org/topic_0121">http://edamontology.org/topic_0121</a></li><li>RNA-Seq — <a href="http://edamontology.org/topic_3170">http://edamontology.org/topic_3170</a></li><li>Functional genomics — <a href="http://edamontology.org/topic_3320">http://edamontology.org/topic_3320</a></li></ul></div>
         </div>
         
       </div>
@@ -1675,7 +1522,7 @@
       <h3>2.b Statistics</h3>
       
       <div class="practice">Provide domain-appropriate statistical characterizations of key features of the dataset to inform analysis planning. Ensure missing values are encoded consistently.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (2)</summary>
         <ul><li>Are descriptive statistics of key variables provided?</li><li>Are missing values encoded consistently?</li></ul>
       </details>
@@ -1696,34 +1543,19 @@
         
         
         <div class="item">
-          <div class="label">Datasets with summary statistics (hasSummaryStatistics)</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:0.0%"></span></span>
-                <strong>0.0%</strong>
-                <span class="meta">(0 of 53,877)</span>
-              </div>
+          <div class="label">Datasets with summary statistics (hasSummaryStatistics)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 53,877)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Example summary-statistics reference</div>
-          <div class="value"><span class="na">none found</span></div>
+          <div class="label">Example summary-statistics reference</div><div class="value"><span class="na">none found</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Missing-data statement (rai:dataCollectionMissingData)</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps…</span> <span class="more">[265 chars — expand]</span></summary>Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release.</details>
-                
-              </div>
+          <div class="label">Missing-data statement (rai:dataCollectionMissingData)</div><div class="value"><details class="longtext"><summary><span class="head">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps…</span> <span class="more">[265 chars — expand]</span></summary><span class="pre">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release.</span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Tabular formats in the crate (N/A applies only if none)</div>
-          <div class="value">
-                <ul class="plain"><li>tsv: 5</li><li>csv: 4</li><li>TSV: 9</li></ul>
-              </div>
+          <div class="label">Tabular formats in the crate (N/A applies only if none)</div><div class="value"><ul class="plain"><li>tsv: 5</li><li>csv: 4</li><li>TSV: 9</li></ul></div>
         </div>
         
       </div>
@@ -1747,7 +1579,7 @@
       <h3>2.c Standards</h3>
       <span class="badge">Gating</span>
       <div class="practice">Provide a machine-readable data dictionary or schema for each dataset, linked to the dataset metadata, and referencing any relevant standards.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (3)</summary>
         <ul><li>Is the file governed by a formal open specification with a built-in or paired external schema that names and types its data elements? Examples include RDF/JSON-LD, OWL, OME-TIFF, OME-NGFF, NWB, WFDB, DICOM, NIfTI, Parquet, CSVW, Frictionless Table Schema, JSON Schema, XSD.</li><li>Is at least one data element bound to a standard vocabulary term through (a) a dataset-level JSON-LD sidecar, or (b) the format's inherent mechanism (vocabulary IRIs in RDF/JSON-LD data, DICOM Code Sequences, CSVW propertyUrl/aboutUrl, Frictionless rdfType, Define-XML NCI Thesaurus codes, OME annotations, NWB ontology links)?</li><li>Is the standard a true schema/model that dictates structure and content, or merely a generic file container?</li></ul>
       </details>
@@ -1768,37 +1600,23 @@
         
         
         <div class="item">
-          <div class="label">Machine-readable schema entities (EVI:Schema, JSON Schema dialect)</div>
-          <div class="value"><strong>18</strong></div>
+          <div class="label">Machine-readable schema entities (EVI:Schema, JSON Schema dialect)</div><div class="value"><strong>18</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">Datasets linked to a schema</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:0.4%"></span></span>
-                <strong>0.4%</strong>
-                <span class="meta">(212 of 53,877)</span>
-              <span class="detail">a schema covering a format class covers every file in that class — judge per class, not per file</span></div>
+          <div class="label">Non-image datasets linked to a schema</div><div class="value"><span class="pct-bar"><span style="width:8.7%"></span></span> <strong>8.7%</strong> <span class="meta">(212 of 2,441)</span> <span class="detail">51,436 image datasets excluded — image files don&#39;t take a data dictionary; a schema covering a format class covers every file in that class</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Standard vocabulary bindings populated</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">Cellosaurus (274), UniProt (127), MeSH (35), OBO Foundry PURL (18)</span></div>
+          <div class="label">Standard vocabulary bindings populated</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Cellosaurus (274), UniProt (127), MeSH (35), OBO Foundry PURL (18)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">File formats present (format-class view)</div>
-          <div class="value">
-                <ul class="plain"><li>image/jpeg: 51436</li><li>raw: 1261</li><li>Bruker .d: 868</li><li>fastq.gz: 192</li><li>h5: 90</li><li>TSV: 9</li><li>tsv: 5</li><li>csv: 4</li><li>pdf: 3</li><li>xml: 3</li><li>txt: 2</li><li>fasta: 2</li><li>h5ad: 2</li></ul>
-              </div>
+          <div class="label">File formats present (format-class view)</div><div class="value"><ul class="plain"><li>image/jpeg: 51436</li><li>raw: 1261</li><li>Bruker .d: 868</li><li>fastq.gz: 192</li><li>h5: 90</li><li>TSV: 9</li><li>tsv: 5</li><li>csv: 4</li><li>pdf: 3</li><li>xml: 3</li><li>txt: 2</li><li>fasta: 2</li><li>h5ad: 2</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Example schema entity</div>
-          <div class="value">
-                <details class="entity"><summary>summary.tsv schema</summary>
-                  <pre>{
+          <div class="label">Example schema entity</div><div class="value"><details class="entity"><summary>summary.tsv schema</summary><pre>{
   &#34;@id&#34;: &#34;ark:59853/schema-summary-tsv-schema-20260522-092748&#34;,
   &#34;@context&#34;: {
     &#34;@vocab&#34;: &#34;<a href="https://schema.org/">https://schema.org/</a>&#34;,
@@ -1831,8 +1649,7 @@
     &#34;Tech_replicates_url_params&#34;: &#34;{…}&#34;
   },
   &#34;additionalProperties&#34;: true
-}</pre></details>
-              </div>
+}</pre></details></div>
         </div>
         
       </div>
@@ -1856,7 +1673,7 @@
       <h3>2.d Potential Sources of Bias</h3>
       
       <div class="practice">Describe known sources of bias in the data and assumptions made in collecting, processing, or interpreting the data. Include any known explanations regarding missing values, including reasons for missingness, and the degree to which data represents a state vs. a control (e.g., disease state vs. healthy state).</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (3)</summary>
         <ul><li>Does the metadata describe known biases and assumptions?</li><li>Does the metadata describe, where applicable, reasons for missingness?</li><li>Does the metadata describe the state-vs-control balance?</li></ul>
       </details>
@@ -1877,42 +1694,23 @@
         
         
         <div class="item">
-          <div class="label">Bias description (rai:dataBiases)</div>
-          <div class="value">
-                Data in this release was derived from commercially available de-identified human cell lines, and does not represent all biological variants which may be seen in the population at large.
-              </div>
+          <div class="label">Bias description (rai:dataBiases)</div><div class="value"><span class="pre">Data in this release was derived from commercially available de-identified human cell lines, and does not represent all biological variants which may be seen in the population at large.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Bias description present and substantive-length</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">Bias description present and substantive-length</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Missing-data reasons (rai:dataCollectionMissingData)</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps…</span> <span class="more">[265 chars — expand]</span></summary>Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release.</details>
-                
-              </div>
+          <div class="label">Missing-data reasons (rai:dataCollectionMissingData)</div><div class="value"><details class="longtext"><summary><span class="head">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps…</span> <span class="more">[265 chars — expand]</span></summary><span class="pre">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release.</span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Missingness explanation present and substantive-length</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">Missingness explanation present and substantive-length</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Completeness statement</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">These data are not yet in completed final form, and some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of…</span> <span class="more">[317 chars — expand]</span></summary>These data are not yet in completed final form, and some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release.</details>
-                
-              </div>
+          <div class="label">Completeness statement</div><div class="value"><details class="longtext"><summary><span class="head">These data are not yet in completed final form, and some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of…</span> <span class="more">[317 chars — expand]</span></summary><span class="pre">These data are not yet in completed final form, and some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release.</span></details></div>
         </div>
         
       </div>
@@ -1936,7 +1734,7 @@
       <h3>2.e Data quality</h3>
       
       <div class="practice">Have quality control procedures been applied? If so, provide a link to a description.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (2)</summary>
         <ul><li>Has a data quality assessment been applied?</li><li>What was it?</li></ul>
       </details>
@@ -1957,35 +1755,19 @@
         
         
         <div class="item">
-          <div class="label">Collection / QC description (rai:dataCollection)</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi:…</span> <span class="more">[347 chars — expand]</span></summary>Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi: <a href="https://doi.org/10.1101/2024.05.21.589311">https://doi.org/10.1101/2024.05.21.589311</a>. Additional data collection details will be subsequently published once finalized. </details>
-                
-              </div>
+          <div class="label">Collection / QC description (rai:dataCollection)</div><div class="value"><details class="longtext"><summary><span class="head">Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi:…</span> <span class="more">[347 chars — expand]</span></summary><span class="pre">Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi: <a href="https://doi.org/10.1101/2024.05.21.589311">https://doi.org/10.1101/2024.05.21.589311</a>. Additional data collection details will be subsequently published once finalized. </span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Missing-data handling</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps…</span> <span class="more">[265 chars — expand]</span></summary>Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release.</details>
-                
-              </div>
+          <div class="label">Missing-data handling</div><div class="value"><details class="longtext"><summary><span class="head">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps…</span> <span class="more">[265 chars — expand]</span></summary><span class="pre">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release.</span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">QC language found in metadata</div>
-          <div class="value"><span class="no">✗ No</span>
-              </div>
+          <div class="label">QC language found in metadata</div><div class="value"><span class="no">✗ No</span></div>
         </div>
         
         <div class="item">
-          <div class="label">QC description link resolves: https://doi.org/10.1101/2024.05.21.589311</div>
-          <div class="value"><span class="no">✗ No</span>
-              <span class="detail">HTTP 429</span></div>
+          <div class="label">QC description link resolves: https://doi.org/10.1101/2024.05.21.589311</div><div class="value"><span class="no">✗ No</span> <span class="detail">HTTP 429</span></div>
         </div>
         
       </div>
@@ -2015,7 +1797,7 @@
       <h3>3.a Data documentation template</h3>
       
       <div class="practice">Machine-readable metadata and a linked human-readable document should support a domain-appropriate extension of the original Gebru Datasheets concept for pre-model explainability. Healthsheets information may be a helpful supplement.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (2)</summary>
         <ul><li>Is there datasheet-style documentation of the dataset as machine-readable metadata?</li><li>Is there a linked human-readable document, such as Datasheets for Datasets (Gebru et al.)?</li></ul>
       </details>
@@ -2036,79 +1818,43 @@
         
         
         <div class="item">
-          <div class="label">Human-readable datasheet(s)</div>
-          <div class="value">
-                <ul class="plain">
-                
-                  <li><a href="../../../CM4AIJuneRelease/ro-crate-datasheet.html">ro-crate-datasheet.html</a></li>
-                
-                </ul>
-              </div>
+          <div class="label">Human-readable datasheet(s)</div><div class="value"><ul class="plain"><li><a href="../../../CM4AIJuneRelease/ro-crate-datasheet.html">ro-crate-datasheet.html</a></li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Machine-readable datasheet sections populated</div>
-          <div class="value"><strong>7</strong> of 7</div>
+          <div class="label">Machine-readable datasheet sections populated</div><div class="value"><strong>7</strong> of 7</div>
         </div>
         
         <div class="item">
-          <div class="label">Missing sections</div>
-          <div class="value"><span class="na">none</span></div>
+          <div class="label">Missing sections</div><div class="value"><span class="na">none</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Section — Collection</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi:…</span> <span class="more">[347 chars — expand]</span></summary>Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi: <a href="https://doi.org/10.1101/2024.05.21.589311">https://doi.org/10.1101/2024.05.21.589311</a>. Additional data collection details will be subsequently published once finalized. </details>
-                
-              </div>
+          <div class="label">Section — Collection</div><div class="value"><details class="longtext"><summary><span class="head">Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi:…</span> <span class="more">[347 chars — expand]</span></summary><span class="pre">Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi: <a href="https://doi.org/10.1101/2024.05.21.589311">https://doi.org/10.1101/2024.05.21.589311</a>. Additional data collection details will be subsequently published once finalized. </span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Section — Use cases</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or…</span> <span class="more">[438 chars — expand]</span></summary>AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable biologically-driven, interpretable ML applications, for example as proposed in Ma et al. 2018 (PMID: 29505029) and Kuenzi et al. 2020 (PMID: 33096023).</details>
-                
-              </div>
+          <div class="label">Section — Use cases</div><div class="value"><details class="longtext"><summary><span class="head">AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or…</span> <span class="more">[438 chars — expand]</span></summary><span class="pre">AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable biologically-driven, interpretable ML applications, for example as proposed in Ma et al. 2018 (PMID: 29505029) and Kuenzi et al. 2020 (PMID: 33096023).</span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Section — Limitations</div>
-          <div class="value">
-                This is an interim release. It does not contain predicted cell maps, which will be added in future releases. The current release is most suitable for bioinformatics analysis of the individual datasets. Requires domain expertise for meaningful analysis.
-              </div>
+          <div class="label">Section — Limitations</div><div class="value"><span class="pre">This is an interim release. It does not contain predicted cell maps, which will be added in future releases. The current release is most suitable for bioinformatics analysis of the individual datasets. Requires domain expertise for meaningful analysis.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Section — Biases</div>
-          <div class="value">
-                Data in this release was derived from commercially available de-identified human cell lines, and does not represent all biological variants which may be seen in the population at large.
-              </div>
+          <div class="label">Section — Biases</div><div class="value"><span class="pre">Data in this release was derived from commercially available de-identified human cell lines, and does not represent all biological variants which may be seen in the population at large.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Section — Release/maintenance plan</div>
-          <div class="value">
-                Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the <a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>, supported by committed institutional funds.
-              </div>
+          <div class="label">Section — Release/maintenance plan</div><div class="value"><span class="pre">Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the <a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>, supported by committed institutional funds.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Section — License</div>
-          <div class="value">
-                <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">https://creativecommons.org/licenses/by-nc-sa/4.0/</a>
-              </div>
+          <div class="label">Section — License</div><div class="value"><span class="pre"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">https://creativecommons.org/licenses/by-nc-sa/4.0/</a></span></div>
         </div>
         
         <div class="item">
-          <div class="label">Section — Conditions of access</div>
-          <div class="value">
-                Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.
-              </div>
+          <div class="label">Section — Conditions of access</div><div class="value"><span class="pre">Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.</span></div>
         </div>
         
       </div>
@@ -2132,7 +1878,7 @@
       <h3>3.b Fit for purpose</h3>
       
       <div class="practice">Identify appropriate and inappropriate use cases for the data set. Link to any previously published analyses using this data.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (1)</summary>
         <ul><li>Does the dataset identify the appropriate and inappropriate use cases, and are there any links to previously published analyses using it?</li></ul>
       </details>
@@ -2153,55 +1899,27 @@
         
         
         <div class="item">
-          <div class="label">Appropriate use cases (rai:dataUseCases)</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or…</span> <span class="more">[438 chars — expand]</span></summary>AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable biologically-driven, interpretable ML applications, for example as proposed in Ma et al. 2018 (PMID: 29505029) and Kuenzi et al. 2020 (PMID: 33096023).</details>
-                
-              </div>
+          <div class="label">Appropriate use cases (rai:dataUseCases)</div><div class="value"><details class="longtext"><summary><span class="head">AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or…</span> <span class="more">[438 chars — expand]</span></summary><span class="pre">AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable biologically-driven, interpretable ML applications, for example as proposed in Ma et al. 2018 (PMID: 29505029) and Kuenzi et al. 2020 (PMID: 33096023).</span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Limitations / inappropriate uses (rai:dataLimitations)</div>
-          <div class="value">
-                This is an interim release. It does not contain predicted cell maps, which will be added in future releases. The current release is most suitable for bioinformatics analysis of the individual datasets. Requires domain expertise for meaningful analysis.
-              </div>
+          <div class="label">Limitations / inappropriate uses (rai:dataLimitations)</div><div class="value"><span class="pre">This is an interim release. It does not contain predicted cell maps, which will be added in future releases. The current release is most suitable for bioinformatics analysis of the individual datasets. Requires domain expertise for meaningful analysis.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Prohibited uses</div>
-          <div class="value">
-                These laboratory data are not to be used in clinical decision-making or in any context involving patient care without appropriate regulatory oversight and approval.
-              </div>
+          <div class="label">Prohibited uses</div><div class="value"><span class="pre">These laboratory data are not to be used in clinical decision-making or in any context involving patient care without appropriate regulatory oversight and approval.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Both appropriate and inappropriate uses stated</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">Both appropriate and inappropriate uses stated</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Prior publications listed</div>
-          <div class="value"><strong>4</strong></div>
+          <div class="label">Prior publications listed</div><div class="value"><strong>4</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">Prior publications</div>
-          <div class="value">
-                <ul class="plain">
-                
-                  <li><a href="https://doi.org/10.1101/2024.05.21.589311">Clark T, Parker J, Al Manir S, et al. (2024) Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines. bioRxiv 2024.05.21.589311; doi: …[truncated, 232 chars total]</a></li>
-                
-                  <li><a href="https://doi.org/10.1101/2024.11.03.621734">Nourreddine S, et al. (2024) A Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells. bioRxiv 2024.05.21.589311; doi: https://doi.org/10.1101/2024.11.03.621734</a></li>
-                
-                  <li><a href="https://doi.org/10.1038/s41586-021-04115-9">Qin, Y., Huttlin, E.L., Winsnes, C.F. et al. A multi-scale map of cell structure fusing protein images and interactions. Nature 600, 536–542 (2021). https://doi.org/10.1038/s41586-021-04115-9</a></li>
-                
-                  <li><a href="https://www.nature.com/articles/s41586-025-08878-3">Schaffer LV, Hu M, Qian G, et al. Multimodal cell maps as a foundation for structural and functional genomics. Nature [Internet]. 2025 Apr 9; Available from: https://www.nature.com/articles/s41586-025-08878-3</a></li>
-                
-                </ul>
-              </div>
+          <div class="label">Prior publications</div><div class="value"><ul class="plain"><li><a href="https://doi.org/10.1101/2024.05.21.589311">Clark T, Parker J, Al Manir S, et al. (2024) Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines. bioRxiv 2024.05.21.589311; doi: …[truncated, 232 chars total]</a></li><li><a href="https://doi.org/10.1101/2024.11.03.621734">Nourreddine S, et al. (2024) A Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells. bioRxiv 2024.05.21.589311; doi: https://doi.org/10.1101/2024.11.03.621734</a></li><li><a href="https://doi.org/10.1038/s41586-021-04115-9">Qin, Y., Huttlin, E.L., Winsnes, C.F. et al. A multi-scale map of cell structure fusing protein images and interactions. Nature 600, 536–542 (2021). https://doi.org/10.1038/s41586-021-04115-9</a></li><li><a href="https://www.nature.com/articles/s41586-025-08878-3">Schaffer LV, Hu M, Qian G, et al. Multimodal cell maps as a foundation for structural and functional genomics. Nature [Internet]. 2025 Apr 9; Available from: https://www.nature.com/articles/s41586-025-08878-3</a></li></ul></div>
         </div>
         
       </div>
@@ -2225,7 +1943,7 @@
       <h3>3.c Verifiable</h3>
       
       <div class="practice">Provide a mechanism for ensuring the integrity of each raw or processed dataset, such as a cryptographic hash.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (1)</summary>
         <ul><li>Is there an integrity mechanism (e.g., cryptographic hash) for each raw or processed dataset?</li></ul>
       </details>
@@ -2246,24 +1964,15 @@
         
         
         <div class="item">
-          <div class="label">Hash coverage (datasets + software, embargoed excluded)</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:0.0%"></span></span>
-                <strong>0.0%</strong>
-                <span class="meta">(2 of 53,598)</span>
-              </div>
+          <div class="label">Hash coverage (datasets + software, embargoed excluded)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(2 of 53,598)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Embargoed datasets excluded from the denominator</div>
-          <div class="value"><strong>283</strong></div>
+          <div class="label">Embargoed datasets excluded from the denominator</div><div class="value"><strong>283</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">Example entity with a checksum</div>
-          <div class="value">
-                <details class="entity"><summary>KOLF Pan Genome OC Filtered Aggregated Data</summary>
-                  <pre>{
+          <div class="label">Example entity with a checksum</div><div class="value"><details class="entity"><summary>KOLF Pan Genome OC Filtered Aggregated Data</summary><pre>{
   &#34;@id&#34;: &#34;ark:59853/dataset-kolf-pan-genome-aggregated-data&#34;,
   &#34;name&#34;: &#34;KOLF Pan Genome OC Filtered Aggregated Data&#34;,
   &#34;@type&#34;: [
@@ -2302,8 +2011,7 @@
       &#34;@id&#34;: &#34;ark:59853/computation-perturbation-cell-atlas-data-processing-Cmx85JtSguG&#34;
     }
   ]
-}</pre></details>
-              </div>
+}</pre></details></div>
         </div>
         
       </div>
@@ -2333,7 +2041,7 @@
       <h3>4.a Ethically acquired</h3>
       
       <div class="practice">Describe ethical data acquisition consistent with accepted principles (e.g., Belmont Report, Menlo Report, CARE Principles) sufficient to evaluate for intended use, along with a management plan.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (5)</summary>
         <ul><li>Is ethical data acquisition consistent with accepted bioethics principles sufficient to evaluate for the intended use?</li><li>Are the following elements present? IRB/REC URL, IRB/REC protocol number, data governance committee chair, and ethics reviewer.</li><li>If an indigenous population is being studied, is CARE principles conformance demonstrated?</li><li>Is a management plan provided? (rai:dataReleaseMaintenancePlan link to the DMP/DMSP.)</li><li>Acquisition is legitimate - obtained without theft, coercion, or deception, with required permissions/consent secured.</li></ul>
       </details>
@@ -2354,67 +2062,39 @@
         
         
         <div class="item">
-          <div class="label">Collection description (rai:dataCollection)</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi:…</span> <span class="more">[347 chars — expand]</span></summary>Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi: <a href="https://doi.org/10.1101/2024.05.21.589311">https://doi.org/10.1101/2024.05.21.589311</a>. Additional data collection details will be subsequently published once finalized. </details>
-                
-              </div>
+          <div class="label">Collection description (rai:dataCollection)</div><div class="value"><details class="longtext"><summary><span class="head">Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi:…</span> <span class="more">[347 chars — expand]</span></summary><span class="pre">Data collection processes are generally described in Clark T et al. (2024) &#34;Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines&#34; bioRxiv 2024.05.21.589311; doi: <a href="https://doi.org/10.1101/2024.05.21.589311">https://doi.org/10.1101/2024.05.21.589311</a>. Additional data collection details will be subsequently published once finalized. </span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Ethics reviewers (ethicalReview)</div>
-          <div class="value">
-                Vardit Ravistky ravitskyv@thehastingscenter.org and Jean-Christophe Belisle-Pipon jean-christophe_belisle-pipon@sfu.ca.
-              </div>
+          <div class="label">Ethics reviewers (ethicalReview)</div><div class="value"><span class="pre">Vardit Ravistky ravitskyv@thehastingscenter.org and Jean-Christophe Belisle-Pipon jean-christophe_belisle-pipon@sfu.ca.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Human subjects research</div>
-          <div class="value">
-                None - data collected from commercially available cell lines
-              </div>
+          <div class="label">Human subjects research</div><div class="value"><span class="pre">None - data collected from commercially available cell lines</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Human subjects exemption</div>
-          <div class="value">
-                Exempt — research with commercially available de-identified human cell lines does not constitute human subjects research.
-              </div>
+          <div class="label">Human subjects exemption</div><div class="value"><span class="pre">Exempt — research with commercially available de-identified human cell lines does not constitute human subjects research.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Informed consent</div>
-          <div class="value">
-                Not applicable — data collected from commercially available de-identified human cell lines (KOLF2.1J iPSC and MDA-MB-468). No primary human subjects research conducted under this release.
-              </div>
+          <div class="label">Informed consent</div><div class="value"><span class="pre">Not applicable — data collected from commercially available de-identified human cell lines (KOLF2.1J iPSC and MDA-MB-468). No primary human subjects research conducted under this release.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">At-risk populations</div>
-          <div class="value">
-                None — no human subjects involved; commercially sourced de-identified cell lines only.
-              </div>
+          <div class="label">At-risk populations</div><div class="value"><span class="pre">None — no human subjects involved; commercially sourced de-identified cell lines only.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">IRB / ethics-review references found</div>
-          <div class="value"><span class="no">✗ No</span>
-              </div>
+          <div class="label">IRB / ethics-review references found</div><div class="value"><span class="no">✗ No</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Management plan (rai:dataReleaseMaintenancePlan)</div>
-          <div class="value">
-                Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the <a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>, supported by committed institutional funds.
-              </div>
+          <div class="label">Management plan (rai:dataReleaseMaintenancePlan)</div><div class="value"><span class="pre">Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the <a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>, supported by committed institutional funds.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">DMP link resolves: https://dataverse.lib.virginia.edu/</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">DMP link resolves: https://dataverse.lib.virginia.edu/</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
       </div>
@@ -2438,7 +2118,7 @@
       <h3>4.b Ethically managed</h3>
       
       <div class="practice">Data management must align with ethical principles throughout the health AI lifecycle. Indicate privacy-protection processing, if any, sufficient to evaluate ethical status for intended use.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (3)</summary>
         <ul><li>Is data sensitivity properly described in alignment with disclosure risks?</li><li>Is data sensitivity aligned with intended use?</li><li>Is privacy protection described in a way aligned with the above?</li></ul>
       </details>
@@ -2459,36 +2139,23 @@
         
         
         <div class="item">
-          <div class="label">Confidentiality level</div>
-          <div class="value">
-                Unrestricted
-              </div>
+          <div class="label">Confidentiality level</div><div class="value"><span class="pre">Unrestricted</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Personal/sensitive information statement</div>
-          <div class="value"><span class="na">not provided</span></div>
+          <div class="label">Personal/sensitive information statement</div><div class="value"><span class="na">not provided</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Data governance committee</div>
-          <div class="value">
-                Jilian Parker
-              </div>
+          <div class="label">Data governance committee</div><div class="value"><span class="pre">Jilian Parker</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Ethics review</div>
-          <div class="value">
-                Vardit Ravistky ravitskyv@thehastingscenter.org and Jean-Christophe Belisle-Pipon jean-christophe_belisle-pipon@sfu.ca.
-              </div>
+          <div class="label">Ethics review</div><div class="value"><span class="pre">Vardit Ravistky ravitskyv@thehastingscenter.org and Jean-Christophe Belisle-Pipon jean-christophe_belisle-pipon@sfu.ca.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Management plan content (judge adequacy for the declared sensitivity)</div>
-          <div class="value">
-                Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the <a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>, supported by committed institutional funds.
-              </div>
+          <div class="label">Management plan content (judge adequacy for the declared sensitivity)</div><div class="value"><span class="pre">Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the <a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>, supported by committed institutional funds.</span></div>
         </div>
         
       </div>
@@ -2512,7 +2179,7 @@
       <h3>4.c Ethically Disseminated</h3>
       
       <div class="practice">Specify a licensing agreement and/or data use agreement (DUA) on as open terms as ethical and sustainability considerations permit. Specify contact information for a data access committee.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (3)</summary>
         <ul><li>Is the license and/or DUA specified on as-open-as-appropriate terms?</li><li>Is a Data Access Committee (DAC) contact provided where access is controlled?</li><li>If a DUA exists, does the DUA specify permitted and prohibited uses?</li></ul>
       </details>
@@ -2533,36 +2200,23 @@
         
         
         <div class="item">
-          <div class="label">License</div>
-          <div class="value">
-                <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">https://creativecommons.org/licenses/by-nc-sa/4.0/</a>
-              </div>
+          <div class="label">License</div><div class="value"><span class="pre"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">https://creativecommons.org/licenses/by-nc-sa/4.0/</a></span></div>
         </div>
         
         <div class="item">
-          <div class="label">Conditions of access / DUA</div>
-          <div class="value">
-                Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.
-              </div>
+          <div class="label">Conditions of access / DUA</div><div class="value"><span class="pre">Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Permitted uses stated</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable …[truncated, 438 chars total]</span></div>
+          <div class="label">Permitted uses stated</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable …[truncated, 438 chars total]</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Prohibited uses stated</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">These laboratory data are not to be used in clinical decision-making or in any context involving patient care without appropriate regulatory oversight and approval.</span></div>
+          <div class="label">Prohibited uses stated</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">These laboratory data are not to be used in clinical decision-making or in any context involving patient care without appropriate regulatory oversight and approval.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Access-committee / dataset contact</div>
-          <div class="value">
-                tideker@health.ucsd.edu
-              <span class="detail">N/A if fully open with no access committee</span></div>
+          <div class="label">Access-committee / dataset contact</div><div class="value"><span class="pre">tideker@health.ucsd.edu</span> <span class="detail">N/A if fully open with no access committee</span></div>
         </div>
         
       </div>
@@ -2586,7 +2240,7 @@
       <h3>4.d Secure</h3>
       
       <div class="practice">Specify security requirements for storing and accessing this data, e.g., "public", "controlled access only", etc.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (1)</summary>
         <ul><li>Are security requirements for storing and accessing the dataset specified, following standards such as HL7's Confidentiality security labels (see http://terminology.hl7.org/ValueSet/v3-Confidentiality)?</li></ul>
       </details>
@@ -2607,26 +2261,19 @@
         
         
         <div class="item">
-          <div class="label">Confidentiality level</div>
-          <div class="value">
-                Unrestricted
-              </div>
+          <div class="label">Confidentiality level</div><div class="value"><span class="pre">Unrestricted</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Value is an HL7 v3-Confidentiality code</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">matches code &#39;U&#39; in <a href="http://terminology.hl7.org/ValueSet/v3-Confidentiality">http://terminology.hl7.org/ValueSet/v3-Confidentiality</a></span></div>
+          <div class="label">Value is an HL7 v3-Confidentiality code</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">matches code &#39;U&#39; in <a href="http://terminology.hl7.org/ValueSet/v3-Confidentiality">http://terminology.hl7.org/ValueSet/v3-Confidentiality</a></span></div>
         </div>
         
         <div class="item">
-          <div class="label">De-identification statement</div>
-          <div class="value"><span class="na">not provided</span></div>
+          <div class="label">De-identification statement</div><div class="value"><span class="na">not provided</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Personal/sensitive information statement</div>
-          <div class="value"><span class="na">not provided</span></div>
+          <div class="label">Personal/sensitive information statement</div><div class="value"><span class="na">not provided</span></div>
         </div>
         
       </div>
@@ -2656,7 +2303,7 @@
       <h3>5.a Persistent</h3>
       
       <div class="practice">Ensure unprocessed data is preserved in an archive that complies with privacy laws and retention guidelines, enabling future reprocessing and publishing of revised data.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (1)</summary>
         <ul><li>Is all unprocessed/raw and processed data preserved in an archive that supports retention and future reprocessing?</li></ul>
       </details>
@@ -2677,32 +2324,19 @@
         
         
         <div class="item">
-          <div class="label">Identifier</div>
-          <div class="value">
-                <a href="https://doi.org/10.18130/V3/HIGT4C">https://doi.org/10.18130/V3/HIGT4C</a>
-              </div>
+          <div class="label">Identifier</div><div class="value"><span class="pre"><a href="https://doi.org/10.18130/V3/HIGT4C">https://doi.org/10.18130/V3/HIGT4C</a></span></div>
         </div>
         
         <div class="item">
-          <div class="label">Identifier is a PID</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">scheme: DOI</span></div>
+          <div class="label">Identifier is a PID</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">scheme: DOI</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Recognized archives detected (publisher + content hosts)</div>
-          <div class="value">
-                <ul class="plain"><li>Dataverse</li><li>Figshare</li><li>MassIVE (proteomics)</li></ul>
-              </div>
+          <div class="label">Recognized archives detected (publisher + content hosts)</div><div class="value"><ul class="plain"><li>Dataverse</li><li>Figshare</li><li>MassIVE (proteomics)</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Datasets with a contentUrl (data parked somewhere)</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:100.0%"></span></span>
-                <strong>100.0%</strong>
-                <span class="meta">(53,877 of 53,877)</span>
-              <span class="detail">2,155 of these are remote archive links; the rest live inside the crate deposit</span></div>
+          <div class="label">Datasets with a contentUrl (data parked somewhere)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(53,877 of 53,877)</span> <span class="detail">2,155 of these are remote archive links; the rest live inside the crate deposit</span></div>
         </div>
         
       </div>
@@ -2726,7 +2360,7 @@
       <h3>5.b Domain-appropriate</h3>
       
       <div class="practice">Ensure single-domain raw or processed data are deposited in a FAIR, domain-appropriate specialist repository if available.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (1)</summary>
         <ul><li>For single-domain data, is it deposited in the repository the domain community treats as appropriate, where one is available for this data?</li></ul>
       </details>
@@ -2747,55 +2381,31 @@
         
         
         <div class="item">
-          <div class="label">Publisher repository</div>
-          <div class="value">
-                <a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>
-              <span class="detail">Dataverse</span></div>
+          <div class="label">Publisher repository</div><div class="value"><span class="pre"><a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a></span> <span class="detail">Dataverse</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Specialist (domain) hosts</div>
-          <div class="value">
-                ftp://massive-ftp.ucsd.edu — MassIVE (proteomics): 2153 files
-                
-              </div>
+          <div class="label">Specialist (domain) hosts</div><div class="value">ftp://massive-ftp.ucsd.edu — MassIVE (proteomics): 2153 files</div>
         </div>
         
         <div class="item">
-          <div class="label">Generalist repository hosts</div>
-          <div class="value">
-                <a href="https://figshare.com">https://figshare.com</a> — Figshare: 2 files
-                
-              </div>
+          <div class="label">Generalist repository hosts</div><div class="value"><a href="https://figshare.com">https://figshare.com</a> — Figshare: 2 files</div>
         </div>
         
         <div class="item">
-          <div class="label">Unrecognized hosts</div>
-          <div class="value"><span class="na">none</span></div>
+          <div class="label">Unrecognized hosts</div><div class="value"><span class="na">none</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Dataset files on recognized repository hosts</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:100.0%"></span></span>
-                <strong>100.0%</strong>
-                <span class="meta">(2,155 of 2,155)</span>
-              </div>
+          <div class="label">Dataset files on recognized repository hosts</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(2,155 of 2,155)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Domain hint — collection types</div>
-          <div class="value">
-                Perturb-seq; IF imaging; SEC-MS; AP-MS
-                
-              </div>
+          <div class="label">Domain hint — collection types</div><div class="value">Perturb-seq; IF imaging; SEC-MS; AP-MS</div>
         </div>
         
         <div class="item">
-          <div class="label">Domain hint — keywords</div>
-          <div class="value">
-                <ul class="plain"><li>AI</li><li>affinity purification</li><li>AP-MS</li><li>artificial intelligence</li><li>breast cancer</li><li>Bridge2AI</li><li>cardiomyocyte</li><li>CM4AI</li><li>CRISPR/Cas9</li><li>induced pluripotent stem cell</li><li>iPSC</li><li>KOLF2.1J</li><li>machine learning</li><li>mass spectroscopy</li><li>MDA-MB-468</li></ul>
-              </div>
+          <div class="label">Domain hint — keywords</div><div class="value"><ul class="plain"><li>AI</li><li>affinity purification</li><li>AP-MS</li><li>artificial intelligence</li><li>breast cancer</li><li>Bridge2AI</li><li>cardiomyocyte</li><li>CM4AI</li><li>CRISPR/Cas9</li><li>induced pluripotent stem cell</li><li>iPSC</li><li>KOLF2.1J</li><li>machine learning</li><li>mass spectroscopy</li><li>MDA-MB-468</li></ul></div>
         </div>
         
       </div>
@@ -2819,7 +2429,7 @@
       <h3>5.c Well-governed</h3>
       
       <div class="practice">Implement a data governance model before data capture, including a repository that facilitates data stewardship in the future and governance that accounts for maintenance, terms, policy changes, and fairness.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (2)</summary>
         <ul><li>Is a data governance plan specified? A rai:dataReleaseMaintenancePlan should include a link to the Data Management Plan (DMP).</li><li>Are terms of access specified? See schema.org conditionsOfAccess and license.</li></ul>
       </details>
@@ -2840,55 +2450,35 @@
         
         
         <div class="item">
-          <div class="label">Governance / maintenance plan</div>
-          <div class="value">
-                Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the <a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>, supported by committed institutional funds.
-              </div>
+          <div class="label">Governance / maintenance plan</div><div class="value"><span class="pre">Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the <a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>, supported by committed institutional funds.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">DMP link extracted from the plan</div>
-          <div class="value"><a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a>
-              </div>
+          <div class="label">DMP link extracted from the plan</div><div class="value"><a href="https://dataverse.lib.virginia.edu/">https://dataverse.lib.virginia.edu/</a></div>
         </div>
         
         <div class="item">
-          <div class="label">DMP link resolves</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">DMP link resolves</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Terms of access (conditionsOfAccess)</div>
-          <div class="value">
-                Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.
-              </div>
+          <div class="label">Terms of access (conditionsOfAccess)</div><div class="value"><span class="pre">Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">License</div>
-          <div class="value">
-                <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">https://creativecommons.org/licenses/by-nc-sa/4.0/</a>
-              </div>
+          <div class="label">License</div><div class="value"><span class="pre"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">https://creativecommons.org/licenses/by-nc-sa/4.0/</a></span></div>
         </div>
         
         <div class="item">
-          <div class="label">Responsible party</div>
-          <div class="value">
-                Jilian Parker; Trey Ideker; tideker@health.ucsd.edu
-              </div>
+          <div class="label">Responsible party</div><div class="value"><span class="pre">Jilian Parker; Trey Ideker; tideker@health.ucsd.edu</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Governance plan present</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">Governance plan present</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Terms of access present</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">Terms of access present</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
       </div>
@@ -2912,7 +2502,7 @@
       <h3>5.d Associated</h3>
       
       <div class="practice">Document project-level connections between data components and elements in a machine-readable manner.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (1)</summary>
         <ul><li>Will a future user be able to access all data components needed for the declared analysis, as an associated set that persists?</li></ul>
       </details>
@@ -2933,51 +2523,19 @@
         
         
         <div class="item">
-          <div class="label">Entities carrying at least one machine-readable provenance link</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:98.5%"></span></span>
-                <strong>98.5%</strong>
-                <span class="meta">(56,109 of 56,986)</span>
-              </div>
+          <div class="label">Entities carrying at least one machine-readable provenance link</div><div class="value"><span class="pct-bar"><span style="width:98.5%"></span></span> <strong>98.5%</strong> <span class="meta">(56,109 of 56,986)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Sub-crates linked from the parent and present</div>
-          <div class="value"><strong>9</strong> of 19</div>
+          <div class="label">Sub-crates linked from the parent and present</div><div class="value"><strong>9</strong> of 19</div>
         </div>
         
         <div class="item">
-          <div class="label">hasPart references on the root</div>
-          <div class="value"><strong>70</strong></div>
+          <div class="label">hasPart references on the root</div><div class="value"><strong>70</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">Evidence graphs (machine-derived association views)</div>
-          <div class="value">
-                <ul class="plain">
-                
-                  <li><a href="../../../CM4AIJuneRelease/AP-MS/apms-paclitaxel-rocrate/ro-crate-prov-graph.html">EndoTag AP-MS Profiling of Chromatin Modifier Interactome Rewiring in MDA-MB-468 Cells Upon Paclitaxel Perturbation — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/AP-MS/apms-vorinostat-rocrate/ro-crate-prov-graph.html">EndoTag-AP-MS Profiling of Chromatin Modifier Interactome Rewiring in MDA-MB-468 Cells Upon Vorinostat Perturbation — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/Images/paclitaxel/ro-crate-prov-graph.html">Paclitaxel IF Images — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/Images/untreated/ro-crate-prov-graph.html">Untreated IF Images — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/Images/vorinostat/ro-crate-prov-graph.html">Vorinostat IF Images — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/ro-crate-prov-graph.html">SEC-MS characterization of KOLF2 neuronal and cardiomyocyte differentiation — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/parental-rep1-F01-evidence-graph.html">SEC-MS characterization of KOLF2 neuronal and cardiomyocyte differentiation — parental-rep1-F01-evidence-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/mass-spec/cancer-cells/ro-crate-prov-graph.html">SEC-MS of MDA-MB468 following treatment of vorinostat or paclitaxel. — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/Perturb-Seq/sra/ro-crate-prov-graph.html">Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells - Raw Sequence Data — ro-crate-prov-graph.html</a></li>
-                
-                  <li><a href="../../../CM4AIJuneRelease/Perturb-Seq/cell-atlas/ro-crate-prov-graph.html">Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells - Perturb Seq — ro-crate-prov-graph.html</a></li>
-                
-                </ul>
-              </div>
+          <div class="label">Evidence graphs (machine-derived association views)</div><div class="value"><ul class="plain"><li><a href="../../../CM4AIJuneRelease/AP-MS/apms-paclitaxel-rocrate/ro-crate-prov-graph.html">EndoTag AP-MS Profiling of Chromatin Modifier Interactome Rewiring in MDA-MB-468 Cells Upon Paclitaxel Perturbation — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/AP-MS/apms-vorinostat-rocrate/ro-crate-prov-graph.html">EndoTag-AP-MS Profiling of Chromatin Modifier Interactome Rewiring in MDA-MB-468 Cells Upon Vorinostat Perturbation — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/Images/paclitaxel/ro-crate-prov-graph.html">Paclitaxel IF Images — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/Images/untreated/ro-crate-prov-graph.html">Untreated IF Images — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/Images/vorinostat/ro-crate-prov-graph.html">Vorinostat IF Images — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/ro-crate-prov-graph.html">SEC-MS characterization of KOLF2 neuronal and cardiomyocyte differentiation — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/mass-spec/iPSCs/parental-rep1-F01-evidence-graph.html">SEC-MS characterization of KOLF2 neuronal and cardiomyocyte differentiation — parental-rep1-F01-evidence-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/mass-spec/cancer-cells/ro-crate-prov-graph.html">SEC-MS of MDA-MB468 following treatment of vorinostat or paclitaxel. — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/Perturb-Seq/sra/ro-crate-prov-graph.html">Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells - Raw Sequence Data — ro-crate-prov-graph.html</a></li><li><a href="../../../CM4AIJuneRelease/Perturb-Seq/cell-atlas/ro-crate-prov-graph.html">Perturbation Cell Atlas of Human Induced Pluripotent Stem Cells - Perturb Seq — ro-crate-prov-graph.html</a></li></ul></div>
         </div>
         
       </div>
@@ -3007,7 +2565,7 @@
       <h3>6.a Standardized</h3>
       
       <div class="practice">Datasets adhere to established, documented standards, including metadata standards, and their adherence can be validated deterministically.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (2)</summary>
         <ul><li>Can the adherence to standards, as described in 2.c, be validated deterministically?</li><li>Does a programmatic validator (e.g., script, CLI tool, or automated pipeline) exist to deterministically verify this adherence without human intervention?</li></ul>
       </details>
@@ -3028,36 +2586,23 @@
         
         
         <div class="item">
-          <div class="label">conformsTo declarations (metadata descriptor + root)</div>
-          <div class="value">
-                <a href="https://w3id.org/ro/crate/1.2">https://w3id.org/ro/crate/1.2</a>
-                
-              </div>
+          <div class="label">conformsTo declarations (metadata descriptor + root)</div><div class="value"><a href="https://w3id.org/ro/crate/1.2">https://w3id.org/ro/crate/1.2</a></div>
         </div>
         
         <div class="item">
-          <div class="label">Recognized standards in @context / conformsTo</div>
-          <div class="value">
-                <ul class="plain"><li>RO-Crate</li><li>schema.org</li></ul>
-              </div>
+          <div class="label">Recognized standards in @context / conformsTo</div><div class="value"><ul class="plain"><li>RO-Crate</li><li>schema.org</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Deterministic validator known for the declared standards</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              <span class="detail">JSON Schema — any JSON Schema validator (e.g. python-jsonschema); RO-Crate profile — rocrate-validator / ro-crate-py</span></div>
+          <div class="label">Deterministic validator known for the declared standards</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">JSON Schema — any JSON Schema validator (e.g. python-jsonschema); RO-Crate profile — rocrate-validator / ro-crate-py</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Machine-readable schema entities</div>
-          <div class="value"><strong>18</strong></div>
+          <div class="label">Machine-readable schema entities</div><div class="value"><strong>18</strong></div>
         </div>
         
         <div class="item">
-          <div class="label">File formats present</div>
-          <div class="value">
-                <ul class="plain"><li>image/jpeg: 51436</li><li>raw: 1261</li><li>Bruker .d: 868</li><li>fastq.gz: 192</li><li>h5: 90</li><li>TSV: 9</li><li>tsv: 5</li><li>csv: 4</li><li>pdf: 3</li><li>xml: 3</li><li>txt: 2</li><li>fasta: 2</li><li>h5ad: 2</li></ul>
-              </div>
+          <div class="label">File formats present</div><div class="value"><ul class="plain"><li>image/jpeg: 51436</li><li>raw: 1261</li><li>Bruker .d: 868</li><li>fastq.gz: 192</li><li>h5: 90</li><li>TSV: 9</li><li>tsv: 5</li><li>csv: 4</li><li>pdf: 3</li><li>xml: 3</li><li>txt: 2</li><li>fasta: 2</li><li>h5ad: 2</li></ul></div>
         </div>
         
       </div>
@@ -3081,7 +2626,7 @@
       <h3>6.b Computationally accessible</h3>
       
       <div class="practice">Provide a mechanism to access data either through established exchange protocols or a well-documented API.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (3)</summary>
         <ul><li>Is there a programmatic mechanism to access the data at scale (e.g., cloud object storage, standard API)?</li><li>Does the access mechanism utilize standard interoperability protocols (e.g., GA4GH DRS, HL7 FHIR APIs, other REST API endpoints)?</li><li>Are the endpoints, payloads, and authentication methods formally documented (e.g., via an OpenAPI/Swagger specification)?</li></ul>
       </details>
@@ -3102,48 +2647,27 @@
         
         
         <div class="item">
-          <div class="label">Datasets with a distribution link (contentUrl)</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:100.0%"></span></span>
-                <strong>100.0%</strong>
-                <span class="meta">(53,877 of 53,877)</span>
-              </div>
+          <div class="label">Datasets with a distribution link (contentUrl)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(53,877 of 53,877)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Datasets with a REMOTE distribution link (http/ftp/s3-style)</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:4.0%"></span></span>
-                <strong>4.0%</strong>
-                <span class="meta">(2,155 of 53,877)</span>
-              <span class="detail">the rest are file:// paths inside the crate or embargoed placeholders</span></div>
+          <div class="label">Datasets with a REMOTE distribution link (http/ftp/s3-style)</div><div class="value"><span class="pct-bar"><span style="width:4.0%"></span></span> <strong>4.0%</strong> <span class="meta">(2,155 of 53,877)</span> <span class="detail">the rest are file:// paths inside the crate or embargoed placeholders</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Protocols used by distribution links</div>
-          <div class="value">
-                <ul class="plain"><li>file: 51439 files</li><li>ftp: 2153 files</li><li>none: 283 files</li><li>https: 2 files</li></ul>
-              <span class="detail">file = paths inside the crate; none = placeholder values such as &#39;Embargoed&#39;</span></div>
+          <div class="label">Protocols used by distribution links</div><div class="value"><ul class="plain"><li>file: 51439 files</li><li>ftp: 2153 files</li><li>none: 283 files</li><li>https: 2 files</li></ul> <span class="detail">file = paths inside the crate; none = placeholder values such as &#39;Embargoed&#39;</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Distribution hosts</div>
-          <div class="value">
-                <ul class="plain"><li>ftp://massive-ftp.ucsd.edu: 2153 files</li><li><a href="https://figshare.com">https://figshare.com</a>: 2 files</li></ul>
-              </div>
+          <div class="label">Distribution hosts</div><div class="value"><ul class="plain"><li>ftp://massive-ftp.ucsd.edu: 2153 files</li><li><a href="https://figshare.com">https://figshare.com</a>: 2 files</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Access instructions (conditionsOfAccess)</div>
-          <div class="value">
-                Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.
-              </div>
+          <div class="label">Access instructions (conditionsOfAccess)</div><div class="value"><span class="pre">Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Sample host reachable: https://figshare.com/</div>
-          <div class="value"><span class="yes">✓ Yes</span>
-              </div>
+          <div class="label">Sample host reachable: https://figshare.com/</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
       </div>
@@ -3167,7 +2691,7 @@
       <h3>6.c Portable</h3>
       
       <div class="practice">Maximize portability across computational resources where possible. If data use requires specific resources, provide machine-readable documentation defining these resources.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (3)</summary>
         <ul><li>Can the data be processed or utilized without being locked into a specific, proprietary, or localized compute environment?</li><li>Are software dependencies (libraries, OS versions) and hardware requirements (GPUs, memory) explicitly documented?</li><li>Is this documentation provided in a machine-executable format (e.g., containers, workflow languages) that automates environment setup?</li></ul>
       </details>
@@ -3188,29 +2712,19 @@
         
         
         <div class="item">
-          <div class="label">Files in open/common formats</div>
-          <div class="value"><strong>51,748</strong><span class="detail">image/jpeg: 51436, fastq.gz: 192, h5: 90, TSV: 9, tsv: 5, csv: 4, pdf: 3, xml: 3</span></div>
+          <div class="label">Files in open/common formats</div><div class="value"><strong>51,748</strong> <span class="detail">image/jpeg: 51436, fastq.gz: 192, h5: 90, TSV: 9, tsv: 5, csv: 4, pdf: 3, xml: 3</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Files in proprietary vendor formats</div>
-          <div class="value"><strong>2,129</strong><span class="detail">raw — Thermo .raw (mass spec, vendor): 1261, Bruker .d — Bruker .d (mass spec, vendor): 868</span></div>
+          <div class="label">Files in proprietary vendor formats</div><div class="value"><strong>2,129</strong> <span class="detail">raw — Thermo .raw (mass spec, vendor): 1261, Bruker .d — Bruker .d (mass spec, vendor): 868</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Computations with a container declared (usedContainer)</div>
-          <div class="value">
-                <span class="pct-bar"><span style="width:0.0%"></span></span>
-                <strong>0.0%</strong>
-                <span class="meta">(0 of 102)</span>
-              </div>
+          <div class="label">Computations with a container declared (usedContainer)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 102)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Example computation (environment description)</div>
-          <div class="value">
-                <details class="entity"><summary>MSstats across all KOLF2 SEC-MS fractions</summary>
-                  <pre>{
+          <div class="label">Example computation (environment description)</div><div class="value"><details class="entity"><summary>MSstats across all KOLF2 SEC-MS fractions</summary><pre>{
   &#34;@id&#34;: &#34;ark:59853/computation-msv000100676-MSstats&#34;,
   &#34;name&#34;: &#34;MSstats across all KOLF2 SEC-MS fractions&#34;,
   &#34;@type&#34;: [
@@ -3277,15 +2791,11 @@
     &#34;…(+854 more)&#34;
   ],
   &#34;evi:annotatedBy&#34;: []
-}</pre></details>
-              </div>
+}</pre></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Software descriptions</div>
-          <div class="value">
-                <ul class="plain"><li>Spectronaut: Spectronaut is a commercial software package developed by Biognosys for the analysis of mass spectrometry-based proteomics data, particularly for Data-Independent Acquisition (DIA) experiments.</li><li>Unknown SEC analysis tool: Placeholder for the downstream SEC quantification tool that produced sec.csv. The MassIVE upload MSV000100676 does not record which software was used; the column set (fractionMass, log2MassNumber, …[truncated, 401 chars total]</li><li>Spectronaut: Spectronaut is a commercial software package developed by Biognosys for the analysis of mass spectrometry-based proteomics data. It is particularly known for its capabilities in processing Data-Independent Acquisition …[truncated, 363 chars total]</li></ul>
-              </div>
+          <div class="label">Software descriptions</div><div class="value"><ul class="plain"><li>Spectronaut: Spectronaut is a commercial software package developed by Biognosys for the analysis of mass spectrometry-based proteomics data, particularly for Data-Independent Acquisition (DIA) experiments.</li><li>Unknown SEC analysis tool: Placeholder for the downstream SEC quantification tool that produced sec.csv. The MassIVE upload MSV000100676 does not record which software was used; the column set (fractionMass, log2MassNumber, …[truncated, 401 chars total]</li><li>Spectronaut: Spectronaut is a commercial software package developed by Biognosys for the analysis of mass spectrometry-based proteomics data. It is particularly known for its capabilities in processing Data-Independent Acquisition …[truncated, 363 chars total]</li></ul></div>
         </div>
         
       </div>
@@ -3309,7 +2819,7 @@
       <h3>6.d Contextualized</h3>
       
       <div class="practice">Include any considerations regarding splits of the data, including any information withheld at any point of data collection and processing. Provide examples of data components to aid understanding of their general structure and content.</div>
-      <details class="questions">
+      <details class="questions" open>
         <summary>Questions (3)</summary>
         <ul><li>Are machine-learning data splits (train/test/validation) explicitly defined, or is the rationale for a contiguous dataset documented?</li><li>Is any withheld information (such as de-identified/redacted fields, censored variables, or blinded evaluation holdouts) clearly described?</li><li>Are representative examples or synthetic datasets provided that strictly mirror the structure of the full dataset?</li></ul>
       </details>
@@ -3330,46 +2840,31 @@
         
         
         <div class="item">
-          <div class="label">Datasets with split-like names (train/test/validation/holdout)</div>
-          <div class="value"><span class="no">✗ No</span>
-              </div>
+          <div class="label">Datasets with split-like names (train/test/validation/holdout)</div><div class="value"><span class="no">✗ No</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Split-named datasets</div>
-          <div class="value"><span class="na">none</span></div>
+          <div class="label">Split-named datasets</div><div class="value"><span class="na">none</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Sampling strategies (d4d:samplingStrategies)</div>
-          <div class="value"><span class="na">not provided</span></div>
+          <div class="label">Sampling strategies (d4d:samplingStrategies)</div><div class="value"><span class="na">not provided</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Withheld / missing information</div>
-          <div class="value">
-                
-                  <details class="longtext">
-                    <summary><span class="head">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps…</span> <span class="more">[265 chars — expand]</span></summary>Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release.</details>
-                
-              </div>
+          <div class="label">Withheld / missing information</div><div class="value"><details class="longtext"><summary><span class="head">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps…</span> <span class="more">[265 chars — expand]</span></summary><span class="pre">Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release.</span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Preprocessing protocol (rai:dataPreprocessingProtocol)</div>
-          <div class="value"><span class="na">not provided</span></div>
+          <div class="label">Preprocessing protocol (rai:dataPreprocessingProtocol)</div><div class="value"><span class="na">not provided</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Example / synthetic dataset provided</div>
-          <div class="value"><span class="na">none found</span></div>
+          <div class="label">Example / synthetic dataset provided</div><div class="value"><span class="na">none found</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Structural example — schema entity (documents exact record structure)</div>
-          <div class="value">
-                <details class="entity"><summary>summary.tsv schema</summary>
-                  <pre>{
+          <div class="label">Structural example — schema entity (documents exact record structure)</div><div class="value"><details class="entity"><summary>summary.tsv schema</summary><pre>{
   &#34;@id&#34;: &#34;ark:59853/schema-summary-tsv-schema-20260522-092748&#34;,
   &#34;@context&#34;: {
     &#34;@vocab&#34;: &#34;<a href="https://schema.org/">https://schema.org/</a>&#34;,
@@ -3402,8 +2897,7 @@
     &#34;Tech_replicates_url_params&#34;: &#34;{…}&#34;
   },
   &#34;additionalProperties&#34;: true
-}</pre></details>
-              </div>
+}</pre></details></div>
         </div>
         
       </div>

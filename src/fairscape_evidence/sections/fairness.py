@@ -11,9 +11,36 @@ import re
 from .. import evidence as ev
 from ..crate import as_list
 from ..known import (
-    GENERALIST_REPOS, LICENSE_NAMES, ONTOLOGY_HOSTS, SPECIALIST_REPOS,
-    detect_pid, match_host,
+    GENERALIST_REPOS, LICENSE_NAMES, SPECIALIST_REPOS,
+    detect_pid, match_host, summarize_vocab_hits,
 )
+
+
+def _context_vocabs(context):
+    """Namespace URIs declared in the crate's @context."""
+    vocabs = []
+    for ns in as_list(context):
+        if isinstance(ns, str):
+            vocabs.append(ns)
+        elif isinstance(ns, dict):
+            vocabs += [str(v) for v in ns.values() if isinstance(v, str)]
+    return vocabs
+
+
+def _vocab_evidence(context_vocabs, vocab_found):
+    """The standard-vocabularies block shared by 0.b and 0.c: what the
+    @context declares, and which published vocabularies the metadata
+    actually references."""
+    return [
+        ev.listing("@context vocabularies of the crate metadata",
+                   context_vocabs,
+                   detail="schema.org / EVI here means the metadata follows "
+                          "a standard vocabulary"),
+        ev.flag("Standard vocabulary references found in metadata",
+                bool(vocab_found),
+                detail=", ".join(f"{k} ({n} refs)"
+                                 for k, n in vocab_found.items())),
+    ]
 
 # --- 0.a Findable ----------------------------------------------------------
 
@@ -83,18 +110,18 @@ def extract_0b(ctx):
     return {
         "identifier": ctx.bundle.root.get("identifier"),
         "context": ctx.bundle.context,
+        "vocab_hits": dict(ctx.bundle.stats.vocab_hits),
     }
 
 
 def transform_0b(ctx, raw):
     fetched = ctx.net.fetch_pid_metadata(raw["identifier"])
-    vocabs = []
-    for ns in as_list(raw["context"]) :
-        if isinstance(ns, str):
-            vocabs.append(ns)
-        elif isinstance(ns, dict):
-            vocabs += [str(v) for v in ns.values() if isinstance(v, str)]
-    return {"identifier": raw["identifier"], "fetched": fetched, "vocabs": vocabs}
+    return {
+        "identifier": raw["identifier"],
+        "fetched": fetched,
+        "vocabs": _context_vocabs(raw["context"]),
+        "vocab_found": summarize_vocab_hits(raw["vocab_hits"]),
+    }
 
 
 def present_0b(facts):
@@ -114,11 +141,7 @@ def present_0b(facts):
                  "datePublished", "license", "author", "creator") if k in meta}
         items.append(ev.entity("Metadata returned by the PID resolver", keep,
                                detail="truncated to descriptive fields"))
-    items.append(ev.listing("@context vocabularies of the crate metadata",
-                            facts["vocabs"],
-                            detail="schema.org / EVI here means the metadata "
-                                   "follows a standard vocabulary"))
-    return items
+    return items + _vocab_evidence(facts["vocabs"], facts["vocab_found"])
 
 
 # --- 0.c Interoperable -----------------------------------------------------
@@ -138,14 +161,11 @@ def extract_0c(ctx):
 
 
 def transform_0c(ctx, raw):
-    vocab_found = {}
-    for host, n in raw["vocab_hits"].items():
-        vocab_found[ONTOLOGY_HOSTS.get(host, host)] = (
-            vocab_found.get(ONTOLOGY_HOSTS.get(host, host), 0) + n)
     parquet = sum(n for f, n in raw["formats"].items() if "parquet" in f.lower())
     return {
         "jsonld": bool(raw["context"]),
-        "vocab_found": vocab_found,
+        "vocabs": _context_vocabs(raw["context"]),
+        "vocab_found": summarize_vocab_hits(raw["vocab_hits"]),
         "about_ids": raw["about_ids"],
         "schema_total": raw["schema_total"],
         "dataset_with_schema_ref": raw["dataset_with_schema_ref"],
@@ -158,10 +178,7 @@ def present_0c(facts):
     return [
         ev.flag("Metadata is JSON-LD (formal interoperable specification)",
                 facts["jsonld"]),
-        ev.flag("Standard vocabularies referenced", bool(facts["vocab_found"]),
-                detail=", ".join(f"{k} ({n} refs)"
-                                 for k, n in sorted(facts["vocab_found"].items(),
-                                                    key=lambda kv: -kv[1]))),
+        *_vocab_evidence(facts["vocabs"], facts["vocab_found"]),
         ev.listing("Subject terms on the root (about)", facts["about_ids"][:8]),
         ev.count("Machine-readable schema entities (EVI:Schema)",
                  facts["schema_total"]),

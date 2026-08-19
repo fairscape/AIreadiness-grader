@@ -61,7 +61,7 @@ def extract_1b(ctx):
         "computation_total": stats.computation_total,
         "experiment_total": stats.experiment_total,
         "with_io": stats.activity_with_io,
-        "with_software": stats.activity_with_software,
+        "computation_with_software": stats.computation_with_software,
         "computation": stats.sample("computation") or stats.sample("experiment"),
         "graphs": ctx.bundle.evidence_graph_links(),
     }
@@ -79,11 +79,9 @@ def present_1b(facts):
                         f"{facts['experiment_total']} experiments"),
         ev.percent("Steps with inputs and outputs declared",
                    facts["with_io"], facts["activity_total"]),
-        ev.percent("Steps linked to software",
-                   facts["with_software"], facts["activity_total"],
-                   detail="experiments link instruments/samples instead of "
-                          "software, so judge software links against "
-                          "computations"),
+        ev.percent("Computations linked to software",
+                   facts["computation_with_software"],
+                   facts["computation_total"]),
         ev.entity("Example transformation step", facts["computation"]),
         ev.links("Evidence graphs (visual provenance per sub-crate)",
                  facts["graphs"]),
