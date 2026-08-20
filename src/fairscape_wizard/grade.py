@@ -1,32 +1,31 @@
 """grade.py — full RO-Crate AI-Ready scoring pipeline (packaged engine).
 
-Loads an RO-Crate, runs all 28 ``RubricExtractor`` classes from ``extract.py``,
-then for each rubric asks an LLM (via ``pydantic-ai``) to apply the rubric's
-0/1/2 scoring rules to the extracted evidence. Writes a per-rubric folder
-containing ``rubric.yaml`` + ``evidence.json`` + ``score.json``, plus a
-top-level ``aggregated_score.json`` grouped by criterion.
+Builds the ``fairscape_evidence`` presentation for an RO-Crate (the
+docx-derived rubric text + typed evidence per criterion), then for each of the
+28 criteria asks an LLM (via ``pydantic-ai``) to apply the criterion's 0/1/2
+scoring rules to the evidence. Writes a per-criterion folder containing
+``rubric.json`` + ``evidence.json`` + ``score.json``, plus a top-level
+``aggregated_score.json`` grouped by criterion.
 
-This module is the install-safe home of the grader. It reuses
-``fairscape_wizard.rubric_eval`` to locate the bundled ``rubrics/ai-ready``
-assets (``extract.py`` + the 28 rubric YAMLs) whether running from a source
-checkout or a pip-installed wheel, so it works both as a CLI and imported into
-a script. ``rubrics/ai-ready/grade.py`` is now a thin shim onto this module.
+Evidence extraction, folder layout, and aggregation are shared with the
+agentic (Claude-as-grader) path in ``fairscape_wizard.rubric_eval``; this
+module only adds the LLM round-trips.
 
 Run as a CLI (console script registered in pyproject.toml):
 
-    fairscape-grade <ro-crate-metadata.json> <output-dir> \\
+    fairscape-grade <crate-dir-or-metadata.json> <output-dir> \\
         --model anthropic:claude-opus-4-7 \\
         --api-key <key>
 
 Or equivalently::
 
-    python -m fairscape_wizard.grade <crate.json> <out-dir> --model ... --api-key ...
+    python -m fairscape_wizard.grade <crate> <out-dir> --model ... --api-key ...
 
 Or from inside a script::
 
     from fairscape_wizard import grade
     result = grade.grade_crate(
-        "ro-crate-metadata.json", "out/",
+        "path/to/crate", "out/",
         model="anthropic:claude-opus-4-7", api_key=key,
     )
     print(result["percentage"])
@@ -42,7 +41,7 @@ validation directly). Example::
 
     --model "uvarc:Kimi K2.5" --api-key $UVARC_GenAI_API
 
-Calls are made sequentially — 28 round-trips per run. Failed rubrics get
+Calls are made sequentially — 28 round-trips per run. Failed criteria get
 score: null and an error string in score.json; in the aggregate they contribute
 0 to the subscore but their max still counts toward the criterion total.
 """
@@ -51,30 +50,20 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import shutil
 import sys
 import urllib.request
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Optional, Union
 
-import yaml
 from pydantic import BaseModel, Field
 from pydantic_ai import Agent
 
-# Reuse the install-safe rubric/extract resolution from rubric_eval: importing
-# it resolves RUBRIC_SRC_DIR (source checkout *or* bundled wheel), puts it on
-# sys.path, and re-exports the deterministic extractor symbols. This is the
-# single source of truth for "where do the rubric assets live", shared with the
-# agentic (Claude-as-grader) path.
-from fairscape_wizard.rubric_eval import (  # noqa: E402
-    ALL_EXTRACTORS,
-    CRITERION_NAMES,
-    RUBRIC_SRC_DIR,
-    ExtractContext,
-    ReleaseBundle,
+from fairscape_wizard.rubric_eval import (
+    SCORE_LABELS,
     _aggregate,
-    root_summary,
+    build_crate_presentation,
+    dump_presentation,
 )
 
 __all__ = ["grade_crate", "RubricScore", "main"]
@@ -92,51 +81,54 @@ UVARC_PROVIDER = "uvarc"
 UVARC_BASE_URL = "https://open-webui.rc.virginia.edu/api/chat/completions"
 
 BASE_SYSTEM_PROMPT = (
-    "You are an RO-Crate AI-Readiness rubric grader. You score one rubric at a "
-    "time using only the evidence payload provided. Follow the rubric's "
-    "scoring rules literally — choose 0 (Absent), 1 (Partial), or 2 "
-    "(Substantive) based solely on the rule that matches the evidence. Quote "
-    "@id refs or short text fragments from the evidence to justify the score, "
-    "and list specific gaps that would raise the score (empty if score is 2)."
+    "You are an RO-Crate AI-Readiness rubric grader. You score one criterion "
+    "at a time using only the evidence payload provided. Follow the "
+    "criterion's scoring rules literally — choose 0 (Absent), 1 (Partial), or "
+    "2 (Substantive) based solely on the rule that matches the evidence. "
+    "Quote @id refs, evidence labels, or short text fragments from the "
+    "evidence to justify the score, and list specific gaps that would raise "
+    "the score (empty if score is 2)."
 )
 
 PROMPT_TEMPLATE = """\
-You are grading a single rubric for an RO-Crate AI-Readiness assessment.
-Return a JSON object matching the rubric's output_schema — your reply will be
+You are grading a single criterion for an RO-Crate AI-Readiness assessment.
+Return a JSON object matching the output schema below — your reply will be
 validated against the RubricScore model.
 
-================ RUBRIC ================
-ID:            {rubric_id}
-Criterion:     {criterion}
-Sub-criterion: {sub_criterion}
+================ CRITERION ================
+ID:      {rubric_id}
+Name:    {name}
+Section: {section_number} — {section_title}{gating_suffix}
 
-INTENT:
-{intent}
+PRACTICE (what the rubric asks data producers to do):
+{practice}
 
-WHAT TO LOOK FOR:
-{what_to_look_for}
+REVIEW QUESTIONS:
+{questions}
 
 SCORING RULES (apply LITERALLY — pick the single rule that matches the evidence):
-  0 — {label_0}: {rule_0}
-  1 — {label_1}: {rule_1}
-  2 — {label_2}: {rule_2}
-
+{rules}
+{notes_block}
 OUTPUT SCHEMA (your response must conform):
 {output_schema_json}
 
 ================ EVIDENCE ================
 The evidence below was deterministically extracted from the crate. Treat it as
 the complete factual basis for your decision — do not invent or assume fields
-that are not present.
+that are not present. Each item has a `label`, a `kind`, and a `value`; the
+`evidence_kinds` map explains the kinds. Items marked `sub: true` are derived
+checks on the primary item above them. A bool value of null means the check
+was inconclusive or not performed.
 
 {evidence_json}
 
 ================ INSTRUCTIONS ================
-1. Decide which scoring rule (0, 1, or 2) matches the evidence above.
+1. Decide which scoring rule matches the evidence above.
 2. Write a 1-3 sentence rationale that cites the specific rule that applied
-   and points at the evidence fields that decided it.
-3. Populate `evidence` with direct @id refs or short string fragments from the
-   payload above (no fabrication — only strings actually present).
+   and points at the evidence items that decided it.
+3. Populate `evidence` with direct @id refs, item labels, or short string
+   fragments from the payload above (no fabrication — only strings actually
+   present).
 4. Populate `gaps` with what is missing that would raise the score; leave it
    empty if score == 2.
 """
@@ -222,33 +214,32 @@ class UVARCClient:
         return SimpleNamespace(output=RubricScore(**data))
 
 
-def _load_rubric_yaml(rubric_id: str, rubric_slug: str) -> dict:
-    path = RUBRIC_SRC_DIR / f"{rubric_id}-{rubric_slug}.yaml"
-    if not path.exists():
-        raise FileNotFoundError(f"rubric YAML missing: {path}")
-    with path.open() as f:
-        return yaml.safe_load(f)
-
-
-def _build_prompt(rubric_yaml: dict, evidence_payload: dict) -> str:
-    scoring = rubric_yaml["scoring"]
-    what_to_look_for = "\n".join(
-        f"- {line.strip()}" for line in rubric_yaml.get("what_to_look_for", [])
+def _build_prompt(rubric: dict, evidence: dict) -> str:
+    questions = "\n".join(f"- {q}" for q in rubric["questions"])
+    # rules come from the docx; a criterion may define no rule for a level
+    # (0.d has only 0 and 2), so build the block from what exists.
+    rules = "\n".join(
+        f"  {level} — {SCORE_LABELS[level]}: {rubric['scoring'][level].strip()}"
+        for level in ("0", "1", "2")
+        if level in rubric["scoring"]
     )
+    notes = []
+    if rubric.get("notes"):
+        notes.append(f"NOTES:\n{rubric['notes']}\n")
+    if rubric.get("gating_note"):
+        notes.append(f"GATING NOTE:\n{rubric['gating_note']}\n")
     return PROMPT_TEMPLATE.format(
-        rubric_id=rubric_yaml["id"],
-        criterion=rubric_yaml.get("criterion", ""),
-        sub_criterion=rubric_yaml.get("sub_criterion", ""),
-        intent=str(rubric_yaml.get("intent", "")).strip(),
-        what_to_look_for=what_to_look_for,
-        label_0=scoring["0"]["label"],
-        rule_0=str(scoring["0"]["rule"]).strip(),
-        label_1=scoring["1"]["label"],
-        rule_1=str(scoring["1"]["rule"]).strip(),
-        label_2=scoring["2"]["label"],
-        rule_2=str(scoring["2"]["rule"]).strip(),
-        output_schema_json=json.dumps(rubric_yaml["output_schema"], indent=2),
-        evidence_json=json.dumps(evidence_payload, indent=2, default=str),
+        rubric_id=rubric["id"],
+        name=rubric["name"],
+        section_number=rubric["section"]["number"],
+        section_title=rubric["section"]["title"],
+        gating_suffix=" (gating)" if rubric["section"]["gating"] else "",
+        practice=rubric["practice"].strip(),
+        questions=questions,
+        rules=rules,
+        notes_block=("\n" + "\n".join(notes)) if notes else "",
+        output_schema_json=json.dumps(rubric["output_schema"], indent=2),
+        evidence_json=json.dumps(evidence, indent=2, ensure_ascii=False, default=str),
     )
 
 
@@ -279,18 +270,21 @@ def grade_crate(
     model: str,
     api_key: str,
     system_prompt_extra: str = "",
+    network: bool = True,
     verbose: bool = True,
 ) -> dict:
-    """Run the full 28-rubric LLM scoring pipeline against an RO-Crate.
+    """Run the full 28-criterion LLM scoring pipeline against an RO-Crate.
 
     Args:
-        crate_path: path to ``ro-crate-metadata.json``.
-        output_dir: directory to write per-rubric folders + aggregate into
+        crate_path: crate directory, or path to its ``ro-crate-metadata.json``.
+        output_dir: directory to write per-criterion folders + aggregate into
             (created if missing).
         model: pydantic-ai model string, e.g. ``anthropic:claude-opus-4-7`` or
             ``uvarc:Kimi K2.5``.
         api_key: provider API key; set as the matching env var for this run.
         system_prompt_extra: optional text appended to the base system prompt.
+        network: run the evidence pipeline's URL resolution / registry lookups
+            (default True).
         verbose: emit progress to stderr (default True). The returned dict is
             the sole stdout-safe result regardless.
 
@@ -300,7 +294,7 @@ def grade_crate(
         object written to ``<output_dir>/aggregated_score.json``.
 
     Raises:
-        FileNotFoundError: if the crate or a rubric YAML is missing.
+        FileNotFoundError: if the crate is missing.
         ValueError: if ``model`` is malformed or its provider is unsupported.
     """
     crate_path = Path(crate_path)
@@ -316,21 +310,17 @@ def grade_crate(
             print(msg, file=sys.stderr)
 
     log(f"[grade] loading {crate_path}")
-    bundle = ReleaseBundle.load(crate_path)
-    log(
-        f"[grade] loaded {len(bundle.entities)} entities "
-        f"({len(bundle.sub_crates)} sub-crates)"
+    crate_dir, presentation = build_crate_presentation(
+        crate_path, network=network, verbose=verbose,
     )
-
-    ctx = ExtractContext(bundle)
+    inv = presentation["inventory"]
     log(
-        f"[grade] dataset={ctx.dataset_count}  software={ctx.software_count}  "
-        f"computation={ctx.computation_count}  experiment={ctx.experiment_count}  "
-        f"schema={ctx.schema_count}"
+        f"[grade] loaded {inv['entities']} entities "
+        f"({len(inv['sub_crates'])} sub-crates)"
     )
 
     rubrics_dir = output_dir / "rubrics"
-    rubrics_dir.mkdir(parents=True, exist_ok=True)
+    records = dump_presentation(presentation, rubrics_dir)
 
     system_prompt = BASE_SYSTEM_PROMPT
     if system_prompt_extra:
@@ -341,22 +331,8 @@ def grade_crate(
 
     per_rubric: list[dict] = []
 
-    for cls in ALL_EXTRACTORS:
-        slug_dir = rubrics_dir / f"{cls.rubric_id}-{cls.rubric_slug}"
-        slug_dir.mkdir(parents=True, exist_ok=True)
-
-        src_yaml = RUBRIC_SRC_DIR / f"{cls.rubric_id}-{cls.rubric_slug}.yaml"
-        if not src_yaml.exists():
-            raise FileNotFoundError(f"rubric YAML missing: {src_yaml}")
-        shutil.copy(src_yaml, slug_dir / "rubric.yaml")
-
-        evidence_payload = cls().extract(ctx)
-        (slug_dir / "evidence.json").write_text(
-            json.dumps(evidence_payload, indent=2, sort_keys=True, default=str) + "\n"
-        )
-
-        rubric_yaml = _load_rubric_yaml(cls.rubric_id, cls.rubric_slug)
-        prompt = _build_prompt(rubric_yaml, evidence_payload)
+    for rec in records:
+        prompt = _build_prompt(rec["rubric"], rec["evidence"])
         score, err = _score_one(agent, prompt)
 
         if score is not None:
@@ -369,23 +345,13 @@ def grade_crate(
                 "gaps": [],
                 "error": err,
             }
-        (slug_dir / "score.json").write_text(json.dumps(score_dict, indent=2) + "\n")
+        (rec["dir"] / "score.json").write_text(json.dumps(score_dict, indent=2) + "\n")
 
-        per_rubric.append({**score_dict, "id": cls.rubric_id, "slug": cls.rubric_slug})
-        log(f"  [{cls.rubric_id}] {cls.rubric_slug}  -> score={score_dict.get('score')}")
-
-    summary = {
-        "target": str(crate_path),
-        "root_summary": root_summary(bundle),
-        "stats": ctx.stats,
-        "rubric_ids": [c.rubric_id for c in ALL_EXTRACTORS],
-    }
-    (output_dir / "summary.json").write_text(
-        json.dumps(summary, indent=2, sort_keys=True, default=str) + "\n"
-    )
+        per_rubric.append({**score_dict, "id": rec["id"], "slug": rec["slug"]})
+        log(f"  [{rec['id']}] {rec['slug']}  -> score={score_dict.get('score')}")
 
     aggregate = _aggregate(per_rubric, model)
-    aggregate["target"] = str(crate_path)
+    aggregate["target"] = str(crate_dir)
     (output_dir / "aggregated_score.json").write_text(
         json.dumps(aggregate, indent=2, default=str) + "\n"
     )
@@ -405,9 +371,10 @@ def grade_crate(
 def main(argv: Optional[list[str]] = None) -> int:
     ap = argparse.ArgumentParser(
         prog="fairscape-grade",
-        description="Score an RO-Crate against the 28 AI-Ready rubrics using an LLM.",
+        description="Score an RO-Crate against the 28 AI-Ready criteria using an LLM.",
     )
-    ap.add_argument("crate_path", type=Path, help="path to ro-crate-metadata.json")
+    ap.add_argument("crate_path", type=Path,
+                    help="crate directory or its ro-crate-metadata.json")
     ap.add_argument("output_dir", type=Path, help="output directory (created if missing)")
     ap.add_argument(
         "--model",
@@ -424,6 +391,11 @@ def main(argv: Optional[list[str]] = None) -> int:
         default="",
         help="optional extra text appended to the base system prompt",
     )
+    ap.add_argument(
+        "--no-network",
+        action="store_true",
+        help="skip the evidence pipeline's URL resolution / registry lookups",
+    )
     args = ap.parse_args(argv)
 
     try:
@@ -433,6 +405,7 @@ def main(argv: Optional[list[str]] = None) -> int:
             model=args.model,
             api_key=args.api_key,
             system_prompt_extra=args.system_prompt_extra,
+            network=not args.no_network,
             verbose=True,
         )
     except (FileNotFoundError, ValueError) as e:

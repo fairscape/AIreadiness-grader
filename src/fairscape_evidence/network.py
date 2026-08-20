@@ -50,7 +50,12 @@ class Network:
                 # some hosts reject HEAD; retry with GET
                 if method == "HEAD" and err.code in (403, 405, 501):
                     continue
-                result["note"] = f"HTTP {err.code}"
+                if err.code in (429, 502, 503, 504):
+                    # rate-limited / transient upstream — inconclusive, like a timeout
+                    result["ok"] = None
+                    result["note"] = f"HTTP {err.code} — inconclusive"
+                else:
+                    result["note"] = f"HTTP {err.code}"
                 break
             except TimeoutError:
                 # inconclusive, not a failure — slow hosts often resolve fine

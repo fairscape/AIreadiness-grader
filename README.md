@@ -7,13 +7,14 @@ that crate against the 28 AI-Ready rubrics.
 
 - **Wizard** — the `.claude/skills/` bundle. The interview + build-script
   emission flow (`/fairscape-rocrate-wizard`) and everything around it.
-- **Grader** — `rubrics/ai-ready/` (the 28 rubric YAMLs + the deterministic
-  `extract.py` evidence extractors) plus the `fairscape_wizard` Python helper
-  module that drives them.
-- **Evidence presentation** (this branch) — `src/fairscape_evidence/`, a fresh
-  extraction → transformation → presentation pipeline that builds the evidence
-  document requested by *Rubric for Human Review of AI.docx*. See
-  [Evidence presentation](#evidence-presentation) below.
+- **Evidence presentation** — `src/fairscape_evidence/`, an extraction →
+  transformation → presentation pipeline that builds the evidence document
+  requested by *Rubric for Human Review of AI.docx* (rubric text transcribed
+  in `rubric_defs.yaml`). See [Evidence presentation](#evidence-presentation).
+- **Grader** — the `fairscape_wizard` helper module. It splits the presentation
+  into per-criterion grading folders (`rubric_eval.py`, driven by the
+  `agentic-rescore` skill) or grades them with an LLM of your choice
+  (`grade.py`, the `fairscape-grade` CLI).
 
 ## Evidence presentation
 
@@ -75,10 +76,14 @@ full pipeline against the LLM of your choice. Use this when you want a specific
 model, a non-interactive/batch run, or grading outside an agent host.
 
 ```bash
-fairscape-grade <ro-crate-metadata.json> <output-dir> \
+fairscape-grade <crate-dir-or-metadata.json> <output-dir> \
     --model anthropic:claude-opus-4-7 \
     --api-key "$ANTHROPIC_API_KEY"
 ```
+
+Both paths grade from the same `fairscape_evidence` presentation: per criterion,
+the docx practice / questions / 0-1-2 rules plus the typed evidence items. Pass
+`--no-network` to skip the pipeline's URL / registry checks.
 
 `--model` is a `pydantic-ai` model string — the provider prefix picks the LLM:
 
@@ -99,15 +104,15 @@ export OPENAI_BASE_URL=http://localhost:11434/v1   # e.g. Ollama
 fairscape-grade <crate.json> <out-dir> --model openai:llama3.1 --api-key local
 ```
 
-It writes a per-rubric folder (`rubric.yaml` + `evidence.json` + `score.json`)
-under `<output-dir>/rubrics/`, a `summary.json`, and a top-level
-`aggregated_score.json` with totals grouped by criterion.
+It writes a per-rubric folder (`rubric.json` + `evidence.json` + `score.json`)
+under `<output-dir>/rubrics/`, a `summary.json` + `ai-ready-presentation.json`
+alongside them, and a top-level `aggregated_score.json` with totals grouped by
+criterion.
 
-Equivalent invocations:
+Equivalent invocation:
 
 ```bash
-python -m fairscape_wizard.grade <crate.json> <out-dir> --model ... --api-key ...
-python rubrics/ai-ready/grade.py  <crate.json> <out-dir> --model ... --api-key ...   # back-compat shim
+python -m fairscape_wizard.grade <crate> <out-dir> --model ... --api-key ...
 ```
 
 Or call it from a script and get the aggregate back as a dict:
@@ -116,7 +121,7 @@ Or call it from a script and get the aggregate back as a dict:
 from fairscape_wizard import grade
 
 result = grade.grade_crate(
-    "ro-crate-metadata.json",
+    "path/to/crate",
     "grading-out/",
     model="anthropic:claude-opus-4-7",
     api_key="...",
@@ -134,10 +139,11 @@ the only thing on stdout).
 pip install -e .
 ```
 
-This installs the `fairscape_wizard` module and the `fairscape-grade` console
-script, and pulls in `fairscape-models`, `fairscape-cli`, and `pydantic-ai`. The
-28 rubric YAMLs and `extract.py` are bundled into the wheel, so `fairscape-grade`
-works the same whether you installed from a source checkout or a built wheel.
+This installs the `fairscape_wizard` and `fairscape_evidence` modules and the
+`fairscape-grade` + `fairscape-evidence` console scripts, and pulls in
+`fairscape-models`, `fairscape-cli`, and `pydantic-ai`. The rubric text
+(`rubric_defs.yaml`) and the HTML template ship inside the `fairscape_evidence`
+package, so everything works the same from a source checkout or a built wheel.
 
 ## Sandboxed run (Docker)
 

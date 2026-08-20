@@ -21,10 +21,3 @@ fairscape-evidence = "fairscape_evidence.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/fairscape_wizard", "src/fairscape_evidence"]
-
-# rubric_eval imports extract.py and reads the 28 rubric YAMLs at runtime. They
-# live outside the package tree (shared with grade.py), so bundle the directory
-# into the wheel under fairscape_wizard/_rubrics/ai-ready.
-# rubric_eval._find_rubric_src_dir() resolves this path when pip-installed.
-[tool.hatch.build.targets.wheel.force-include]
-"rubrics/ai-ready" = "fairscape_wizard/_rubrics/ai-ready"
