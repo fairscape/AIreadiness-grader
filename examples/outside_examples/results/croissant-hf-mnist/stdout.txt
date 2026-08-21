@@ -1,1 +1,0 @@
-/home/oj/fairscape/fairscape_grader/examples/outside_examples/results/croissant-hf-mnist/ai-ready-presentation.json

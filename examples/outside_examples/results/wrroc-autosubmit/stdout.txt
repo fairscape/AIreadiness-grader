@@ -1,1 +1,0 @@
-/home/oj/fairscape/fairscape_grader/examples/outside_examples/results/wrroc-autosubmit/ai-ready-presentation.json
