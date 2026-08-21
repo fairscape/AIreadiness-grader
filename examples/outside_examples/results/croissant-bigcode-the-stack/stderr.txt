@@ -1,0 +1,30 @@
+loading crate: /home/oj/fairscape/fairscape_grader/examples/outside_examples/croissant-bigcode-the-stack
+root graph: 0 entities, 0 sub-crates found on disk (0 referenced)
+criterion 0.a Findable
+criterion 0.b Accessible
+criterion 0.c Interoperable
+criterion 0.d Reusable
+criterion 1.a Transparent
+criterion 1.b Traceable
+criterion 1.c Interpretable
+criterion 1.d Key actors identified
+criterion 2.a Semantics
+criterion 2.b Statistics
+criterion 2.c Standards
+criterion 2.d Potential Sources of Bias
+criterion 2.e Data quality
+criterion 3.a Data documentation template
+criterion 3.b Fit for purpose
+criterion 3.c Verifiable
+criterion 4.a Ethically acquired
+criterion 4.b Ethically managed
+criterion 4.c Ethically Disseminated
+criterion 4.d Secure
+criterion 5.a Persistent
+criterion 5.b Domain-appropriate
+criterion 5.c Well-governed
+criterion 5.d Associated
+criterion 6.a Standardized
+criterion 6.b Computationally accessible
+criterion 6.c Portable
+criterion 6.d Contextualized

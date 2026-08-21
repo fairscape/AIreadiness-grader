@@ -1,6 +1,6 @@
 ---
 name: preflight-check
-description: Cheap read-only environment check. Verifies Python >=3.10, the fairscape-cli binary on PATH, and the three Python packages the wizard imports (fairscape_models, fairscape_cli, fairscape_wizard). Reports pass/fail with specific blockers. Invoked by both wizards at step 1 before anything else runs; also user-callable to debug "why doesn't the wizard work". On failure, the wizard offloads to env-setup.
+description: Cheap read-only environment check. Verifies Python >=3.10, the fairscape-cli binary on PATH, and the three Python packages the wizard imports (fairscape_models, fairscape_cli, aireadiness_wizard). Reports pass/fail with specific blockers. Invoked by both wizards at step 1 before anything else runs; also user-callable to debug "why doesn't the wizard work". On failure, the wizard offloads to env-setup.
 ---
 
 # Preflight check
@@ -52,13 +52,13 @@ try:
 except Exception as e:
     add("fairscape_cli importable", False, f"{type(e).__name__}: {e}")
 
-# 5. fairscape_wizard importable (this grader)
+# 5. aireadiness_wizard importable (this grader)
 try:
-    import fairscape_wizard
-    from fairscape_wizard import rubric_eval  # the module agentic-rescore calls
-    add("fairscape_wizard importable", True, getattr(fairscape_wizard, "__version__", "unknown"))
+    import aireadiness_wizard
+    from aireadiness_wizard import rubric_eval  # the module agentic-rescore calls
+    add("aireadiness_wizard importable", True, getattr(aireadiness_wizard, "__version__", "unknown"))
 except Exception as e:
-    add("fairscape_wizard importable", False, f"{type(e).__name__}: {e}")
+    add("aireadiness_wizard importable", False, f"{type(e).__name__}: {e}")
 
 # 6. Optional: pandas+pyarrow for the summary-stats phase. Warning, not blocker.
 try:
@@ -94,7 +94,7 @@ If the pandas/pyarrow warning fires, mention it once non-blockingly:
 Preflight blockers:
   ✗ fairscape-cli on PATH         — not found
   ✗ fairscape_models importable   — ModuleNotFoundError: No module named 'fairscape_models'
-  ✗ fairscape_wizard importable   — ModuleNotFoundError: No module named 'fairscape_wizard'
+  ✗ aireadiness_wizard importable   — ModuleNotFoundError: No module named 'aireadiness_wizard'
 
 Want me to walk you through fixing this? I'll run `env-setup` which will ask whether you want a PyPI install (recommended for most users) or an editable dev install from sibling repos, and optionally set up a venv so we don't touch system Python.
 ```

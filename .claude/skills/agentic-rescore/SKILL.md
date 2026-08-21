@@ -1,19 +1,19 @@
 ---
 name: agentic-rescore
-description: Phase 4 of the remote-source wizard. Score the 28 AI-Ready rubrics agentically — dump deterministic evidence via `python -m fairscape_wizard.rubric_eval extract-evidence`, then have Claude (this skill) read each rubric.json + evidence.json and emit a RubricScore JSON per rubric. Never invokes fairscape-grade.
+description: Phase 4 of the remote-source wizard. Score the 28 AI-Ready rubrics agentically — dump deterministic evidence via `python -m aireadiness_wizard.rubric_eval extract-evidence`, then have Claude (this skill) read each rubric.json + evidence.json and emit a RubricScore JSON per rubric. Never invokes fairscape-grade.
 ---
 
 # Agentic rescore — Phase 4
 
-The grader (`fairscape_wizard/grade.py`, the `fairscape-grade` CLI) normally drives a separate LLM via `pydantic-ai`. Here, **Claude is the grader** — we reuse the deterministic `fairscape_evidence` presentation pipeline for evidence, then score each rubric inline. Output matches `fairscape-grade`'s file layout exactly so downstream tooling can consume either.
+The grader (`aireadiness_wizard/grade.py`, the `fairscape-grade` CLI) normally drives a separate LLM via `pydantic-ai`. Here, **Claude is the grader** — we reuse the deterministic `aireadiness_evidence` presentation pipeline for evidence, then score each rubric inline. Output matches `fairscape-grade`'s file layout exactly so downstream tooling can consume either.
 
 ## What to tell the user before any commands run
 
 Before invoking the evidence dump or asking about subset selection, give them one paragraph of context so the rest of the phase isn't opaque:
 
-> *"This is the **AI-Ready scoring** phase. The 28 rubrics are transcribed from "Rubric for Human Review of AI.docx" v1.0 into `src/fairscape_evidence/rubric_defs.yaml` and cover seven criteria: FAIRness (`0.x`), Provenance (`1.x`), Characterization (`2.x`), Pre-model Explainability (`3.x`), Ethics (`4.x`), Sustainability (`5.x`), Computability (`6.x`). Each rubric has three possible scores: 0 (Absent), 1 (Partial), or 2 (Substantive), with rules that say literally what evidence justifies each level (a few rubrics define only 0 and 2). Max total is 56 (2 × 28).*
+> *"This is the **AI-Ready scoring** phase. The 28 rubrics are transcribed from "Rubric for Human Review of AI.docx" v1.0 into `src/aireadiness_evidence/rubric_defs.yaml` and cover seven criteria: FAIRness (`0.x`), Provenance (`1.x`), Characterization (`2.x`), Pre-model Explainability (`3.x`), Ethics (`4.x`), Sustainability (`5.x`), Computability (`6.x`). Each rubric has three possible scores: 0 (Absent), 1 (Partial), or 2 (Substantive), with rules that say literally what evidence justifies each level (a few rubrics define only 0 and 2). Max total is 56 (2 × 28).*
 >
-> *The scoring is two-step. First a deterministic Python pass (`python -m fairscape_wizard.rubric_eval extract-evidence`) walks the crate and dumps the relevant facts per rubric as typed evidence items — identifiers, license, schemas, format coverage, etc. — into a `grading/` folder. No LLM involved; just structured reading (plus optional URL/registry checks — pass `--no-network` to skip them). Then I fan the rubrics out to parallel subagents — one per rubric, all dispatched in a single message — and each subagent sees **only** its rubric JSON and its evidence JSON, nothing else. It writes its `score.json` and returns. After all rubrics are scored, a small Python aggregator computes the total and a per-criterion breakdown.*
+> *The scoring is two-step. First a deterministic Python pass (`python -m aireadiness_wizard.rubric_eval extract-evidence`) walks the crate and dumps the relevant facts per rubric as typed evidence items — identifiers, license, schemas, format coverage, etc. — into a `grading/` folder. No LLM involved; just structured reading (plus optional URL/registry checks — pass `--no-network` to skip them). Then I fan the rubrics out to parallel subagents — one per rubric, all dispatched in a single message — and each subagent sees **only** its rubric JSON and its evidence JSON, nothing else. It writes its `score.json` and returns. After all rubrics are scored, a small Python aggregator computes the total and a per-criterion breakdown.*
 >
 > *The isolation matters for reproducibility: the score for any rubric is determined by the fixed prompt + that rubric + its evidence, not by anything I've seen earlier in this conversation (the paper, prior decisions, your phrasing). Anyone can re-run the same subagent prompt against the same `evidence.json` and reproduce the verdict. The evidence dump is itself reproducible and inspectable — `grading/<id>/evidence.json` is a self-contained audit trail. Each score comes with a written rationale and a `gaps` list that tells you what would raise it."*
 
@@ -35,7 +35,7 @@ If subset, only iterate the matching rubrics. Aggregated score still computes co
 ## 1. Dump evidence (deterministic, one shot)
 
 ```
-Bash python -m fairscape_wizard.rubric_eval extract-evidence "<state.crate_path>" "<state.crate_dir>/grading/"
+Bash python -m aireadiness_wizard.rubric_eval extract-evidence "<state.crate_path>" "<state.crate_dir>/grading/"
 ```
 
 This writes:
@@ -103,7 +103,7 @@ Pitfalls:
 After the loop (full or filtered):
 
 ```
-Bash python -m fairscape_wizard.rubric_eval aggregate "<state.crate_dir>/grading/"
+Bash python -m aireadiness_wizard.rubric_eval aggregate "<state.crate_dir>/grading/"
 ```
 
 This writes `<grading>/aggregated_score.json` matching `fairscape-grade`'s shape: `total_score`, `max_score`, `percentage`, `counts`, and `criteria` grouped by `id[0]`.

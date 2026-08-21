@@ -87,7 +87,7 @@ Otherwise gather the remaining Software fields:
 - **dateModified** — today's date, ISO (`datetime.utcnow().date().isoformat()`).
 - **keywords** — accept a comma-separated list; default to `["software", <step name>]`.
 
-GUID: `generate_guid("software", name)` from `fairscape_wizard.ids`. Build via:
+GUID: `generate_guid("software", name)` from `aireadiness_wizard.ids`. Build via:
 
 ```python
 from fairscape_models.software import Software

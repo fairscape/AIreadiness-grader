@@ -6,7 +6,7 @@ paths (agentic + `fairscape-grade`) run on this pipeline; the old
 
 ## What was built
 
-`src/fairscape_evidence/` — extraction → transformation → presentation from a
+`src/aireadiness_evidence/` — extraction → transformation → presentation from a
 FAIRSCAPE RO-Crate, matching the per-criterion Extractor / Transformation /
 Presented specs in *Rubric for Human Review of AI.docx* v1.0. No scoring.
 
@@ -14,10 +14,10 @@ Presented specs in *Rubric for Human Review of AI.docx* v1.0. No scoring.
 | --- | --- |
 | `rubric_defs.yaml` | docx transcription: practice / questions / 0-1-2 rules / gating per criterion. Single source of rubric text. |
 | `crate.py` | one-pass load of root + sub-crates into counters + bounded samples; discovers datasheet / prov-graph / evidence-graph HTML on disk |
-| `sections/*.py` | 7 modules, one `extract_` / `transform_` / `present_` trio per criterion; evidence items typed (text/bool/count/percent/link/list/entity) and tiered primary vs `sub` (derived checks) |
+| `sections/*.py` | 7 modules, one `extract_` / `transform_` / `present_` trio per criterion; evidence items typed (text/bool/count/percent/link/list/entity) and tiered primary vs `sub` (derived checks). Optional `estimate_` per criterion: the scoring rule applied mechanically to the facts → `{"score", "basis"}` in the presentation JSON, or None where the call needs human judgment (substance of prose, domain adequacy, N/A determinations the metadata can't settle) |
 | `known.py` | PID schemes, repo hosts (specialist/generalist/software archives), ontology hosts, HL7 v3-Confidentiality codes, vendor formats, validator map |
 | `network.py` | optional checks: URL resolution, re3data search, DOI content negotiation; timeouts and transient statuses (429/502/503/504) report inconclusive; `--no-network` skips |
-| `render.py` + `templates/review.html.j2` | human-review HTML: scoring defs, grouped evidence, linkified URLs/DOIs, score radios + copy-as-JSON export, inventory table |
+| `render.py` + `templates/review.html.j2` | human-review HTML: scoring defs, grouped evidence, linkified URLs/DOIs, score radios + copy-as-JSON export, inventory table. Sticky summary bar (graded n/28, points on graded criteria, live-updating) with a "By section" dropdown — per-section graded/points/left counts plus one colored chip per criterion (2/1/0/N/A/ungraded, each a jump link) — and a "Next ungraded" jump button. Per-criterion estimate chip — dashed amber box labeled "Automated estimate" with basis bullets and a warning that it may be wrong; "use as starting point" fills the radio but nothing is ever pre-filled. Each section ends with a free-text section-comments box (Manlik's per-section context request). Page ends with a Score summary: per-section table (graded, points, %, N/A, gating badge) and a live radar chart of section percentages with a dashed unverified-estimates reference polygon. Scores/notes autosave to localStorage keyed by crate `@id` (restored on reload; Reset button clears). Export JSON carries each criterion's estimate alongside the human score, plus `section_notes` and per-section rollups |
 | `cli.py` | `fairscape-evidence <crate> -o out/` → `ai-ready-presentation.json` + `ai-ready-review.html` |
 
 Verified on CM4AIJuneRelease (57k entities, 9 sub-crates): output committed at
@@ -38,7 +38,7 @@ Decisions baked in (change in code if wrong):
 Both graders now consume the presentation instead of the old 28 YAMLs +
 `extract.py`:
 
-- `fairscape_wizard/rubric_eval.py` — `extract-evidence` builds the
+- `aireadiness_wizard/rubric_eval.py` — `extract-evidence` builds the
   presentation and splits it into `<out>/<id>-<slug>/{rubric.json,
   evidence.json}` (same folder names as before; slugs derive from the docx
   criterion names and match the retired filenames exactly). `rubric.json` =
@@ -46,7 +46,7 @@ Both graders now consume the presentation instead of the old 28 YAMLs +
   block carried over from the old YAMLs, now the `OUTPUT_SCHEMA` constant);
   `evidence.json` = the criterion's typed items + an `evidence_kinds` legend.
   `aggregate` unchanged. New `--no-network` flag.
-- `fairscape_wizard/grade.py` — prompt built from one presentation criterion;
+- `aireadiness_wizard/grade.py` — prompt built from one presentation criterion;
   pydantic-ai / UVARC agent machinery unchanged. Accepts a crate dir or its
   `ro-crate-metadata.json`. Note: a criterion may define no rule for a level
   (0.d has only 0 and 2), so the prompt's rules block is built dynamically.
@@ -54,7 +54,7 @@ Both graders now consume the presentation instead of the old 28 YAMLs +
   was YAML-invalid — the old `fairscape-grade` path crashed on it),
   `rubrics/ai-ready/grade.py`, `dump_prompts.py`, and the pyproject
   `force-include` bundling. `rubric_defs.yaml` + the HTML template ship inside
-  the `fairscape_evidence` package, so the wheel needs no extra bundling.
+  the `aireadiness_evidence` package, so the wheel needs no extra bundling.
 - `rubrics/ai-ready/human/` kept for now (owner call whether the review HTML
   replaces the Section-*.md walkthroughs).
 - Skills updated: `agentic-rescore` (rubric.json layout, docx framing),

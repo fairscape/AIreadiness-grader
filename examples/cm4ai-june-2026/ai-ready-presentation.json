@@ -1,6 +1,6 @@
 {
   "rubric": "Rubric for Human Review of AI-readiness Evaluation Criteria, v1.0 (2026-08-14)",
-  "generated": "2026-08-19 14:14 UTC",
+  "generated": "2026-08-20 15:37 UTC",
   "network_checks": true,
   "crate": {
     "@id": "ark:59853/rocrate-cell-maps-for-artificial-intelligence-June-2026-data-release",
@@ -118,7 +118,7 @@
         "preview": "Perturb-Seq/cell-atlas/ro-crate-preview.html"
       }
     ],
-    "hasPart_count": 70
+    "hasPart_count": 60
   },
   "artifacts": {
     "datasheets": [
@@ -228,6 +228,14 @@
               "sub": true
             }
           ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "PID present (scheme: DOI)",
+              "PID resolved",
+              "deposited in a recognized repository (Dataverse)"
+            ]
+          },
           "gating_note": "Scoring threshold for gating is all 2's for FAIRness."
         },
         {
@@ -740,9 +748,16 @@
               "label": "Standard vocabulary references found in metadata",
               "kind": "bool",
               "value": true,
-              "detail": "Cellosaurus (274 refs), UniProt (127 refs), MeSH (35 refs), OBO Foundry PURL (18 refs)"
+              "detail": "Cellosaurus (270 refs), UniProt (127 refs), MeSH (21 refs), OBO Foundry PURL (18 refs)"
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "metadata fetchable via PID lookup",
+              "standard vocabularies referenced: Cellosaurus, UniProt, MeSH, OBO Foundry PURL"
+            ]
+          }
         },
         {
           "id": "0.c",
@@ -777,7 +792,7 @@
               "label": "Standard vocabulary references found in metadata",
               "kind": "bool",
               "value": true,
-              "detail": "Cellosaurus (274 refs), UniProt (127 refs), MeSH (35 refs), OBO Foundry PURL (18 refs)"
+              "detail": "Cellosaurus (270 refs), UniProt (127 refs), MeSH (21 refs), OBO Foundry PURL (18 refs)"
             },
             {
               "label": "Subject terms on the root (about)",
@@ -849,7 +864,14 @@
               },
               "sub": true
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "metadata is JSON-LD",
+              "standard vocabularies referenced: Cellosaurus, UniProt, MeSH, OBO Foundry PURL"
+            ]
+          }
         },
         {
           "id": "0.d",
@@ -896,6 +918,13 @@
               "sub": true
             }
           ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "license present (CC BY-NC-SA 4.0)",
+              "no AI/ML prohibition language found in license or use terms"
+            ]
+          },
           "notes": "There is no intermediate \"1\" grade for this criterion."
         }
       ]
@@ -1080,7 +1109,14 @@
               },
               "sub": true
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "53874 datasets carry provenance links",
+              "all ground-truth elements present as structured entities (samples, instruments, experiments)"
+            ]
+          }
         },
         {
           "id": "1.b",
@@ -1238,7 +1274,14 @@
                 }
               ]
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "1976 machine-readable transformation steps",
+              "every computation links its software"
+            ]
+          }
         },
         {
           "id": "1.c",
@@ -1303,7 +1346,13 @@
               ],
               "sub": true
             }
-          ]
+          ],
+          "estimate": {
+            "score": "0",
+            "basis": [
+              "software entities exist but none has a download or repository link"
+            ]
+          }
         },
         {
           "id": "1.d",
@@ -1389,7 +1438,14 @@
               "value": false,
               "sub": true
             }
-          ]
+          ],
+          "estimate": {
+            "score": "1",
+            "basis": [
+              "38 of 47 authors carry a PID",
+              "9 named in free text only"
+            ]
+          }
         }
       ]
     },
@@ -1472,7 +1528,15 @@
               ],
               "sub": true
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "abstract present (928 chars — length-checked only, not read for substance)",
+              "39 keywords",
+              "13 controlled-vocabulary terms"
+            ]
+          }
         },
         {
           "id": "2.b",
@@ -1517,6 +1581,7 @@
               ]
             }
           ],
+          "estimate": null,
           "notes": "For non-tabular data this criterion is N/A. Descriptive statistics means per-variable summaries: for numeric variables, central tendency and spread with min/max and non-missing count; for categorical variables, category frequencies; plus dataset-level record and variable counts. Missing-value consistency means one documented convention used throughout (not mixed blanks/NA/-999/0)."
         },
         {
@@ -1553,7 +1618,7 @@
               "label": "Standard vocabulary bindings populated",
               "kind": "bool",
               "value": true,
-              "detail": "Cellosaurus (274), UniProt (127), MeSH (35), OBO Foundry PURL (18)"
+              "detail": "Cellosaurus (270), UniProt (127), MeSH (21), OBO Foundry PURL (18)"
             },
             {
               "label": "File formats present (format-class view)",
@@ -1614,6 +1679,13 @@
               "sub": true
             }
           ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "18 schema entities",
+              "standard vocabulary bindings populated: Cellosaurus, UniProt, MeSH, OBO Foundry PURL"
+            ]
+          },
           "notes": "A standard vocabulary is one registered in NCBO BioPortal, EBI Ontology Lookup Service, or OBO Foundry. A vocabulary binding must be populated in the deposited instance (capability alone scores 1). Scoring may be per format class, and a sidecar covering a class covers every file in it. Formats named are examples, not an enumeration."
         },
         {
@@ -1660,6 +1732,7 @@
               "value": "These data are not yet in completed final form, and some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release."
             }
           ],
+          "estimate": null,
           "notes": "\"Substantive\" means it engages the actual data (specific bias sources, assumptions, or reasons are named); it is not a boilerplate disclaimer. \"Reasons for missingness\" is N/A if the dataset has no missing values; \"state-vs-control\" is N/A if the dataset has no such structure. N/A elements don't count against the score."
         },
         {
@@ -1696,10 +1769,12 @@
             {
               "label": "QC description link resolves: https://doi.org/10.1101/2024.05.21.589311",
               "kind": "bool",
-              "value": true,
+              "value": null,
+              "detail": "HTTP 429 — inconclusive",
               "sub": true
             }
           ],
+          "estimate": null,
           "notes": "Adequacy (1 vs 2) is a domain-expert determination."
         }
       ]
@@ -1788,7 +1863,14 @@
               "value": "Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.",
               "sub": true
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "human-readable datasheet linked",
+              "7 of 7 machine-readable sections populated (presence-checked only — whether coverage is substantive is a human read)"
+            ]
+          }
         },
         {
           "id": "3.b",
@@ -1854,6 +1936,13 @@
               "sub": true
             }
           ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "appropriate and inappropriate uses both stated",
+              "4 prior publications linked"
+            ]
+          },
           "notes": "\"Link to prior analyses\" is N/A if the dataset is newly released with no published analyses - its absence doesn't count against the score."
         },
         {
@@ -1928,7 +2017,13 @@
               },
               "sub": true
             }
-          ]
+          ],
+          "estimate": {
+            "score": "1",
+            "basis": [
+              "checksums on 2 of 53598 entities"
+            ]
+          }
         }
       ]
     },
@@ -2003,7 +2098,8 @@
               "value": true,
               "sub": true
             }
-          ]
+          ],
+          "estimate": null
         },
         {
           "id": "4.b",
@@ -2046,7 +2142,8 @@
               "kind": "text",
               "value": "Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the https://dataverse.lib.virginia.edu/, supported by committed institutional funds."
             }
-          ]
+          ],
+          "estimate": null
         },
         {
           "id": "4.c",
@@ -2093,6 +2190,14 @@
               "detail": "N/A if fully open with no access committee"
             }
           ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "license/DUA present",
+              "permitted and prohibited uses both stated",
+              "openness vs. ethical constraints not judged — downgrade if terms look unjustifiably restrictive"
+            ]
+          },
           "notes": "DAC contact is N/A for openly licensed data with no access committee."
         },
         {
@@ -2131,7 +2236,13 @@
               "kind": "text",
               "value": null
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "confidentiality level is an HL7 v3-Confidentiality code ('U')"
+            ]
+          }
         }
       ]
     },
@@ -2183,7 +2294,14 @@
               "n": 53877,
               "total": 53877
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "PID present (scheme: DOI)",
+              "recognized archive(s): Dataverse, Figshare, MassIVE (proteomics)"
+            ]
+          }
         },
         {
           "id": "5.b",
@@ -2263,7 +2381,13 @@
               ],
               "sub": true
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "data on specialist (domain) hosts: ftp://massive-ftp.ucsd.edu — MassIVE (proteomics)"
+            ]
+          }
         },
         {
           "id": "5.c",
@@ -2326,7 +2450,14 @@
               "kind": "text",
               "value": "Jilian Parker; Trey Ideker; tideker@health.ucsd.edu"
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "governance/maintenance plan present",
+              "terms of access present"
+            ]
+          }
         },
         {
           "id": "5.d",
@@ -2353,12 +2484,12 @@
               "label": "Sub-crates linked from the parent and present",
               "kind": "count",
               "value": 9,
-              "of": 19
+              "of": 9
             },
             {
               "label": "hasPart references on the root",
               "kind": "count",
-              "value": 70,
+              "value": 60,
               "sub": true
             },
             {
@@ -2407,7 +2538,14 @@
                 }
               ]
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "components associated machine-readably in the archived RO-Crate (hasPart + provenance links)",
+              "accessibility of every component not verified — downgrade if pieces are missing"
+            ]
+          }
         }
       ]
     },
@@ -2478,7 +2616,14 @@
                 "h5ad: 2"
               ]
             }
-          ]
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "declared standards: RO-Crate, schema.org",
+              "deterministic validator known: JSON Schema — any JSON Schema validator (e.g. python-jsonschema); RO-Crate profile — rocrate-validator / ro-crate-py"
+            ]
+          }
         },
         {
           "id": "6.b",
@@ -2544,7 +2689,8 @@
               "value": true,
               "sub": true
             }
-          ]
+          ],
+          "estimate": null
         },
         {
           "id": "6.c",
@@ -2664,7 +2810,8 @@
               ],
               "sub": true
             }
-          ]
+          ],
+          "estimate": null
         },
         {
           "id": "6.d",
@@ -2753,6 +2900,12 @@
               "sub": true
             }
           ],
+          "estimate": {
+            "score": "1",
+            "basis": [
+              "some context present but incomplete (example data or withheld-information description missing)"
+            ]
+          },
           "notes": "\"Splits\" is N/A where the dataset has no defined splits; the withholding and example components still apply. Score on the applicable elements."
         }
       ]

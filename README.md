@@ -7,11 +7,11 @@ that crate against the 28 AI-Ready rubrics.
 
 - **Wizard** — the `.claude/skills/` bundle. The interview + build-script
   emission flow (`/fairscape-rocrate-wizard`) and everything around it.
-- **Evidence presentation** — `src/fairscape_evidence/`, an extraction →
+- **Evidence presentation** — `src/aireadiness_evidence/`, an extraction →
   transformation → presentation pipeline that builds the evidence document
   requested by *Rubric for Human Review of AI.docx* (rubric text transcribed
   in `rubric_defs.yaml`). See [Evidence presentation](#evidence-presentation).
-- **Grader** — the `fairscape_wizard` helper module. It splits the presentation
+- **Grader** — the `aireadiness_wizard` helper module. It splits the presentation
   into per-criterion grading folders (`rubric_eval.py`, driven by the
   `agentic-rescore` skill) or grades them with an LLM of your choice
   (`grade.py`, the `fairscape-grade` CLI).
@@ -19,7 +19,7 @@ that crate against the 28 AI-Ready rubrics.
 ## Evidence presentation
 
 ```
-fairscape-evidence /path/to/crate -o out/          # or: PYTHONPATH=src python3 -m fairscape_evidence.cli
+fairscape-evidence /path/to/crate -o out/          # or: PYTHONPATH=src python3 -m aireadiness_evidence.cli
 fairscape-evidence /path/to/crate --no-network     # skip URL / registry lookups
 ```
 
@@ -28,9 +28,9 @@ Writes two files built from the same presentation dict — no scoring in either:
 | Output | Audience |
 | --- | --- |
 | `ai-ready-presentation.json` | evidence handed to an LLM grader |
-| `ai-ready-review.html` | human reviewer: rubric text + scoring defs + evidence, score radios with a copy-as-JSON export |
+| `ai-ready-review.html` | human reviewer: rubric text + scoring defs + evidence, score radios, live per-section score rollups (sticky-bar dropdown, end-of-page table + radar chart), per-section comment boxes, browser autosave, copy-as-JSON export |
 
-Layout of `src/fairscape_evidence/`:
+Layout of `src/aireadiness_evidence/`:
 
 | File | Stage |
 | --- | --- |
@@ -81,7 +81,7 @@ fairscape-grade <crate-dir-or-metadata.json> <output-dir> \
     --api-key "$ANTHROPIC_API_KEY"
 ```
 
-Both paths grade from the same `fairscape_evidence` presentation: per criterion,
+Both paths grade from the same `aireadiness_evidence` presentation: per criterion,
 the docx practice / questions / 0-1-2 rules plus the typed evidence items. Pass
 `--no-network` to skip the pipeline's URL / registry checks.
 
@@ -112,13 +112,13 @@ criterion.
 Equivalent invocation:
 
 ```bash
-python -m fairscape_wizard.grade <crate> <out-dir> --model ... --api-key ...
+python -m aireadiness_wizard.grade <crate> <out-dir> --model ... --api-key ...
 ```
 
 Or call it from a script and get the aggregate back as a dict:
 
 ```python
-from fairscape_wizard import grade
+from aireadiness_wizard import grade
 
 result = grade.grade_crate(
     "path/to/crate",
@@ -139,10 +139,10 @@ the only thing on stdout).
 pip install -e .
 ```
 
-This installs the `fairscape_wizard` and `fairscape_evidence` modules and the
+This installs the `aireadiness_wizard` and `aireadiness_evidence` modules and the
 `fairscape-grade` + `fairscape-evidence` console scripts, and pulls in
 `fairscape-models`, `fairscape-cli`, and `pydantic-ai`. The rubric text
-(`rubric_defs.yaml`) and the HTML template ship inside the `fairscape_evidence`
+(`rubric_defs.yaml`) and the HTML template ship inside the `aireadiness_evidence`
 package, so everything works the same from a source checkout or a built wheel.
 
 ## Sandboxed run (Docker)

@@ -1,0 +1,2631 @@
+{
+  "@context": [
+    "https://w3id.org/ro/crate/1.1/context",
+    {"@base": "https://www.researchobject.org/2021-packaging-research-artefacts-with-ro-crate/"}
+  ],
+  "@graph": [
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.1"
+      },
+      "about": {
+        "@id": "./"
+      },
+      "creator": {
+        "@id": "https://orcid.org/0000-0001-9842-9718"
+      },
+      "license": {
+        "@id": "https://spdx.org/licenses/CC0-1.0"
+      }
+    },
+    {
+      "@id": "./",
+      "@type": "Dataset",
+      "abstract": "An increasing number of researchers support reproducibility by including pointers to and descriptions of datasets, software and methods in their publications. However, scientific articles may be ambiguous, incomplete and difficult to process by automated systems. In this paper we introduce RO-Crate, an open, community-driven, and lightweight approach to packaging research artefacts along with their metadata in a machine readable manner. RO-Crate is based on Schema.org annotations in JSON-LD, aiming to establish best practices to formally describe metadata in an accessible and practical way for their use in a wide variety of situations.\n\nAn RO-Crate is a structured archive of all the items that contributed to a research outcome, including their identifiers, provenance, relations and annotations. As a general purpose packaging approach for data and their metadata, RO-Crate is used across multiple areas, including bioinformatics, digital humanities and regulatory sciences. By applying “just enough” Linked Data standards, RO-Crate simplifies the process of making research outputs FAIR while also contributes to enhancing research reproducibility.",
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0001-9842-9718"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3545-944X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1304-1939"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3986-0510"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6565-5145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-4806-5140"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0454-7145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3079-6586"
+        },        
+        {
+          "@id": "https://orcid.org/0000-0001-5383-6993"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8271-5429"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8131-2150"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-9648-6484"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1991-0533"
+        },
+        {
+          "@id": "https://www.researchobject.org/ro-crate/community"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0183-6910"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1219-2137"
+        }
+      ],
+      "contributor": [
+        {
+          "@id": "#role-0000-0001-9842-9718"
+        },
+        {
+          "@id": "#role-0000-0002-3545-944X"
+        },
+        {
+          "@id": "#role-0000-0003-1304-1939"
+        },
+        {
+          "@id": "#role-0000-0003-3986-0510"
+        },
+        {
+          "@id": "#role-0000-0001-6565-5145"
+        },
+        {
+          "@id": "#role-0000-0002-4806-5140"
+        },
+        {
+          "@id": "#role-0000-0003-0454-7145"
+        },
+        {
+          "@id": "#role-0000-0002-3079-6586"
+        },
+        {
+          "@id": "#role-0000-0001-5383-6993"
+        },
+        {
+          "@id": "#role-0000-0001-8271-5429"
+        },
+        {
+          "@id": "#role-0000-0001-8131-2150"
+        },
+        {
+          "@id": "#role-0000-0002-9648-6484"
+        },
+        {
+          "@id": "#role-0000-0003-1991-0533"
+        },
+        {
+          "@id": "#role-community"
+        },
+        {
+          "@id": "#role-0000-0003-0183-6910"
+        },
+        {
+          "@id": "#role-0000-0003-1219-2137"
+        },
+        {
+          "@id": "#role-0000-0002-0048-3300"
+        },
+        {
+          "@id": "#role-0000-0002-0715-6126"
+        },
+        {
+          "@id": "#role-0000-0002-6190-122X"
+        },
+        {
+          "@id": "#role-0000-0002-2036-8350"
+        },
+        {
+          "@id": "#role-0000-0002-9260-0753"
+        },
+        {
+          "@id": "#role-0000-0003-2130-0865"
+        },
+        {
+          "@id": "#role-0000-0003-4929-1219"
+        },
+        {
+          "@id": "#role-0000-0003-3156-2105"
+        },
+        {
+          "@id": "#role-0000-0002-4763-3943"
+        },
+        {
+          "@id": "#role-0000-0002-1112-1292"
+        },
+        {
+          "@id": "#role-reviewer-3"
+        },
+        {
+          "@id": "#role-0000-0003-0530-4305"
+        }
+      ],
+      "creativeWorkStatus": {
+        "@id": "http://purl.org/spar/pso/published"
+      },
+      "description": "This is the RO-Crate for the article about RO-Crate, submitted to Data Science. The manuscript is included in HTML and PDF versions. Additionally this crate adds the latest RO-Crate specifications and known RO-Crate implementations.",
+      "encoding": [
+        {
+          "@id": "manuscript.html"
+        },
+        {
+          "@id": "manuscript.pdf"
+        }
+      ],
+      "hasPart": [
+        {
+          "@id": "https://doi.org/10.5281/zenodo.4541002"
+        },
+        {
+          "@id": "manuscript.html"
+        },
+        {
+          "@id": "manuscript.pdf"
+        },
+        {
+          "@id": "response.pdf"
+        },
+        {
+          "@id": "listing1/"
+        },
+        {
+          "@id": "software/"
+        },
+        {
+          "@id": "https://w3id.org/ro/crate/"
+        } 
+      ],
+      "identifier": "https://doi.org/10.5281/zenodo.5146227",
+      "isBasedOn": {
+        "@id": "https://doi.org/10.5281/zenodo.5744421"
+      },
+      "mainPart": {
+        "@id": "https://doi.org/10.3233/DS-210053"
+      },
+      "review": {"@id": "https://datasciencehub.net/paper/packaging-research-artefacts-ro-crate"},
+      "keywords": "Research Object, Linked Data, Scholarly Communication, Data publishing, Data packaging, FAIR, Metadata, Reproducibility",
+      "license": {
+        "@id": "https://spdx.org/licenses/CC-BY-4.0"
+      },
+      "mentions": [
+        {"@id": "https://www.researchobject.org/ro-crate/community"},
+        {"@id": "https://github.com/stain/ro-crate-paper/actions/runs/1671704143"},
+        {"@id": "https://github.com/stain/ro-crate-paper/actions/runs/1671704144"},
+        {"@id": "#response"}
+      ],
+      "name": "Packaging research artefacts with RO-Crate",
+      "publisher": {
+        "@id": "https://www.researchobject.org/"
+      },
+      "datePublished": "2022-01-10T11:00:00Z",
+      "sameAs": {"@id": "https://w3id.org/ro/doi/10.5281/zenodo.5146227"},
+      "url": "https://w3id.org/ro/doi/10.5281/zenodo.5146227"
+    },
+    {
+      "@id": "https://doi.org/10.5281/zenodo.5146228",
+      "@type": ["ScholarlyArticle", "Dataset"],
+      "name": "Packaging research artefacts with RO-Crate",
+      "datePublished": "2021-11-30T15:22:00Z",
+      "creativeWorkStatus": {
+        "@id": "http://purl.org/spar/pso/submitted"
+      },
+      "url": "https://arxiv.org/abs/2108.06503v1"
+    },
+    {
+      "@id": "https://doi.org/10.5281/zenodo.5744421",
+      "@type": ["ScholarlyArticle", "Dataset"],
+      "name": "Packaging research artefacts with RO-Crate",
+      "datePublished": "2021-08-13T14:00:00Z",
+      "isBasedOn": {
+        "@id": "https://doi.org/10.5281/zenodo.5146228"
+      },
+      "creativeWorkStatus": {
+        "@id": "http://purl.org/spar/pso/accepted"
+      },
+      "url": "https://arxiv.org/abs/2108.06503v2"
+    },
+    {
+      "@id": "https://doi.org/10.3233/DS-210053",
+      "@type": "ScholarlyArticle",
+      "name": "Packaging research artefacts with RO-Crate",
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0001-9842-9718"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3545-944X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1304-1939"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3986-0510"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6565-5145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-4806-5140"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0454-7145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3079-6586"
+        },        
+        {
+          "@id": "https://orcid.org/0000-0001-5383-6993"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8271-5429"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8131-2150"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-9648-6484"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1991-0533"
+        },
+        {
+          "@id": "https://www.researchobject.org/ro-crate/community"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0183-6910"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1219-2137"
+        }
+      ],
+      "datePublished": "2022-01-04T13:00:00Z",
+      "isPartOf": [
+        {"@id": "http://datasciencehub.net/"}
+      ],
+      "creativeWorkStatus": {
+        "@id": "http://purl.org/spar/pso/published"
+      }
+    },
+    {
+      "@id": "http://datasciencehub.net/",
+      "@type": "Periodical",
+      "name": "Data Science",
+      "issn": "2451-8492",
+      "url": "http://datasciencehub.net/"
+    },
+    {
+      "@id": "https://w3id.org/ro/crate/",
+      "@type": "WebSite",
+      "name": "Research Object Crate (RO-Crate) website",
+      "url": "https://www.researchobject.org/ro-crate/"
+    },  
+    {
+      "@id": "#role-0000-0001-5383-6993",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000100"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0001-5383-6993"
+      },
+      "name": "Contributions by Marco La Rosa"
+    },
+    {
+      "@id": "#role-0000-0001-6565-5145",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000102"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000083"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0001-6565-5145"
+      },
+      "name": "Contributions by Frederik Coppens"
+    },
+    {
+      "@id": "#role-0000-0001-8131-2150",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000005"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000007"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000006"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0001-8131-2150"
+      },
+      "name": "Contributions by Eoghan Ó Carragáin"
+    },
+    {
+      "@id": "#role-0000-0001-8271-5429",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0001-8271-5429"
+      },
+      "name": "Contributions by Simone Leo"
+    },
+    {
+      "@id": "#role-0000-0001-9842-9718",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000001"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000002"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000003"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000004"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000005"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000007"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000012"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000013"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000105"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000100"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000083"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000003"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000006"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000038"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000051"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0001-9842-9718"
+      },
+      "name": "Contributions by Stian Soiland-Reyes"
+    },
+    {
+      "@id": "#role-0000-0002-0048-3300",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0002-0048-3300"
+      },
+      "name": "Contributions by Finn Bacall"
+    },
+    {
+      "@id": "#role-0000-0002-0715-6126",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000006"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0002-0715-6126"
+      },
+      "name": "Contributions by Herbert Van de Sompel"
+    },
+    {
+      "@id": "#role-0000-0002-2036-8350",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000102"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0002-2036-8350"
+      },
+      "name": "Contributions by Nick Juty"
+    },
+    {
+      "@id": "#role-0000-0002-3545-944X",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000001"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000007"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000100"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000083"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000006"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0002-3545-944X"
+      },
+      "name": "Contributions by Peter Sefton"
+    },
+    {
+      "@id": "#role-0000-0002-3588-6257",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000100"
+        }
+      ],
+      "contributor": "https://orcid.org/0000-0002-3588-6257",
+      "name": "Contributions by Jason A. Clark"
+    },
+    {
+      "@id": "#role-0000-0002-4806-5140",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000100"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0002-4806-5140"
+      },
+      "name": "Contributions by José María Fernández"
+    },
+    {
+      "@id": "#role-0000-0002-6190-122X",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000083"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0002-6190-122X"
+      },
+      "name": "Contributions by Ignacio Eguinoa"
+    },
+    {
+      "@id": "#role-0000-0002-9260-0753",
+      "@type": "Role",
+      "additionalType": {
+        "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+      },
+      "contributor": {
+        "@id": "https://orcid.org/0000-0002-9260-0753"
+      },
+      "name": "Contributions by Oscar Corcho"
+    },
+    {
+      "@id": "#role-0000-0002-9648-6484",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0002-9648-6484"
+      },
+      "name": "Contributions by Marc Portier"
+    },
+    {
+      "@id": "#role-0000-0003-0183-6910",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000013"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000006"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0003-0183-6910"
+      },
+      "name": "Contributions by Paul Groth"
+    },
+    {
+      "@id": "#role-0000-0003-0454-7145",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000102"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000006"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0003-0454-7145"
+      },
+      "name": "Contributions by Daniel Garijo"
+    },
+    {
+      "@id": "#role-0000-0003-0522-5674",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000008"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000051"
+        }
+      ],
+      "contributor": {"@id": "https://orcid.org/0000-0003-0522-5674"},
+      "name": "Contributions by Bert Droesbeke"
+    },
+    {
+      "@id": "#role-0000-0003-1219-2137",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000001"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000004"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000007"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000012"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000102"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000100"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000083"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000003"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000006"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0003-1219-2137"
+      },
+      "name": "Contributions by Carole Goble"
+    },
+    {
+      "@id": "#role-0000-0003-1304-1939",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000100"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0003-1304-1939"
+      },
+      "name": "Contributions by Mercè Crosas"
+    },
+    {
+      "@id": "#role-0000-0003-1991-0533",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0003-1991-0533"
+      },
+      "name": "Contributions by Ana Trisovic"
+    },
+    {
+      "@id": "#role-0000-0003-2130-0865",
+      "@type": "Role",
+      "additionalType": {
+        "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+      },
+      "contributor": {
+        "@id": "https://orcid.org/0000-0003-2130-0865"
+      },
+      "name": "Contributions by Stuart Owen"
+    },
+    {
+      "@id": "#role-0000-0003-3986-0510",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000006"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000006"
+        }
+      ],
+      "contributor": "https://orcid.org/0000-0003-3986-0510",
+      "name": "Contributions by LJ Garcia Castro"
+    },
+
+    {
+      "@id": "#role-0000-0002-3079-6586",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        }
+      ],
+      "contributor": "https://orcid.org/0000-0002-3079-6586",
+      "name": "Contributions by Björn Grüning"
+    },
+    
+    {
+      "@id": "#role-0000-0003-4929-1219",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000012"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000103"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0003-4929-1219"
+      },
+      "name": "Contributions by Laura Rodríguez-Navas"
+    },
+    {
+      "@id": "#role-0000-0003-3156-2105",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000103"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        }
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0003-3156-2105"
+      },
+      "name": "Contributions by Alan R Williams"
+    },
+    {
+      "@id": "#role-community",
+      "@type": "Role",
+      "additionalType": [
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000009"
+        },
+        {
+          "@id": "http://purl.org/credit/ontology#CREDIT_00000014"
+        },
+        {
+          "@id": "http://purl.obolibrary.org/obo/CRO_0000073"
+        }
+      ],
+      "contributor": {
+        "@id": "https://www.researchobject.org/ro-crate/community"
+      },
+      "name": "Contributions by RO-Crate Community"
+    },
+    {
+      "@id": "#role-0000-0002-4763-3943",
+      "@type": "Role",
+      "name": "Reviewed by by Angelo A.",
+      "additionalType": [
+        {"@id": "http://purl.obolibrary.org/obo/CRO_0000101"}
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0002-4763-3943"
+      }
+    },
+    {
+      "@id": "#role-0000-0002-1112-1292",
+      "@type": "Role",
+      "name": "Reviewed by Alessia Bardi",
+      "additionalType": [
+        {"@id": "http://purl.obolibrary.org/obo/CRO_0000101"}
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0002-1112-1292"
+      }
+    },
+    {
+      "@id": "#role-reviewer-3",
+      "@type": "Role",
+      "name": "Reviewed by (anonymous)",
+      "additionalType": [
+        {"@id": "http://purl.obolibrary.org/obo/CRO_0000101"}
+      ],
+      "contributor": {
+        "@id": "#reviewer-3"
+      }
+    },
+    {
+      "@id": "#role-0000-0003-0530-4305",
+      "@type": "Role",
+      "name": "Metareviewed by editor Silvio Peroni",
+      "additionalType": [
+        {"@id": "http://purl.obolibrary.org/obo/CRO_0000101"},
+        {"@id": "http://purl.obolibrary.org/obo/CRO_0000104"}
+      ],
+      "contributor": {
+        "@id": "https://orcid.org/0000-0003-0530-4305"
+      }
+    },
+    {
+      "@id": "manuscript.html",
+      "@type": ["File", "ScholarlyArticle"],
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0001-9842-9718"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3545-944X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1304-1939"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3986-0510"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6565-5145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-4806-5140"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0454-7145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3079-6586"
+        },        
+        {
+          "@id": "https://orcid.org/0000-0001-5383-6993"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8271-5429"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8131-2150"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-9648-6484"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1991-0533"
+        },
+        {
+          "@id": "https://www.researchobject.org/ro-crate/community"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0183-6910"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1219-2137"
+        }
+      ],
+      "creativeWorkStatus": {
+        "@id": "http://purl.org/spar/pso/proof"
+      },
+      "description": "HTML manuscript of the RO-Crate article, created by Manubot",
+      "abstract": "An increasing number of researchers support reproducibility by including pointers to and descriptions of datasets, software and methods in their publications. However, scientific articles may be ambiguous, incomplete and difficult to process by automated systems. In this paper we introduce RO-Crate, an open, community-driven, and lightweight approach to packaging research artefacts along with their metadata in a machine readable manner. RO-Crate is based on Schema.org annotations in JSON-LD, aiming to establish best practices to formally describe metadata in an accessible and practical way for their use in a wide variety of situations.\n\nAn RO-Crate is a structured archive of all the items that contributed to a research outcome, including their identifiers, provenance, relations and annotations. As a general purpose packaging approach for data and their metadata, RO-Crate is used across multiple areas, including bioinformatics, digital humanities and regulatory sciences. By applying “just enough” Linked Data standards, RO-Crate simplifies the process of making research outputs FAIR while also contributes to enhancing research reproducibility.",
+      "name": "Packaging research artefacts with RO-Crate (HTML)",
+      "isBasedOn": {"@id": "https://github.com/stain/ro-crate-paper/tree/4f1ce872ac51f6149e8128deddd32d0582d74015"},
+      "url": "https://stain.github.io/ro-crate-paper/v/4f1ce872ac51f6149e8128deddd32d0582d74015/"
+    },
+    {
+      "@id": "response.pdf",
+      "@type": ["File", "Comment"],
+      "encodingFormat": "application/pdf",
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0001-9842-9718"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3545-944X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1304-1939"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3986-0510"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6565-5145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-4806-5140"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0454-7145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8271-5429"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0183-6910"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1219-2137"
+        }
+      ],
+      "datePublished": "2021-11-27T02:05:00Z",
+      "about": {
+        "@id": "https://datasciencehub.net/paper/packaging-research-artefacts-ro-crate"
+      },
+      "name": "Response to peer review, Data Science submission 706-1686",
+      "url": "https://docs.google.com/document/d/1o6sHXzpDYpJUtkHRsEnQMdLD2vU5BLwRa1blgcjHGGE/edit#"
+    },    
+    {
+      "@id": "manuscript.pdf",
+      "@type": ["File", "ScholarlyArticle"],
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0001-9842-9718"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3545-944X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1304-1939"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3986-0510"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6565-5145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-4806-5140"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0454-7145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3079-6586"
+        },        
+        {
+          "@id": "https://orcid.org/0000-0001-5383-6993"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8271-5429"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8131-2150"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-9648-6484"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1991-0533"
+        },
+        {
+          "@id": "https://www.researchobject.org/ro-crate/community"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0183-6910"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1219-2137"
+        }
+      ],
+      "abstract": "An increasing number of researchers support reproducibility by including pointers to and descriptions of datasets, software and methods in their publications. However, scientific articles may be ambiguous, incomplete and difficult to process by automated systems. In this paper we introduce RO-Crate, an open, community-driven, and lightweight approach to packaging research artefacts along with their metadata in a machine readable manner. RO-Crate is based on Schema.org annotations in JSON-LD, aiming to establish best practices to formally describe metadata in an accessible and practical way for their use in a wide variety of situations.\n\nAn RO-Crate is a structured archive of all the items that contributed to a research outcome, including their identifiers, provenance, relations and annotations. As a general purpose packaging approach for data and their metadata, RO-Crate is used across multiple areas, including bioinformatics, digital humanities and regulatory sciences. By applying “just enough” Linked Data standards, RO-Crate simplifies the process of making research outputs FAIR while also contributes to enhancing research reproducibility.",
+      "creativeWorkStatus": {
+        "@id": "http://purl.org/spar/pso/proof"
+      },
+      "description": "PDF manuscript of the RO-Crate article, created by Texlive",
+      "name": "Packaging research artefacts with RO-Crate (PDF)",
+      "isBasedOn": {"@id": "https://github.com/stain/ro-crate-paper/tree/4f1ce872ac51f6149e8128deddd32d0582d74015"}
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-5383-6993",
+      "name": "Marco La Rosa"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-6022-9825",
+      "@type": "Person",
+      "name": "Karl Sebby"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-6565-5145",
+      "@type": "Person",
+      "name": "Frederik Coppens"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-6960-357X",
+      "@type": "Person",
+      "name": "Mark Wilkinson"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-8131-2150",
+      "@type": "Person",
+      "name": "Eoghan Ó Carragáin"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-8172-8981",
+      "@type": "Person",
+      "name": "Jasper Koehorst"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-8271-5429",
+      "name": "Simone Leo"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-8420-5254",
+      "@type": "Person",
+      "name": "Kristi Holmes"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-9842-9718",
+      "@type": "Person",
+      "name": "Stian Soiland-Reyes"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-0048-3300",
+      "@type": "Person",
+      "name": "Finn Bacall"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-0309-604X",
+      "@type": "Person",
+      "name": "Salvador Capella-Gutierrez"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-0337-8610",
+      "@type": "Person",
+      "name": "brandon whitehead"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-0715-6126",
+      "@type": "Person",
+      "name": "Herbert Van de Sompel"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-1756-2128",
+      "@type": "Person",
+      "name": "Thomas Thelen"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-2036-8350",
+      "@type": "Person",
+      "name": "Nick Juty"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-2142-1731",
+      "name": "Chenxu Niu"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-2961-9670",
+      "@type": "Person",
+      "name": "Michael R Crusoe"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-3468-0652",
+      "@type": "Person",
+      "name": "Alexander Kanitz"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-3545-944X",
+      "@type": "Person",
+      "name": "Peter Sefton"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-3588-6257",
+      "@type": "Person",
+      "name": "Jason A. Clark"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-4806-5140",
+      "@type": "Person",
+      "name": "José María Fernández"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-4929-7875",
+      "name": "Tomasz Miksa"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-5432-2748",
+      "name": "Paul Brack"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-5491-6431",
+      "@type": "Person",
+      "name": "Jose Manuel Gomez-Perez"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-5711-4872",
+      "@type": "Person",
+      "name": "Alasdair J. G. Gray"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-6190-122X",
+      "@type": "Person",
+      "name": "Ignacio Eguinoa"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-7370-4805",
+      "@type": "Person",
+      "name": "Kyle Chard"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-7552-1009",
+      "@type": "Person",
+      "name": "Hervé Ménager"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-9260-0753",
+      "@type": "Person",
+      "name": "Oscar Corcho"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-9648-6484",
+      "name": "Marc Portier"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-9986-7223",
+      "name": "Kosuke Tanabe"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-0183-6910",
+      "@type": "Person",
+      "name": "Paul Groth"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-0223-1059",
+      "@type": "Person",
+      "name": "Erich Bremer"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-0454-7145",
+      "@type": "Person",
+      "name": "Daniel Garijo"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-0522-5674",
+      "name": "Bert Droesbeke"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-1130-2154",
+      "@type": "Person",
+      "name": "Giacomo Tartari"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-1219-2137",
+      "@type": "Person",
+      "name": "Carole Goble"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-1304-1939",
+      "@type": "Person",
+      "name": "Mercè Crosas"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-1541-5631",
+      "@type": "Person",
+      "name": "Paul Walk"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-1743-8300",
+      "name": "Milan Ojsteršek"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-1991-0533",
+      "@type": "Person",
+      "name": "Ana Trisovic"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-2130-0865",
+      "@type": "Person",
+      "name": "Stuart Owen"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-3156-2105",
+      "@type": "Person",
+      "name": "Alan R Williams"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-3486-8193",
+      "@type": "Person",
+      "name": "Mark Graves"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-3910-0474",
+      "@type": "Person",
+      "name": "Gavin Kennedy"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-3986-0510",
+      "@type": "Person",
+      "alternateName": "LJ Garcia Castro",
+      "name": "Leyla Jael Castro"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-3079-6586",
+      "@type": "Person",
+      "name": "Björn Grüning"
+    },        
+    {
+      "@id": "https://orcid.org/0000-0003-4289-4922",
+      "@type": "Person",
+      "name": "Raul Palma"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-4929-1219",
+      "@type": "Person",
+      "name": "Laura Rodríguez-Navas"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-6387-5988",
+      "@type": "Person",
+      "name": "Cedric Decruw"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-3883-4169",
+      "@type": "Person",
+      "name": "Andreas Czerniak"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-5761-7533",
+      "@type": "Person",
+      "name": "Jeremy Jay"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-0792-8157",
+      "@type": "Person",
+      "name": "Sergio Serra"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-8772-7904",
+      "@type": "Person",
+      "name": "Ronald Siebes"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-4196-3658",
+      "@type": "Person",
+      "name": "Shaun de Witt"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-2318-4477",
+      "@type": "Person",
+      "name": "Shady El Damaty"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-1248-3594",
+      "@type": "Person",
+      "name": "Douglas Lowe"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-0792-8157",
+      "@type": "Person",
+      "name": "Sergio Serra"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-1498-6205",
+      "@type": "Person",
+      "name": "Xuanqi Li"
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-4763-3943",
+      "@type": "Person",
+      "name": "Angelo A."
+    },
+    {
+      "@id": "https://orcid.org/0000-0002-1112-1292",
+      "@type": "Person",
+      "name": "Alessia Bardi"
+    },
+    {
+      "@id": "#reviewer-3",
+      "@type": "Person",
+      "name": "(anonymous)"
+    },
+    {
+      "@id": "https://orcid.org/0000-0003-0530-4305",
+      "@type": "Person",
+      "name": "Silvio Peroni"
+    },
+    {
+      "@id": "https://datasciencehub.net/paper/packaging-research-artefacts-ro-crate",
+      "type": "Review",
+      "name": "DataScience submission 706-1686: Packaging research artefacts with RO-Crate",
+      "isPartOf": [
+        {"@id": "http://datasciencehub.net/"}
+      ],
+      "itemReviewed": {
+        "@id": "https://doi.org/10.5281/zenodo.5146228"
+      },
+      "contributor": [
+        {
+          "@id": "#role-0000-0002-4763-3943"
+        },
+        {
+          "@id": "#role-0000-0002-1112-1292"
+        },
+        {
+          "@id": "#role-reviewer-3"
+        }
+      ],
+      "editor": {"@id": "https://orcid.org/0000-0003-0530-4305"}
+    },
+    {
+      "@id": "https://spdx.org/licenses/Apache-2.0",
+      "@type": "CreativeWork",
+      "identifier": "Apache-2.0",
+      "name": "Apache License 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0",
+      "description": "Licensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.",
+      "version": "2.0"
+    },
+    {
+      "@id": "https://spdx.org/licenses/CC-BY-4.0",
+      "@type": "CreativeWork",
+      "identifier": "CC-BY-4.0",
+      "name": "Creative Commons Attribution 4.0 International",
+      "description": "This is a human-readable summary of (and not a substitute for) the license.\nYou are free to:\n\n    Share — copy and redistribute the material in any medium or format\n    Adapt — remix, transform, and build upon the material\n    for any purpose, even commercially.\n\nThis license is acceptable for Free Cultural Works.\n    The licensor cannot revoke these freedoms as long as you follow the license terms.\n\nUnder the following terms:\n    Attribution — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.\n    No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.\n\nNotices:\n    You do not have to comply with the license for elements of the material in the public domain or where your use is permitted by an applicable exception or limitation.\n    No warranties are given. The license may not give you all of the permissions necessary for your intended use. For example, other rights such as publicity, privacy, or moral rights may limit how you use the material.",
+      "url": "https://creativecommons.org/licenses/by/4.0/",
+      "version": "4.0"
+    },
+    {
+      "@id": "https://spdx.org/licenses/CC0-1.0",
+      "@type": "CreativeWork",
+      "identifier": "CC0-1.0",
+      "name": "Creative Commons Zero v1.0 Universal",
+      "description": "This is a human-readable summary of the Legal Code (read the full text).\n\nNo Copyright\n\n    The person who associated a work with this deed has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law.\n\n    You can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission. See Other Information below.\n\nThis license is acceptable for Free Cultural Works.\nOther Information\n\n    In no way are the patent or trademark rights of any person affected by CC0, nor are the rights that other persons may have in the work or in how the work is used, such as publicity or privacy rights.\n    Unless expressly stated otherwise, the person who associated a work with this deed makes no warranties about the work, and disclaims liability for all uses of the work, to the fullest extent permitted by applicable law.\n    When using or citing the work, you should not imply endorsement by the author or the affirmer.\n",
+      "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "version": "1.0"
+    },
+    {
+      "@id": "https://www.researchobject.org/",
+      "@type": "Organization",
+      "name": "ResearchObject.org",
+      "url": "https://www.researchobject.org/"
+    },
+    {
+      "@id": "https://w3id.org/ro/crate/1.1",
+      "name": "RO-Crate Metadata Specification 1.1",
+      "identifier": "https://doi.org/10.5281/zenodo.4541002",
+      "datePublished": "2021-02-15T12:00:00Z",
+      "version": "1.1.1"
+    },
+    {
+      "@id": "https://www.researchobject.org/ro-crate/1.1/ro-crate-metadata.jsonld",
+      "@type": "CreativeWork",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.1"
+      }
+    },
+    {
+      "@id": "https://www.researchobject.org/ro-crate/community",
+      "@type": "Project",
+      "member": [
+        {
+          "@id": "https://orcid.org/0000-0001-8131-2150"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3545-944X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-9842-9718"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-9260-0753"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0454-7145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-4289-4922"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6565-5145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1219-2137"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-4806-5140"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-7370-4805"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-5491-6431"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-2961-9670"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-6190-122X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-2036-8350"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8420-5254"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3588-6257"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-0309-604X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-5711-4872"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-2130-0865"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3156-2105"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1130-2154"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-0048-3300"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-1756-2128"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-7552-1009"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-4929-1219"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1541-5631"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-0337-8610"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6960-357X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0183-6910"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0223-1059"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3986-0510"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6022-9825"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3468-0652"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1991-0533"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3910-0474"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3486-8193"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8172-8981"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8271-5429"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-9648-6484"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-5432-2748"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1743-8300"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0522-5674"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-2142-1731"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-9986-7223"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-4929-7875"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-5383-6993"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6387-5988"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3883-4169"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-5761-7533"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-0792-8157"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8772-7904"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-4196-3658"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-2318-4477"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-1248-3594"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-0792-8157"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1498-6205"
+        }
+    
+      ],
+      "name": "RO-Crate Community",
+      "parentOrganization": {
+        "@id": "https://www.researchobject.org/"
+      },
+      "sdDatePublished": "2021-10-05T17:41:00Z",
+      "url": "https://www.researchobject.org/ro-crate/community"
+    },
+    {
+      "@id": "http://purl.org/spar/pso/submitted",
+      "@type": "DefinedTerm",
+      "name": "submitted"
+    },
+    {
+      "@id": "http://purl.org/spar/pso/accepted-for-publication",
+      "@type": "DefinedTerm",
+      "name": "accepted for publication"
+    },
+    {
+      "@id": "http://purl.org/spar/pso/proof",
+      "@type": "DefinedTerm",
+      "name": "proof"
+    },
+    {
+      "@id": "http://purl.org/spar/pso/published",
+      "@type": "DefinedTerm",
+      "name": "published"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000003",
+      "@type": "DefinedTerm",
+      "name": "figure development role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000006",
+      "@type": "DefinedTerm",
+      "name": "background and literature search role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000008",
+      "@type": "DefinedTerm",
+      "name": "website role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000014",
+      "@type": "DefinedTerm",
+      "name": "technical documentation role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000038",
+      "@type": "DefinedTerm",
+      "name": "metadata role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000051",
+      "@type": "DefinedTerm",
+      "name": "system administrator role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000073",
+      "@type": "DefinedTerm",
+      "name": "standards development role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000081",
+      "@type": "DefinedTerm",
+      "name": "coordination role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000083",
+      "@type": "DefinedTerm",
+      "name": "community engagement role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000089",
+      "@type": "DefinedTerm",
+      "name": "lay summary role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000091",
+      "@type": "DefinedTerm",
+      "name": "technical writing role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000100",
+      "@type": "DefinedTerm",
+      "name": "presenter role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000101",
+      "@type": "DefinedTerm",
+      "name": "peer review role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000104",
+      "@type": "DefinedTerm",
+      "name": "acceptor role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000102",
+      "@type": "DefinedTerm",
+      "name": "advisory role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000103",
+      "@type": "DefinedTerm",
+      "name": "modifier role"
+    },
+    {
+      "@id": "http://purl.obolibrary.org/obo/CRO_0000105",
+      "@type": "DefinedTerm",
+      "name": "submitter role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000001",
+      "@type": "DefinedTerm",
+      "name": "conceptualization role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000002",
+      "@type": "DefinedTerm",
+      "name": "data curation role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000003",
+      "@type": "DefinedTerm",
+      "name": "formal analysis role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000004",
+      "@type": "DefinedTerm",
+      "name": "funding acquisition role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000005",
+      "@type": "DefinedTerm",
+      "name": "investigation role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000006",
+      "@type": "DefinedTerm",
+      "name": "methodology role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000007",
+      "@type": "DefinedTerm",
+      "name": "project administration role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000009",
+      "@type": "DefinedTerm",
+      "name": "software role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000010",
+      "@type": "DefinedTerm",
+      "name": "supervision role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000011",
+      "@type": "DefinedTerm",
+      "name": "validation role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000012",
+      "@type": "DefinedTerm",
+      "name": "visualization role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000013",
+      "@type": "DefinedTerm",
+      "name": "writing original draft role"
+    },
+    {
+      "@id": "http://purl.org/credit/ontology#CREDIT_00000014",
+      "@type": "DefinedTerm",
+      "name": "writing review and editing role"
+    },
+    {
+      "@id": "https://doi.org/10.5281/zenodo.4541002",
+      "@type": "Dataset",
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0001-8131-2150"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3545-944X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-9842-9718"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-9260-0753"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0454-7145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-4289-4922"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6565-5145"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1219-2137"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-4806-5140"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-7370-4805"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-5491-6431"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-2961-9670"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-6190-122X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-2036-8350"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8420-5254"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3588-6257"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-0309-604X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-5711-4872"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-2130-0865"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3156-2105"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1130-2154"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-0048-3300"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-1756-2128"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-7552-1009"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-4929-1219"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1541-5631"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-0337-8610"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6960-357X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0183-6910"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0223-1059"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3986-0510"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-6022-9825"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3468-0652"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-1991-0533"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3910-0474"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-3486-8193"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-8172-8981"
+        }
+      ],
+      "identifier": "https://doi.org/10.5281/zenodo.4541002",
+      "license": {
+        "@id": "https://spdx.org/licenses/Apache-2.0"
+      },
+      "name": "RO-Crate Metadata Specification 1.1.1",
+      "subjectOf": "https://www.researchobject.org/ro-crate/1.1/ro-crate-metadata.jsonld",
+      "url": "https://www.researchobject.org/ro-crate/1.1/ro-crate-preview.html",
+      "version": "1.1.1"
+    },
+    {
+      "@id": "#maroua",
+      "familyName": "Jaoua",
+      "givenName": "Maroua",
+      "name": "Maroua Jaoua"
+    },
+    {
+      "@id": "#ghaith",
+      "@type": "Person",
+      "familyName": "Arfaoui",
+      "givenName": "Ghaith",
+      "name": "Ghaith Arfaoui"
+    },
+    {
+      "@id": "#gabriel",
+      "@type": "Person",
+      "familyName": "Brenner",
+      "givenName": "Gabriel",
+      "name": "Gabriel Brenner"
+    },
+    {
+      "@id": "#kostadin",
+      "@type": "Person",
+      "familyName": "Belchev",
+      "givenName": "Kostadin",
+      "name": "Kostadin Belchev"
+    },
+    {
+      "@id": "#thanasis",
+      "@type": "Person",
+      "familyName": "Vergoulis",
+      "givenName": "Thanasis",
+      "name": "Thanasis Vergoulis"
+    },
+    {
+      "@id": "#marina",
+      "@type": "Person",
+      "familyName": "Soares e Silva",
+      "givenName": "Marina",
+      "name": "Marina Soares e Silva"
+    },
+    {
+      "@id": "#mike",
+      "@type": "Person",
+      "familyName": "Lynch",
+      "givenName": "Mike",
+      "name": "Mike Lynch"
+    },
+    {
+      "@id": "#martyn",
+      "@type": "Person",
+      "familyName": "Whitwell",
+      "givenName": "Martyn",
+      "name": "Martyn Whitwell"
+    },
+    {
+      "@id": "https://ardc.edu.au/",
+      "@type": "FundingAgency"
+    },
+    {
+      "@id": "https://arkisto-platform.github.io/case-studies/paradisec/",
+      "@type": "WebPage",
+      "name": "Case Study: Modern PARADISEC"
+    },
+    {
+      "@id": "https://doi.org/10.4126/frl01-006423291",
+      "@type": "ScholarlyArticle",
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0002-4929-7875"
+        },
+        {
+          "@id": "#maroua"
+        },
+        {
+          "@id": "#ghaith"
+        }
+      ],
+      "name": "Research Object Crates and Machine-actionable Data Management Plans"
+    },
+    {
+      "@id": "https://doi.org/10.5281/zenodo.3903463",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "CLI",
+      "audience": {
+        "@id": "#dmp-users"
+      },
+      "author": {
+        "@id": "#gabriel"
+      },
+      "creativeWorkStatus": "Beta",
+      "description": "Convert between machine-actionable data management plans (maDMP) and RO-Crate",
+      "name": "Ro-Crate_2_ma-DMP",
+      "softwareRequirements": "Python",
+      "url": "https://github.com/BrennerG/Ro-Crate_2_ma-DMP"
+    },
+    {
+      "@id": "https://doi.org/10.5281/zenodo.3922136",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "CLI",
+      "audience": {
+        "@id": "#dmp-users"
+      },
+      "author": [
+        {
+          "@id": "#ghaith"
+        },
+        {
+          "@id": "#maroua"
+        }
+      ],
+      "citation": {
+        "@id": "https://doi.org/10.4126/frl01-006423291"
+      },
+      "creativeWorkStatus": "Beta",
+      "description": "Mapping between machine-actionable data management plans (maDMP) and RO-Crate",
+      "name": "RDA maDMP Mapper",
+      "softwareRequirements": "Python",
+      "url": "https://github.com/GhaithArf/ro-crate-rda-madmp-mapper"
+    },
+    {
+      "@id": "https://doi.org/10.5281/zenodo.4671709",
+      "@type": "PresentationDigitalDocument",
+      "author": {
+        "@id": "#thanasis"
+      },
+      "name": "Use of RO-Crates in SCHeMa"
+    },
+    {
+      "@id": "https://doi.org/10.5281/zenodo.4705143",
+      "@type": "SoftwareApplication",
+      "audience": {
+        "@id": "#Developers"
+      },
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0001-8271-5429"
+        },
+        {
+          "@id": "https://orcid.org/0000-0001-9842-9718"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-6190-122X"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-0522-5674"
+        },
+        {
+          "@id": "#alban"
+        },
+        {
+          "@id": "https://orcid.org/0000-0003-4929-1219"
+        }
+      ],
+      "creativeWorkStatus": "Alpha",
+      "description": "Object-oriented Python library for reading/writing RO-Crate",
+      "name": "ro-crate-py",
+      "softwareRequirements": "Python",
+      "url": "https://github.com/researchobject/ro-crate-py/"
+    },
+    {
+      "@id": "listing1/",
+      "@type": "Dataset",
+      "name": "A simplified RO-Crate (Listing 1)",
+      "description": "This example crate expands Listing 1 in the paper Packaging research artefacts with RO-Crate",
+      "isBasedOn": {
+        "@id": "manuscript.html#cb1"
+      },
+      "subjectOf": [
+        {"@id": "listing1/ro-crate-metadata.json"},
+        {"@id": "listing1/ro-crate-preview.html"}
+      ]
+    },
+    {
+      "@id": "listing1/ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "name": "RO-Crate Metadata File for listing1",
+      "encodingFormat": "appliation/json",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.1"
+      }
+    },
+    {
+      "@id": "listing1/ro-crate-preview.html",
+      "@type": "WebPage",
+      "name": "RO-Crate HTML preview for listing1",
+      "encodingFormat": "text/html"
+    },
+    {
+      "@id": "manuscript.html#cb1",
+      "@type": "WebPageElement",
+      "name": "Listing 1: Simplified RO-Crate metadata file",
+      "isPartOf": "manuscript.html"
+    },
+    {
+      "@id": "software/",
+      "@type": "Dataset",
+      "description": "Applications and libraries implementing RO-Crate, targeting different types of users across multiple programming languages. creativeWorkStatus is indicative as assessed by this work (Alpha < Beta < Release Candidate (RC) < Release)",
+      "hasPart": [
+        {
+          "@id": "#describo"
+        },
+        {
+          "@id": "#describo-online"
+        },
+        {
+          "@id": "#ro-crate-excel"
+        },
+        {
+          "@id": "#ro-crate-html-js"
+        },
+        {
+          "@id": "#ro-crate-js"
+        },
+        {
+          "@id": "#ro-crate-ruby"
+        },
+        {
+          "@id": "https://doi.org/10.5281/zenodo.4705143"
+        },
+        {
+          "@id": "#about-workflowhub"
+        },
+        {
+          "@id": "#about-lifemonitor"
+        },
+        {
+          "@id": "#athenarc-schema"
+        },
+        {
+          "@id": "#galaxy2cwl"
+        },
+        {
+          "@id": "#modpdsc"
+        },
+        {
+          "@id": "#arkisto-data-portal"
+        },
+        {
+          "@id": "#ocfl-tools"
+        },
+        {
+          "@id": "#ro-composer"
+        },
+        {
+          "@id": "https://doi.org/10.5281/zenodo.3922136"
+        },
+        {
+          "@id": "https://doi.org/10.5281/zenodo.3903463"
+        },
+        {
+          "@id": "#CheckMyCrate"
+        }
+      ],
+      "name": "RO-Crate Software (Table 1)"
+    },
+    {
+      "@id": "#CheckMyCrate",
+      "@type": "SoftwareApplication",
+      "abstract": "A command line application for validating a RO-Crate object against a JSON profile.",
+      "alternateName": "KockataEPich/CheckMyCrate",
+      "applicationCategory": "CLI",
+      "audience": {
+        "@id": "#Developers"
+      },
+      "author": {
+        "@id": "#kostadin"
+      },
+      "creativeWorkStatus": "Alpha",
+      "description": "Validation according to Workflow RO-Crate profile",
+      "name": "CheckMyCrate",
+      "softwareRequirements": "Python",
+      "url": "https://github.com/KockataEPich/CheckMyCrate"
+    },
+    {
+      "@id": "#Data-managers",
+      "@type": "Audience",
+      "name": "Data managers"
+    },
+    {
+      "@id": "#Developers",
+      "@type": "Audience",
+      "name": "Developers"
+    },
+    {
+      "@id": "#Platform-developers",
+      "@type": "Audience",
+      "name": "Platform developers"
+    },
+    {
+      "@id": "#Repository-developers",
+      "@type": "Audience",
+      "name": "Repository developers"
+    },
+    {
+      "@id": "#Repository-managers",
+      "@type": "Audience",
+      "name": "Repository managers"
+    },
+    {
+      "@id": "#Research-Data-Managers",
+      "@type": "Audience",
+      "name": "Research Data Managers"
+    },
+    {
+      "@id": "#Workflow-developers",
+      "@type": "Audience",
+      "name": "Workflow developers"
+    },
+    {
+      "@id": "#Workflow-users",
+      "@type": "Audience",
+      "name": "Workflow users"
+    },
+    {
+      "@id": "#about-lifemonitor",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "Web",
+      "applicationSubCategory": "API",
+      "audience": {
+        "@id": "#Workflow-developers"
+      },
+      "creativeWorkStatus": "Alpha",
+      "description": "Workflow testing and monitoring service; Workflow Testing profile of RO-Crate",
+      "name": "Life Monitor",
+      "softwareRequirements": "Python",
+      "url": "https://about.lifemonitor.eu/"
+    },
+    {
+      "@id": "#about-workflowhub",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "Web",
+      "audience": [
+        {
+          "@id": "#Workflow-developers"
+        },
+        {
+          "@id": "#Workflow-users"
+        }
+      ],
+      "creativeWorkStatus": "Beta",
+      "description": "Workflow repository; imports and exports Workflow RO-Crate",
+      "name": "WorkflowHub",
+      "softwareRequirements": "Ruby",
+      "url": "https://about.workflowhub.eu/"
+    },
+    {
+      "@id": "#alban",
+      "@type": "Person",
+      "familyName": "Gaignard",
+      "givenName": "Alban",
+      "name": "Alban Gaignard"
+    },
+    {
+      "@id": "#arkisto-data-portal",
+      "@type": "SoftwareApplication",
+      "applicationCategory": [
+        "Platform",
+        "Web"
+      ],
+      "audience": {
+        "@id": "#Repository-managers"
+      },
+      "creativeWorkStatus": "Beta",
+      "description": "Platform for publishing data and documents stored in an OCFL repository via a web interface",
+      "name": "ONI express",
+      "softwareRequirements": "Docker",
+      "url": "https://arkisto-platform.github.io/tools/portal/"
+    },
+    {
+      "@id": "#athenarc-schema",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "Web",
+      "audience": {
+        "@id": "#Workflow-users"
+      },
+      "creativeWorkStatus": "Alpha",
+      "description": "Workflow execution using RO-Crate as exchange mechanism [@doi:]",
+      "name": "SCHeMa",
+      "softwareRequirements": "PHP",
+      "subjectOf": {
+        "@id": "https://doi.org/10.5281/zenodo.4671709"
+      },
+      "url": "https://github.com/athenarc/schema"
+    },
+    {
+      "@id": "#describo",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "Desktop",
+      "audience": {
+        "@id": "#Research-Data-Managers"
+      },
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0001-5383-6993"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3545-944X"
+        }
+      ],
+      "creativeWorkStatus": "RC",
+      "description": "Interactive desktop application to create, update and export RO-Crates for different profiles",
+      "installUrl": "https://github.com/Arkisto-Platform/describo/releases",
+      "name": "Describo",
+      "softwareRequirements": "NodeJS",
+      "url": "https://arkisto-platform.github.io/describo/"
+    },
+    {
+      "@id": "#describo-online",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "Web",
+      "audience": {
+        "@id": "#Platform-developers"
+      },
+      "author": {
+        "@id": "https://orcid.org/0000-0001-5383-6993"
+      },
+      "creativeWorkStatus": "Alpha",
+      "description": "Web-based application to create RO-Crates using cloud storage",
+      "name": "Describo Online",
+      "softwareRequirements": "NodeJS",
+      "url": "https://arkisto-platform.github.io/describo-online/"
+    },
+    {
+      "@id": "#dmp-users",
+      "@type": "Audience",
+      "name": "Data Management Plan users"
+    },
+    {
+      "@id": "#galaxy2cwl",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "CLI",
+      "audience": {
+        "@id": "#Workflow-developers"
+      },
+      "author": {
+        "@id": "https://orcid.org/0000-0002-6190-122X"
+      },
+      "creativeWorkStatus": "Alpha",
+      "description": "Wraps Galaxy workflow as Workflow RO-Crate",
+      "installUrl": "https://pypi.org/project/galaxy2cwl/",
+      "name": "galaxy2cwl",
+      "softwareRequirements": "Python",
+      "url": "https://github.com/workflowhub-eu/galaxy2cwl"
+    },
+    {
+      "@id": "#modpdsc",
+      "@type": "WebApplication",
+      "applicationCategory": "Web",
+      "audience": {
+        "@id": "#Repository-managers"
+      },
+      "creativeWorkStatus": "Beta",
+      "description": "Cultural Heritage portal based on OCFL and RO-Crate",
+      "downloadUrl": "https://github.com/CoEDL/modpdsc/",
+      "funder": {
+        "@id": "https://ardc.edu.au/"
+      },
+      "name": "Modern PARADISEC",
+      "subjectOf": {
+        "@id": "https://arkisto-platform.github.io/case-studies/paradisec/"
+      },
+      "url": "http://mod.paradisec.org.au/"
+    },
+    {
+      "@id": "#ocfl-tools",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "CLI",
+      "audience": {
+        "@id": "#Repository-developers"
+      },
+      "creativeWorkStatus": "Beta",
+      "description": "Tools for managing RO-Crates in an OCFL repository",
+      "name": "ocfl-tools",
+      "softwareRequirements": "JavaScript",
+      "url": "https://github.com/CoEDL/ocfl-tools"
+    },
+    {
+      "@id": "#ro-composer",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "Web",
+      "applicationSubCategory": "API",
+      "audience": {
+        "@id": "#Repository-developers"
+      },
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0001-9842-9718"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-0048-3300"
+        },
+        {
+          "@id": "#marina"
+        }
+      ],
+      "creativeWorkStatus": "Alpha",
+      "description": "REST API for gradually building ROs for given profile.",
+      "downloadUrl": "https://github.com/ResearchObject/research-object-composer",
+      "funder": {
+        "@id": "https://www.mendeley.com/"
+      },
+      "name": "RO Composer",
+      "softwareRequirements": "Java",
+      "url": "https://esciencelab.org.uk/projects/ro-composer/"
+    },
+    {
+      "@id": "#ro-crate-excel",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "CLI",
+      "audience": {
+        "@id": "#Data-managers"
+      },
+      "creativeWorkStatus": "Beta",
+      "description": "Command-line tool to help create RO-Crates and HTML-readable rendering",
+      "installUrl": "https://www.npmjs.com/package/ro-crate-excel",
+      "name": "ro-crate-excel",
+      "softwareRequirements": "JavaScript",
+      "url": "https://github.com/UTS-eResearch/ro-crate-excel"
+    },
+    {
+      "@id": "#ro-crate-html-js",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "CLI",
+      "audience": {
+        "@id": "#Developers"
+      },
+      "creativeWorkStatus": "Beta",
+      "description": "HTML rendering of RO-Crate",
+      "installUrl": "https://www.npmjs.com/package/ro-crate-html-js",
+      "name": "ro-crate-html-js",
+      "softwareRequirements": "JavaScript",
+      "url": "https://github.com/UTS-eResearch/ro-crate-html-js"
+    },
+    {
+      "@id": "#ro-crate-js",
+      "@type": "SoftwareApplication",
+      "applicationCategory": "Library",
+      "audience": {
+        "@id": "#Research-Data-Managers"
+      },
+      "author": [
+        {
+          "@id": "#mike"
+        },
+        {
+          "@id": "https://orcid.org/0000-0002-3545-944X"
+        }
+      ],
+      "creativeWorkStatus": "Alpha",
+      "description": "Library for creating/manipulating crates; basic validation code",
+      "installUrl": "https://www.npmjs.com/package/ro-crate",
+      "name": "ro-crate-js",
+      "softwareRequirements": "JavaScript",
+      "url": "https://github.com/UTS-eResearch/ro-crate-js"
+    },
+    {
+      "@id": "#ro-crate-ruby",
+      "@type": "SoftwareApplication",
+      "audience": {
+        "@id": "#Developers"
+      },
+      "author": [
+        {
+          "@id": "https://orcid.org/0000-0002-0048-3300"
+        },
+        {
+          "@id": "#martyn"
+        }
+      ],
+      "creativeWorkStatus": "Beta",
+      "description": "Ruby library for reading/writing RO-Crate, with workflow support",
+      "name": "ro-crate-ruby",
+      "softwareRequirements": "Ruby"
+    },
+    {
+      "@id": "https://www.mendeley.com",
+      "@type": "Organization",
+      "name": "Mendeley Ltd"
+    },
+    {
+      "@id": "https://github.com/manubot/rootstock",
+      "@type": "SoftwareApplication",
+      "url": "https://manubot.org/",
+      "name": "Manubot",
+      "citation": {"@id": "https://doi.org/10.1371/journal.pcbi.1007128"},
+      "description": "Manubot is a workflow and set of tools for the next generation of scholarly publishing. Write your manuscript in markdown, track it with git, automatically convert it to .html, .pdf, or .docx, and deploy it to your destination of choice. "
+    },
+    {
+      "@id": "https://doi.org/10.1371/journal.pcbi.1007128",
+      "@type": "ScholarlyArticle",
+      "name": "Open collaborative writing with Manubot",
+      "identifier": "https://doi.org/10.1371/journal.pcbi.1007128"
+    },
+    {
+      "@id": "https://hub.docker.com/layers/danteev/texlive/2021-D/images/sha256-b3a437ebef34a03d39e0cba86ae4c7a8d564a412bc6cb3415df680239cbc2b4c",
+      "@type": "SoftwareApplication",
+      "url": "https://github.com/dante-ev/docker-texlive/tree/2021-D",
+      "name": "Docker image for texlive",
+      "description": "This docker image supports full TeX Live with following additions:\n\n- [Gnuplot](http://www.gnuplot.info/)\n- [GraphViz](https://www.graphviz.org/)\n- [Inkscape](https://inkscape.org/)\n- [latexmk](https://www.ctan.org/pkg/latexmk/) - an automator for latex building\n- [Pandoc](http://pandoc.org/) - to convert from and to `.tex`\n- Python\n  - [pygments](https://pygments.org/). This enables the usage of the [minted](https://ctan.org/pkg/minted) package for source code highlighting.\n  - [pip](https://pypi.org/project/pip/). This enables manual Python package installation.\n- [git-latexdiff](https://gitlab.com/git-latexdiff/git-latexdiff) - to enable diffs of LaTeX documents\n- Java headless - required for Pandoc\n\nIt builds on the [full texlive image by 'Island of TeX'](https://gitlab.com/islandoftex/images/texlive) with additions concidered important.",
+      "author": {
+        "@id": "https://orcid.org/0000-0001-6962-4290"
+      },
+      "version": "2021-D"
+    },
+    {
+      "@id": "https://orcid.org/0000-0001-6962-4290",
+      "@type": "Person",
+      "name": "Oliver Kopp"
+    },    
+    {
+      "@id": "https://github.com/stain/ro-crate-paper/actions/runs/1671704144",
+      "@type": "CreateAction",
+      "name": "LaTeX GitHub action built PDF",
+      "description": "make LATEXMK=latexmk",
+      "startTime": "2022-01-08T16:19:22Z",
+      "endTime": "2022-01-08T16:21:12Z",
+      "instrument": {
+        "@id": "https://hub.docker.com/layers/danteev/texlive/2021-D/images/sha256-b3a437ebef34a03d39e0cba86ae4c7a8d564a412bc6cb3415df680239cbc2b4c"
+      },
+      "object": {
+        "@id": "https://github.com/stain/ro-crate-paper/tree/4f1ce872ac51f6149e8128deddd32d0582d74015"
+      },
+      "result": {
+        "@id": "manuscript.pdf"
+      }
+    },
+    {
+      "@id": "https://github.com/stain/ro-crate-paper/actions/runs/1671704143",
+      "@type": "CreateAction",
+      "name": "Manubot GitHub action built HTML",
+      "description": "ci/deploy.sh",
+      "startTime": "2022-01-08T16:19:22Z",
+      "endTime": "2022-01-08T16:26:41Z",
+      "instrument": {
+        "@id": "https://github.com/manubot/rootstock"
+      },
+      "object": {
+        "@id": "https://github.com/stain/ro-crate-paper/tree/4f1ce872ac51f6149e8128deddd32d0582d74015"
+      },
+      "result": {
+        "@id": "manuscript.html"
+      }
+    },
+    {
+      "@id": "#response",
+      "@type": "ReplyAction",
+      "name": "Responding to peer review",
+      "startTime": "2021-10-04T13:44:00Z",
+      "endTime": "2021-11-27T02:05:00Z",
+      "object": {
+        "@id": "https://github.com/stain/ro-crate-paper/tree/4f1ce872ac51f6149e8128deddd32d0582d74015"
+      },
+      "resultComment": {
+        "@id": "response.pdf"
+      }
+    },
+    {
+      "@id": "https://github.com/stain/ro-crate-paper/tree/4f1ce872ac51f6149e8128deddd32d0582d74015",
+      "@type": "Dataset",
+      "name": "GitHub markdown for manuscript: Packaging research artefacts with RO-Crate",
+      "url": "https://github.com/stain/ro-crate-paper/releases/tag/published-2022-01-08",
+      "version": "published-2022-01-08"
+    }
+  ]
+}

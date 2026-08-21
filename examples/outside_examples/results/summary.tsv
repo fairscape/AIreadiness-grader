@@ -1,0 +1,24 @@
+example	root@id	root name	ents	types seen	hasPart	err	no-evid	est	est pts
+bioschemas-nanocommons	None		0	-	0	0	0/28	24	2/46
+bioschemas-wikipathways	None		0	-	0	0	0/28	24	2/46
+cedar-instance	None		0	-	0	0	0/28	24	2/46
+croissant-bigcode-the-stack	None		0	-	0	0	0/28	24	3/46
+croissant-hf-mnist	None		0	-	0	0	0/28	24	3/46
+croissant-movielens	None		0	-	0	0	0/28	24	3/46
+croissant-titanic	None		0	-	0	0	0/28	24	3/46
+datacite-dryad	None		0	-	0	0	0/28	24	2/46
+dataverse-harvard	None		0	-	0	0	0/28	24	2/46
+esip-sos-astromaterials	None		0	-	0	0	0/28	24	3/46
+esip-sos-full	None		0	-	0	0	0/28	24	3/46
+ogc-prov-entity-timeline	None		0	-	0	0	0/28	24	0/46
+ogc-prov-llm	None		0	-	0	0	0/28	24	0/46
+physionet-mimic3-demo	None		0	-	0	0	0/28	24	2/46
+rocrate-paper-2021	./	Packaging research artefacts with 	193	Other:88, Person:62, DefinedTerm:34, Dataset:7, Organization:2	7	0	0/28	24	13/46
+rocrate-py-testdata	./		10	Other:5, Dataset:4, Person:1	8	0	0/28	25	3/48
+runcrate-revsort-provenance	./		21	Other:20, Dataset:1	4	0	0/28	24	7/46
+workflowhub-1078-snapatac2	./	Research Object Crate for Multisam	16	Other:12, Organization:2, Dataset:1, Person:1	1	0	0/28	22	7/42
+wrroc-autosubmit	./		126	Other:117, Dataset:7, Person:1, Organization:1	73	0	0/28	23	7/44
+wrroc-compss	./	BackTrackBB	623	Other:617, Person:3, Organization:2, Dataset:1	610	0	0/28	23	7/44
+wrroc-snakemake-crcc	./		15	Other:12, Dataset:3	12	0	0/28	24	7/46
+wrroc-wfexs-nfcore-rnaseq	./		852	Other:834, Dataset:17, Person:1	289	0	0/28	23	8/44
+zenodo-record-3541888	None		0	-	0	0	0/28	24	2/46

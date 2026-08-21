@@ -113,11 +113,11 @@ For `policy == "SAMPLE-ONE"` (the common case), ask the user once per group: "Sa
 
 - **CSV / TSV**: range-GET first 5 MiB; the helper trims the trailing partial line.
   ```
-  Bash python -m fairscape_wizard.remote_fetch "<rep.contentUrl>" "<crate>/.cache/samples/<rep.name>" --max-bytes 5242880
+  Bash python -m aireadiness_wizard.remote_fetch "<rep.contentUrl>" "<crate>/.cache/samples/<rep.name>" --max-bytes 5242880
   ```
 - **Parquet / HDF5**: **full download** — schema lives in the footer, range-truncating breaks it. Pass `--max-bytes 0 --no-trim-tail`. Warn the user if the representative is > 50 MB; offer to swap to a smaller member or skip the group.
   ```
-  Bash python -m fairscape_wizard.remote_fetch "<rep.contentUrl>" "<crate>/.cache/samples/<rep.name>" --max-bytes 0 --no-trim-tail
+  Bash python -m aireadiness_wizard.remote_fetch "<rep.contentUrl>" "<crate>/.cache/samples/<rep.name>" --max-bytes 0 --no-trim-tail
   ```
 
 The sample file path **must preserve the original extension** so `schema infer`'s file-type detector works (`.parquet`, `.csv`, etc.).

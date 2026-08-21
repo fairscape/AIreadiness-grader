@@ -22,7 +22,7 @@ import zipfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-from fairscape_evidence.render import render_review  # noqa: E402
+from aireadiness_evidence.render import render_review  # noqa: E402
 
 LOCAL_HREF_RE = re.compile(r'href="([^"]+)"')
 
