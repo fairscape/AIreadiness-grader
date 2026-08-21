@@ -83,6 +83,45 @@ specific than the old YAML paraphrases:
 (The 2.e grade also cited a bioRxiv HTTP 429 reported as a dead link; 429/5xx
 now report inconclusive — fixed in `network.py` after the comparison run.)
 
+## Agentic review document (2026-08-21)
+
+`aireadiness_evidence/agentic_report.py` + `templates/agentic_review.html.j2`
+render a **pre-scored, read-only** counterpart to the blank human-review page.
+Input is a grading dir from `rubric_eval extract-evidence` in which every
+`<id>-<slug>/` has gained a `score.json`; output is
+`ai-ready-agentic-review.html` + `ai-ready-agentic-scores.json`:
+
+```
+python -m aireadiness_evidence.agentic_report <grading_dir> -o <out_dir> \
+    [--link-base ..] [--label "who/what scored it"]
+```
+
+The page carries a total, per-section rollups, a static SVG radar (one axis per
+section, no JS), a "where the points went" table of every sub-2 criterion with
+the grader's first named gap, and one card per criterion holding the matched
+rule, rationale, cited evidence, gaps, and the full extracted evidence in a
+`<details>`. Where a criterion's mechanical `estimate` disagrees with the
+grader's score, the card says so. `ai-ready-agentic-scores.json` is the whole
+report — it is the audit trail, so the per-criterion grading folders do not
+need to be kept.
+
+Rendered for all four examples (scored by Claude Opus 5, one isolated agent per
+rubric section, evidence taken from the committed presentations so the facts
+match the human-review pages exactly):
+
+| Crate | Total | Section 0 gate |
+| --- | --- | --- |
+| CM4AI June 2026 | 44 / 56 (78.6%) | passed |
+| B2AI Voice | 38 / 56 (67.9%) | passed |
+| AI-READI | 28 / 56 (50.0%) | not met (0.a) |
+| CHoRUS | 26 / 56 (46.4%) | not met (0.a) |
+
+Estimate-vs-grader disagreements clustered on 0.b and 0.c in three of the four
+crates: the estimator's "standard vocabulary references found" check looks for
+domain ontology hosts, while the docx questions for 0.b/0.c name metadata
+vocabularies (DCAT, Datacite, schema.org, bioschemas) — which schema.org + EVI
+satisfy. Worth reconciling in `sections/fairness.py`.
+
 ## Pipeline gaps worth closing
 
 - 0.a question 2 (identifiers.org compact-ID prefix) is not checked.

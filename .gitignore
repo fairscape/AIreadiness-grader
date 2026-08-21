@@ -11,3 +11,6 @@ rubrics/ai-ready/UpdatesNeeded.md
 # Python caches
 __pycache__/
 *.py[cod]
+
+# Example crate outputs (kept local only)
+examples/

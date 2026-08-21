@@ -1,1 +1,0 @@
-/home/oj/fairscape/fairscape_grader/examples/outside_examples/results/zenodo-record-3541888/ai-ready-presentation.json

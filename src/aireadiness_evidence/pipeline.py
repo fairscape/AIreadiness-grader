@@ -5,7 +5,9 @@
     + rubric text from rubric_defs.yaml
 
 The result is the presentation JSON: evidence for the LLM grader, and the
-input to the human-review HTML template. No scoring happens here.
+input to the human-review HTML template. No grading happens here — the only
+scores attached are the per-criterion mechanical estimates (see the
+``estimate_`` hooks), clearly labeled as such.
 """
 
 import datetime
