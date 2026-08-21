@@ -27,7 +27,7 @@ You should NOT ask for: format (infer from extension), date (default today), ver
 
 ## GUID generation
 
-Use `python -c 'from fairscape_wizard import generate_guid; print(generate_guid("dataset", "<name>"))'` via `Bash`, or compute inline matching `fairscape_wizard.ids.generate_guid`. Format: `ark:59853/dataset-<slug>-<squid>`.
+Use `python -c 'from aireadiness_wizard import generate_guid; print(generate_guid("dataset", "<name>"))'` via `Bash`, or compute inline matching `aireadiness_wizard.ids.generate_guid`. Format: `ark:59853/dataset-<slug>-<squid>`.
 
 ## Write to state
 

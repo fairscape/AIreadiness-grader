@@ -69,11 +69,11 @@ Whether single or bulk, you collect one set of fields and either emit one Datase
 
 ## 3. Build the Datasets
 
-Use `fairscape_models.dataset.Dataset` for validation. GUIDs use `generate_guid("dataset", <name>)` from `fairscape_wizard.ids` — same convention every other registration skill uses.
+Use `fairscape_models.dataset.Dataset` for validation. GUIDs use `generate_guid("dataset", <name>)` from `aireadiness_wizard.ids` — same convention every other registration skill uses.
 
 ```python
 from fairscape_models.dataset import Dataset
-from fairscape_wizard.ids import generate_guid
+from aireadiness_wizard.ids import generate_guid
 
 def build_one(name: str, description: str, author, file_format: str,
               date_published: str, keywords: list[str]) -> Dataset:

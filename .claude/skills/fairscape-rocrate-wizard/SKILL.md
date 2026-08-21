@@ -27,7 +27,7 @@ Builds an RO-Crate from any source — a local project folder OR a dataset that'
 
 ### 1. Open
 
-**First**, invoke `preflight-check`. It verifies Python ≥ 3.10, the `fairscape-cli` binary on PATH, and that `fairscape_models`, `fairscape_cli`, and `fairscape_wizard` import. On pass, one-line confirmation and continue. On fail, surface the blockers and offer `env-setup` (it walks the user through PyPI vs editable dev install, optionally setting up a fresh `.venv`). If the user picks `skip` at env-setup, stop here — none of the phases below can run without the environment.
+**First**, invoke `preflight-check`. It verifies Python ≥ 3.10, the `fairscape-cli` binary on PATH, and that `fairscape_models`, `fairscape_cli`, and `aireadiness_wizard` import. On pass, one-line confirmation and continue. On fail, surface the blockers and offer `env-setup` (it walks the user through PyPI vs editable dev install, optionally setting up a fresh `.venv`). If the user picks `skip` at env-setup, stop here — none of the phases below can run without the environment.
 
 `Bash pwd` to confirm the working directory.
 
@@ -147,7 +147,7 @@ After it finishes, summarize:
 
 ### 5.5 Build the datasheet (auto, before grading)
 
-Not a phase — no user input. Before grading runs, the crate needs a sibling `ro-crate-datasheet.html`: rubric 3.a (Data Documentation) checks for that file by name (`extract.py: find_datasheet_file`), and its absence caps the 3.a score at 0/2 regardless of how well-populated the metadata is. The build also emits `ro-crate-linkml.yaml` as a side effect.
+Not a phase — no user input. Before grading runs, the crate needs a sibling `ro-crate-datasheet.html`: rubric 3.a (Data Documentation) looks for `*datasheet*.html` files on disk (`aireadiness_evidence`'s crate loader), and the absence of a human-readable datasheet drags the 3.a score down regardless of how well-populated the metadata is. The build also emits `ro-crate-linkml.yaml` as a side effect.
 
 Tell the user one sentence, then run the command — don't prompt:
 
@@ -169,7 +169,7 @@ Run the build *every time* you enter Phase 5, even on resume — Phase 4 may hav
 
 Frame the phase first:
 
-> *"**Phase 5 — Grading.** Now we measure how complete the crate is against the 28-rubric AI-Ready checklist. The rubrics live in `rubrics/ai-ready/` and cover seven criteria: FAIRness, Provenance, Characterization, Pre-model Explainability, Ethics, Sustainability, Computability. The flow is two-step: first I run a deterministic extractor (`extract.py`) that walks the crate and dumps the relevant evidence per rubric — no LLM involved, just structured reading. Then I (Claude) read each rubric's scoring rules and the extracted evidence and give it a 0 (Absent), 1 (Partial), or 2 (Substantive), with a rationale and a list of gaps that would raise the score. The result is a per-rubric folder of `score.json` files plus an `aggregated_score.json` with the total."*
+> *"**Phase 5 — Grading.** Now we measure how complete the crate is against the 28-rubric AI-Ready checklist. The rubric text is transcribed from "Rubric for Human Review of AI.docx" v1.0 into `src/aireadiness_evidence/rubric_defs.yaml` and covers seven criteria: FAIRness, Provenance, Characterization, Pre-model Explainability, Ethics, Sustainability, Computability. The flow is two-step: first I run the deterministic `aireadiness_evidence` pipeline, which walks the crate and dumps typed evidence per rubric — no LLM involved, just structured reading. Then I (Claude) read each rubric's scoring rules and the extracted evidence and give it a 0 (Absent), 1 (Partial), or 2 (Substantive), with a rationale and a list of gaps that would raise the score. The result is a per-rubric folder of `score.json` files plus an `aggregated_score.json` with the total."*
 
 Then ask:
 

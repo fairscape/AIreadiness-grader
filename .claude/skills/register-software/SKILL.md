@@ -30,7 +30,7 @@ Don't ask about format (infer from extension), date (use today as `dateModified`
 
 ## GUID
 
-`ark:59853/software-<slug(name)>-<squid>` via `fairscape_wizard.generate_guid("software", name)`.
+`ark:59853/software-<slug(name)>-<squid>` via `aireadiness_wizard.generate_guid("software", name)`.
 
 ## Write to state
 

@@ -266,7 +266,7 @@ if __name__ == "__main__":
 
 For each section, format as a Python list of dicts using JSON-like syntax. Long string fields can use double-quoted strings; multi-line descriptions can use triple-quoted strings.
 
-For `CRATE_GUID`, use `ark:59853/rocrate-<slug(crate_metadata.name)>-<squid>`. Generate a fresh squid via `python -c 'from fairscape_wizard import generate_guid; print(generate_guid("rocrate", "<name>"))'` — this becomes a constant in the file so re-running keeps the same crate GUID.
+For `CRATE_GUID`, use `ark:59853/rocrate-<slug(crate_metadata.name)>-<squid>`. Generate a fresh squid via `python -c 'from aireadiness_wizard import generate_guid; print(generate_guid("rocrate", "<name>"))'` — this becomes a constant in the file so re-running keeps the same crate GUID.
 
 If `state.bulk_groups` is empty, leave `BULK_GROUPS = []` and the bulk loop simply produces no entities. Same for any other empty section.
 

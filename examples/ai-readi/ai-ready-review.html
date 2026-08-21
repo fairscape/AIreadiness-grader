@@ -1,0 +1,2995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Readiness Review — Flagship Dataset of Type 2 Diabetes from the AI-READI Project</title>
+<style>
+  :root {
+    --ink: #1a1a1a; --muted: #6b6b6b; --line: #d9d9d9; --bg: #fafaf8;
+    --card: #ffffff; --accent: #b45309; --ok: #15803d; --bad: #b91c1c;
+    --unknown: #6b6b6b; --gate: #7c2d12;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 14px/1.45 "Source Sans 3", "Segoe UI", system-ui, sans-serif; }
+  .mono { font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+          font-size: 0.86em; }
+  a { color: var(--accent); }
+  header { border-bottom: 2px solid var(--ink); padding: 16px 0 12px;
+           background: var(--card); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  h1 { font-size: 1.25rem; margin: 0 0 2px; }
+  h2 { font-size: 1.05rem; border-bottom: 1px solid var(--line);
+       padding-bottom: 4px; margin: 26px 0 10px;
+       display: flex; align-items: baseline; justify-content: space-between;
+       gap: 12px; flex-wrap: wrap;
+       /* clears the sticky summary bar when the TOC jumps to a section */
+       scroll-margin-top: 48px; }
+  .meta { color: var(--muted); font-size: 0.85rem; }
+  .badge { display: inline-block; border: 1px solid var(--gate);
+           color: var(--gate); border-radius: 2px; font-size: 0.68rem;
+           padding: 0 5px; margin-left: 8px; vertical-align: 2px;
+           text-transform: uppercase; letter-spacing: 0.05em; }
+  .toplinks { margin-top: 6px; font-size: 0.88rem; }
+  .toplinks a { margin-right: 16px; }
+  nav.toc { margin: 14px 0; font-size: 0.88rem; }
+  nav.toc a { margin-right: 12px; white-space: nowrap; }
+  .inventory { background: var(--card); border: 1px solid var(--line);
+               border-radius: 2px; padding: 8px 12px; margin: 12px 0;
+               font-size: 0.85rem; }
+  .inventory table { border-collapse: collapse; margin-top: 6px; }
+  .inventory th { text-align: left; padding: 2px 14px 3px 0;
+                  font-size: 0.72rem; text-transform: uppercase;
+                  letter-spacing: 0.05em; color: var(--muted);
+                  font-weight: 600; border-bottom: 1px solid var(--line); }
+  .inventory td { padding: 2px 14px 2px 0; border-bottom: 1px dotted #ececea; }
+  .inventory tr:last-child td { border-bottom: 0; }
+  .inventory td.num { text-align: right; }
+  .inventory th.num { text-align: right; }
+
+  .criterion { background: var(--card); border: 1px solid var(--line);
+               border-radius: 2px; padding: 10px 14px 8px; margin: 0 0 10px; }
+  .criterion h3 { margin: 0; font-size: 0.98rem; display: inline; }
+  .practice { color: var(--muted); font-style: italic; margin: 2px 0 6px;
+              font-size: 0.85rem; }
+  details.questions { margin: 0 0 6px; font-size: 0.85rem; }
+  details.questions summary { cursor: pointer; color: var(--muted); }
+  details.questions ul { margin: 4px 0 2px; padding-left: 20px; }
+
+  .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+            margin: 6px 0 8px; }
+  .scores > div { border: 1px solid var(--line); border-radius: 2px;
+                  padding: 4px 8px; font-size: 0.8rem; line-height: 1.35;
+                  color: #333; background: #fcfcfa; }
+  .scores .n { font-weight: 700; margin-right: 6px; font-size: 0.9rem; }
+  .rubric-note { color: var(--muted); font-size: 0.78rem; margin: -2px 0 6px; }
+
+  .evidence { border-top: 1px solid var(--line); padding-top: 4px; }
+  .item { display: flex; gap: 12px; padding: 2px 0; font-size: 0.86rem;
+          border-top: 1px dotted #ececea; }
+  .item:first-child { border-top: 0; }
+  .item .label { flex: 0 0 290px; color: var(--ink); font-weight: 600; }
+  .item.sub .label { color: var(--muted); font-weight: 400;
+                     padding-left: 16px; }
+  .item .value { flex: 1; min-width: 0; overflow-wrap: break-word; }
+  .pre { white-space: pre-line; }
+  .detail { color: var(--muted); font-size: 0.8rem; display: inline;
+            margin-left: 6px; }
+  .detail::before { content: "— "; }
+  .yes { color: var(--ok); font-weight: 600; }
+  .no { color: var(--bad); font-weight: 600; }
+  .na { color: var(--unknown); }
+  .pct-bar { display: inline-block; width: 90px; height: 7px;
+             background: #eee; border-radius: 2px; margin-right: 6px;
+             vertical-align: 1px; }
+  .pct-bar span { display: block; height: 100%; background: var(--accent);
+                  border-radius: 2px; }
+  details.entity { display: inline; }
+  details.entity pre { background: #f4f4f2; border: 1px solid var(--line);
+                       border-radius: 2px; padding: 8px; overflow-x: auto;
+                       font-size: 0.75rem; max-height: 320px; margin: 4px 0; }
+  details.entity summary { cursor: pointer; color: var(--accent); }
+  ul.plain { margin: 0; padding-left: 16px; }
+  ul.plain li { margin: 0; }
+  .longtext { display: inline; }
+  .longtext summary { cursor: pointer; display: inline; color: inherit; }
+  .longtext summary .more { color: var(--accent); font-size: 0.8rem; }
+  .longtext[open] summary .head { display: none; }
+
+  .summarybar { position: sticky; top: 0; z-index: 10; background: var(--card);
+                border-bottom: 1px solid var(--line); padding: 7px 0;
+                font-size: 0.88rem; }
+  .summarybar .wrap { display: flex; align-items: center; gap: 14px;
+                      flex-wrap: wrap; }
+  .summarybar .pct-bar { width: 160px; height: 9px; }
+  .summarybar .score { font-weight: 700; }
+
+  .axis-score { font-size: 0.75rem; font-weight: 400; color: var(--muted);
+                border: 1px solid var(--line); border-radius: 2px;
+                padding: 1px 8px; background: var(--card); white-space: nowrap; }
+  .axis-score .ax-pts { font-weight: 700; color: var(--ink); }
+  .axis-score.complete { border-color: var(--accent); }
+
+  details.secmenu > summary { cursor: pointer; list-style: none;
+    border: 1px solid var(--line); border-radius: 2px; padding: 2px 10px;
+    font-size: 0.82rem; user-select: none; }
+  details.secmenu > summary::-webkit-details-marker { display: none; }
+  details.secmenu > summary::after { content: " ▾"; color: var(--muted); }
+  details.secmenu[open] > summary { border-color: var(--accent); }
+  /* anchored to the sticky bar (nearest positioned ancestor), aligned with
+     the content column — anchoring to the button ran off-screen either way */
+  .secpanel { position: absolute; top: calc(100% + 1px); z-index: 30;
+              left: calc((100% - min(100%, 1080px)) / 2 + 24px);
+              background: var(--card); border: 1px solid var(--line);
+              border-radius: 2px; padding: 8px 12px 10px;
+              min-width: min(620px, calc(100vw - 48px));
+              max-width: calc(100vw - 48px);
+              max-height: 70vh; overflow: auto; }
+  .secrow { display: flex; align-items: baseline; gap: 10px; padding: 4px 0;
+            border-top: 1px dotted #ececea; flex-wrap: wrap; }
+  .secrow:first-child { border-top: 0; }
+  .secrow .sec-title { flex: 0 0 210px; color: var(--ink);
+                       text-decoration: none; font-weight: 600;
+                       font-size: 0.85rem; }
+  .secrow .sec-title:hover { color: var(--accent); }
+  .secrow .sec-stat { flex: 1; color: var(--muted); font-size: 0.78rem;
+                      white-space: nowrap; }
+  .chips { display: inline-flex; gap: 4px; }
+  .chip { display: inline-block; width: 22px; text-align: center;
+          border: 1px dashed var(--line); border-radius: 2px;
+          font-size: 0.72rem; line-height: 1.5; text-decoration: none;
+          color: var(--muted); font-family: "JetBrains Mono", Consolas,
+          monospace; }
+  .chip.s2 { border: 1px solid var(--ok); color: var(--ok);
+             background: #edf7ef; font-weight: 700; }
+  .chip.s1 { border: 1px solid var(--accent); color: var(--accent);
+             background: #fdf3e7; font-weight: 700; }
+  .chip.s0 { border: 1px solid var(--bad); color: var(--bad);
+             background: #fbeeee; font-weight: 700; }
+  .chip.sna { border: 1px solid var(--line); color: var(--muted);
+              background: #f1f1ef; text-decoration: line-through; }
+  .chip-key { margin-top: 6px; color: var(--muted); font-size: 0.75rem; }
+  .chip-key .chip { pointer-events: none; margin-right: 2px; }
+  .next-btn { background: none; border: 1px solid var(--line);
+              border-radius: 2px; padding: 2px 10px; font: inherit;
+              font-size: 0.82rem; cursor: pointer; color: var(--ink); }
+  .next-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .section-note { margin: 2px 0 8px; }
+  .section-note label { display: block; font-size: 0.78rem; font-weight: 600;
+                        color: var(--muted); text-transform: uppercase;
+                        letter-spacing: 0.05em; margin-bottom: 2px; }
+  .section-note textarea { width: 100%; border: 1px solid var(--line);
+                           border-radius: 2px; padding: 5px 8px; font: inherit;
+                           font-size: 0.85rem; background: var(--card);
+                           resize: vertical; }
+
+  .summary-grid { display: flex; gap: 28px; align-items: flex-start;
+                  flex-wrap: wrap; margin: 12px 0 4px; }
+  .sumtable { border-collapse: collapse; font-size: 0.86rem;
+              background: var(--card); border: 1px solid var(--line); }
+  .sumtable th { text-align: left; padding: 4px 12px; font-size: 0.72rem;
+                 text-transform: uppercase; letter-spacing: 0.05em;
+                 color: var(--muted); border-bottom: 1px solid var(--line); }
+  .sumtable td { padding: 3px 12px; border-bottom: 1px dotted #ececea; }
+  .sumtable th.num, .sumtable td.num { text-align: right; }
+  .sumtable tfoot td { border-top: 1px solid var(--ink); border-bottom: 0;
+                       font-weight: 700; }
+  .sumtable a { color: var(--ink); text-decoration: none; }
+  .sumtable a:hover { color: var(--accent); }
+  .sum-note { color: var(--muted); font-size: 0.8rem; margin-top: 6px;
+              max-width: 460px; }
+  .radar-box { flex: 0 0 auto; }
+  .radar-box svg { display: block; }
+  .radar-legend { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  .radar-legend .swatch { display: inline-block; width: 18px; height: 0;
+                          border-top: 2px solid var(--accent);
+                          vertical-align: 3px; margin-right: 5px; }
+  .radar-legend .swatch.est { border-top-style: dashed;
+                              border-top-color: var(--unknown); }
+
+  .estimate { margin-top: 6px; padding: 5px 8px; font-size: 0.82rem;
+              border: 1px dashed var(--line); border-radius: 2px;
+              background: #fdf6ec; }
+  .estimate.none { background: transparent; color: var(--muted);
+                   font-style: italic; }
+  .est-badge { display: inline-block; border: 1px solid var(--accent);
+               color: var(--accent); border-radius: 2px; font-size: 0.68rem;
+               padding: 0 5px; margin-right: 6px; text-transform: uppercase;
+               letter-spacing: 0.05em; }
+  .estimate .n { font-weight: 700; }
+  .estimate ul { margin: 2px 0 0; padding-left: 18px; color: #555; }
+  .est-warn { color: var(--gate); font-size: 0.75rem; margin-top: 2px; }
+  .use-est { float: right; background: none; border: 1px solid var(--accent);
+             color: var(--accent); border-radius: 2px; padding: 1px 8px;
+             font: inherit; font-size: 0.78rem; cursor: pointer; }
+  .use-est:hover { background: var(--accent); color: #fff; }
+
+  .grade { margin-top: 6px; padding-top: 5px; border-top: 1px solid var(--line);
+           font-size: 0.85rem; display: flex; align-items: center; gap: 10px; }
+  .grade label { cursor: pointer; white-space: nowrap; }
+  .grade input[type="text"] { flex: 1; border: 1px solid var(--line);
+                              border-radius: 2px; padding: 3px 6px;
+                              font: inherit; font-size: 0.85rem; }
+  .exportbar { position: sticky; bottom: 0; background: var(--card);
+               border-top: 1px solid var(--line); padding: 8px 0;
+               margin-top: 28px; }
+  .exportbar button { background: var(--accent); color: #fff; border: 0;
+                      border-radius: 2px; padding: 6px 14px; font: inherit;
+                      cursor: pointer; }
+  .exportbar button.next-btn { background: none; color: var(--ink);
+                               border: 1px solid var(--line); padding: 5px 13px; }
+  .exportbar button.next-btn:hover { border-color: var(--bad);
+                                     color: var(--bad); }
+  .exportbar .status { margin-left: 12px; color: var(--muted);
+                       font-size: 0.85rem; }
+  .error { color: var(--bad); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>AI-Readiness Human Review</h1>
+    <div class="meta">
+      Rubric for Human Review of AI-readiness Evaluation Criteria, v1.0 (2026-08-14) · generated 2026-08-20 15:36 UTC
+    </div>
+    <div style="margin-top:6px">
+      <strong>Flagship Dataset of Type 2 Diabetes from the AI-READI Project</strong>
+      <span class="mono">ark:59853/rocrate-b2ai-aireadi-release-3-0-0</span>
+      <span class="meta"> · https://doi.org/10.60775/fairhub.3 · published 11/17/25</span>
+    </div>
+    <div class="toplinks">
+      
+        <a href="./ro-crate-datasheet.html">Datasheet — ro-crate-datasheet.html</a>
+      
+    </div>
+  </div>
+</header>
+
+<div class="summarybar">
+  <div class="wrap">
+    <span id="sum-progress">Graded 0 of 28</span>
+    <span class="pct-bar"><span id="sum-fill" style="width:0%"></span></span>
+    <span class="score" id="sum-score"></span>
+    <details class="secmenu">
+      <summary>By section</summary>
+      <div class="secpanel">
+        
+        <div class="secrow">
+          <a class="sec-title" href="#sec0">0. FAIRness *</a>
+          <span class="chips"><a class="chip" data-chip="0.a"
+               href="#c0-a"
+               title="0.a Findable — ungraded">a</a><a class="chip" data-chip="0.b"
+               href="#c0-b"
+               title="0.b Accessible — ungraded">b</a><a class="chip" data-chip="0.c"
+               href="#c0-c"
+               title="0.c Interoperable — ungraded">c</a><a class="chip" data-chip="0.d"
+               href="#c0-d"
+               title="0.d Reusable — ungraded">d</a></span>
+          <span class="sec-stat" data-secstat="0"></span>
+        </div>
+        
+        <div class="secrow">
+          <a class="sec-title" href="#sec1">1. Provenance *</a>
+          <span class="chips"><a class="chip" data-chip="1.a"
+               href="#c1-a"
+               title="1.a Transparent — ungraded">a</a><a class="chip" data-chip="1.b"
+               href="#c1-b"
+               title="1.b Traceable — ungraded">b</a><a class="chip" data-chip="1.c"
+               href="#c1-c"
+               title="1.c Interpretable — ungraded">c</a><a class="chip" data-chip="1.d"
+               href="#c1-d"
+               title="1.d Key actors identified — ungraded">d</a></span>
+          <span class="sec-stat" data-secstat="1"></span>
+        </div>
+        
+        <div class="secrow">
+          <a class="sec-title" href="#sec2">2. Characterization</a>
+          <span class="chips"><a class="chip" data-chip="2.a"
+               href="#c2-a"
+               title="2.a Semantics — ungraded">a</a><a class="chip" data-chip="2.b"
+               href="#c2-b"
+               title="2.b Statistics — ungraded">b</a><a class="chip" data-chip="2.c"
+               href="#c2-c"
+               title="2.c Standards — ungraded">c</a><a class="chip" data-chip="2.d"
+               href="#c2-d"
+               title="2.d Potential Sources of Bias — ungraded">d</a><a class="chip" data-chip="2.e"
+               href="#c2-e"
+               title="2.e Data quality — ungraded">e</a></span>
+          <span class="sec-stat" data-secstat="2"></span>
+        </div>
+        
+        <div class="secrow">
+          <a class="sec-title" href="#sec3">3. Pre-model Explainability</a>
+          <span class="chips"><a class="chip" data-chip="3.a"
+               href="#c3-a"
+               title="3.a Data documentation template — ungraded">a</a><a class="chip" data-chip="3.b"
+               href="#c3-b"
+               title="3.b Fit for purpose — ungraded">b</a><a class="chip" data-chip="3.c"
+               href="#c3-c"
+               title="3.c Verifiable — ungraded">c</a></span>
+          <span class="sec-stat" data-secstat="3"></span>
+        </div>
+        
+        <div class="secrow">
+          <a class="sec-title" href="#sec4">4. Ethics *</a>
+          <span class="chips"><a class="chip" data-chip="4.a"
+               href="#c4-a"
+               title="4.a Ethically acquired — ungraded">a</a><a class="chip" data-chip="4.b"
+               href="#c4-b"
+               title="4.b Ethically managed — ungraded">b</a><a class="chip" data-chip="4.c"
+               href="#c4-c"
+               title="4.c Ethically Disseminated — ungraded">c</a><a class="chip" data-chip="4.d"
+               href="#c4-d"
+               title="4.d Secure — ungraded">d</a></span>
+          <span class="sec-stat" data-secstat="4"></span>
+        </div>
+        
+        <div class="secrow">
+          <a class="sec-title" href="#sec5">5. Sustainability</a>
+          <span class="chips"><a class="chip" data-chip="5.a"
+               href="#c5-a"
+               title="5.a Persistent — ungraded">a</a><a class="chip" data-chip="5.b"
+               href="#c5-b"
+               title="5.b Domain-appropriate — ungraded">b</a><a class="chip" data-chip="5.c"
+               href="#c5-c"
+               title="5.c Well-governed — ungraded">c</a><a class="chip" data-chip="5.d"
+               href="#c5-d"
+               title="5.d Associated — ungraded">d</a></span>
+          <span class="sec-stat" data-secstat="5"></span>
+        </div>
+        
+        <div class="secrow">
+          <a class="sec-title" href="#sec6">6. Computability</a>
+          <span class="chips"><a class="chip" data-chip="6.a"
+               href="#c6-a"
+               title="6.a Standardized — ungraded">a</a><a class="chip" data-chip="6.b"
+               href="#c6-b"
+               title="6.b Computationally accessible — ungraded">b</a><a class="chip" data-chip="6.c"
+               href="#c6-c"
+               title="6.c Portable — ungraded">c</a><a class="chip" data-chip="6.d"
+               href="#c6-d"
+               title="6.d Contextualized — ungraded">d</a></span>
+          <span class="sec-stat" data-secstat="6"></span>
+        </div>
+        
+        <div class="chip-key">
+          <span class="chip s2">2</span><span class="chip s1">1</span
+          ><span class="chip s0">0</span><span class="chip sna">a</span
+          ><span class="chip">b</span> score chips — hollow = not yet graded;
+          click any chip to jump to that criterion. * = gating section.
+        </div>
+      </div>
+    </details>
+    <button class="next-btn" id="next-ungraded" type="button">Next ungraded ↓</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <nav class="toc">
+    
+      <a href="#sec0">0. FAIRness *</a>
+    
+      <a href="#sec1">1. Provenance *</a>
+    
+      <a href="#sec2">2. Characterization</a>
+    
+      <a href="#sec3">3. Pre-model Explainability</a>
+    
+      <a href="#sec4">4. Ethics *</a>
+    
+      <a href="#sec5">5. Sustainability</a>
+    
+      <a href="#sec6">6. Computability</a>
+    
+  </nav>
+
+  <div class="inventory">
+    <strong>Crate inventory</strong> — 0 entities
+    ()
+    <table>
+      <tr>
+        <th>Sub-crate</th>
+        <th>Location</th>
+        <th class="num">Entities</th>
+        <th>Links</th>
+      </tr>
+      
+    </table>
+  </div>
+
+  
+  <h2 id="sec0"><span>0. FAIRness<span class="badge">Gating</span></span>
+    <span class="axis-score" data-section="0"
+      ><span class="ax-progress"></span><span class="ax-pts"></span
+      ><span class="ax-na"></span></span>
+  </h2>
+
+    
+    <div class="criterion" id="c0-a">
+      <h3>0.a Findable</h3>
+      
+      <div class="practice">Deposit datasets in a searchable FAIR-compliant data repository.</div>
+      <details class="questions" open>
+        <summary>Questions (3)</summary>
+        <ul><li>Does the dataset have a resolvable PID: ARK, CSTR, DOI, IGSN, PURL, URN, HDL?</li><li>Does the dataset have a compact ID whose prefix is registered with identifiers.org (e.g., ena.embl:ERP001234, geo:GSE68086, dbgap:phs000001)?</li><li>Is the dataset deposited in a repository listed in re3data or FAIRsharing?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>PID or prefix-registered compact ID is present, and the dataset was deposited in a registered repository.</div>
+        
+        <div><span class="n">1</span>Re3data or FAIRsharing registry is provided without a PID; or only a PID is given, but the dataset is not in a registered repository.</div>
+        
+        <div><span class="n">0</span>Neither is present.</div>
+        
+      </div>
+      
+      <div class="rubric-note">Scoring threshold for gating is all 2's for FAIRness.</div>
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Identifier</div><div class="value"><span class="pre"><a href="https://doi.org/10.60775/fairhub.3">https://doi.org/10.60775/fairhub.3</a></span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Persistent identifier present</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">scheme: DOI</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Identifier resolves</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">HTTP 200</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Publisher</div><div class="value"><span class="pre">AI-READi Consortium</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Publisher is a recognized repository</div><div class="value"><span class="no">✗ No</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Publisher found in re3data</div><div class="value"><span class="no">✗ No</span> <span class="detail">query: AI-READi Consortium</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="0.a"
+                data-score="1">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">1</span>
+        <ul><li>PID present (scheme: DOI)</li><li>PID present but publisher not found in re3data/known repositories</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="0.a" data-estimate="1">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-0.a" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-0.a" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-0.a" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-0.a" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c0-b">
+      <h3>0.b Accessible</h3>
+      
+      <div class="practice">Descriptive metadata should always be available and accessible, even if the dataset is restricted, unavailable, or de-accessioned. Ensure metadata conforms to standards such as DCAT (Data Catalog Vocabulary), Datacite schema, and/or schema.org.</div>
+      <details class="questions" open>
+        <summary>Questions (2)</summary>
+        <ul><li>Is descriptive metadata available via PID or compact ID lookup independently of the dataset, i.e., even if the dataset is restricted or de-accessioned?</li><li>Does descriptive metadata conform to a standard metadata vocabulary such as DCAT 3, Datacite schema (datacite.org), schema.org, and/or bioschemas.org?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Both are true.</div>
+        
+        <div><span class="n">1</span>Metadata is always available but does not conform to a standard schema.</div>
+        
+        <div><span class="n">0</span>Metadata is not accessible.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Identifier used for lookup</div><div class="value"><span class="pre"><a href="https://doi.org/10.60775/fairhub.3">https://doi.org/10.60775/fairhub.3</a></span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Descriptive metadata fetchable via PID alone</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">application/ld+json</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Metadata returned by the PID resolver</div><div class="value"><details class="entity"><summary>Flagship Dataset of Type 2 Diabetes from the AI-READI Project</summary><pre>{
+  &#34;@context&#34;: &#34;<a href="http://schema.org">http://schema.org</a>&#34;,
+  &#34;@type&#34;: &#34;Dataset&#34;,
+  &#34;name&#34;: &#34;Flagship Dataset of Type 2 Diabetes from the AI-READI Project&#34;,
+  &#34;publisher&#34;: {
+    &#34;@type&#34;: &#34;Organization&#34;,
+    &#34;name&#34;: &#34;FAIRhub&#34;
+  },
+  &#34;datePublished&#34;: &#34;2025&#34;,
+  &#34;license&#34;: &#34;<a href="https://doi.org/10.5281/zenodo.17555036">https://doi.org/10.5281/zenodo.17555036</a>&#34;,
+  &#34;author&#34;: {
+    &#34;name&#34;: &#34;AI-READI Consortium&#34;,
+    &#34;@type&#34;: &#34;Organization&#34;
+  }
+}</pre></details> <span class="detail">truncated to descriptive fields</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">@context vocabularies of the crate metadata</div><div class="value"><ul class="plain"><li><a href="https://w3id.org/EVI#">https://w3id.org/EVI#</a></li><li><a href="https://schema.org/">https://schema.org/</a></li></ul> <span class="detail">schema.org / EVI here means the metadata follows a standard vocabulary</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Standard vocabulary references found in metadata</div><div class="value"><span class="no">✗ No</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="0.b"
+                data-score="1">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">1</span>
+        <ul><li>metadata fetchable via PID lookup but no standard-vocabulary references found</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="0.b" data-estimate="1">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-0.b" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-0.b" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-0.b" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-0.b" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c0-c">
+      <h3>0.c Interoperable</h3>
+      
+      <div class="practice">Wherever possible, provide data and metadata using formally defined specifications for digital objects.</div>
+      <details class="questions" open>
+        <summary>Questions (2)</summary>
+        <ul><li>Is metadata presented using one of the following formal interoperable specifications, such as JSON-LD, RDF, or OWL, referencing at least one standard vocabulary such as SNOMED, LOINC, UBERON, OBI, etc.?</li><li>Is metadata provided using a machine-readable schema such as JSON + JSON Schema, XML + XSD, Parquet with embedded schema, or Frictionless Data?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Formal interoperable specifications are provided.</div>
+        
+        <div><span class="n">1</span>A machine-readable schema is provided.</div>
+        
+        <div><span class="n">0</span>Neither is provided.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Metadata is JSON-LD (formal interoperable specification)</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">@context vocabularies of the crate metadata</div><div class="value"><ul class="plain"><li><a href="https://w3id.org/EVI#">https://w3id.org/EVI#</a></li><li><a href="https://schema.org/">https://schema.org/</a></li></ul> <span class="detail">schema.org / EVI here means the metadata follows a standard vocabulary</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Standard vocabulary references found in metadata</div><div class="value"><span class="no">✗ No</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Subject terms on the root (about)</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Machine-readable schema entities (EVI:Schema)</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Datasets linked to a schema</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Parquet-format datasets (embedded schema)</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Example schema entity</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="0.c"
+                data-score="1">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">1</span>
+        <ul><li>metadata is JSON-LD but references no standard vocabulary</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="0.c" data-estimate="1">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-0.c" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-0.c" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-0.c" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-0.c" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c0-d">
+      <h3>0.d Reusable</h3>
+      
+      <div class="practice">Attach a clear and accessible data usage license that allows the responsible use of AI/ML applications or link to a Data Use Agreement (DUA).</div>
+      <details class="questions" open>
+        <summary>Questions (2)</summary>
+        <ul><li>Does the metadata reference a clear and accessible data usage license such as a Creative Commons license (CC-BY, CC-BY-SA, etc.), public domain dedication, or a Data Use Agreement?</li><li>Does the license or DUA prohibit use of the data in AI/ML applications?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>License, DUA, or public domain dedication is present, and there is no AI/ML prohibition.</div>
+        
+        <div><span class="n">0</span>No license, DUA, or public domain dedication is specified, or AI/ML is prohibited.</div>
+        
+      </div>
+      <div class="rubric-note">There is no intermediate "1" grade for this criterion.</div>
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">License</div><div class="value"><a href="https://doi.org/10.5281/zenodo.17555036">https://doi.org/10.5281/zenodo.17555036</a></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">License is a well-known open license</div><div class="value"><span class="no">✗ No</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">License link resolves</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Conditions of access / DUA terms</div><div class="value"><span class="pre"><a href="https://fairhub.io/datasets/3/access">https://fairhub.io/datasets/3/access</a></span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">AI/ML explicitly mentioned in license or use terms</div><div class="value"><span class="no">✗ No</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="0.d"
+                data-score="2">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">2</span>
+        <ul><li>license present</li><li>no AI/ML prohibition language found in license or use terms</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="0.d" data-estimate="2">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-0.d" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-0.d" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-0.d" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-0.d" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+
+    <div class="section-note">
+      <label for="secnote-0">Section 0 comments</label>
+      <textarea id="secnote-0" data-secnote="0" rows="2"
+        placeholder="Context behind this section's scores — caveats, research-question dependence, evidence the extractor missed…"></textarea>
+    </div>
+  
+  <h2 id="sec1"><span>1. Provenance<span class="badge">Gating</span></span>
+    <span class="axis-score" data-section="1"
+      ><span class="ax-progress"></span><span class="ax-pts"></span
+      ><span class="ax-na"></span></span>
+  </h2>
+
+    
+    <div class="criterion" id="c1-a">
+      <h3>1.a Transparent</h3>
+      
+      <div class="practice">Identify data sources traceable to a reasonable ground truth, e.g., clinical data from EHR at a given hospital, clinical trials, or laboratory data.</div>
+      <details class="questions" open>
+        <summary>Questions (2)</summary>
+        <ul><li>Does the metadata identify the data's source specifically enough to reach a real-world, trustworthy ground truth? E.g., a named EHR/hospital, a named drug trial, a named lab; for experimental labs, the ground truth must include samples, instruments, reagents, and generated dataset.</li><li>Is the source metadata provided in machine-readable form? Valid ontologies are: W3C PROV-O, PROV-DM, or a derivation of either, e.g., EVI, CPM, PAV.</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>A source is named and traceable to a ground truth, in a structured metadata field.</div>
+        
+        <div><span class="n">1</span>The source is stated but not to a fully grounded truth, e.g., to a hospital but not to an actual OMOP dataset, or to an experimental lab dataset but not specifying samples, reagents, and instruments.</div>
+        
+        <div><span class="n">0</span>No machine-readable source identified.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Datasets carrying provenance links (EVI/PROV terms)</div><div class="value"><span class="na">— no denominator</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Example dataset with provenance links</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Ground-truth elements present as structured entities</div><div class="value"><ul class="plain"><li>samples: no</li><li>instruments: no</li><li>experiments: no</li><li>datasets_with_provenance: no</li></ul></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Sample entities</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Instrument entities</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Experiment entities</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Example sample entity</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Example instrument entity</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="1.a"
+                data-score="0">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">0</span>
+        <ul><li>no dataset carries a machine-readable provenance link</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="1.a" data-estimate="0">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-1.a" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-1.a" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-1.a" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-1.a" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c1-b">
+      <h3>1.b Traceable</h3>
+      
+      <div class="practice">Identify important data transformation steps, with links to software, at an appropriate level of detail, using a machine-readable representation, such as W3C PROV-O or EVI.</div>
+      <details class="questions" open>
+        <summary>Questions (2)</summary>
+        <ul><li>Have you described the key steps from a reliable data origin (e.g., raw data from a reliable source with accompanying metadata about how the data were generated) to data provided for analyses? Have you included links to the software that was used?</li><li>Have you utilized valid ontologies such as W3C PROV-O, PROV-DM, or a derivation of either, e.g., EVI, CPM? (PAV is not allowed as it does not provide step tracing and is single-source only.)</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Steps are provided in a machine-readable provenance record, and it includes software links.</div>
+        
+        <div><span class="n">1</span>Machine-readable provenance record is provided, but software links were not provided.</div>
+        
+        <div><span class="n">0</span>No transformation steps were provided.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Transformation steps (Computation + Experiment entities)</div><div class="value"><strong>0</strong> <span class="detail">0 computations, 0 experiments</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Steps with inputs and outputs declared</div><div class="value"><span class="na">— no denominator</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Computations linked to software</div><div class="value"><span class="na">— no denominator</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Example transformation step</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Evidence graphs (visual provenance per sub-crate)</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="1.b"
+                data-score="0">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">0</span>
+        <ul><li>no transformation steps (Computation or Experiment entities) in the crate</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="1.b" data-estimate="0">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-1.b" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-1.b" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-1.b" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-1.b" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c1-c">
+      <h3>1.c Interpretable</h3>
+      
+      <div class="practice">Make software for key data transformation and analysis steps available in a sustainable repository.</div>
+      <details class="questions" open>
+        <summary>Questions (1)</summary>
+        <ul><li>Is the software for key transformation/analysis steps deposited where it will persist and is citable?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Software is archived in a sustainable repository with a PID, that is, an immutable snapshot with a persistent identifier (e.g., Zenodo, Software Heritage, Dataverse, an institutional archive; includes a GitHub release archived to such a repository).</div>
+        
+        <div><span class="n">1</span>Software is available but only in mutable code hosting with no PID (e.g., a GitHub/GitLab/BitBucket repo alone).</div>
+        
+        <div><span class="n">0</span>Software is not available.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Software entities</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Archived with a PID (Zenodo / Software Heritage / DOI / PyPI)</div><div class="value"><strong>0</strong> of 0</div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Mutable code hosting only (GitHub and the like)</div><div class="value"><strong>0</strong> of 0</div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">No download/repository link</div><div class="value"><strong>0</strong> of 0</div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Archived software</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Code-hosted software</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Software without links</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="1.c"
+                data-score="0">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">0</span>
+        <ul><li>no software entities in the crate</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="1.c" data-estimate="0">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-1.c" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-1.c" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-1.c" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-1.c" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c1-d">
+      <h3>1.d Key actors identified</h3>
+      
+      <div class="practice">Identify people and organizations responsible for obtaining and processing the data, the samples, and subject groups involved in producing the data. Reference these parties along with other dataset metadata.</div>
+      <details class="questions" open>
+        <summary>Questions (1)</summary>
+        <ul><li>Does the metadata identify the key actors? "Key actors" are the people and organizations who obtained and processed the data/samples and who recruited the participants.</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Key actors are identified with resolvable PIDs (ORCID for people, ROR for orgs).</div>
+        
+        <div><span class="n">1</span>Key actors are named in free text, without PIDs.</div>
+        
+        <div><span class="n">0</span>Key actors are not identified.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Key actors identified</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Authors identified with a PID (ORCID)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 1)</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Authors with PIDs (first 10)</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Authors named in free text only</div><div class="value">AI-READI Consortium</div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Principal investigator</div><div class="value"><span class="pre">Aaron Lee, Department of Ophthalmology, University of Washington</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Contact</div><div class="value"><span class="na">not provided</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Organizations (root isPartOf)</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Organizations identified with ROR PIDs</div><div class="value"><span class="no">✗ No</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="1.d"
+                data-score="1">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">1</span>
+        <ul><li>0 of 1 authors carry a PID</li><li>1 named in free text only</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="1.d" data-estimate="1">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-1.d" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-1.d" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-1.d" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-1.d" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+
+    <div class="section-note">
+      <label for="secnote-1">Section 1 comments</label>
+      <textarea id="secnote-1" data-secnote="1" rows="2"
+        placeholder="Context behind this section's scores — caveats, research-question dependence, evidence the extractor missed…"></textarea>
+    </div>
+  
+  <h2 id="sec2"><span>2. Characterization</span>
+    <span class="axis-score" data-section="2"
+      ><span class="ax-progress"></span><span class="ax-pts"></span
+      ><span class="ax-na"></span></span>
+  </h2>
+
+    
+    <div class="criterion" id="c2-a">
+      <h3>2.a Semantics</h3>
+      
+      <div class="practice">Use comprehensive descriptive metadata for datasets, including a detailed abstract, dataset keywords, and subject-specific vocabularies (e.g., MeSH) to enable detailed search and discovery.</div>
+      <details class="questions" open>
+        <summary>Questions (1)</summary>
+        <ul><li>Does the metadata support search and discovery through a substantive abstract, keywords, and subject-specific controlled-vocabulary terms?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>The abstract, keywords, and controlled-vocabulary terms are present and from recognized vocabularies (e.g., MeSH, or another subject-specific ontology/thesaurus).</div>
+        
+        <div><span class="n">1</span>Abstract and keywords are present, but not controlled-vocabulary terms (free-text keywords only).</div>
+        
+        <div><span class="n">0</span>No abstract, or effectively no descriptive metadata is present.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Dataset abstract/description</div><div class="value"><details class="longtext"><summary><span class="head">
+The Artificial Intelligence Ready and Exploratory Atlas for Diabetes Insights (AI-READI) project seeks to create a flagship ethically-sourced dataset to enable future generations of artificial intelligence/machine learning (AI/ML)…</span> <span class="more">[1,525 chars — expand]</span></summary><span class="pre">
+The Artificial Intelligence Ready and Exploratory Atlas for Diabetes Insights (AI-READI) project seeks to create a flagship ethically-sourced dataset to enable future generations of artificial intelligence/machine learning (AI/ML) research to provide critical insights into type 2 diabetes mellitus (T2DM), including salutogenic pathways to return to health. The ability to understand and affect the course of complex, multi-organ diseases such as T2DM has been limited by a lack of well-designed, high quality, large, and inclusive multimodal datasets. The AI-READI team of investigators will aim to collect a cross-sectional dataset of 4,000 people and longitudinal data from 10% of the study cohort across the US. The study cohort will be balanced for self-reported race/ethnicity, gender, and diabetes disease stage. Data collection will be specifically designed to permit downstream pseudo-time manifold analysis, an approach used to predict disease trajectories by collecting and learning from complex, multimodal data from participants with differing disease severity (normal to insulin-dependent T2DM). The long-term objective for this project is to develop a foundational dataset in T2DM, agnostic to existing classification criteria or biases, which can be used to reconstruct a temporal atlas of T2DM development and reversal towards health (i.e., salutogenesis). Data will be optimized for downstream AI/ML research and made publicly available
+
+This dataset contains data from 2280 …[truncated, 2060 chars total]</span></details> <span class="detail">2060 chars</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Keywords</div><div class="value"><ul class="plain"><li>diabetes mellitus</li><li>Machine Learning</li><li>Artificial Intelligence</li><li>Electrocardiography</li><li>Continuous Glucose Monitoring</li><li>Retinal Imaging</li><li>Eye Exam</li></ul></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Controlled-vocabulary terms present</div><div class="value"><span class="no">✗ No</span> <span class="detail">0 MeSH terms of 0 DefinedTerms</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Controlled-vocabulary terms</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="2.a"
+                data-score="1">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">1</span>
+        <ul><li>abstract and keywords present, no controlled-vocabulary terms</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="2.a" data-estimate="1">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-2.a" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-2.a" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-2.a" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-2.a" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c2-b">
+      <h3>2.b Statistics</h3>
+      
+      <div class="practice">Provide domain-appropriate statistical characterizations of key features of the dataset to inform analysis planning. Ensure missing values are encoded consistently.</div>
+      <details class="questions" open>
+        <summary>Questions (2)</summary>
+        <ul><li>Are descriptive statistics of key variables provided?</li><li>Are missing values encoded consistently?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Descriptive statistics of key variables are provided, and missing values are encoded consistently.</div>
+        
+        <div><span class="n">1</span>Missing values are encoded consistently, but no descriptive statistics are present.</div>
+        
+        <div><span class="n">0</span>Missing values are not consistently encoded.</div>
+        
+      </div>
+      <div class="rubric-note">For non-tabular data this criterion is N/A. Descriptive statistics means per-variable summaries: for numeric variables, central tendency and spread with min/max and non-missing count; for categorical variables, category frequencies; plus dataset-level record and variable counts. Missing-value consistency means one documented convention used throughout (not mixed blanks/NA/-999/0).</div>
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Datasets with summary statistics (hasSummaryStatistics)</div><div class="value"><span class="na">— no denominator</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Example summary-statistics reference</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Missing-data statement (rai:dataCollectionMissingData)</div><div class="value"><details class="longtext"><summary><span class="head">Yes, not all modalities are available for all participants. Some participants elected not to participate in some study elements. In a few cases, the data collection device did not have any stored results or was returned too late to…</span> <span class="more">[394 chars — expand]</span></summary><span class="pre">Yes, not all modalities are available for all participants. Some participants elected not to participate in some study elements. In a few cases, the data collection device did not have any stored results or was returned too late to retrieve the results (e.g. battery died, data was lost). In a few cases, there may have been a data collision at some point in the process and data has been lost.</span></details></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Tabular formats in the crate (N/A applies only if none)</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="2.b"
+                data-score="N/A">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">N/A</span>
+        <ul><li>no tabular formats in the crate — the rubric marks this criterion N/A for non-tabular data</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="2.b" data-estimate="N/A">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-2.b" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-2.b" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-2.b" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-2.b" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c2-c">
+      <h3>2.c Standards</h3>
+      <span class="badge">Gating</span>
+      <div class="practice">Provide a machine-readable data dictionary or schema for each dataset, linked to the dataset metadata, and referencing any relevant standards.</div>
+      <details class="questions" open>
+        <summary>Questions (3)</summary>
+        <ul><li>Is the file governed by a formal open specification with a built-in or paired external schema that names and types its data elements? Examples include RDF/JSON-LD, OWL, OME-TIFF, OME-NGFF, NWB, WFDB, DICOM, NIfTI, Parquet, CSVW, Frictionless Table Schema, JSON Schema, XSD.</li><li>Is at least one data element bound to a standard vocabulary term through (a) a dataset-level JSON-LD sidecar, or (b) the format's inherent mechanism (vocabulary IRIs in RDF/JSON-LD data, DICOM Code Sequences, CSVW propertyUrl/aboutUrl, Frictionless rdfType, Define-XML NCI Thesaurus codes, OME annotations, NWB ontology links)?</li><li>Is the standard a true schema/model that dictates structure and content, or merely a generic file container?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Formal schema and at least one populated standard vocabulary binding.</div>
+        
+        <div><span class="n">1</span>Formal schema, no standard vocabulary binding.</div>
+        
+        <div><span class="n">0</span>No formal schema.</div>
+        
+      </div>
+      <div class="rubric-note">A standard vocabulary is one registered in NCBO BioPortal, EBI Ontology Lookup Service, or OBO Foundry. A vocabulary binding must be populated in the deposited instance (capability alone scores 1). Scoring may be per format class, and a sidecar covering a class covers every file in it. Formats named are examples, not an enumeration.</div>
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Machine-readable schema entities (EVI:Schema, JSON Schema dialect)</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Non-image datasets linked to a schema</div><div class="value"><span class="na">— no denominator</span> <span class="detail">0 image datasets excluded — image files don&#39;t take a data dictionary; a schema covering a format class covers every file in that class</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Standard vocabulary bindings populated</div><div class="value"><span class="no">✗ No</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">File formats present (format-class view)</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Example schema entity</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="2.c"
+                data-score="0">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">0</span>
+        <ul><li>no machine-readable schema entities</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="2.c" data-estimate="0">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-2.c" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-2.c" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-2.c" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-2.c" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c2-d">
+      <h3>2.d Potential Sources of Bias</h3>
+      
+      <div class="practice">Describe known sources of bias in the data and assumptions made in collecting, processing, or interpreting the data. Include any known explanations regarding missing values, including reasons for missingness, and the degree to which data represents a state vs. a control (e.g., disease state vs. healthy state).</div>
+      <details class="questions" open>
+        <summary>Questions (3)</summary>
+        <ul><li>Does the metadata describe known biases and assumptions?</li><li>Does the metadata describe, where applicable, reasons for missingness?</li><li>Does the metadata describe the state-vs-control balance?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Substantive description of known bias sources and assumptions in collection/processing/interpretation is given, and the applicable elements are addressed (reasons for missingness where there are missing values; state-vs-control representation where relevant).</div>
+        
+        <div><span class="n">1</span>Bias/assumptions are addressed but thinly, or applicable missingness/state-control elements were omitted.</div>
+        
+        <div><span class="n">0</span>No description of bias or assumptions is given, or a non-substantive placeholder is offered (e.g., "no known bias" with no basis).</div>
+        
+      </div>
+      <div class="rubric-note">"Substantive" means it engages the actual data (specific bias sources, assumptions, or reasons are named); it is not a boilerplate disclaimer. "Reasons for missingness" is N/A if the dataset has no missing values; "state-vs-control" is N/A if the dataset has no such structure. N/A elements don't count against the score.</div>
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Bias description (rai:dataBiases)</div><div class="value"><details class="longtext"><summary><span class="head">
+Uniform data collection protocols were implemented for all subjects, irrespective of their race/ethnicity, biological sex, or diabetes severity, across all study sites. The selection of study sites was intended to ensure varied…</span> <span class="more">[290 chars — expand]</span></summary><span class="pre">
+Uniform data collection protocols were implemented for all subjects, irrespective of their race/ethnicity, biological sex, or diabetes severity, across all study sites. The selection of study sites was intended to ensure varied representation and minimize the potential for sampling bias.
+</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Bias description present and substantive-length</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Missing-data reasons (rai:dataCollectionMissingData)</div><div class="value"><details class="longtext"><summary><span class="head">Yes, not all modalities are available for all participants. Some participants elected not to participate in some study elements. In a few cases, the data collection device did not have any stored results or was returned too late to…</span> <span class="more">[394 chars — expand]</span></summary><span class="pre">Yes, not all modalities are available for all participants. Some participants elected not to participate in some study elements. In a few cases, the data collection device did not have any stored results or was returned too late to retrieve the results (e.g. battery died, data was lost). In a few cases, there may have been a data collision at some point in the process and data has been lost.</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Missingness explanation present and substantive-length</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Completeness statement</div><div class="value"><details class="longtext"><summary><span class="head">In cases of survey data, skipped questions or incomplete responses are expected. In cases of using wearables, improper use, technical failure such as battery failure or system malfunction are expected. In cases of imaging data, patient…</span> <span class="more">[375 chars — expand]</span></summary><span class="pre">In cases of survey data, skipped questions or incomplete responses are expected. In cases of using wearables, improper use, technical failure such as battery failure or system malfunction are expected. In cases of imaging data, patient uncooperation, noise that may obscure the images and technical failure such as system malfunction, and data transfer failures are expected.</span></details></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate none">No automated estimate — this criterion needs
+        human judgment.</div>
+      
+
+      <div class="grade" data-criterion="2.d">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-2.d" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-2.d" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-2.d" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-2.d" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c2-e">
+      <h3>2.e Data quality</h3>
+      
+      <div class="practice">Have quality control procedures been applied? If so, provide a link to a description.</div>
+      <details class="questions" open>
+        <summary>Questions (2)</summary>
+        <ul><li>Has a data quality assessment been applied?</li><li>What was it?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>QC was applied and appropriate for the domain.</div>
+        
+        <div><span class="n">1</span>QC was applied and documented, but it is incomplete for the domain.</div>
+        
+        <div><span class="n">0</span>No QC was applied, or the description link doesn't resolve, or the description is inadequate/junk.</div>
+        
+      </div>
+      <div class="rubric-note">Adequacy (1 vs 2) is a domain-expert determination.</div>
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Collection / QC description (rai:dataCollection)</div><div class="value"><details class="longtext"><summary><span class="head">Multiple modalities of data are collected for each participant, including survey data, clinical data, retinal imaging data, environmental sensor data, continuous glucose monitor data, and wearable activity monitor data. These encompass…</span> <span class="more">[562 chars — expand]</span></summary><span class="pre">Multiple modalities of data are collected for each participant, including survey data, clinical data, retinal imaging data, environmental sensor data, continuous glucose monitor data, and wearable activity monitor data. These encompass tabular data, imaging data, and physiological signal/waveform data. There is no unstructured text data included in this dataset. The exact forms used for data collection in REDCap are available here. Furthermore, all modalities, file formats, and devices are detailed in the dataset documentation at <a href="https://docs.aireadi.org/">https://docs.aireadi.org/</a>.</span></details></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Missing-data handling</div><div class="value"><details class="longtext"><summary><span class="head">Yes, not all modalities are available for all participants. Some participants elected not to participate in some study elements. In a few cases, the data collection device did not have any stored results or was returned too late to…</span> <span class="more">[394 chars — expand]</span></summary><span class="pre">Yes, not all modalities are available for all participants. Some participants elected not to participate in some study elements. In a few cases, the data collection device did not have any stored results or was returned too late to retrieve the results (e.g. battery died, data was lost). In a few cases, there may have been a data collision at some point in the process and data has been lost.</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">QC language found in metadata</div><div class="value"><span class="no">✗ No</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">QC description link resolves: https://docs.aireadi.org/</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate none">No automated estimate — this criterion needs
+        human judgment.</div>
+      
+
+      <div class="grade" data-criterion="2.e">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-2.e" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-2.e" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-2.e" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-2.e" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+
+    <div class="section-note">
+      <label for="secnote-2">Section 2 comments</label>
+      <textarea id="secnote-2" data-secnote="2" rows="2"
+        placeholder="Context behind this section's scores — caveats, research-question dependence, evidence the extractor missed…"></textarea>
+    </div>
+  
+  <h2 id="sec3"><span>3. Pre-model Explainability</span>
+    <span class="axis-score" data-section="3"
+      ><span class="ax-progress"></span><span class="ax-pts"></span
+      ><span class="ax-na"></span></span>
+  </h2>
+
+    
+    <div class="criterion" id="c3-a">
+      <h3>3.a Data documentation template</h3>
+      
+      <div class="practice">Machine-readable metadata and a linked human-readable document should support a domain-appropriate extension of the original Gebru Datasheets concept for pre-model explainability. Healthsheets information may be a helpful supplement.</div>
+      <details class="questions" open>
+        <summary>Questions (2)</summary>
+        <ul><li>Is there datasheet-style documentation of the dataset as machine-readable metadata?</li><li>Is there a linked human-readable document, such as Datasheets for Datasets (Gebru et al.)?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Both machine-readable metadata and a linked, human-readable datasheet-style document that substantively covers dataset composition, collection, processing, and known limitations/uses are provided.</div>
+        
+        <div><span class="n">1</span>One is present but not the other, or one or both are present but are thin or partial.</div>
+        
+        <div><span class="n">0</span>Neither is provided.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Human-readable datasheet(s)</div><div class="value"><ul class="plain"><li><a href="./ro-crate-datasheet.html">ro-crate-datasheet.html</a></li></ul></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Machine-readable datasheet sections populated</div><div class="value"><strong>7</strong> of 7</div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Missing sections</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — Collection</div><div class="value"><details class="longtext"><summary><span class="head">Multiple modalities of data are collected for each participant, including survey data, clinical data, retinal imaging data, environmental sensor data, continuous glucose monitor data, and wearable activity monitor data. These encompass…</span> <span class="more">[562 chars — expand]</span></summary><span class="pre">Multiple modalities of data are collected for each participant, including survey data, clinical data, retinal imaging data, environmental sensor data, continuous glucose monitor data, and wearable activity monitor data. These encompass tabular data, imaging data, and physiological signal/waveform data. There is no unstructured text data included in this dataset. The exact forms used for data collection in REDCap are available here. Furthermore, all modalities, file formats, and devices are detailed in the dataset documentation at <a href="https://docs.aireadi.org/">https://docs.aireadi.org/</a>.</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — Use cases</div><div class="value"><details class="longtext"><summary><span class="head">The purpose for creating the dataset was to enable future generations of artificial intelligence/machine learning (AI/ML) research to provide critical insights into type 2 diabetes mellitus (T2DM), including salutogenic pathways to return…</span> <span class="more">[594 chars — expand]</span></summary><span class="pre">The purpose for creating the dataset was to enable future generations of artificial intelligence/machine learning (AI/ML) research to provide critical insights into type 2 diabetes mellitus (T2DM), including salutogenic pathways to return to health. T2DM is a growing public health threat. Yet, the current understanding of T2DM, especially in the context of salutogenesis, is limited. Given the complexity of T2DM, AI-based approaches may help with improving our understanding but a key issue is the lack of data ready for training AI models. The AI-READI dataset is intended to fill this gap.</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — Limitations</div><div class="value"><details class="longtext"><summary><span class="head">
+While the AI-READI&#39;s cross-sectional database ultimately aims to achieve balance across race/ethnicity, biological sex, and diabetes presence and severity, the pilot study is not balanced across these parameters.
+
+Three recording sites…</span> <span class="more">[728 chars — expand]</span></summary><span class="pre">
+While the AI-READI&#39;s cross-sectional database ultimately aims to achieve balance across race/ethnicity, biological sex, and diabetes presence and severity, the pilot study is not balanced across these parameters.
+
+Three recording sites were strategically selected to achieve broad recruitment: the University of Alabama at Birmingham (UAB), the University of California San Diego (UCSD), and the University of Washington (UW). The sites were chosen for geographic variability across the United States and to ensure representation across various racial and ethnic groups. Individuals from all demographic backgrounds were recruited at all 3 sites. Factors influencing the generalization of derived …[truncated, 1722 chars total]</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — Biases</div><div class="value"><details class="longtext"><summary><span class="head">
+Uniform data collection protocols were implemented for all subjects, irrespective of their race/ethnicity, biological sex, or diabetes severity, across all study sites. The selection of study sites was intended to ensure varied…</span> <span class="more">[290 chars — expand]</span></summary><span class="pre">
+Uniform data collection protocols were implemented for all subjects, irrespective of their race/ethnicity, biological sex, or diabetes severity, across all study sites. The selection of study sites was intended to ensure varied representation and minimize the potential for sampling bias.
+</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — Release/maintenance plan</div><div class="value"><details class="longtext"><summary><span class="head">The dataset gets released as static versions. This is the third version of the dataset and consists of data collected up through the end of the second year of the study, i.e. between July 19, 2023 and May 1st, 2025. There are plans to…</span> <span class="more">[398 chars — expand]</span></summary><span class="pre">The dataset gets released as static versions. This is the third version of the dataset and consists of data collected up through the end of the second year of the study, i.e. between July 19, 2023 and May 1st, 2025. There are plans to release new versions of the dataset approximately once a year with additional data from participants who have been enrolled since the last dataset version release.</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — License</div><div class="value"><span class="pre"><a href="https://doi.org/10.5281/zenodo.17555036">https://doi.org/10.5281/zenodo.17555036</a></span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — Conditions of access</div><div class="value"><span class="pre"><a href="https://fairhub.io/datasets/3/access">https://fairhub.io/datasets/3/access</a></span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="3.a"
+                data-score="2">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">2</span>
+        <ul><li>human-readable datasheet linked</li><li>7 of 7 machine-readable sections populated (presence-checked only — whether coverage is substantive is a human read)</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="3.a" data-estimate="2">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-3.a" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-3.a" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-3.a" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-3.a" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c3-b">
+      <h3>3.b Fit for purpose</h3>
+      
+      <div class="practice">Identify appropriate and inappropriate use cases for the data set. Link to any previously published analyses using this data.</div>
+      <details class="questions" open>
+        <summary>Questions (1)</summary>
+        <ul><li>Does the dataset identify the appropriate and inappropriate use cases, and are there any links to previously published analyses using it?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Appropriate and inappropriate use cases are identified, ideally in structured machine-readable form (e.g., Croissant RAI recommended/prohibited-use fields), and links to prior analyses are provided where such analyses exist.</div>
+        
+        <div><span class="n">1</span>Use cases are identified but only partially (e.g., appropriate uses only, or prose-only with no structured form), or links to prior analysis are missing where these analyses exist.</div>
+        
+        <div><span class="n">0</span>No use-case guidance is provided.</div>
+        
+      </div>
+      <div class="rubric-note">"Link to prior analyses" is N/A if the dataset is newly released with no published analyses - its absence doesn't count against the score.</div>
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Appropriate use cases (rai:dataUseCases)</div><div class="value"><details class="longtext"><summary><span class="head">The purpose for creating the dataset was to enable future generations of artificial intelligence/machine learning (AI/ML) research to provide critical insights into type 2 diabetes mellitus (T2DM), including salutogenic pathways to return…</span> <span class="more">[594 chars — expand]</span></summary><span class="pre">The purpose for creating the dataset was to enable future generations of artificial intelligence/machine learning (AI/ML) research to provide critical insights into type 2 diabetes mellitus (T2DM), including salutogenic pathways to return to health. T2DM is a growing public health threat. Yet, the current understanding of T2DM, especially in the context of salutogenesis, is limited. Given the complexity of T2DM, AI-based approaches may help with improving our understanding but a key issue is the lack of data ready for training AI models. The AI-READI dataset is intended to fill this gap.</span></details></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Limitations / inappropriate uses (rai:dataLimitations)</div><div class="value"><details class="longtext"><summary><span class="head">
+While the AI-READI&#39;s cross-sectional database ultimately aims to achieve balance across race/ethnicity, biological sex, and diabetes presence and severity, the pilot study is not balanced across these parameters.
+
+Three recording sites…</span> <span class="more">[1,526 chars — expand]</span></summary><span class="pre">
+While the AI-READI&#39;s cross-sectional database ultimately aims to achieve balance across race/ethnicity, biological sex, and diabetes presence and severity, the pilot study is not balanced across these parameters.
+
+Three recording sites were strategically selected to achieve broad recruitment: the University of Alabama at Birmingham (UAB), the University of California San Diego (UCSD), and the University of Washington (UW). The sites were chosen for geographic variability across the United States and to ensure representation across various racial and ethnic groups. Individuals from all demographic backgrounds were recruited at all 3 sites. Factors influencing the generalization of derived models include the predominantly urban and hospital-based recruitment, which may not fully capture all possible cultural and socioeconomic backgrounds. The study cohort may not provide a comprehensive representation of the population, as it does not include other races/ethnicities such as Pacific Islanders and Native Americans. Information on device make and model, including specific modalities like macula scans or wide scans during OCT, were documented to ensure repeatability. Moreover, the study included multiple devices for one measure to enhance generalizability and represent the broad range of equipment utilized in clinical settings.
+
+In cases of survey data, skipped questions or incomplete responses are expected. In cases of using wearables, improper use, technical failure such as …[truncated, 1722 chars total]</span></details></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Prohibited uses</div><div class="value"><span class="na">not provided</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Both appropriate and inappropriate uses stated</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Prior publications listed</div><div class="value"><strong>2</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Prior publications</div><div class="value"><ul class="plain"><li><a href="https://doi.org/10.1038/s42255-024-01165-x">AI-READI Consortium. (2024). "AI-READI: rethinking data collection, preparation and
+sharing for propelling AI-based discoveries in diabetes research and beyond."
+Nature metabolism. …[truncated, 223 chars total]</a></li><li><a href="https://doi.org/10.60775/fairhub.3">AI-READI Consortium. (2025). Flagship Dataset of Type 2 Diabetes from the
+AI-READI Project (3.0.0) [Data set]. FAIRhub.
+https://doi.org/10.60775/fairhub.3</a></li></ul></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="3.b"
+                data-score="2">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">2</span>
+        <ul><li>appropriate and inappropriate uses both stated</li><li>2 prior publications linked</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="3.b" data-estimate="2">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-3.b" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-3.b" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-3.b" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-3.b" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c3-c">
+      <h3>3.c Verifiable</h3>
+      
+      <div class="practice">Provide a mechanism for ensuring the integrity of each raw or processed dataset, such as a cryptographic hash.</div>
+      <details class="questions" open>
+        <summary>Questions (1)</summary>
+        <ul><li>Is there an integrity mechanism (e.g., cryptographic hash) for each raw or processed dataset?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>An integrity mechanism is provided for each dataset (e.g., SHA-256 per file/dataset, or a Merkle tree/manifest of hashes covering all components).</div>
+        
+        <div><span class="n">1</span>An integrity mechanism is provided, but it is incomplete (some datasets/files are covered, others are not).</div>
+        
+        <div><span class="n">0</span>No integrity mechanism is provided.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Hash coverage (datasets + software, embargoed excluded)</div><div class="value"><span class="na">— no denominator</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Embargoed datasets excluded from the denominator</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Example entity with a checksum</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate none">No automated estimate — this criterion needs
+        human judgment.</div>
+      
+
+      <div class="grade" data-criterion="3.c">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-3.c" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-3.c" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-3.c" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-3.c" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+
+    <div class="section-note">
+      <label for="secnote-3">Section 3 comments</label>
+      <textarea id="secnote-3" data-secnote="3" rows="2"
+        placeholder="Context behind this section's scores — caveats, research-question dependence, evidence the extractor missed…"></textarea>
+    </div>
+  
+  <h2 id="sec4"><span>4. Ethics<span class="badge">Gating</span></span>
+    <span class="axis-score" data-section="4"
+      ><span class="ax-progress"></span><span class="ax-pts"></span
+      ><span class="ax-na"></span></span>
+  </h2>
+
+    
+    <div class="criterion" id="c4-a">
+      <h3>4.a Ethically acquired</h3>
+      
+      <div class="practice">Describe ethical data acquisition consistent with accepted principles (e.g., Belmont Report, Menlo Report, CARE Principles) sufficient to evaluate for intended use, along with a management plan.</div>
+      <details class="questions" open>
+        <summary>Questions (5)</summary>
+        <ul><li>Is ethical data acquisition consistent with accepted bioethics principles sufficient to evaluate for the intended use?</li><li>Are the following elements present? IRB/REC URL, IRB/REC protocol number, data governance committee chair, and ethics reviewer.</li><li>If an indigenous population is being studied, is CARE principles conformance demonstrated?</li><li>Is a management plan provided? (rai:dataReleaseMaintenancePlan link to the DMP/DMSP.)</li><li>Acquisition is legitimate - obtained without theft, coercion, or deception, with required permissions/consent secured.</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Acquisition is described with the source, including permission/consent basis (or substantiated statement that it is not required), confirmation of legitimate collection is included, and the DMP/DMSP is linked.</div>
+        
+        <div><span class="n">1</span>Acquisition is described, but it is incomplete or generic.</div>
+        
+        <div><span class="n">0</span>No acquisition description.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Collection description (rai:dataCollection)</div><div class="value"><details class="longtext"><summary><span class="head">Multiple modalities of data are collected for each participant, including survey data, clinical data, retinal imaging data, environmental sensor data, continuous glucose monitor data, and wearable activity monitor data. These encompass…</span> <span class="more">[562 chars — expand]</span></summary><span class="pre">Multiple modalities of data are collected for each participant, including survey data, clinical data, retinal imaging data, environmental sensor data, continuous glucose monitor data, and wearable activity monitor data. These encompass tabular data, imaging data, and physiological signal/waveform data. There is no unstructured text data included in this dataset. The exact forms used for data collection in REDCap are available here. Furthermore, all modalities, file formats, and devices are detailed in the dataset documentation at <a href="https://docs.aireadi.org/">https://docs.aireadi.org/</a>.</span></details></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Ethics reviewers (ethicalReview)</div><div class="value"><span class="pre">Camille Nebeker, Debra Mathews, Kadija Ferryman, Nicholas Evans</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Human subjects research</div><div class="value"><span class="pre">Yes</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Human subjects exemption</div><div class="value"><span class="na">not provided</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Informed consent</div><div class="value"><span class="na">not provided</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">At-risk populations</div><div class="value"><span class="na">not provided</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">IRB / ethics-review references found</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">IRB</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Management plan (rai:dataReleaseMaintenancePlan)</div><div class="value"><details class="longtext"><summary><span class="head">The dataset gets released as static versions. This is the third version of the dataset and consists of data collected up through the end of the second year of the study, i.e. between July 19, 2023 and May 1st, 2025. There are plans to…</span> <span class="more">[398 chars — expand]</span></summary><span class="pre">The dataset gets released as static versions. This is the third version of the dataset and consists of data collected up through the end of the second year of the study, i.e. between July 19, 2023 and May 1st, 2025. There are plans to release new versions of the dataset approximately once a year with additional data from participants who have been enrolled since the last dataset version release.</span></details></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate none">No automated estimate — this criterion needs
+        human judgment.</div>
+      
+
+      <div class="grade" data-criterion="4.a">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-4.a" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-4.a" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-4.a" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-4.a" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c4-b">
+      <h3>4.b Ethically managed</h3>
+      
+      <div class="practice">Data management must align with ethical principles throughout the health AI lifecycle. Indicate privacy-protection processing, if any, sufficient to evaluate ethical status for intended use.</div>
+      <details class="questions" open>
+        <summary>Questions (3)</summary>
+        <ul><li>Is data sensitivity properly described in alignment with disclosure risks?</li><li>Is data sensitivity aligned with intended use?</li><li>Is privacy protection described in a way aligned with the above?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Confidentiality code or equivalent present and DMP/DMSP content substantively describes management appropriate to that sensitivity.</div>
+        
+        <div><span class="n">1</span>Code present but privacy protection inadequate.</div>
+        
+        <div><span class="n">0</span>No classification, or no management description where sensitivity requires it.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Confidentiality level</div><div class="value"><span class="pre">HL7:2N (normal)</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Personal/sensitive information statement</div><div class="value"><span class="pre">EHR; Wearable Monitoring; ECG; Environmental Sensor; Continuous glucose monitor; Wearable accelerometer</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Data governance committee</div><div class="value"><span class="pre">AI-READi Consortium</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Ethics review</div><div class="value"><span class="pre">Camille Nebeker, Debra Mathews, Kadija Ferryman, Nicholas Evans</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Management plan content (judge adequacy for the declared sensitivity)</div><div class="value"><details class="longtext"><summary><span class="head">The dataset gets released as static versions. This is the third version of the dataset and consists of data collected up through the end of the second year of the study, i.e. between July 19, 2023 and May 1st, 2025. There are plans to…</span> <span class="more">[398 chars — expand]</span></summary><span class="pre">The dataset gets released as static versions. This is the third version of the dataset and consists of data collected up through the end of the second year of the study, i.e. between July 19, 2023 and May 1st, 2025. There are plans to release new versions of the dataset approximately once a year with additional data from participants who have been enrolled since the last dataset version release.</span></details></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate none">No automated estimate — this criterion needs
+        human judgment.</div>
+      
+
+      <div class="grade" data-criterion="4.b">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-4.b" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-4.b" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-4.b" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-4.b" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c4-c">
+      <h3>4.c Ethically Disseminated</h3>
+      
+      <div class="practice">Specify a licensing agreement and/or data use agreement (DUA) on as open terms as ethical and sustainability considerations permit. Specify contact information for a data access committee.</div>
+      <details class="questions" open>
+        <summary>Questions (3)</summary>
+        <ul><li>Is the license and/or DUA specified on as-open-as-appropriate terms?</li><li>Is a Data Access Committee (DAC) contact provided where access is controlled?</li><li>If a DUA exists, does the DUA specify permitted and prohibited uses?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>The license and/or DUA do not restrict use unjustifiably, permitted and prohibited uses are specified, terms are appropriately open given ethical/sustainability constraints, and a DAC contact is present and available where access is controlled.</div>
+        
+        <div><span class="n">1</span>The license/DUA is present, but its use limits are unspecified, or terms are more restrictive than warranted, or DAC contact is missing where access is controlled.</div>
+        
+        <div><span class="n">0</span>There is no license/DUA.</div>
+        
+      </div>
+      <div class="rubric-note">DAC contact is N/A for openly licensed data with no access committee.</div>
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">License</div><div class="value"><span class="pre"><a href="https://doi.org/10.5281/zenodo.17555036">https://doi.org/10.5281/zenodo.17555036</a></span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Conditions of access / DUA</div><div class="value"><span class="pre"><a href="https://fairhub.io/datasets/3/access">https://fairhub.io/datasets/3/access</a></span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Permitted uses stated</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">The purpose for creating the dataset was to enable future generations of artificial intelligence/machine learning (AI/ML) research to provide critical insights into type 2 diabetes mellitus (T2DM), including salutogenic pathways to return to health. T2DM is a growing public health threat. Yet, the …[truncated, 594 chars total]</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Prohibited uses stated</div><div class="value"><span class="no">✗ No</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Access-committee / dataset contact</div><div class="value"><span class="pre">none listed</span> <span class="detail">N/A if fully open with no access committee</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="4.c"
+                data-score="1">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">1</span>
+        <ul><li>license/DUA present but permitted/prohibited uses not both specified</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="4.c" data-estimate="1">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-4.c" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-4.c" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-4.c" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-4.c" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c4-d">
+      <h3>4.d Secure</h3>
+      
+      <div class="practice">Specify security requirements for storing and accessing this data, e.g., "public", "controlled access only", etc.</div>
+      <details class="questions" open>
+        <summary>Questions (1)</summary>
+        <ul><li>Are security requirements for storing and accessing the dataset specified, following standards such as HL7's Confidentiality security labels (see http://terminology.hl7.org/ValueSet/v3-Confidentiality)?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Security level metadata is provided, indicating whether or not any level of protection is required to safeguard sensitive information contained in the dataset. These security requirements are specified using a standard, such as HL7 security labels.</div>
+        
+        <div><span class="n">1</span>Security level is specified in prose, without reference to a standard vocabulary.</div>
+        
+        <div><span class="n">0</span>No security level metadata is provided.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Confidentiality level</div><div class="value"><span class="pre">HL7:2N (normal)</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Value is an HL7 v3-Confidentiality code</div><div class="value"><span class="no">✗ No</span> <span class="detail">prose value — compare against U/L/M/N/R/V display names</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">De-identification statement</div><div class="value"><span class="pre">True</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Personal/sensitive information statement</div><div class="value"><span class="pre">EHR; Wearable Monitoring; ECG; Environmental Sensor; Continuous glucose monitor; Wearable accelerometer</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="4.d"
+                data-score="1">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">1</span>
+        <ul><li>confidentiality level stated in prose, not a standard vocabulary</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="4.d" data-estimate="1">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-4.d" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-4.d" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-4.d" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-4.d" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+
+    <div class="section-note">
+      <label for="secnote-4">Section 4 comments</label>
+      <textarea id="secnote-4" data-secnote="4" rows="2"
+        placeholder="Context behind this section's scores — caveats, research-question dependence, evidence the extractor missed…"></textarea>
+    </div>
+  
+  <h2 id="sec5"><span>5. Sustainability</span>
+    <span class="axis-score" data-section="5"
+      ><span class="ax-progress"></span><span class="ax-pts"></span
+      ><span class="ax-na"></span></span>
+  </h2>
+
+    
+    <div class="criterion" id="c5-a">
+      <h3>5.a Persistent</h3>
+      
+      <div class="practice">Ensure unprocessed data is preserved in an archive that complies with privacy laws and retention guidelines, enabling future reprocessing and publishing of revised data.</div>
+      <details class="questions" open>
+        <summary>Questions (1)</summary>
+        <ul><li>Is all unprocessed/raw and processed data preserved in an archive that supports retention and future reprocessing?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Data is preserved in an accepted/sustainable repository (per 0.a repository acceptance), with a persistent identifier.</div>
+        
+        <div><span class="n">1</span>Data is preserved but only in non-sustainable storage (no PID, or mutable hosting with no retention commitment).</div>
+        
+        <div><span class="n">0</span>Data is not preserved (only processed/derived data available).</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Identifier</div><div class="value"><span class="pre"><a href="https://doi.org/10.60775/fairhub.3">https://doi.org/10.60775/fairhub.3</a></span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Identifier is a PID</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">scheme: DOI</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Recognized archives detected (publisher + content hosts)</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Datasets with a contentUrl (data parked somewhere)</div><div class="value"><span class="na">— no denominator</span> <span class="detail">0 of these are remote archive links; the rest live inside the crate deposit</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="5.a"
+                data-score="1">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">1</span>
+        <ul><li>PID present (scheme: DOI)</li><li>0 datasets have a contentUrl but no recognized archive detected</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="5.a" data-estimate="1">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-5.a" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-5.a" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-5.a" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-5.a" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c5-b">
+      <h3>5.b Domain-appropriate</h3>
+      
+      <div class="practice">Ensure single-domain raw or processed data are deposited in a FAIR, domain-appropriate specialist repository if available.</div>
+      <details class="questions" open>
+        <summary>Questions (1)</summary>
+        <ul><li>For single-domain data, is it deposited in the repository the domain community treats as appropriate, where one is available for this data?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Data is deposited in a domain-appropriate repository, i.e., one normally used by a practice community for this data type, whether that is a specialist archive or a generalist repository that serves as the recognized domain resource.</div>
+        
+        <div><span class="n">1</span>Data is deposited in a generalist repository even though a specialist domain-appropriate repository that accepts this type of data exists.</div>
+        
+        <div><span class="n">0</span>Data was not deposited in any community-accepted repository.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Publisher repository</div><div class="value"><span class="pre">AI-READi Consortium</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Specialist (domain) hosts</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Generalist repository hosts</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Unrecognized hosts</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Dataset files on recognized repository hosts</div><div class="value"><span class="na">— no denominator</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Domain hint — collection types</div><div class="value">Manual Human Curation</div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Domain hint — keywords</div><div class="value"><ul class="plain"><li>diabetes mellitus</li><li>Machine Learning</li><li>Artificial Intelligence</li><li>Electrocardiography</li><li>Continuous Glucose Monitoring</li><li>Retinal Imaging</li><li>Eye Exam</li></ul></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="5.b"
+                data-score="0">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">0</span>
+        <ul><li>no recognized repository host detected</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="5.b" data-estimate="0">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-5.b" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-5.b" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-5.b" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-5.b" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c5-c">
+      <h3>5.c Well-governed</h3>
+      
+      <div class="practice">Implement a data governance model before data capture, including a repository that facilitates data stewardship in the future and governance that accounts for maintenance, terms, policy changes, and fairness.</div>
+      <details class="questions" open>
+        <summary>Questions (2)</summary>
+        <ul><li>Is a data governance plan specified? A rai:dataReleaseMaintenancePlan should include a link to the Data Management Plan (DMP).</li><li>Are terms of access specified? See schema.org conditionsOfAccess and license.</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Both are present.</div>
+        
+        <div><span class="n">1</span>Terms of access are not specified but there is a data governance plan.</div>
+        
+        <div><span class="n">0</span>Neither is present.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Governance / maintenance plan</div><div class="value"><details class="longtext"><summary><span class="head">The dataset gets released as static versions. This is the third version of the dataset and consists of data collected up through the end of the second year of the study, i.e. between July 19, 2023 and May 1st, 2025. There are plans to…</span> <span class="more">[398 chars — expand]</span></summary><span class="pre">The dataset gets released as static versions. This is the third version of the dataset and consists of data collected up through the end of the second year of the study, i.e. between July 19, 2023 and May 1st, 2025. There are plans to release new versions of the dataset approximately once a year with additional data from participants who have been enrolled since the last dataset version release.</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">DMP link extracted from the plan</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Governance plan present</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Terms of access (conditionsOfAccess)</div><div class="value"><span class="pre"><a href="https://fairhub.io/datasets/3/access">https://fairhub.io/datasets/3/access</a></span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">License</div><div class="value"><span class="pre"><a href="https://doi.org/10.5281/zenodo.17555036">https://doi.org/10.5281/zenodo.17555036</a></span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Terms of access present</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Responsible party</div><div class="value"><span class="pre">AI-READi Consortium; Aaron Lee, Department of Ophthalmology, University of Washington</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="5.c"
+                data-score="2">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">2</span>
+        <ul><li>governance/maintenance plan present</li><li>terms of access present</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="5.c" data-estimate="2">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-5.c" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-5.c" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-5.c" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-5.c" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c5-d">
+      <h3>5.d Associated</h3>
+      
+      <div class="practice">Document project-level connections between data components and elements in a machine-readable manner.</div>
+      <details class="questions" open>
+        <summary>Questions (1)</summary>
+        <ul><li>Will a future user be able to access all data components needed for the declared analysis, as an associated set that persists?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>All necessary components are accessible and associated in persistent machine-readable form (single-modality: sole component accessible and self-contained; multimodal: components linked machine-readably in an archived record, e.g. RO-Crate, Frictionless Data).</div>
+        
+        <div><span class="n">1</span>All components are accessible, and associations are durable, but they are only documented in human-readable prose (persists with the deposit, not machine-actionable).</div>
+        
+        <div><span class="n">0</span>Necessary components are not all accessible, or associations are only in a non-durable location (project page/README not archived with the data), or associations are absent.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Entities carrying at least one machine-readable provenance link</div><div class="value"><span class="na">— no denominator</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Sub-crates linked from the parent and present</div><div class="value"><strong>0</strong> of 9</div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">hasPart references on the root</div><div class="value"><strong>9</strong></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Evidence graphs (machine-derived association views)</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="5.d"
+                data-score="0">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">0</span>
+        <ul><li>only 0 of 9 referenced sub-crates are present</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="5.d" data-estimate="0">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-5.d" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-5.d" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-5.d" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-5.d" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+
+    <div class="section-note">
+      <label for="secnote-5">Section 5 comments</label>
+      <textarea id="secnote-5" data-secnote="5" rows="2"
+        placeholder="Context behind this section's scores — caveats, research-question dependence, evidence the extractor missed…"></textarea>
+    </div>
+  
+  <h2 id="sec6"><span>6. Computability</span>
+    <span class="axis-score" data-section="6"
+      ><span class="ax-progress"></span><span class="ax-pts"></span
+      ><span class="ax-na"></span></span>
+  </h2>
+
+    
+    <div class="criterion" id="c6-a">
+      <h3>6.a Standardized</h3>
+      
+      <div class="practice">Datasets adhere to established, documented standards, including metadata standards, and their adherence can be validated deterministically.</div>
+      <details class="questions" open>
+        <summary>Questions (2)</summary>
+        <ul><li>Can the adherence to standards, as described in 2.c, be validated deterministically?</li><li>Does a programmatic validator (e.g., script, CLI tool, or automated pipeline) exist to deterministically verify this adherence without human intervention?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>(Meta)data conforms to a declared and documented standard (e.g., RDF/JSON-LD, OWL, OME-TIFF, OME-NGFF, NWB, WFDB, DICOM, NIfTI, Parquet, CSVW, Frictionless Table Schema, JSON Schema, XSD, GA4GH Phenopackets). Deterministic programmatic validation exists for this standard (e.g., OMOP DQD, pyshacl, JSON Schema validators), and the dataset architecture allows these tools to execute successfully.</div>
+        
+        <div><span class="n">1</span>(Meta)data uses a recognized file format or container (e.g., base HDF5, raw NIfTI) or conforms to a text-based specification, but it lacks a machine-readable schema. Adherence cannot be deterministically validated without manual review or custom one-off scripts.</div>
+        
+        <div><span class="n">0</span>No declared or documented standard is used. Data structures are arbitrary, proprietary, or undocumented, making programmatic validation impossible.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">conformsTo declarations (metadata descriptor + root)</div><div class="value"><ul class="plain"><li><a href="https://w3id.org/ro/crate/1.2-DRAFT">https://w3id.org/ro/crate/1.2-DRAFT</a></li><li><a href="https://w3id.org/fairscape/profile/0.1">https://w3id.org/fairscape/profile/0.1</a></li></ul></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Recognized standards in @context / conformsTo</div><div class="value"><ul class="plain"><li>RO-Crate</li><li>schema.org</li></ul></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Deterministic validator known for the declared standards</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">RO-Crate profile — rocrate-validator / ro-crate-py</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Machine-readable schema entities</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">File formats present</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="6.a"
+                data-score="2">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">2</span>
+        <ul><li>declared standards: RO-Crate, schema.org</li><li>deterministic validator known: RO-Crate profile — rocrate-validator / ro-crate-py</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="6.a" data-estimate="2">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-6.a" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-6.a" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-6.a" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-6.a" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c6-b">
+      <h3>6.b Computationally accessible</h3>
+      
+      <div class="practice">Provide a mechanism to access data either through established exchange protocols or a well-documented API.</div>
+      <details class="questions" open>
+        <summary>Questions (3)</summary>
+        <ul><li>Is there a programmatic mechanism to access the data at scale (e.g., cloud object storage, standard API)?</li><li>Does the access mechanism utilize standard interoperability protocols (e.g., GA4GH DRS, HL7 FHIR APIs, other REST API endpoints)?</li><li>Are the endpoints, payloads, and authentication methods formally documented (e.g., via an OpenAPI/Swagger specification)?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>Programmatic access is provided via robust, formally documented APIs or standardized interoperability exchange protocols (e.g., cloud-native S3/GCS Buckets, GA4GH DRS URIs, HL7 FHIR Bulk Data Access). If the data is access-controlled, documentation explains how to gain access and the process is easily executed.</div>
+        
+        <div><span class="n">1</span>Programmatic access exists, but it creates friction for automated pipelines (poorly documented, non-machine-readable API documentation, custom web scraping, or non-standard authentication with human-in-the-loop steps).</div>
+        
+        <div><span class="n">0</span>Data is not accessible, or is accessible only via manual download, or requires direct human intervention to transfer. Also 0 if a user can access controlled-access data without permission, or a user cannot access the data despite having permission.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Datasets with a distribution link (contentUrl)</div><div class="value"><span class="na">— no denominator</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Datasets with a REMOTE distribution link (http/ftp/s3-style)</div><div class="value"><span class="na">— no denominator</span> <span class="detail">the rest are file:// paths inside the crate or embargoed placeholders</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Protocols used by distribution links</div><div class="value"><span class="na">none</span> <span class="detail">file = paths inside the crate; none = placeholder values such as &#39;Embargoed&#39;</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Distribution hosts</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Access instructions (conditionsOfAccess)</div><div class="value"><span class="pre"><a href="https://fairhub.io/datasets/3/access">https://fairhub.io/datasets/3/access</a></span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="6.b"
+                data-score="0">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">0</span>
+        <ul><li>no dataset has a remote distribution link — no programmatic access mechanism visible</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="6.b" data-estimate="0">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-6.b" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-6.b" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-6.b" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-6.b" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c6-c">
+      <h3>6.c Portable</h3>
+      
+      <div class="practice">Maximize portability across computational resources where possible. If data use requires specific resources, provide machine-readable documentation defining these resources.</div>
+      <details class="questions" open>
+        <summary>Questions (3)</summary>
+        <ul><li>Can the data be processed or utilized without being locked into a specific, proprietary, or localized compute environment?</li><li>Are software dependencies (libraries, OS versions) and hardware requirements (GPUs, memory) explicitly documented?</li><li>Is this documentation provided in a machine-executable format (e.g., containers, workflow languages) that automates environment setup?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>The data requires no specialized compute environment; OR all required resources and software dependencies are defined using standard, machine-executable deployment formats (containers, Conda environment.yml, or workflow languages such as CWL/WDL/Nextflow) so the environment can be programmatically spun up on different infrastructures.</div>
+        
+        <div><span class="n">1</span>Hardware constraints or software dependencies are documented in plain text (e.g., a README listing required Python versions or RAM limits), but they are not machine-executable.</div>
+        
+        <div><span class="n">0</span>Compute requirements and software dependencies are undocumented, or the data is tightly coupled to a proprietary system, unshareable internal cluster, or hardcoded local file paths.</div>
+        
+      </div>
+      
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Files in open/common formats</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Files in proprietary vendor formats</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Computations with a container declared (usedContainer)</div><div class="value"><span class="na">— no denominator</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Example computation (environment description)</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Software descriptions</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate none">No automated estimate — this criterion needs
+        human judgment.</div>
+      
+
+      <div class="grade" data-criterion="6.c">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-6.c" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-6.c" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-6.c" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-6.c" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+    <div class="criterion" id="c6-d">
+      <h3>6.d Contextualized</h3>
+      
+      <div class="practice">Include any considerations regarding splits of the data, including any information withheld at any point of data collection and processing. Provide examples of data components to aid understanding of their general structure and content.</div>
+      <details class="questions" open>
+        <summary>Questions (3)</summary>
+        <ul><li>Are machine-learning data splits (train/test/validation) explicitly defined, or is the rationale for a contiguous dataset documented?</li><li>Is any withheld information (such as de-identified/redacted fields, censored variables, or blinded evaluation holdouts) clearly described?</li><li>Are representative examples or synthetic datasets provided that strictly mirror the structure of the full dataset?</li></ul>
+      </details>
+
+      <div class="scores">
+        
+        <div><span class="n">2</span>The dataset composition is transparent. Any predefined splits are explicitly defined (including stratification strategies or random seeds), OR the dataset is explicitly documented as not requiring splits. Redacted, censored, or blinded data is clearly detailed. Crucially, machine-readable example data (a synthetic set or representative subset) is provided.</div>
+        
+        <div><span class="n">1</span>Context is provided but incomplete (splits mentioned without methodology; withheld data noted vaguely; or examples provided in a non-actionable format such as a PDF screenshot).</div>
+        
+        <div><span class="n">0</span>No context is provided regarding splits, withheld information, or structural examples.</div>
+        
+      </div>
+      <div class="rubric-note">"Splits" is N/A where the dataset has no defined splits; the withholding and example components still apply. Score on the applicable elements.</div>
+      
+
+      <div class="evidence">
+        
+        
+        <div class="item">
+          <div class="label">Datasets with split-like names (train/test/validation/holdout)</div><div class="value"><span class="no">✗ No</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Split-named datasets</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Sampling strategies (d4d:samplingStrategies)</div><div class="value"><span class="na">not provided</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Withheld / missing information</div><div class="value"><details class="longtext"><summary><span class="head">Yes, not all modalities are available for all participants. Some participants elected not to participate in some study elements. In a few cases, the data collection device did not have any stored results or was returned too late to…</span> <span class="more">[394 chars — expand]</span></summary><span class="pre">Yes, not all modalities are available for all participants. Some participants elected not to participate in some study elements. In a few cases, the data collection device did not have any stored results or was returned too late to retrieve the results (e.g. battery died, data was lost). In a few cases, there may have been a data collision at some point in the process and data has been lost.</span></details></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Preprocessing protocol (rai:dataPreprocessingProtocol)</div><div class="value"><details class="longtext"><summary><span class="head">
+There were several quality control measures used at the time of data entry/acquisition. For example, clinical data outside of expected min/max ranges were flagged in REDCap, which was visible in reports viewed by clinical research…</span> <span class="more">[1,530 chars — expand]</span></summary><span class="pre">
+There were several quality control measures used at the time of data entry/acquisition. For example, clinical data outside of expected min/max ranges were flagged in REDCap, which was visible in reports viewed by clinical research coordinators (CRCs) and Data Managers. Using these REDCap reports as guides, Data Managers and CRCs examined participant records and determined if an error was likely. Data were checked for the following and edited if errors were detected:
+
+	i. Credibility, based on range checks to determine if all responses fall within a prespecified reasonable range
+ ii. Incorrect flow through prescribed skip patterns
+	iii. Missing data that can be directly filed from other portions of an individual� s record
+	iv. The omission and/or duplication of records
+
+Editing was only done under the guidance and approval of the site PI. If corrected data was available from elsewhere in the respondent�s answers, the error was corrected. If there was no logical or appropriate way to correct the data, the Data site PI reviewed the values and made decisions about whether those values should be removed from the data.
+
+Once data +were sent from each of the study sites to the central project team, additional processing steps were conducted in preparation for dissemination. For example, all data were mapped to standardized terminologies when possible, such as the Observational Medical Outcomes Partnership (OMOP) Common Data Model, a common data model for observational health data, …[truncated, 1762 chars total]</span></details></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Example / synthetic dataset provided</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Structural example — schema entity (documents exact record structure)</div><div class="value"><span class="na">none found</span></div>
+        </div>
+        
+      </div>
+
+      
+      <div class="estimate">
+        <button class="use-est" data-criterion="6.d"
+                data-score="1">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">1</span>
+        <ul><li>some context present but incomplete (example data or withheld-information description missing)</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
+      
+
+      <div class="grade" data-criterion="6.d" data-estimate="1">
+        <strong>Score:</strong>
+        
+          <label><input type="radio" name="score-6.d" value="2"> 2</label>
+        
+          <label><input type="radio" name="score-6.d" value="1"> 1</label>
+        
+          <label><input type="radio" name="score-6.d" value="0"> 0</label>
+        
+          <label><input type="radio" name="score-6.d" value="N/A"> N/A</label>
+        
+        <input type="text" placeholder="reviewer notes…">
+      </div>
+    </div>
+    
+
+    <div class="section-note">
+      <label for="secnote-6">Section 6 comments</label>
+      <textarea id="secnote-6" data-secnote="6" rows="2"
+        placeholder="Context behind this section's scores — caveats, research-question dependence, evidence the extractor missed…"></textarea>
+    </div>
+  
+
+  <h2 id="summary"><span>Score summary</span></h2>
+  <div class="summary-grid">
+    <div>
+      <table class="sumtable">
+        <thead>
+          <tr><th>Section</th><th class="num">Graded</th>
+              <th class="num">Points</th><th class="num">%</th>
+              <th class="num">N/A</th></tr>
+        </thead>
+        <tbody>
+          
+          <tr data-sumrow="0">
+            <td><a href="#sec0">0. FAIRness</a> <span class="badge">Gating</span></td>
+            <td class="num sr-graded"></td><td class="num sr-pts"></td>
+            <td class="num sr-pct"></td><td class="num sr-na"></td>
+          </tr>
+          
+          <tr data-sumrow="1">
+            <td><a href="#sec1">1. Provenance</a> <span class="badge">Gating</span></td>
+            <td class="num sr-graded"></td><td class="num sr-pts"></td>
+            <td class="num sr-pct"></td><td class="num sr-na"></td>
+          </tr>
+          
+          <tr data-sumrow="2">
+            <td><a href="#sec2">2. Characterization</a></td>
+            <td class="num sr-graded"></td><td class="num sr-pts"></td>
+            <td class="num sr-pct"></td><td class="num sr-na"></td>
+          </tr>
+          
+          <tr data-sumrow="3">
+            <td><a href="#sec3">3. Pre-model Explainability</a></td>
+            <td class="num sr-graded"></td><td class="num sr-pts"></td>
+            <td class="num sr-pct"></td><td class="num sr-na"></td>
+          </tr>
+          
+          <tr data-sumrow="4">
+            <td><a href="#sec4">4. Ethics</a> <span class="badge">Gating</span></td>
+            <td class="num sr-graded"></td><td class="num sr-pts"></td>
+            <td class="num sr-pct"></td><td class="num sr-na"></td>
+          </tr>
+          
+          <tr data-sumrow="5">
+            <td><a href="#sec5">5. Sustainability</a></td>
+            <td class="num sr-graded"></td><td class="num sr-pts"></td>
+            <td class="num sr-pct"></td><td class="num sr-na"></td>
+          </tr>
+          
+          <tr data-sumrow="6">
+            <td><a href="#sec6">6. Computability</a></td>
+            <td class="num sr-graded"></td><td class="num sr-pts"></td>
+            <td class="num sr-pct"></td><td class="num sr-na"></td>
+          </tr>
+          
+        </tbody>
+        <tfoot>
+          <tr data-sumrow="total">
+            <td>Total</td>
+            <td class="num sr-graded"></td><td class="num sr-pts"></td>
+            <td class="num sr-pct"></td><td class="num sr-na"></td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="sum-note">Points and percentages cover graded criteria only;
+        N/A answers are excluded from the denominator. Sections not yet graded
+        plot at 0 on the chart.</div>
+    </div>
+    <div class="radar-box">
+      <svg id="radar" width="320" height="320" viewBox="0 0 320 320"
+           role="img" aria-label="Per-section score radar chart"></svg>
+      <div class="radar-legend">
+        <span class="swatch"></span>your scores &nbsp;
+        <span class="swatch est"></span>unverified automated estimates
+      </div>
+    </div>
+  </div>
+
+  <div class="exportbar">
+    <button id="export">Copy scores as JSON</button>
+    <button id="reset" class="next-btn" type="button">Reset all scores</button>
+    <span class="status" id="export-status"></span>
+  </div>
+</div>
+
+<script>
+var grades = document.querySelectorAll('.grade');
+var secNotes = document.querySelectorAll('textarea[data-secnote]');
+
+// per-axis rollups, keyed by the criterion id prefix ("0.a" -> "0") — the same
+// grouping the machine grader uses (rubric_eval._aggregate)
+var axes = {};
+document.querySelectorAll('.axis-score').forEach(function (el) {
+  axes[el.dataset.section] = {
+    el: el,
+    stat: document.querySelector('[data-secstat="' + el.dataset.section + '"]'),
+    row: document.querySelector('[data-sumrow="' + el.dataset.section + '"]'),
+    total: 0, estPts: 0, estMax: 0
+  };
+});
+var axisOrder = Object.keys(axes);  // template order
+var chips = {};
+document.querySelectorAll('.chip[data-chip]').forEach(function (el) {
+  chips[el.dataset.chip] = el;
+});
+grades.forEach(function (g) {
+  var a = axes[g.dataset.criterion.split('.')[0]];
+  if (!a) return;
+  a.total += 1;
+  var e = g.dataset.estimate;
+  if (e !== undefined && e !== 'N/A') { a.estPts += +e; a.estMax += 2; }
+});
+
+function fillRow(row, r) {
+  if (!row) return;
+  row.querySelector('.sr-graded').textContent = r.graded + ' / ' + r.total;
+  row.querySelector('.sr-pts').textContent =
+    r.max ? r.pts + ' / ' + r.max : '—';
+  row.querySelector('.sr-pct').textContent =
+    r.max ? Math.round(100 * r.pts / r.max) + '%' : '—';
+  row.querySelector('.sr-na').textContent = r.na || '';
+}
+
+// N/A counts as graded but leaves the axis denominator alone, matching the
+// global bar
+function renderAxis(a) {
+  a.el.querySelector('.ax-progress').textContent =
+    a.graded + ' of ' + a.total + ' graded';
+  a.el.querySelector('.ax-pts').textContent = a.max
+    ? ' · ' + a.pts + ' / ' + a.max + ' pts (' +
+      Math.round(100 * a.pts / a.max) + '%)'
+    : '';
+  a.el.querySelector('.ax-na').textContent = a.na ? ' · ' + a.na + ' N/A' : '';
+  a.el.classList.toggle('complete', a.graded === a.total);
+  if (a.stat) {
+    a.stat.textContent = (a.total - a.graded)
+      ? (a.total - a.graded) + ' left' +
+        (a.max ? ' · ' + a.pts + '/' + a.max + ' pts so far' : '')
+      : 'done · ' + a.pts + ' / ' + a.max + ' pts' +
+        (a.na ? ' · ' + a.na + ' N/A' : '');
+  }
+  fillRow(a.row, a);
+}
+
+function renderChip(g, checked) {
+  var chip = chips[g.dataset.criterion];
+  if (!chip) return;
+  chip.className = 'chip' + (checked
+    ? ' ' + (checked.value === 'N/A' ? 'sna' : 's' + checked.value) : '');
+  chip.title = chip.title.replace(/ — [^—]*$/, '') +
+    ' — ' + (checked ? 'scored ' + checked.value : 'ungraded');
+}
+
+// ---- radar ------------------------------------------------------------
+var RADAR = { cx: 160, cy: 160, r: 108 };
+
+function radarPoint(i, frac) {
+  var ang = -Math.PI / 2 + (2 * Math.PI * i) / axisOrder.length;
+  return (RADAR.cx + RADAR.r * frac * Math.cos(ang)).toFixed(1) + ',' +
+         (RADAR.cy + RADAR.r * frac * Math.sin(ang)).toFixed(1);
+}
+
+function radarPoly(fracs, attrs) {
+  return '<polygon points="' +
+    fracs.map(function (f, i) { return radarPoint(i, f); }).join(' ') +
+    '" ' + attrs + '/>';
+}
+
+function drawRadar() {
+  var svg = ['<g>'];
+  [0.25, 0.5, 0.75, 1].forEach(function (ring) {
+    svg.push(radarPoly(axisOrder.map(function () { return ring; }),
+      'fill="none" stroke="#d9d9d9" stroke-width="' +
+      (ring === 1 ? 1.2 : 0.6) + '"'));
+  });
+  axisOrder.forEach(function (k, i) {
+    svg.push('<line x1="' + RADAR.cx + '" y1="' + RADAR.cy + '" ' +
+      'x2="' + radarPoint(i, 1).replace(',', '" y2="') +
+      '" stroke="#ececea" stroke-width="0.6"/>');
+    var pos = radarPoint(i, 1.13).split(',');
+    svg.push('<text x="' + pos[0] + '" y="' + pos[1] + '" ' +
+      'text-anchor="middle" dominant-baseline="middle" ' +
+      'font-size="12" font-weight="600" fill="#6b6b6b">' + k + '</text>');
+  });
+  var est = axisOrder.map(function (k) {
+    return axes[k].estMax ? axes[k].estPts / axes[k].estMax : 0;
+  });
+  if (est.some(function (f) { return f > 0; })) {
+    svg.push(radarPoly(est, 'fill="none" stroke="#6b6b6b" ' +
+      'stroke-width="1.4" stroke-dasharray="5 4"'));
+  }
+  var human = axisOrder.map(function (k) {
+    return axes[k].max ? axes[k].pts / axes[k].max : 0;
+  });
+  if (human.some(function (f) { return f > 0; })) {
+    svg.push(radarPoly(human, 'fill="rgba(180,83,9,0.12)" ' +
+      'stroke="#b45309" stroke-width="1.8"'));
+    human.forEach(function (f, i) {
+      if (!axes[axisOrder[i]].max) return;
+      var pos = radarPoint(i, f).split(',');
+      svg.push('<circle cx="' + pos[0] + '" cy="' + pos[1] +
+        '" r="2.6" fill="#b45309"/>');
+    });
+  }
+  svg.push('</g>');
+  document.getElementById('radar').innerHTML = svg.join('');
+}
+
+function updateSummary() {
+  var graded = 0, pts = 0, max = 0, na = 0;
+  Object.keys(axes).forEach(function (k) {
+    var a = axes[k];
+    a.graded = 0; a.pts = 0; a.max = 0; a.na = 0;
+  });
+  grades.forEach(function (g) {
+    var checked = g.querySelector('input:checked');
+    renderChip(g, checked);
+    if (!checked) return;
+    var a = axes[g.dataset.criterion.split('.')[0]];
+    graded += 1;
+    if (a) a.graded += 1;
+    if (checked.value === 'N/A') { na += 1; if (a) a.na += 1; return; }
+    pts += +checked.value; max += 2;
+    if (a) { a.pts += +checked.value; a.max += 2; }
+  });
+  document.getElementById('sum-progress').textContent =
+    'Graded ' + graded + ' of ' + grades.length;
+  document.getElementById('sum-fill').style.width =
+    (100 * graded / grades.length) + '%';
+  document.getElementById('sum-score').textContent = max
+    ? pts + ' / ' + max + ' pts (' + Math.round(100 * pts / max) + '%) on graded'
+    : '';
+  Object.keys(axes).forEach(function (k) { renderAxis(axes[k]); });
+  fillRow(document.querySelector('[data-sumrow="total"]'),
+    { graded: graded, total: grades.length, pts: pts, max: max, na: na });
+  drawRadar();
+}
+
+// ---- local autosave ----------------------------------------------------
+// keyed by crate id so parallel reviews of different crates don't collide
+var STORE_KEY = 'ai-ready-review:' + "ark:59853/rocrate-b2ai-aireadi-release-3-0-0";
+
+function saveState() {
+  var state = { scores: {}, section_notes: {} };
+  grades.forEach(function (g) {
+    var checked = g.querySelector('input:checked');
+    var notes = g.querySelector('input[type=text]').value;
+    if (checked || notes) {
+      state.scores[g.dataset.criterion] =
+        { score: checked ? checked.value : null, notes: notes || null };
+    }
+  });
+  secNotes.forEach(function (t) {
+    if (t.value) state.section_notes[t.dataset.secnote] = t.value;
+  });
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  catch (err) { /* private mode / quota — grading still works, just unsaved */ }
+}
+
+function restoreState() {
+  var raw;
+  try { raw = localStorage.getItem(STORE_KEY); } catch (err) { return; }
+  if (!raw) return;
+  var state = JSON.parse(raw);
+  var n = 0;
+  grades.forEach(function (g) {
+    var saved = (state.scores || {})[g.dataset.criterion];
+    if (!saved) return;
+    if (saved.score) {
+      var radio = g.querySelector('input[value="' + saved.score + '"]');
+      if (radio) { radio.checked = true; n += 1; }
+    }
+    if (saved.notes) g.querySelector('input[type=text]').value = saved.notes;
+  });
+  secNotes.forEach(function (t) {
+    var v = (state.section_notes || {})[t.dataset.secnote];
+    if (v) t.value = v;
+  });
+  if (n) {
+    document.getElementById('export-status').textContent =
+      'restored ' + n + ' saved scores from this browser';
+  }
+}
+
+var saveTimer;
+document.addEventListener('input', function (e) {
+  if (e.target.type === 'text' || e.target.tagName === 'TEXTAREA') {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveState, 400);
+  }
+});
+document.addEventListener('change', function (e) {
+  if (e.target.type === 'radio') { updateSummary(); saveState(); }
+});
+
+document.querySelectorAll('.use-est').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var radio = document.querySelector(
+      'input[name="score-' + btn.dataset.criterion + '"][value="' +
+      btn.dataset.score + '"]');
+    if (radio) { radio.checked = true; updateSummary(); saveState(); }
+  });
+});
+
+document.getElementById('next-ungraded').addEventListener('click', function () {
+  for (var i = 0; i < grades.length; i++) {
+    if (!grades[i].querySelector('input:checked')) {
+      grades[i].closest('.criterion').scrollIntoView(
+        { behavior: 'smooth', block: 'center' });
+      return;
+    }
+  }
+  document.getElementById('summary').scrollIntoView({ behavior: 'smooth' });
+});
+
+document.getElementById('reset').addEventListener('click', function () {
+  if (!confirm('Clear every score, note, and section comment?')) return;
+  grades.forEach(function (g) {
+    var checked = g.querySelector('input:checked');
+    if (checked) checked.checked = false;
+    g.querySelector('input[type=text]').value = '';
+  });
+  secNotes.forEach(function (t) { t.value = ''; });
+  try { localStorage.removeItem(STORE_KEY); } catch (err) { }
+  document.getElementById('export-status').textContent = 'cleared';
+  updateSummary();
+});
+
+restoreState();
+updateSummary();
+
+document.getElementById('export').addEventListener('click', function () {
+  var out = { crate: "ark:59853/rocrate-b2ai-aireadi-release-3-0-0", scores: {},
+              section_notes: {}, sections: {} };
+  grades.forEach(function (g) {
+    var id = g.dataset.criterion;
+    var checked = g.querySelector('input:checked');
+    out.scores[id] = {
+      score: checked ? checked.value : null,
+      notes: g.querySelector('input[type=text]').value || null,
+      estimate: g.dataset.estimate !== undefined ? g.dataset.estimate : null
+    };
+  });
+  secNotes.forEach(function (t) {
+    out.section_notes[t.dataset.secnote] = t.value || null;
+  });
+  Object.keys(axes).forEach(function (k) {
+    var a = axes[k];
+    out.sections[k] = { graded: a.graded, total: a.total, points: a.pts,
+                        max_points: a.max, na: a.na };
+  });
+  var text = JSON.stringify(out, null, 2);
+  navigator.clipboard.writeText(text).then(function () {
+    document.getElementById('export-status').textContent =
+      'copied ' + Object.keys(out.scores).length + ' criteria to clipboard';
+  }, function () {
+    document.getElementById('export-status').textContent =
+      'clipboard blocked — JSON logged to console';
+    console.log(text);
+  });
+});
+</script>
+
+</body>
+</html>
