@@ -1,6 +1,6 @@
-# fairscape-grader
+# AIreadiness-grader
 
-This repo is the **FAIRSCAPE wizard**: a suite of skills that walks a non-expert
+This repo is the **AIReadiness wizard**: a suite of skills that walks a non-expert
 user through documenting a research pipeline as a
 [FAIRSCAPE](https://fairscape.github.io/) RO-Crate, plus a **grader** that scores
 that crate against the 28 AI-Ready rubrics.
