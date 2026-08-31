@@ -8,8 +8,6 @@ version = "0.3.0"
 description = "Helper module for the FAIRSCAPE RO-Crate wizard Claude Code skill bundle"
 requires-python = ">=3.10"
 dependencies = [
-    "fairscape-models",
-    "fairscape-cli>=1.2.9",
     "pydantic-ai>=0.0.14",
     "pyyaml",
     "jinja2",
