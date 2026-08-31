@@ -9,6 +9,7 @@ paths (agentic + `fairscape-grade`) run on this pipeline; the old
 `src/aireadiness_evidence/` — extraction → transformation → presentation from a
 FAIRSCAPE RO-Crate, matching the per-criterion Extractor / Transformation /
 Presented specs in *Rubric for Human Review of AI.docx* v1.0. No scoring.
+(Since updated to rubric v1.5 — see the migration section at the end.)
 
 | Piece | What it does |
 | --- | --- |
@@ -141,3 +142,69 @@ satisfy. Worth reconciling in `sections/fairness.py`.
 - The rubric docx itself is untracked — commit it next to rubric_defs.yaml.
 - `d4d:samplingStrategies` (6.d) has no live example in CM4AI; untested
   against real data.
+
+## Rubric v1.5 migration (2026-08-31)
+
+The rubric doc moved from v1.0 (2026-08-14) to v1.5 (2026-08-29): "Rubric for
+Human Review of AI-readiness Evaluation Criteria v1.5 2026-08-29.docx" (in the
+repo root, next to the retired v1.0 "Rubric for Human Review of AI.docx").
+Everything downstream of `rubric_defs.yaml` was updated:
+
+**Rubric text** — `rubric_defs.yaml` retranscribed for all 28 criteria. The
+substantive rule changes: 0.a drops the re3data/FAIRsharing question for the
+glossary's "sustainable repository" definition (S3/GCS/Drive/Box excluded) and
+demands version-specific PID resolution; 0.d gains a middle score (license
+present but not machine-readable); 1.b adds provenance-gap/chain-of-custody
+disclosure; 1.c accepts provider URIs for proprietary commercial software; 2.b
+no longer blanket-N/As non-tabular data (missingness is scored in modality
+terms); 2.c scores per format class; 2.d adds demographic-representativeness
+and clinical site-selection questions ("state-vs-control" → "case-vs-control");
+2.e wants a link to the specific QC protocol/software; 3.a must not re-score
+2.d/3.b; 3.c hashes must live in the metadata; 4.a splits
+retrospective-waiver vs prospective-consent-covering-AI/ML; 4.b adds PIA +
+periodic re-identification reassessment; 4.c rewritten around
+modality-specific prohibitions (voice/genomes/face/geolocation); 4.d's 0-rule
+absorbs 6.b's old enforcement clause; 5.a narrows to raw data + retention
+commitment; 5.b adds the multi-domain generalist branch; 5.c drops
+terms-of-access and scores only DMP linkage/depth; 6.a is conditioned on 2.c.
+
+**Scoring methodology (new in v1.5, implemented in `rubric_eval._aggregate`
+and `agentic_report.build_report`)** —
+- Domain score = points / max over applicable (non-N/A) criteria; graders may
+  emit `"N/A"` (never on a gating criterion); the output schema, RubricScore
+  model, and both HTML pages accept it.
+- Overall score = **unweighted average of domain percentages**
+  (`overall_score`), reported alongside the raw point percentage.
+- Gates: FAIRness 0.a = 2 + rest > 0, Provenance all > 0, Standards 2.c > 0,
+  Ethics all > 0. Encoded as `gate_min` per criterion in the yaml, evaluated
+  independently, and a failure marks domain + overall "Gating FAIL" (score
+  still computed).
+- Dependency caps 1.b ≤ 1.a and 6.a ≤ 2.c (`depends_on` in the yaml), applied
+  at aggregation; capped rubrics keep `uncapped_score` + `capped_by`. The
+  human-review page warns live when a reviewer violates a cap.
+
+**Extractors** — new evidence: machine-readable-license flag (0.d),
+gap-disclosure regex (1.b), provider-site software bucket (1.c),
+representativeness / case-control / clinical-site regexes (2.d), QC link list
+(2.e), AI/ML-consent + waiver flags (4.a), PIA + reassessment flags (4.b),
+high-risk-modality flags (4.c), unmanaged-storage detection (0.a, 5.a via
+`known.NON_SUSTAINABLE_HOSTS`), stewardship-language flag (5.c), vocab-binding
+flag (6.a). Estimates retuned to the v1.5 rules — notably 2.b no longer
+auto-N/As, 4.c and 5.c became human calls above 0, and 1.c defers to the
+reviewer when provider-site URIs would decide the score.
+
+**Not yet done** —
+- `rubrics/ai-ready/human/Section-*.md` (the merged-question human
+  questionnaire) still reflects v1.0; it merges criteria in ways v1.5's gates
+  and caps complicate. Owner call whether to regenerate it or retire it in
+  favor of the review HTML.
+- The v1.5 docx ("Rubric for Human Review of AI-readiness Evaluation Criteria
+  v1.5 2026-08-29.docx") is untracked — commit it next to the tracked v1.0
+  docx (or replace it).
+- Any previously generated review/presentation outputs (they were dropped
+  from the repo at the project rename) reflect v1.0 and should be re-run if
+  resurrected.
+- 0.a "resolves to a specific version of the dataset" is asserted, not
+  verified (would need content-negotiation on the PID landing page).
+- 4.d enforcement (controlled data actually blocked without auth) is not
+  probed.

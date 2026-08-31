@@ -15,7 +15,7 @@ from dataclasses import dataclass
 
 from .crate import CrateBundle, as_list
 from .network import Network
-from .rubric import load_rubric
+from .rubric import load_rubric, rubric_title
 from .sections import CRITERIA
 
 
@@ -65,14 +65,20 @@ def build_presentation(crate_dir, network=True, progress=None):
         for opt in ("notes", "gating_note"):
             if defs.get(opt):
                 entry[opt] = defs[opt].strip()
+        if defs.get("gate_min"):
+            entry["gate_min"] = defs["gate_min"]
+        if defs.get("depends_on"):
+            entry["depends_on"] = defs["depends_on"]
         if error:
             entry["error"] = error
         sections[int(criterion.id.split(".")[0])]["criteria"].append(entry)
 
     stats = bundle.stats
     return {
-        "rubric": "Rubric for Human Review of AI-readiness Evaluation Criteria, "
-                  "v1.0 (2026-08-14)",
+        "rubric": rubric_title(rubric),
+        "rubric_version": rubric["version"],
+        "glossary": rubric["glossary"],
+        "methodology": rubric["methodology"],
         "generated": datetime.datetime.now(datetime.timezone.utc)
                      .strftime("%Y-%m-%d %H:%M UTC"),
         "network_checks": network,

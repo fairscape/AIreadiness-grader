@@ -56,7 +56,8 @@ SPECIALIST_REPOS = {
     "addgene.org": "Addgene (plasmids)",
 }
 
-# Generalist FAIR repositories.
+# Generalist FAIR repositories (includes the NIH GREI participants, which the
+# v1.5 rubric glossary names as examples of sustainable repositories).
 GENERALIST_REPOS = {
     "dataverse": "Dataverse",
     "zenodo.org": "Zenodo",
@@ -65,6 +66,24 @@ GENERALIST_REPOS = {
     "osf.io": "OSF",
     "fairhub.io": "FAIRhub",
     "dataverse.lib.virginia.edu": "University of Virginia Dataverse (LibraData)",
+    "data.mendeley.com": "Mendeley Data",
+    "vivli.org": "Vivli",
+    "icpsr.umich.edu": "ICPSR",
+    "ddbj.nig.ac.jp": "DDBJ",
+}
+
+# Purely local or unmanaged storage the v1.5 glossary explicitly EXCLUDES from
+# "sustainable repository" (0.a, 1.c, 5.a): departmental servers, cloud
+# buckets, and consumer file sharing.
+NON_SUSTAINABLE_HOSTS = {
+    "amazonaws.com": "S3 bucket (unmanaged cloud storage)",
+    "storage.googleapis.com": "GCS bucket (unmanaged cloud storage)",
+    "storage.cloud.google.com": "GCS bucket (unmanaged cloud storage)",
+    "drive.google.com": "Google Drive",
+    "docs.google.com": "Google Drive/Docs",
+    "box.com": "Box",
+    "dropbox.com": "Dropbox",
+    "onedrive": "OneDrive",
 }
 
 # Hosts that count as sustainable software archives (1.c score 2).

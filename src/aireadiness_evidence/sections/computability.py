@@ -4,6 +4,7 @@ from .. import evidence as ev
 from ..crate import as_list, ids_of
 from ..known import (
     KNOWN_VALIDATORS, STANDARD_NAMESPACES, classify_format, match_host,
+    summarize_vocab_hits,
 )
 
 # --- 6.a Standardized ------------------------------------------------------
@@ -15,6 +16,7 @@ def extract_6a(ctx):
         "root_conforms": ids_of(ctx.bundle.root.get("conformsTo")),
         "context": ctx.bundle.context,
         "schema_total": ctx.bundle.stats.schema_total,
+        "vocab_hits": dict(ctx.bundle.stats.vocab_hits),
         "formats": dict(ctx.bundle.stats.formats),
     }
 
@@ -41,7 +43,8 @@ def transform_6a(ctx, raw):
             validators[hit[1]] = value
 
     return {**raw, "conforms": conforms, "standards": standards,
-            "validators": validators}
+            "validators": validators,
+            "vocab_found": summarize_vocab_hits(raw["vocab_hits"])}
 
 
 def present_6a(facts):
@@ -55,6 +58,11 @@ def present_6a(facts):
                        detail="; ".join(sorted(facts["validators"])) or
                               "none matched — an unlisted validator may still exist")),
         ev.count("Machine-readable schema entities", facts["schema_total"]),
+        ev.sub(ev.flag("Populated standard vocabulary bindings (2.c evidence — "
+                       "without them 6.a caps at 1)",
+                       bool(facts["vocab_found"]),
+                       detail=", ".join(f"{k} ({n})" for k, n in
+                                        facts["vocab_found"].items()))),
         ev.listing("File formats present",
                    [f"{f}: {n}" for f, n in
                     sorted(facts["formats"].items(), key=lambda kv: -kv[1])]),
@@ -62,16 +70,26 @@ def present_6a(facts):
 
 
 def estimate_6a(facts):
-    if facts["validators"]:
+    if facts["validators"] and facts["vocab_found"]:
         return ev.estimate("2", "declared standards: "
                            + ", ".join(sorted(facts["standards"]) or
                                        sorted(facts["validators"])),
                            "deterministic validator known: "
-                           + "; ".join(sorted(facts["validators"])))
-    if facts["standards"] or facts["conforms"]:
-        return ev.estimate("1", "standards declared but no deterministic "
-                                "validator matched (an unlisted one may "
-                                "exist)")
+                           + "; ".join(sorted(facts["validators"])),
+                           "populated vocabulary bindings present "
+                           "(final score is capped at 2.c's score — rule "
+                           "6.a ≤ 2.c)")
+    if facts["validators"] or facts["standards"] or facts["conforms"] \
+            or facts["schema_total"]:
+        return ev.estimate("1",
+                           "formal schema/standard declared, so structural "
+                           "validation is possible",
+                           "no populated standard-vocabulary bindings — "
+                           "semantic conformance cannot be deterministically "
+                           "validated (v1.5 1-rule)"
+                           if not facts["vocab_found"] else
+                           "no deterministic validator matched (an unlisted "
+                           "one may exist)")
     return ev.estimate("0", "no declared standard in conformsTo or @context")
 
 

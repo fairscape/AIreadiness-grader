@@ -11,7 +11,7 @@ The grader (`aireadiness_wizard/grade.py`, the `fairscape-grade` CLI) normally d
 
 Before invoking the evidence dump or asking about subset selection, give them one paragraph of context so the rest of the phase isn't opaque:
 
-> *"This is the **AI-Ready scoring** phase. The 28 rubrics are transcribed from "Rubric for Human Review of AI.docx" v1.0 into `src/aireadiness_evidence/rubric_defs.yaml` and cover seven criteria: FAIRness (`0.x`), Provenance (`1.x`), Characterization (`2.x`), Pre-model Explainability (`3.x`), Ethics (`4.x`), Sustainability (`5.x`), Computability (`6.x`). Each rubric has three possible scores: 0 (Absent), 1 (Partial), or 2 (Substantive), with rules that say literally what evidence justifies each level (a few rubrics define only 0 and 2). Max total is 56 (2 × 28).*
+> *"This is the **AI-Ready scoring** phase. The 28 rubrics are transcribed from "Rubric for Human Review of AI-readiness Evaluation Criteria" v1.5 (2026-08-29) into `src/aireadiness_evidence/rubric_defs.yaml` and cover seven domains: FAIRness (`0.x`), Provenance (`1.x`), Characterization (`2.x`), Pre-model Explainability (`3.x`), Ethics (`4.x`), Sustainability (`5.x`), Computability (`6.x`). Each rubric scores 0 (Absent), 1 (Partial), or 2 (Substantive), with rules that say literally what evidence justifies each level; a non-gating rubric may also be N/A when every element is inapplicable (N/A leaves the denominator). Max total is 56 points (2 × 28) minus any N/A. The **overall score** is the unweighted average of the seven domain percentages. Four gates are evaluated independently — FAIRness (0.a must be 2, the rest above 0), Provenance (all above 0), Standards (2.c above 0), Ethics (all above 0) — and a failed gate marks the result "Gating FAIL" (the score is still computed). Two dependency rules cap scores at aggregation: 1.b ≤ 1.a and 6.a ≤ 2.c.*
 >
 > *The scoring is two-step. First a deterministic Python pass (`python -m aireadiness_wizard.rubric_eval extract-evidence`) walks the crate and dumps the relevant facts per rubric as typed evidence items — identifiers, license, schemas, format coverage, etc. — into a `grading/` folder. No LLM involved; just structured reading (plus optional URL/registry checks — pass `--no-network` to skip them). Then I fan the rubrics out to parallel subagents — one per rubric, all dispatched in a single message — and each subagent sees **only** its rubric JSON and its evidence JSON, nothing else. It writes its `score.json` and returns. After all rubrics are scored, a small Python aggregator computes the total and a per-criterion breakdown.*
 >
@@ -71,12 +71,12 @@ EVIDENCE_JSON: <abs path to grading/<id>-<slug>/evidence.json>
 OUTPUT: <abs path to grading/<id>-<slug>/score.json>
 
 Procedure:
-1. Read RUBRIC_JSON. Its `scoring` block lists a rule per achievable score (most rubrics define 0, 1, and 2; a few define only 0 and 2). Restate each rule to yourself literally before deciding.
+1. Read RUBRIC_JSON. Its `scoring` block lists a rule per achievable score. Restate each rule to yourself literally before deciding. If the rubric carries a `gate_min`, it is a gating criterion (N/A is not permitted on it). If it carries `depends_on`, score it on its own evidence anyway — the dependency cap is applied downstream at aggregation, not by you.
 2. Read EVIDENCE_JSON. Treat it as the complete factual basis. Do not assume any field that is not present. Do not invent @ids or strings. Items are typed ({label, kind, value}; the `evidence_kinds` map explains the kinds; `sub: true` items are derived checks on the primary item above them; a bool value of null means the check was inconclusive or not performed).
-3. Pick the single rule whose conditions match the evidence — no averaging, no halves. If the rule for score 0 says "Absent" and the required field is missing, choose 0.
+3. Pick the single rule whose conditions match the evidence — no averaging, no halves. If the rule for score 0 says "Absent" and the required field is missing, choose 0. Score "N/A" only when the rubric's notes define an N/A condition and EVERY element of the criterion is inapplicable to this dataset — and never on a gating criterion (one with `gate_min`).
 4. Compose a JSON object exactly matching the rubric's `output_schema`:
    {
-     "score": 0 | 1 | 2,
+     "score": 0 | 1 | 2 | "N/A",
      "rationale": "1-3 sentences. Cite the rule that applied and the specific evidence fields that decided it.",
      "evidence": ["...direct @id refs or short string fragments that appear verbatim in EVIDENCE_JSON..."],
      "gaps": ["...specific missing things that would raise the score; empty list if score is 2..."]
@@ -106,16 +106,17 @@ After the loop (full or filtered):
 Bash python -m aireadiness_wizard.rubric_eval aggregate "<state.crate_dir>/grading/"
 ```
 
-This writes `<grading>/aggregated_score.json` matching `fairscape-grade`'s shape: `total_score`, `max_score`, `percentage`, `counts`, and `criteria` grouped by `id[0]`.
+This writes `<grading>/aggregated_score.json` matching `fairscape-grade`'s shape: `total_score`, `max_score`, `percentage`, `overall_score` (the v1.5 unweighted domain average), `gating` (pass/fail label + the specific failures), `counts` (now including `na`), and `criteria` grouped by `id[0]` (each with its own `percentage`, and `gating`/`gate_failed` on gated domains). The aggregator also applies the dependency caps (1.b ≤ 1.a, 6.a ≤ 2.c) — a capped rubric keeps the grader's verdict in `uncapped_score` with a `capped_by` note.
 
 Report the rollup to the user — one paragraph:
 ```
-Scored 28/28 rubrics. Total: 42 / 56 (75.0%).
-  FAIRness:                   6/8  (4 substantive, 2 partial)
-  Provenance:                 5/8
-  Characterization:           7/10
+Scored 28/28 rubrics. Overall score: 75.0% (unweighted domain average) — Gating FAIL.
+Points: 42 / 56.
+  FAIRness:                   6/8  (gate: FAIL — 0.a scored 1, needs 2)
+  Provenance:                 5/8  (gate: pass)
+  Characterization:           7/10 (2.c gate: pass)
   Pre-model Explainability:   3/6
-  Ethics:                     6/8
+  Ethics:                     6/8  (gate: pass)
   Sustainability:             8/8
   Computability:              7/8
 
@@ -134,7 +135,9 @@ Full per-rubric output: <crate_dir>/grading/
     "completed_rubrics": ["0.a", "0.b", ...],
     "aggregated_score_path": "<crate_dir>/grading/aggregated_score.json",
     "summary": {"total": 42, "max": 56, "percentage": 75.0,
-                "counts": {"substantive": 14, "partial": 8, "absent": 6, "error": 0}}
+                "overall_score": 74.2, "gating": "Gating FAIL",
+                "counts": {"substantive": 14, "partial": 8, "absent": 6,
+                           "na": 0, "error": 0}}
   },
   "phase": "graded",
   "history": [..., {"ts": "...", "skill": "agentic-rescore",

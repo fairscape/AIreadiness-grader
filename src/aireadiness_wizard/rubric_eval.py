@@ -34,6 +34,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from aireadiness_evidence.pipeline import build_presentation
+from aireadiness_evidence.rubric import dependency_rules, gate_specs
 
 CRITERION_NAMES = {
     "0": "FAIRness",
@@ -47,6 +48,14 @@ CRITERION_NAMES = {
 
 SCORE_LABELS = {"0": "Absent", "1": "Partial", "2": "Substantive"}
 
+# v1.5 gating thresholds and score-dependency caps, read from rubric_defs.yaml
+# ({criterion_id: min score} / {criterion_id: capping criterion_id}).
+GATE_MINIMUMS = gate_specs()
+DEPENDENCY_RULES = dependency_rules()
+
+# Which domains carry a gate (any criterion with a gate_min).
+GATED_DOMAINS = sorted({cid[0] for cid in GATE_MINIMUMS})
+
 # The grader's response contract, shared by every criterion. Carried over from
 # the retired rubrics/ai-ready YAMLs, where it was identical across all 28.
 OUTPUT_SCHEMA = {
@@ -54,7 +63,14 @@ OUTPUT_SCHEMA = {
     "required": ["score", "rationale", "evidence"],
     "additionalProperties": False,
     "properties": {
-        "score": {"type": "integer", "enum": [0, 1, 2]},
+        "score": {
+            "enum": [0, 1, 2, "N/A"],
+            "description": (
+                "0, 1, or 2 per the scoring rules. \"N/A\" only when every "
+                "element of the criterion is inapplicable to this dataset; "
+                "N/A is never permitted on a gating criterion."
+            ),
+        },
         "rationale": {
             "type": "string",
             "description": "1–3 sentences citing the rule that applied.",
@@ -150,7 +166,7 @@ def dump_presentation(presentation: dict, out_dir: Path) -> list[dict]:
                 "score_labels": SCORE_LABELS,
                 "output_schema": OUTPUT_SCHEMA,
             }
-            for opt in ("notes", "gating_note"):
+            for opt in ("notes", "gating_note", "gate_min", "depends_on"):
                 if criterion.get(opt):
                     rubric[opt] = criterion[opt]
 
@@ -248,26 +264,82 @@ def cmd_aggregate(out_dir: Path, model: str = "agentic:claude-code") -> int:
     aggregate_path.write_text(json.dumps(aggregate, indent=2, default=str) + "\n")
 
     counts = aggregate["counts"]
+    gating = aggregate["gating"]
     print(
         f"[rubric_eval] {aggregate['total_score']}/{aggregate['max_score']} "
-        f"= {aggregate['percentage']}%  (substantive={counts['substantive']}, "
-        f"partial={counts['partial']}, absent={counts['absent']}, "
+        f"points; overall score {aggregate['overall_score']}% "
+        f"(unweighted domain average) — {gating['label']}  "
+        f"(substantive={counts['substantive']}, partial={counts['partial']}, "
+        f"absent={counts['absent']}, na={counts['na']}, "
         f"error={counts['error']})",
         file=sys.stderr,
     )
+    for failure in gating["failures"]:
+        print(f"[rubric_eval]   gate failure: {failure}", file=sys.stderr)
     print(json.dumps({
         "aggregated_score_path": str(aggregate_path),
         "total_score": aggregate["total_score"],
         "max_score": aggregate["max_score"],
         "percentage": aggregate["percentage"],
+        "overall_score": aggregate["overall_score"],
+        "gating": gating["label"],
         "rubrics_scored": len(per_rubric),
     }))
     return 0
 
 
+def _apply_dependency_caps(per_rubric: list[dict]) -> None:
+    """Enforce the v1.5 dependency rules in place (1.b ≤ 1.a, 6.a ≤ 2.c).
+    A capped rubric keeps the grader's original score in ``uncapped_score``
+    and gains a ``capped_by`` note."""
+    by_id = {r["id"]: r for r in per_rubric}
+    for cid, prereq_id in DEPENDENCY_RULES.items():
+        r, prereq = by_id.get(cid), by_id.get(prereq_id)
+        if not r or not prereq:
+            continue
+        s, ps = r.get("score"), prereq.get("score")
+        if isinstance(s, int) and isinstance(ps, int) and s > ps:
+            r["uncapped_score"] = s
+            r["score"] = ps
+            r["capped_by"] = (f"dependency rule {cid} ≤ {prereq_id}: "
+                              f"score lowered from {s} to {ps}")
+
+
+def _evaluate_gates(per_rubric: list[dict]) -> dict:
+    """Apply the v1.5 gate thresholds. Returns {"pass": bool|None,
+    "failures": [...], "unscored": [...]} — pass is None while any gated
+    criterion is still unscored and nothing has failed yet."""
+    by_id = {r["id"]: r for r in per_rubric}
+    failures, unscored = [], []
+    for cid, minimum in sorted(GATE_MINIMUMS.items()):
+        r = by_id.get(cid)
+        s = r.get("score") if r else None
+        if s is None:
+            unscored.append(cid)
+        elif s == "N/A":
+            failures.append(f"{cid} scored N/A (not permitted on a gating "
+                            "criterion)")
+        elif s < minimum:
+            failures.append(f"{cid} scored {s} (gate requires "
+                            f"{'2' if minimum == 2 else 'above 0'})")
+    passed = False if failures else (None if unscored else True)
+    return {"pass": passed, "failures": failures, "unscored": unscored}
+
+
 def _aggregate(per_rubric: list[dict], model: str) -> dict:
-    """Group by ``id[0]``, sum scores, compute percentage, count outcomes.
-    Shared with ``aireadiness_wizard.grade``."""
+    """v1.5 scoring methodology, shared with ``aireadiness_wizard.grade``.
+
+    Group by ``id[0]`` (domain). Domain score = points earned / max points over
+    applicable (non-N/A) criteria. Overall score = unweighted average of domain
+    percentages, reported alongside the raw point total. Gates (FAIRness 0.a=2
+    + all >0, Provenance all >0, Standards 2.c >0, Ethics all >0) are evaluated
+    independently; a failure marks the domain and the overall result
+    "Gating FAIL" but the score is still computed. Dependency caps
+    (1.b ≤ 1.a, 6.a ≤ 2.c) are applied before anything is summed."""
+    _apply_dependency_caps(per_rubric)
+    gate = _evaluate_gates(per_rubric)
+    gate_failed_domains = {f.split(" ", 1)[0][0] for f in gate["failures"]}
+
     groups: dict[str, list[dict]] = defaultdict(list)
     for r in per_rubric:
         groups[r["id"][0]].append(r)
@@ -275,12 +347,15 @@ def _aggregate(per_rubric: list[dict], model: str) -> dict:
     criteria = []
     total = 0
     max_total = 0
-    counts = {"substantive": 0, "partial": 0, "absent": 0, "error": 0}
+    counts = {"substantive": 0, "partial": 0, "absent": 0, "na": 0, "error": 0}
 
     for prefix in sorted(groups):
         rubrics = groups[prefix]
-        c_score = sum((r["score"] or 0) for r in rubrics if r["score"] is not None)
-        c_max = 2 * len(rubrics)
+        c_score = sum(r["score"] for r in rubrics
+                      if isinstance(r["score"], int))
+        # N/A criteria leave the domain denominator (per the N/A policy);
+        # errors still count against it so a crashed grader can't inflate %
+        c_max = 2 * sum(1 for r in rubrics if r["score"] != "N/A")
         for r in rubrics:
             s = r["score"]
             if s == 2:
@@ -289,24 +364,46 @@ def _aggregate(per_rubric: list[dict], model: str) -> dict:
                 counts["partial"] += 1
             elif s == 0:
                 counts["absent"] += 1
+            elif s == "N/A":
+                counts["na"] += 1
             else:
                 counts["error"] += 1
-        criteria.append({
+        entry = {
             "id": prefix,
             "name": CRITERION_NAMES.get(prefix, f"Unknown ({prefix})"),
             "score": c_score,
             "max": c_max,
+            "percentage": round(100 * c_score / c_max, 1) if c_max else None,
             "rubrics": rubrics,
-        })
+        }
+        if prefix in GATED_DOMAINS:
+            entry["gating"] = True
+            entry["gate_failed"] = prefix in gate_failed_domains
+        criteria.append(entry)
         total += c_score
         max_total += c_max
 
     percentage = round(100 * total / max_total, 1) if max_total else 0.0
+    domain_pcts = [c["percentage"] for c in criteria
+                   if c["percentage"] is not None]
+    domain_average = (round(sum(domain_pcts) / len(domain_pcts), 1)
+                      if domain_pcts else 0.0)
     return {
         "model": model,
         "total_score": total,
         "max_score": max_total,
         "percentage": percentage,
+        # the v1.5 overall AI-readiness score: unweighted average of domain
+        # percentages (differs from `percentage` since domains vary in size)
+        "overall_score": domain_average,
+        "gating": {
+            "pass": gate["pass"],
+            "label": "Gating FAIL" if gate["failures"] else (
+                "gates passed" if gate["pass"] else "gates not fully scored"),
+            "failures": gate["failures"],
+            "unscored": gate["unscored"],
+            "thresholds": dict(sorted(GATE_MINIMUMS.items())),
+        },
         "counts": counts,
         "criteria": criteria,
     }

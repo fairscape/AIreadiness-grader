@@ -67,8 +67,8 @@ def estimate_2a(facts):
 def extract_2b(ctx):
     stats = ctx.bundle.stats
     return {
-        "with_stats": stats.dataset_with_summary_stats,
-        "dataset_total": stats.dataset_total,
+        "with_stats": stats.summary_stats_total,
+        "located": list(stats.summary_stats_entities),
         "example": stats.sample("summary_stats"),
         "missing_data": ctx.bundle.root.get("rai:dataCollectionMissingData"),
         "formats": dict(stats.formats),
@@ -84,29 +84,42 @@ def transform_2b(ctx, raw):
 
 def present_2b(facts):
     return [
-        ev.percent("Datasets with summary statistics (hasSummaryStatistics)",
-                   facts["with_stats"], facts["dataset_total"]),
+        ev.count("Entities carrying a summary-statistics link "
+                 "(hasSummaryStatistics)", facts["with_stats"]),
+        ev.sub(ev.listing(
+            "Entities located",
+            [f"{x['type']}: {x['name'] or x['@id']}"
+             + (f" -> {x['target']}" if x["target"] else "")
+             for x in facts["located"]])),
         ev.sub(ev.entity("Example summary-statistics reference",
                          facts["example"])),
         ev.text("Missing-data statement (rai:dataCollectionMissingData)",
                 ev.clip(facts["missing_data"])),
-        ev.listing("Tabular formats in the crate (N/A applies only if none)",
-                   [f"{f}: {n}" for f, n in facts["tabular_formats"].items()]),
+        ev.listing("Tabular formats in the crate",
+                   [f"{f}: {n}" for f, n in facts["tabular_formats"].items()],
+                   detail="for non-tabular data, per-variable statistics are "
+                          "N/A but missing-value consistency is still scored "
+                          "in modality terms (absent channels, dropped leads, "
+                          "corrupt slices, time-series gaps); the criterion "
+                          "is N/A only if the data has no representable "
+                          "missingness at all"),
     ]
 
 
 def estimate_2b(facts):
-    if not facts["tabular_formats"]:
-        return ev.estimate("N/A", "no tabular formats in the crate — the "
-                                  "rubric marks this criterion N/A for "
-                                  "non-tabular data")
     if facts["with_stats"] and facts["missing_data"]:
         return ev.estimate("2",
-                           f"{facts['with_stats']} datasets carry summary "
-                           "statistics",
+                           f"{facts['with_stats']} "
+                           + ("entity carries" if facts["with_stats"] == 1
+                              else "entities carry")
+                           + " a summary-statistics link",
                            "missing-data statement present (its consistency "
-                           "is asserted, not verified against the files)")
-    return None  # missing-value encoding can't be verified from metadata
+                           "and domain-appropriateness are asserted, not "
+                           "verified against the files)")
+    # non-tabular data is no longer blanket-N/A (v1.5): missing-value
+    # consistency is still scored in modality-appropriate terms, and whether
+    # any representable missingness exists at all is a human call
+    return None
 
 
 # --- 2.c Standards (gating) ------------------------------------------------
@@ -174,6 +187,18 @@ def estimate_2c(facts):
 
 # --- 2.d Potential Sources of Bias -----------------------------------------
 
+# v1.5's added questions: demographic/cohort representativeness disclosure and
+# clinical admission-pattern / site-selection bias. Prose signals only.
+REPRESENTATIVENESS_RE = re.compile(
+    r"demograph|represent\w*|socioeconomic|geograph|underserved|"
+    r"minorit|ancestr|ethnicit|race\b|racial", re.I)
+CASE_CONTROL_RE = re.compile(
+    r"case[- ]?(vs\.?|versus)?[- ]?control|state[- ]vs\.?[- ]control|"
+    r"healthy control|disease state|control (group|cohort|arm)", re.I)
+CLINICAL_SITE_RE = re.compile(
+    r"admission|site selection|recruit\w* site|referral pattern|"
+    r"single[- ](center|centre|site)|multi[- ](center|centre|site)", re.I)
+
 
 def extract_2d(ctx):
     root = ctx.bundle.root
@@ -181,14 +206,23 @@ def extract_2d(ctx):
         "biases": root.get("rai:dataBiases"),
         "missing": root.get("rai:dataCollectionMissingData"),
         "completeness": root.get("completeness"),
+        "limitations": root.get("rai:dataLimitations"),
     }
 
 
 def transform_2d(ctx, raw):
+    blob = " ".join(str(v or "") for v in raw.values())
     return {
         **raw,
         "biases_substantive": ev.substantive(raw["biases"]),
         "missing_substantive": ev.substantive(raw["missing"]),
+        "representativeness_hits": sorted(
+            {m.group(0).lower()
+             for m in REPRESENTATIVENESS_RE.finditer(blob)})[:8],
+        "case_control_hits": sorted(
+            {m.group(0).lower() for m in CASE_CONTROL_RE.finditer(blob)})[:6],
+        "clinical_site_hits": sorted(
+            {m.group(0).lower() for m in CLINICAL_SITE_RE.finditer(blob)})[:6],
     }
 
 
@@ -202,13 +236,28 @@ def present_2d(facts):
         ev.sub(ev.flag("Missingness explanation present and substantive-length",
                        facts["missing_substantive"])),
         ev.text("Completeness statement", ev.clip(facts["completeness"])),
+        ev.text("Limitations (rai:dataLimitations)",
+                ev.clip(facts["limitations"])),
+        ev.flag("Demographic / cohort-representativeness language found",
+                bool(facts["representativeness_hits"]),
+                detail=", ".join(facts["representativeness_hits"]) or None),
+        ev.sub(ev.flag("Case-vs-control language found",
+                       bool(facts["case_control_hits"]),
+                       detail=", ".join(facts["case_control_hits"]) or None)),
+        ev.sub(ev.flag("Clinical admission-pattern / site-selection language "
+                       "found",
+                       bool(facts["clinical_site_hits"]),
+                       detail=", ".join(facts["clinical_site_hits"]) or
+                              "only applicable to clinically-derived data")),
     ]
 
 
 def estimate_2d(facts):
-    if not (facts["biases"] or facts["missing"] or facts["completeness"]):
-        return ev.estimate("0", "no bias, missingness, or completeness "
-                                "description anywhere in the metadata")
+    if not (facts["biases"] or facts["missing"] or facts["completeness"]
+            or facts["limitations"]):
+        return ev.estimate("0", "no bias, missingness, limitations, or "
+                                "completeness description anywhere in the "
+                                "metadata")
     return None  # text exists — whether it is substantive is a human read
 
 
@@ -231,10 +280,11 @@ def extract_2e(ctx):
 def transform_2e(ctx, raw):
     text_blob = " ".join(str(raw[k] or "") for k in raw)
     qc_hits = sorted({m.group(0).lower() for m in QC_RE.finditer(text_blob)})
-    link_checks = []
-    for url in URL_IN_TEXT_RE.findall(str(raw["collection"] or ""))[:3]:
-        link_checks.append(ctx.net.check_url(url.rstrip(".,;")))
-    return {**raw, "qc_hits": qc_hits[:8], "link_checks": link_checks}
+    qc_links = [u.rstrip(".,;") for u in
+                URL_IN_TEXT_RE.findall(str(raw["collection"] or ""))]
+    link_checks = [ctx.net.check_url(url) for url in qc_links[:3]]
+    return {**raw, "qc_hits": qc_hits[:8], "qc_links": qc_links[:6],
+            "link_checks": link_checks}
 
 
 def present_2e(facts):
@@ -244,6 +294,11 @@ def present_2e(facts):
         ev.text("Missing-data handling", ev.clip(facts["missing"])),
         ev.sub(ev.flag("QC language found in metadata", bool(facts["qc_hits"]),
                        detail=", ".join(facts["qc_hits"]) or None)),
+        ev.sub(ev.listing("Links to QC protocol/software found in the "
+                          "collection description", facts["qc_links"],
+                          detail=None if facts["qc_links"] else
+                          "v1.5 asks for a link to the specific protocol or "
+                          "software used")),
     ]
     for chk in facts["link_checks"]:
         items.append(ev.sub(ev.flag(

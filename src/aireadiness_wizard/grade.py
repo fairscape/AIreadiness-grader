@@ -54,9 +54,9 @@ import sys
 import urllib.request
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Optional, Union
+from typing import Literal, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, field_validator
 from pydantic_ai import Agent
 
 from aireadiness_wizard.rubric_eval import (
@@ -85,6 +85,8 @@ BASE_SYSTEM_PROMPT = (
     "at a time using only the evidence payload provided. Follow the "
     "criterion's scoring rules literally — choose 0 (Absent), 1 (Partial), or "
     "2 (Substantive) based solely on the rule that matches the evidence. "
+    "Score \"N/A\" only when every element of the criterion is inapplicable "
+    "to this dataset; N/A is never permitted on a gating criterion. "
     "Quote @id refs, evidence labels, or short text fragments from the "
     "evidence to justify the score, and list specific gaps that would raise "
     "the score (empty if score is 2)."
@@ -135,10 +137,17 @@ was inconclusive or not performed.
 
 
 class RubricScore(BaseModel):
-    score: int = Field(..., ge=0, le=2)
+    score: Union[int, Literal["N/A"]]
     rationale: str
     evidence: list[str] = []
     gaps: list[str] = []
+
+    @field_validator("score")
+    @classmethod
+    def _score_in_range(cls, v):
+        if isinstance(v, int) and not 0 <= v <= 2:
+            raise ValueError("integer score must be 0, 1, or 2")
+        return v
 
 
 def _setup_api_key(model: str, api_key: str) -> None:
@@ -228,6 +237,13 @@ def _build_prompt(rubric: dict, evidence: dict) -> str:
         notes.append(f"NOTES:\n{rubric['notes']}\n")
     if rubric.get("gating_note"):
         notes.append(f"GATING NOTE:\n{rubric['gating_note']}\n")
+    if rubric.get("depends_on"):
+        notes.append(
+            "DEPENDENCY NOTE:\n"
+            f"This criterion's final score is capped at criterion "
+            f"{rubric['depends_on']}'s score during aggregation. Score this "
+            "criterion on its own evidence; the cap is applied downstream.\n"
+        )
     return PROMPT_TEMPLATE.format(
         rubric_id=rubric["id"],
         name=rubric["name"],
@@ -358,12 +374,16 @@ def grade_crate(
 
     log(
         f"[grade] total {aggregate['total_score']}/{aggregate['max_score']} "
-        f"= {aggregate['percentage']}%  "
+        f"points; overall score {aggregate['overall_score']}% "
+        f"(unweighted domain average) — {aggregate['gating']['label']}  "
         f"(substantive={aggregate['counts']['substantive']}, "
         f"partial={aggregate['counts']['partial']}, "
         f"absent={aggregate['counts']['absent']}, "
+        f"na={aggregate['counts']['na']}, "
         f"error={aggregate['counts']['error']})"
     )
+    for failure in aggregate["gating"]["failures"]:
+        log(f"[grade]   gate failure: {failure}")
     log(f"[grade] wrote {output_dir / 'aggregated_score.json'}")
     return aggregate
 

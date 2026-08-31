@@ -1,4 +1,6 @@
 # AI-Readiness Human Questionnaire — Section 5: Sustainability
+
+> **⚠ Written against rubric v1.0.** The rubric is now v1.5 (2026-08-29) — apply the changes in [V1.5-DELTA.md](V1.5-DELTA.md) (gates, N/A policy, dependency caps, and per-criterion rule changes) on top of this packet.
 *Will this data still be reachable, cared for, and connected years from now?*
 
 For Q5.1 and Q5.2 you are **given the relevant metadata, already extracted,

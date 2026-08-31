@@ -9,6 +9,23 @@ IRB_RE = re.compile(r"\bIRB\b|\bREC\b|protocol\s*(#|no\.?|number)|institutional 
                     r"review board|ethics (board|committee|review)", re.I)
 URL_RE = re.compile(r"https?://[^\s\"\')\]]+")
 
+# v1.5 4.a: prospective consent must cover downstream AI/ML use; retrospective
+# data needs an explicit waiver/exemption basis for secondary AI/ML use.
+AI_ML_USE_RE = re.compile(
+    r"AI/ML|artificial intelligence|machine[- ]learning|\bAI\b|\bML\b|"
+    r"commercializ", re.I)
+WAIVER_RE = re.compile(
+    r"waiver|exempt\w*|secondary (use|analysis)|retrospective", re.I)
+
+# v1.5 4.b: Privacy Impact Assessment + periodic re-identification-risk
+# reassessment for sensitive data.
+PIA_RE = re.compile(
+    r"privacy impact assessment|\bPIA\b|(privacy|disclosure|"
+    r"re[- ]?identification) risk assess\w*", re.I)
+REASSESS_RE = re.compile(
+    r"(periodic\w*|annual\w*|regular\w*|ongoing) (re[- ]?)?(assess|review|"
+    r"evaluat)\w*|reassess\w*|re[- ]?identification risk", re.I)
+
 
 def _first(root, *fields):
     """First populated value among aliased field spellings (d4d:/rai:/bare)."""
@@ -43,7 +60,15 @@ def transform_4a(ctx, raw):
     irb_signals = sorted({m.group(0) for m in IRB_RE.finditer(blob)})
     dmp_links = URL_RE.findall(str(raw["maintenance_plan"] or ""))
     dmp_check = ctx.net.check_url(dmp_links[0].rstrip(".,;")) if dmp_links else None
-    return {**raw, "irb_signals": irb_signals, "dmp_check": dmp_check}
+    consent_blob = " ".join(str(raw[k] or "") for k in
+                            ("consent", "collection", "exemption",
+                             "human_subjects", "ethical_review"))
+    return {**raw, "irb_signals": irb_signals, "dmp_check": dmp_check,
+            "aiml_use_hits": sorted(
+                {m.group(0) for m in AI_ML_USE_RE.finditer(consent_blob)})[:6],
+            "waiver_hits": sorted(
+                {m.group(0).lower()
+                 for m in WAIVER_RE.finditer(consent_blob)})[:6]}
 
 
 def present_4a(facts):
@@ -58,6 +83,16 @@ def present_4a(facts):
         ev.sub(ev.flag("IRB / ethics-review references found",
                        bool(facts["irb"] or facts["irb_signals"]),
                        detail=", ".join(facts["irb_signals"]) or None)),
+        ev.sub(ev.flag("Consent/ethics text mentions AI/ML or "
+                       "commercialization (prospective data: consent must "
+                       "explicitly cover downstream AI/ML use)",
+                       bool(facts["aiml_use_hits"]),
+                       detail=", ".join(facts["aiml_use_hits"]) or None)),
+        ev.sub(ev.flag("Waiver / exemption / secondary-use language found "
+                       "(retrospective data: the basis for secondary AI/ML "
+                       "use must be explicit)",
+                       bool(facts["waiver_hits"]),
+                       detail=", ".join(facts["waiver_hits"]) or None)),
         ev.text("Management plan (rai:dataReleaseMaintenancePlan)",
                 ev.clip(facts["maintenance_plan"])),
     ]
@@ -94,7 +129,12 @@ def extract_4b(ctx):
 
 
 def transform_4b(ctx, raw):
-    return raw
+    blob = " ".join(str(v or "") for v in raw.values())
+    return {**raw,
+            "pia_hits": sorted(
+                {m.group(0).lower() for m in PIA_RE.finditer(blob)})[:6],
+            "reassess_hits": sorted(
+                {m.group(0).lower() for m in REASSESS_RE.finditer(blob)})[:6]}
 
 
 def present_4b(facts):
@@ -106,17 +146,35 @@ def present_4b(facts):
         ev.text("Ethics review", ev.clip(facts["ethical_review"])),
         ev.text("Management plan content (judge adequacy for the declared "
                 "sensitivity)", ev.clip(facts["maintenance_plan"])),
+        ev.flag("Privacy Impact Assessment / risk-assessment language found "
+                "(required for high-sensitivity data)",
+                bool(facts["pia_hits"]),
+                detail=", ".join(facts["pia_hits"]) or None),
+        ev.sub(ev.flag("Periodic re-identification-risk reassessment "
+                       "language found (required for sensitive data)",
+                       bool(facts["reassess_hits"]),
+                       detail=", ".join(facts["reassess_hits"]) or None)),
     ]
 
 
 def estimate_4b(facts):
-    if not facts["confidentiality"] and not facts["sensitive"]:
-        return ev.estimate("0", "no confidentiality classification and no "
-                                "sensitivity statement")
-    return None  # adequacy of management for the sensitivity is a human read
+    if not (facts["confidentiality"] or facts["sensitive"]
+            or facts["maintenance_plan"]):
+        return ev.estimate("0", "no sensitivity classification, sensitivity "
+                                "statement, or management description")
+    return None  # adequacy of management for the sensitivity — and whether
+    # the data is high-sensitivity enough to demand a PIA — is a human read
 
 
 # --- 4.c Ethically Disseminated --------------------------------------------
+
+# v1.5: modality-specific ethical prohibitions are required where the data can
+# synthesize / impersonate / re-identify an individual — raw voice or speech,
+# personal genomes, face or full-head imaging, dense longitudinal geolocation.
+HIGH_RISK_MODALITY_RE = re.compile(
+    r"\bvoice\b|\bspeech\b|audio recording|genom\w+|whole[- ]genome|"
+    r"\bWGS\b|face|facial|full[- ]head|geolocation|GPS trace|location "
+    r"histor\w+", re.I)
 
 
 def extract_4c(ctx):
@@ -128,11 +186,18 @@ def extract_4c(ctx):
         "prohibited": _first(root, "prohibitedUses", "usageInfo"),
         "contact": root.get("contactEmail"),
         "sensitive": root.get("rai:personalSensitiveInformation"),
+        "keywords": root.get("keywords"),
+        "description": root.get("description"),
     }
 
 
 def transform_4c(ctx, raw):
-    return {**raw, "access_controlled": bool(raw["conditions"])}
+    modality_blob = " ".join(str(raw[k] or "") for k in
+                             ("keywords", "description", "sensitive"))
+    return {**raw, "access_controlled": bool(raw["conditions"]),
+            "high_risk_modality_hits": sorted(
+                {m.group(0).lower()
+                 for m in HIGH_RISK_MODALITY_RE.finditer(modality_blob)})[:8]}
 
 
 def present_4c(facts):
@@ -143,24 +208,30 @@ def present_4c(facts):
                 detail=ev.clip(facts["use_cases"], 300)),
         ev.flag("Prohibited uses stated", bool(facts["prohibited"]),
                 detail=ev.clip(facts["prohibited"], 300)),
+        ev.flag("High-risk modality signals in the metadata (voice, genomes, "
+                "face imaging, geolocation, …)",
+                bool(facts["high_risk_modality_hits"]),
+                detail=(", ".join(facts["high_risk_modality_hits"])
+                        if facts["high_risk_modality_hits"] else None) or
+                       "where such a modality is present, a 2 requires "
+                       "explicit modality-specific ethical prohibitions "
+                       "(e.g., no biometric synthesis, identity cloning, "
+                       "discriminatory use)"),
         ev.text("Access-committee / dataset contact",
                 facts["contact"] or "none listed",
-                detail="N/A if fully open with no access committee"),
+                detail="required (and active) where access is controlled"),
     ]
 
 
 def estimate_4c(facts):
     if not facts["license"] and not facts["conditions"]:
-        return ev.estimate("0", "no license or DUA")
-    if facts["use_cases"] and facts["prohibited"]:
-        return ev.estimate("2",
-                           "license/DUA present",
-                           "permitted and prohibited uses both stated",
-                           "openness vs. ethical constraints not judged — "
-                           "downgrade if terms look unjustifiably "
-                           "restrictive")
-    return ev.estimate("1", "license/DUA present but permitted/prohibited "
-                            "uses not both specified")
+        return ev.estimate("0", "no license, DUA, or defined ethical terms — "
+                                "openly released with no ethical framework, "
+                                "or access-controlled without one")
+    # everything above 0 is a judgment call under v1.5: whether terms are
+    # "as open as possible, as closed as necessary", whether the modality
+    # demands specific prohibitions, and whether a DAC contact is active
+    return None
 
 
 # --- 4.d Secure ------------------------------------------------------------
@@ -198,7 +269,11 @@ def present_4d(facts):
 def estimate_4d(facts):
     if facts["hl7_code"]:
         return ev.estimate("2", "confidentiality level is an HL7 "
-                                f"v3-Confidentiality code ('{facts['hl7_code']}')")
+                                f"v3-Confidentiality code ('{facts['hl7_code']}')",
+                           "whether the declared level is actually ENFORCED "
+                           "(v1.5 0-rule) is not verified — score 0 if "
+                           "controlled data is retrievable without "
+                           "authorization or authorized users are blocked")
     if facts["confidentiality"]:
         return ev.estimate("1", "confidentiality level stated in prose, not "
                                 "a standard vocabulary")

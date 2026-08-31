@@ -23,10 +23,16 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from .render import linkify
+from .rubric import dependency_rules, gate_specs
 
 TEMPLATES = Path(__file__).parent / "templates"
 
-SCORE_LABELS = {0: "Absent", 1: "Partial", 2: "Substantive"}
+SCORE_LABELS = {0: "Absent", 1: "Partial", 2: "Substantive", "N/A": "N/A"}
+
+# v1.5 gate thresholds ({criterion_id: min score}) and dependency caps
+# ({criterion_id: capping criterion_id}), read from rubric_defs.yaml.
+GATE_MINIMUMS = gate_specs()
+DEPENDENCY_RULES = dependency_rules()
 
 # Radar geometry. One axis per section, first axis straight up. The box is
 # wider than it is tall so the axis labels have room to sit outside the rings.
@@ -74,26 +80,70 @@ def radar_axis_label(index: int, count: int) -> dict:
     return {"x": round(x, 1), "y": round(y + dy, 1), "anchor": anchor}
 
 
+def _capped_scores(scores: dict[str, dict]) -> dict[str, dict]:
+    """Apply the v1.5 dependency rules (1.b ≤ 1.a, 6.a ≤ 2.c) to a copy of
+    the score map. A capped verdict keeps the grader's original score in
+    ``uncapped_score`` and gains a ``capped_by`` note."""
+    out = {cid: dict(v) for cid, v in scores.items()}
+    for cid, prereq_id in DEPENDENCY_RULES.items():
+        v, prereq = out.get(cid), out.get(prereq_id)
+        if not v or not prereq:
+            continue
+        s, ps = v.get("score"), prereq.get("score")
+        if isinstance(s, int) and isinstance(ps, int) and s > ps:
+            v["uncapped_score"] = s
+            v["score"] = ps
+            v["capped_by"] = (f"dependency rule {cid} ≤ {prereq_id}: the "
+                              f"grader's {s} is capped at {prereq_id}'s {ps}")
+    return out
+
+
 def build_report(presentation: dict, scores: dict[str, dict],
                  grader_label: str = "") -> dict:
-    """Merge presentation + scores into the dict the template renders."""
+    """Merge presentation + scores into the dict the template renders.
+
+    Implements the v1.5 scoring methodology: dependency caps, N/A excluded
+    from the denominator, per-criterion gate thresholds rolled up to domain
+    "Gating FAIL", and an overall score that is the unweighted average of the
+    domain percentages."""
+    scores = _capped_scores(scores)
     sections = []
-    counts = {"substantive": 0, "partial": 0, "absent": 0, "unscored": 0}
+    counts = {"substantive": 0, "partial": 0, "absent": 0, "na": 0,
+              "unscored": 0}
     total = max_total = 0
+    gate_failures = []
+    gate_unscored = []
 
     for section in presentation["sections"]:
         criteria = []
         pts = 0
+        section_max = 0
         graded = 0
+        section_gate_failures = []
         for c in section["criteria"]:
             verdict = scores.get(c["id"])
             score = verdict.get("score") if verdict else None
+            gate_min = c.get("gate_min") or GATE_MINIMUMS.get(c["id"])
             if score is None:
                 counts["unscored"] += 1
+                if gate_min:
+                    gate_unscored.append(c["id"])
+            elif score == "N/A":
+                graded += 1
+                counts["na"] += 1
+                if gate_min:
+                    section_gate_failures.append(
+                        f"{c['id']} scored N/A (not permitted on a gating "
+                        "criterion)")
             else:
                 pts += score
+                section_max += 2
                 graded += 1
                 counts[SCORE_LABELS[score].lower()] += 1
+                if gate_min and score < gate_min:
+                    section_gate_failures.append(
+                        f"{c['id']} scored {score} (gate requires "
+                        f"{'2' if gate_min == 2 else 'above 0'})")
             estimate = (c.get("estimate") or {}).get("score")
             # estimates are strings and may be "N/A" where the rule has no
             # mechanical form; only numeric ones are comparable to a score
@@ -101,29 +151,34 @@ def build_report(presentation: dict, scores: dict[str, dict],
                 **c,
                 "score": score,
                 "label": SCORE_LABELS.get(score, "Not scored"),
+                "gate_min": gate_min,
                 "rationale": (verdict or {}).get("rationale", ""),
                 "cited": (verdict or {}).get("evidence", []),
                 "gaps": (verdict or {}).get("gaps", []),
+                "uncapped_score": (verdict or {}).get("uncapped_score"),
+                "capped_by": (verdict or {}).get("capped_by"),
                 "estimate_score": estimate,
                 # flag only a real disagreement; a criterion with no mechanical
                 # estimate is a judgment call, not a mismatch
                 "estimate_differs": (str(estimate) in {"0", "1", "2"}
-                                     and score is not None
+                                     and isinstance(score, int)
                                      and int(estimate) != score),
             })
-        section_max = 2 * len(section["criteria"])
         total += pts
         max_total += section_max
+        gate_failures += section_gate_failures
         sections.append({
             "number": section["number"],
             "title": section["title"],
-            "gating": section["gating"],
+            "gating": section["gating"] or any(
+                c.get("gate_min") for c in criteria),
             "criteria": criteria,
             "points": pts,
             "max": section_max,
             "graded": graded,
             "percentage": round(100 * pts / section_max, 1) if section_max else 0.0,
-            "all_two": graded == len(section["criteria"]) and pts == section_max,
+            "gate_failures": section_gate_failures,
+            "gate_failed": bool(section_gate_failures),
         })
 
     axes = [
@@ -133,6 +188,11 @@ def build_report(presentation: dict, scores: dict[str, dict],
         for i, s in enumerate(sections)
     ]
     gating = [s for s in sections if s["gating"]]
+    scored_sections = [s for s in sections if s["max"]]
+    overall_score = (round(sum(s["percentage"] for s in scored_sections)
+                           / len(scored_sections), 1)
+                     if scored_sections else 0.0)
+    gate_pass = False if gate_failures else (None if gate_unscored else True)
 
     return {
         "rubric": presentation["rubric"],
@@ -147,13 +207,23 @@ def build_report(presentation: dict, scores: dict[str, dict],
             "points": total,
             "max": max_total,
             "percentage": round(100 * total / max_total, 1) if max_total else 0.0,
+            # v1.5 overall AI-readiness score: unweighted average of the
+            # domain percentages (N/A criteria excluded from denominators)
+            "overall_score": overall_score,
+            "gate_pass": gate_pass,
+            "gate_label": "Gating FAIL" if gate_failures else (
+                "gates passed" if gate_pass else "gates not fully scored"),
             "counts": counts,
         },
         "gating": [
-            {"number": s["number"], "title": s["title"], "passed": s["all_two"],
+            {"number": s["number"], "title": s["title"],
+             "passed": not s["gate_failed"],
+             "failures": s["gate_failures"],
              "points": s["points"], "max": s["max"]}
             for s in gating
         ],
+        "gate_failures": gate_failures,
+        "gate_unscored": gate_unscored,
         "radar": {
             "width": RADAR_W,
             "height": RADAR_H,
@@ -178,7 +248,7 @@ def build_report(presentation: dict, scores: dict[str, dict],
         },
         "worst": sorted(
             [c for s in sections for c in s["criteria"]
-             if c["score"] is not None and c["score"] < 2],
+             if isinstance(c["score"], int) and c["score"] < 2],
             key=lambda c: (c["score"], c["id"]),
         ),
     }
@@ -232,6 +302,8 @@ def main(argv: list[str] | None = None) -> int:
         "total": report["total"]["points"],
         "max": report["total"]["max"],
         "percentage": report["total"]["percentage"],
+        "overall_score": report["total"]["overall_score"],
+        "gating": report["total"]["gate_label"],
     }))
     return 0
 

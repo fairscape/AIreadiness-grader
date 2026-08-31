@@ -9,8 +9,10 @@ that crate against the 28 AI-Ready rubrics.
   emission flow (`/fairscape-rocrate-wizard`) and everything around it.
 - **Evidence presentation** — `src/aireadiness_evidence/`, an extraction →
   transformation → presentation pipeline that builds the evidence document
-  requested by *Rubric for Human Review of AI.docx* (rubric text transcribed
-  in `rubric_defs.yaml`). See [Evidence presentation](#evidence-presentation).
+  requested by *Rubric for Human Review of AI-readiness Evaluation Criteria*
+  v1.5 (2026-08-29) (rubric text transcribed in `rubric_defs.yaml`, including
+  the v1.5 gate thresholds and the 1.b ≤ 1.a / 6.a ≤ 2.c dependency rules).
+  See [Evidence presentation](#evidence-presentation).
 - **Grader** — the `aireadiness_wizard` helper module. It splits the presentation
   into per-criterion grading folders (`rubric_eval.py`, driven by the
   `agentic-rescore` skill) or grades them with an LLM of your choice

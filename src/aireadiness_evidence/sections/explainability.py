@@ -161,7 +161,11 @@ def transform_3c(ctx, raw):
 def present_3c(facts):
     return [
         ev.percent("Hash coverage (datasets + software, embargoed excluded)",
-                   facts["hashed"], facts["denominator"]),
+                   facts["hashed"], facts["denominator"],
+                   detail="counts md5/sha256 recorded on the metadata "
+                          "entities themselves, which is what v1.5 requires "
+                          "(metadata and data verifiably reference each "
+                          "other)"),
         ev.sub(ev.count("Embargoed datasets excluded from the denominator",
                         facts["embargoed"])),
         ev.sub(ev.entity("Example entity with a checksum", facts["example"])),

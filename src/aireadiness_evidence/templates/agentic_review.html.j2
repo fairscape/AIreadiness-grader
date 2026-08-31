@@ -91,6 +91,8 @@
   .chip.s2 { border-color: var(--ok); color: #fff; background: var(--ok); }
   .chip.s1 { border-color: var(--mid); color: #fff; background: var(--mid); }
   .chip.s0 { border-color: var(--bad); color: #fff; background: var(--bad); }
+  .chip.sna { border-color: var(--line); color: var(--muted);
+              background: #f1f1ef; font-weight: 400; }
   .chip.sx { color: var(--muted); }
 
   .criterion { background: var(--card); border: 1px solid var(--line);
@@ -98,6 +100,7 @@
   .criterion.s0 { border-left: 3px solid var(--bad); }
   .criterion.s1 { border-left: 3px solid var(--mid); }
   .criterion.s2 { border-left: 3px solid var(--ok); }
+  .criterion.sna { border-left: 3px solid var(--line); }
   .chead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   .chead h3 { margin: 0; font-size: 0.98rem; }
   .chead .lab { font-size: 0.78rem; color: var(--muted);
@@ -182,25 +185,44 @@
     to confirm or overturn: expand <em>Extracted evidence</em> on any criterion
     to see exactly what the verdict was based on.
     {%- if r.grader %} Scored by {{ r.grader }}.{% endif %}</p>
+    <p>Scoring follows the v1.5 methodology: the overall score is the
+    unweighted average of the section percentages (N/A criteria leave the
+    denominator); the dependency rules 1.b&nbsp;≤&nbsp;1.a and
+    6.a&nbsp;≤&nbsp;2.c are applied automatically; and the gates — FAIRness
+    (0.a&nbsp;=&nbsp;2, others&nbsp;&gt;&nbsp;0), Provenance
+    (all&nbsp;&gt;&nbsp;0), Standards (2.c&nbsp;&gt;&nbsp;0), Ethics
+    (all&nbsp;&gt;&nbsp;0) — are reported independently; a failure marks the
+    result "Gating FAIL" but the score is still computed.</p>
   </div>
 
   <div class="summary">
     <div class="totbox">
-      <div class="total">{{ r.total.points }}<small> / {{ r.total.max }}</small></div>
-      <div class="meta">{{ r.total.percentage }}% of possible points</div>
+      <div class="total">{{ r.total.overall_score }}<small>%</small></div>
+      <div class="meta">overall AI-readiness score
+        (unweighted average of section percentages)
+        {%- if r.total.gate_label == "Gating FAIL" %} · <span class="no">Gating FAIL</span>
+        {%- elif r.total.gate_pass %} · <span class="yes">gates passed</span>
+        {%- else %} · <span class="na">{{ r.total.gate_label }}</span>{% endif %}</div>
+      <div class="meta">{{ r.total.points }} / {{ r.total.max }} points
+        ({{ r.total.percentage }}%{% if r.total.counts.na %};
+        {{ r.total.counts.na }} N/A excluded from the denominator{% endif %})</div>
       <div class="counts">
         <span class="chip s2">2</span> {{ r.total.counts.substantive }} substantive<br>
         <span class="chip s1">1</span> {{ r.total.counts.partial }} partial<br>
         <span class="chip s0">0</span> {{ r.total.counts.absent }} absent
+        {%- if r.total.counts.na %}<br><span class="chip sna">N/A</span> {{ r.total.counts.na }} not applicable{% endif %}
         {%- if r.total.counts.unscored %}<br><span class="chip sx">–</span> {{ r.total.counts.unscored }} not scored{% endif %}
       </div>
       {% for g in r.gating %}
       <div class="gatever">
         <strong>Gate — {{ g.number }}. {{ g.title }}:</strong>
-        {% if g.passed %}<span class="yes">passed</span>{% else %}<span class="no">not met</span>{% endif %}
-        <span class="meta">({{ g.points }}/{{ g.max }}; threshold is all 2s)</span>
+        {% if g.passed %}<span class="yes">passed</span>{% else %}<span class="no">Gating FAIL</span>{% endif %}
+        <span class="meta">({{ g.points }}/{{ g.max }}{% if g.failures %} — {{ g.failures | join('; ') }}{% endif %})</span>
       </div>
       {% endfor %}
+      <div class="meta" style="margin-top:6px">Gate thresholds: 0.a must
+        score 2; every other FAIRness, Provenance, and Ethics criterion, and
+        2.c (Standards), must score above 0.</div>
     </div>
 
     <div class="radar-box">
@@ -240,14 +262,17 @@
       <tr><th>Section</th><th class="num">Points</th><th class="num">%</th><th>Criteria</th></tr>
       {% for s in r.sections %}
       <tr>
-        <td><a href="#sec{{ s.number }}">{{ s.number }}. {{ s.title }}</a>{% if s.gating %} *{% endif %}</td>
+        <td><a href="#sec{{ s.number }}">{{ s.number }}. {{ s.title }}</a>{% if s.gating %} *{% endif %}
+            {%- if s.gate_failed %} <span class="no" style="font-size:0.72rem">GATE FAIL</span>{% endif %}</td>
         <td class="num">{{ s.points }} / {{ s.max }}</td>
         <td class="num">{{ s.percentage }}%</td>
-        <td>{% for c in s.criteria %}<span class="chip s{{ c.score if c.score is not none else 'x' }}"
+        <td>{% for c in s.criteria %}{% set cls = 'na' if c.score == 'N/A' else (c.score if c.score is not none else 'x') %}<span class="chip s{{ cls }}"
               title="{{ c.id }} {{ c.name }}">{{ c.score if c.score is not none else '–' }}</span> {% endfor %}</td>
       </tr>
       {% endfor %}
-      <tr><td colspan="4" class="meta">* gating section</td></tr>
+      <tr><td colspan="4" class="meta">* carries a gate (FAIRness, Provenance,
+          Ethics; 2.c in Characterization). Overall score is the unweighted
+          average of the section percentages.</td></tr>
     </table>
   </div>
 
@@ -267,18 +292,21 @@
 
   {% for s in r.sections %}
   <h2 id="sec{{ s.number }}">
-    <span>{{ s.number }}. {{ s.title }}{% if s.gating %}<span class="badge">Gating</span>{% endif %}</span>
+    <span>{{ s.number }}. {{ s.title }}{% if s.gating %}<span class="badge">Gating</span>{% endif %}
+      {%- if s.gate_failed %} <span class="no" style="font-size:0.8rem">Gating FAIL</span>{% endif %}</span>
     <span class="meta">{{ s.points }} / {{ s.max }} · {{ s.percentage }}%</span>
   </h2>
 
     {% for c in s.criteria %}
-    <div class="criterion s{{ c.score if c.score is not none else 'x' }}"
+    {% set cls = 'na' if c.score == 'N/A' else (c.score if c.score is not none else 'x') %}
+    <div class="criterion s{{ cls }}"
          id="c{{ c.id | replace('.', '-') }}">
       <div class="chead">
-        <span class="chip s{{ c.score if c.score is not none else 'x' }}"
+        <span class="chip s{{ cls }}"
           >{{ c.score if c.score is not none else '–' }}</span>
         <h3>{{ c.id }} {{ c.name }}</h3>
         <span class="lab">{{ c.label }}</span>
+        {%- if c.gate_min %} <span class="badge">Gate: {{ "= 2" if c.gate_min == 2 else "> 0" }}</span>{% endif %}
       </div>
       <div class="practice">{{ c.practice }}</div>
       {% if c.score is not none and c.scoring.get(c.score | string) %}
@@ -294,6 +322,12 @@
       {% if c.gaps %}
       <div class="sub">What would raise the score</div>
       <ul class="cite gaps">{% for g in c.gaps %}<li>{{ g | linkify }}</li>{% endfor %}</ul>
+      {% endif %}
+
+      {% if c.capped_by %}
+      <div class="disagree">Dependency cap applied — {{ c.capped_by }}. The
+        grading agent's own verdict was {{ c.uncapped_score }}; the rationale
+        below explains that verdict.</div>
       {% endif %}
 
       {% if c.estimate_differs %}

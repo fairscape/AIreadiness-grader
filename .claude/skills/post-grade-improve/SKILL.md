@@ -41,7 +41,7 @@ agg = json.load(open(state["grading"]["aggregated_score_path"]))
 | `4.d`     | `ethics-questionnaire`      |
 | `6.c`     | `portability-interview`     |
 
-Sort by potential gain (score 0 → +2 ceiling > score 1 → +1 ceiling), then by criterion id for stability. Dedupe so `ethics-questionnaire` shows up once even if all three of 4.a/4.b/4.d are below 2 — surface it with the combined gain estimate.
+Sort by potential gain (score 0 → +2 ceiling > score 1 → +1 ceiling), then by criterion id for stability — except that any rubric currently **failing its gate** (v1.5: 0.a below 2; 0.b/0.c/0.d, all of 1.x and 4.x, or 2.c at 0) sorts first and is flagged, since a single gate failure marks the whole result "Gating FAIL" regardless of points. Dedupe so `ethics-questionnaire` shows up once even if all three of 4.a/4.b/4.d are below 2 — surface it with the combined gain estimate.
 
 If the flat list is empty (every relevant rubric is already 2), tell the user *"Nothing left for me to nudge — the gaps left are ones these skills don't cover (FAIRness / Sustainability / etc.). Run `agentic-rescore` if you want a fresh look or fix them by hand."* and exit.
 
@@ -88,9 +88,9 @@ When all chosen leaves are done, ask:
 If yes:
 1. For each touched rubric id, delete `<crate_dir>/grading/<id>-<slug>/score.json`. (`agentic-rescore`'s resume logic skips rubrics that already have a `score.json` on disk — deleting forces a re-score.)
 2. Invoke `agentic-rescore` with no filter. It will re-run only the missing ones, then re-aggregate.
-3. Diff the old `summary` (from `state.grading.summary` before this phase) against the new one; report the delta:
+3. Diff the old `summary` (from `state.grading.summary` before this phase) against the new one; report the delta, including the v1.5 overall score and gate status:
    ```
-   Score: 42 → 47 / 56  (+5)
+   Score: 42 → 47 / 56  (+5) · overall 73.8% → 82.1% · gates: Gating FAIL → gates passed
      1.d  1 → 2
      4.a  1 → 2
      4.b  1 → 2

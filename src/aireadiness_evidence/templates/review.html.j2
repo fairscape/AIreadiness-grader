@@ -206,6 +206,9 @@
              font: inherit; font-size: 0.78rem; cursor: pointer; }
   .use-est:hover { background: var(--accent); color: #fff; }
 
+  .dep-warn { color: var(--bad); font-size: 0.8rem; margin-top: 4px; }
+  .gate-fail { color: var(--bad); font-weight: 700; }
+  .gate-pass { color: var(--ok); font-weight: 600; }
   .grade { margin-top: 6px; padding-top: 5px; border-top: 1px solid var(--line);
            font-size: 0.85rem; display: flex; align-items: center; gap: 10px; }
   .grade label { cursor: pointer; white-space: nowrap; }
@@ -325,7 +328,9 @@
     {% for c in s.criteria %}
     <div class="criterion" id="c{{ c.id | replace('.', '-') }}">
       <h3>{{ c.id }} {{ c.name }}</h3>
-      {% if c.gating %}<span class="badge">Gating</span>{% endif %}
+      {% if c.gate_min %}<span class="badge">Gate: must score {{ "2" if c.gate_min == 2 else "above 0" }}</span>
+      {%- elif c.gating %}<span class="badge">Gating</span>{% endif %}
+      {% if c.depends_on %}<span class="badge">≤ {{ c.depends_on }}</span>{% endif %}
       <div class="practice">{{ c.practice }}</div>
       <details class="questions" open>
         <summary>Questions ({{ c.questions | length }})</summary>
@@ -407,13 +412,18 @@
         human judgment.</div>
       {% endif %}
 
-      <div class="grade" data-criterion="{{ c.id }}"{% if c.estimate %} data-estimate="{{ c.estimate.score }}"{% endif %}>
+      <div class="grade" data-criterion="{{ c.id }}"{% if c.estimate %} data-estimate="{{ c.estimate.score }}"{% endif %}{% if c.gate_min %} data-gate-min="{{ c.gate_min }}"{% endif %}{% if c.depends_on %} data-depends-on="{{ c.depends_on }}"{% endif %}>
         <strong>Score:</strong>
         {% for opt in ["2", "1", "0", "N/A"] %}
           <label><input type="radio" name="score-{{ c.id }}" value="{{ opt }}"> {{ opt }}</label>
         {% endfor %}
         <input type="text" placeholder="reviewer notes…">
       </div>
+      {% if c.depends_on %}
+      <div class="dep-warn" data-depwarn="{{ c.id }}" hidden>⚠ Dependency rule
+        {{ c.id }} ≤ {{ c.depends_on }}: this score exceeds {{ c.depends_on }}'s
+        score, which the rubric does not allow — the aggregate will cap it.</div>
+      {% endif %}
     </div>
     {% endfor %}
 
@@ -431,15 +441,16 @@
         <thead>
           <tr><th>Section</th><th class="num">Graded</th>
               <th class="num">Points</th><th class="num">%</th>
-              <th class="num">N/A</th></tr>
+              <th class="num">N/A</th><th>Gate</th></tr>
         </thead>
         <tbody>
           {% for s in p.sections %}
           <tr data-sumrow="{{ s.number }}">
             <td><a href="#sec{{ s.number }}">{{ s.number }}. {{ s.title }}</a>
-                {%- if s.gating %} <span class="badge">Gating</span>{% endif %}</td>
+                {%- if s.gating or s.criteria | selectattr('gate_min', 'defined') | list %} <span class="badge">Gating</span>{% endif %}</td>
             <td class="num sr-graded"></td><td class="num sr-pts"></td>
             <td class="num sr-pct"></td><td class="num sr-na"></td>
+            <td class="sr-gate"></td>
           </tr>
           {% endfor %}
         </tbody>
@@ -448,12 +459,20 @@
             <td>Total</td>
             <td class="num sr-graded"></td><td class="num sr-pts"></td>
             <td class="num sr-pct"></td><td class="num sr-na"></td>
+            <td class="sr-gate"></td>
           </tr>
         </tfoot>
       </table>
       <div class="sum-note">Points and percentages cover graded criteria only;
-        N/A answers are excluded from the denominator. Sections not yet graded
-        plot at 0 on the chart.</div>
+        N/A answers are excluded from the denominator (N/A is not permitted on
+        a gating criterion). The <strong>overall AI-readiness score</strong> is
+        the unweighted average of the section percentages. Gate thresholds:
+        0.a must score 2; every other FAIRness, Provenance, and Ethics
+        criterion, and 2.c (Standards), must score above 0 — a gate failure
+        marks the section and the overall result "Gating FAIL" (the score is
+        still computed). Dependency rules 1.b ≤ 1.a and 6.a ≤ 2.c are checked
+        as you grade. Sections not yet graded plot at 0 on the chart.</div>
+      <div class="sum-note" id="overall-line" style="margin-top:8px"></div>
     </div>
     <div class="radar-box">
       <svg id="radar" width="320" height="320" viewBox="0 0 320 320"
@@ -496,9 +515,22 @@ grades.forEach(function (g) {
   var a = axes[g.dataset.criterion.split('.')[0]];
   if (!a) return;
   a.total += 1;
+  if (g.dataset.gateMin) a.gatedTotal = (a.gatedTotal || 0) + 1;
   var e = g.dataset.estimate;
   if (e !== undefined && e !== 'N/A') { a.estPts += +e; a.estMax += 2; }
 });
+
+// v1.5 dependency rules, read off the criterion markup (1.b ≤ 1.a, 6.a ≤ 2.c)
+var deps = {};
+grades.forEach(function (g) {
+  if (g.dataset.dependsOn) deps[g.dataset.criterion] = g.dataset.dependsOn;
+});
+
+function scoreOf(id) {
+  var g = document.querySelector('.grade[data-criterion="' + id + '"]');
+  var checked = g && g.querySelector('input:checked');
+  return checked ? checked.value : null;
+}
 
 function fillRow(row, r) {
   if (!row) return;
@@ -508,6 +540,20 @@ function fillRow(row, r) {
   row.querySelector('.sr-pct').textContent =
     r.max ? Math.round(100 * r.pts / r.max) + '%' : '—';
   row.querySelector('.sr-na').textContent = r.na || '';
+  var gate = row.querySelector('.sr-gate');
+  if (gate) {
+    if (!r.gatedTotal) { gate.textContent = '—'; gate.className = 'sr-gate'; }
+    else if (r.gateFail && r.gateFail.length) {
+      gate.textContent = 'FAIL (' + r.gateFail.join('; ') + ')';
+      gate.className = 'sr-gate gate-fail';
+    } else if (r.gatePending) {
+      gate.textContent = r.gatePending + ' gated left';
+      gate.className = 'sr-gate';
+    } else {
+      gate.textContent = 'pass';
+      gate.className = 'sr-gate gate-pass';
+    }
+  }
 }
 
 // N/A counts as graded but leaves the axis denominator alone, matching the
@@ -522,11 +568,13 @@ function renderAxis(a) {
   a.el.querySelector('.ax-na').textContent = a.na ? ' · ' + a.na + ' N/A' : '';
   a.el.classList.toggle('complete', a.graded === a.total);
   if (a.stat) {
-    a.stat.textContent = (a.total - a.graded)
+    var gateNote = (a.gateFail && a.gateFail.length) ? ' · GATE FAIL' :
+      (a.gatedTotal && !a.gatePending && a.graded ? ' · gate ok' : '');
+    a.stat.textContent = ((a.total - a.graded)
       ? (a.total - a.graded) + ' left' +
         (a.max ? ' · ' + a.pts + '/' + a.max + ' pts so far' : '')
       : 'done · ' + a.pts + ' / ' + a.max + ' pts' +
-        (a.na ? ' · ' + a.na + ' N/A' : '');
+        (a.na ? ' · ' + a.na + ' N/A' : '')) + gateNote;
   }
   fillRow(a.row, a);
 }
@@ -600,29 +648,90 @@ function updateSummary() {
   Object.keys(axes).forEach(function (k) {
     var a = axes[k];
     a.graded = 0; a.pts = 0; a.max = 0; a.na = 0;
+    a.gateFail = []; a.gatePending = 0;
   });
   grades.forEach(function (g) {
     var checked = g.querySelector('input:checked');
     renderChip(g, checked);
-    if (!checked) return;
     var a = axes[g.dataset.criterion.split('.')[0]];
+    var min = g.dataset.gateMin;
+    if (!checked) {
+      if (min && a) a.gatePending += 1;
+      return;
+    }
     graded += 1;
     if (a) a.graded += 1;
+    if (min && a) {
+      if (checked.value === 'N/A') {
+        a.gateFail.push(g.dataset.criterion + ' is N/A (not permitted on a gating criterion)');
+      } else if (+checked.value < +min) {
+        a.gateFail.push(g.dataset.criterion + ' scored ' + checked.value +
+          ' (needs ' + (min === '2' ? '2' : '> 0') + ')');
+      }
+    }
     if (checked.value === 'N/A') { na += 1; if (a) a.na += 1; return; }
     pts += +checked.value; max += 2;
     if (a) { a.pts += +checked.value; a.max += 2; }
   });
+  // dependency warnings (1.b ≤ 1.a, 6.a ≤ 2.c)
+  var depViolations = [];
+  Object.keys(deps).forEach(function (id) {
+    var warn = document.querySelector('[data-depwarn="' + id + '"]');
+    var s = scoreOf(id), p = scoreOf(deps[id]);
+    var bad = s !== null && p !== null && s !== 'N/A' && p !== 'N/A' && +s > +p;
+    if (warn) warn.hidden = !bad;
+    if (bad) depViolations.push(id + ' > ' + deps[id]);
+  });
+  // v1.5 overall score: unweighted average of section percentages + gates
+  var gateFailures = [], gatePending = 0, sectionPcts = [];
+  Object.keys(axes).forEach(function (k) {
+    var a = axes[k];
+    gateFailures = gateFailures.concat(a.gateFail);
+    gatePending += a.gatePending;
+    if (a.max) sectionPcts.push(100 * a.pts / a.max);
+  });
+  var overall = sectionPcts.length
+    ? Math.round(10 * sectionPcts.reduce(function (x, y) { return x + y; }, 0)
+        / sectionPcts.length) / 10
+    : null;
+  var gateLabel = gateFailures.length ? 'Gating FAIL'
+    : (gatePending ? gatePending + ' gated criteria left' : 'gates passed');
   document.getElementById('sum-progress').textContent =
     'Graded ' + graded + ' of ' + grades.length;
   document.getElementById('sum-fill').style.width =
     (100 * graded / grades.length) + '%';
-  document.getElementById('sum-score').textContent = max
-    ? pts + ' / ' + max + ' pts (' + Math.round(100 * pts / max) + '%) on graded'
-    : '';
+  document.getElementById('sum-score').innerHTML = (max
+    ? pts + ' / ' + max + ' pts · overall ' + overall + '%' : '') +
+    (gateFailures.length
+      ? ' · <span class="gate-fail">Gating FAIL</span>' : '') +
+    (depViolations.length
+      ? ' · <span class="gate-fail">⚠ ' + depViolations.join(', ') + '</span>'
+      : '');
+  var overallLine = document.getElementById('overall-line');
+  if (overallLine) {
+    overallLine.innerHTML = overall === null ? '' :
+      '<strong>Overall AI-readiness score: ' + overall + '%</strong>' +
+      ' (unweighted average of section percentages on graded criteria) · ' +
+      (gateFailures.length
+        ? '<span class="gate-fail">Gating FAIL — ' +
+          gateFailures.join('; ') + '</span>'
+        : (gatePending
+          ? gatePending + ' gated criteria not yet graded'
+          : '<span class="gate-pass">all gates passed</span>')) +
+      (depViolations.length
+        ? ' · <span class="gate-fail">dependency rule violated: ' +
+          depViolations.join(', ') + '</span>'
+        : '');
+  }
   Object.keys(axes).forEach(function (k) { renderAxis(axes[k]); });
   fillRow(document.querySelector('[data-sumrow="total"]'),
-    { graded: graded, total: grades.length, pts: pts, max: max, na: na });
+    { graded: graded, total: grades.length, pts: pts, max: max, na: na,
+      gatedTotal: gateFailures.length + gatePending ||
+        document.querySelectorAll('.grade[data-gate-min]').length,
+      gateFail: gateFailures, gatePending: gatePending });
   drawRadar();
+  window.__reviewGating = { failures: gateFailures, pending: gatePending,
+                            overall: overall, dep_violations: depViolations };
 }
 
 // ---- local autosave ----------------------------------------------------
@@ -736,8 +845,20 @@ document.getElementById('export').addEventListener('click', function () {
   Object.keys(axes).forEach(function (k) {
     var a = axes[k];
     out.sections[k] = { graded: a.graded, total: a.total, points: a.pts,
-                        max_points: a.max, na: a.na };
+                        max_points: a.max, na: a.na,
+                        percentage: a.max
+                          ? Math.round(1000 * a.pts / a.max) / 10 : null,
+                        gate_failures: a.gateFail || [] };
   });
+  var gating = window.__reviewGating || {};
+  out.overall_score = gating.overall !== undefined ? gating.overall : null;
+  out.gating = {
+    failures: gating.failures || [],
+    pending: gating.pending || 0,
+    label: (gating.failures && gating.failures.length) ? 'Gating FAIL'
+      : (gating.pending ? 'gates not fully scored' : 'gates passed')
+  };
+  out.dependency_violations = gating.dep_violations || [];
   var text = JSON.stringify(out, null, 2);
   navigator.clipboard.writeText(text).then(function () {
     document.getElementById('export-status').textContent =

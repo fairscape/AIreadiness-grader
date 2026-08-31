@@ -1,8 +1,18 @@
 """Section 1 — Provenance (gating)."""
 
+import re
+
 from .. import evidence as ev
 from ..crate import as_list, ids_of
 from ..known import CODE_HOSTS, SOFTWARE_ARCHIVE_HOSTS, match_host
+
+# v1.5 1.b asks whether known provenance gaps / chain-of-custody breaks are
+# explicitly disclosed. Prose signal only — a structured field doesn't exist.
+GAP_DISCLOSURE_RE = re.compile(
+    r"chain[- ]of[- ]custody|provenance gap|missing provenance|"
+    r"collection circumstances|retrospective(ly)? (collected|acquired)|"
+    r"original (collection|source) (records? )?(unavailable|unknown|lost)",
+    re.I)
 
 # --- 1.a Transparent -------------------------------------------------------
 
@@ -74,6 +84,7 @@ def estimate_1a(facts):
 
 def extract_1b(ctx):
     stats = ctx.bundle.stats
+    root = ctx.bundle.root
     return {
         "activity_total": stats.activity_total,
         "computation_total": stats.computation_total,
@@ -82,11 +93,16 @@ def extract_1b(ctx):
         "computation_with_software": stats.computation_with_software,
         "computation": stats.sample("computation") or stats.sample("experiment"),
         "graphs": ctx.bundle.evidence_graph_links(),
+        "prose": " ".join(str(root.get(f) or "") for f in
+                          ("description", "rai:dataCollection",
+                           "rai:dataLimitations")),
     }
 
 
 def transform_1b(ctx, raw):
-    return raw
+    hits = sorted({m.group(0) for m in
+                   GAP_DISCLOSURE_RE.finditer(raw.pop("prose"))})
+    return {**raw, "gap_disclosures": hits[:6]}
 
 
 def present_1b(facts):
@@ -101,6 +117,14 @@ def present_1b(facts):
                           facts["computation_with_software"],
                           facts["computation_total"])),
         ev.sub(ev.entity("Example transformation step", facts["computation"])),
+        ev.flag("Provenance-gap / chain-of-custody disclosure language found "
+                "in the prose metadata",
+                bool(facts["gap_disclosures"]),
+                detail=(", ".join(facts["gap_disclosures"])
+                        if facts["gap_disclosures"] else
+                        "a 2 requires records to be complete OR known gaps "
+                        "explicitly disclosed — absence of this language is "
+                        "fine if the record is complete")),
         ev.links("Evidence graphs (visual provenance per sub-crate)",
                  facts["graphs"]),
     ]
@@ -115,12 +139,19 @@ def estimate_1b(facts):
         return ev.estimate("2",
                            f"{facts['activity_total']} machine-readable "
                            "transformation steps",
-                           "every computation links its software")
+                           "every computation links its software",
+                           "completeness of the provenance record (or "
+                           "disclosure of known gaps) is asserted, not "
+                           "verified",
+                           "final score is capped at 1.a's score (rule "
+                           "1.b ≤ 1.a)")
     return ev.estimate("1",
                        f"{facts['activity_total']} machine-readable "
                        "transformation steps",
                        f"software linked on {n} of {total} computations — "
-                       "consider 2 if the gap is negligible")
+                       "consider 2 if the gap is negligible",
+                       "final score is capped at 1.a's score (rule "
+                       "1.b ≤ 1.a)")
 
 
 # --- 1.c Interpretable -----------------------------------------------------
@@ -132,7 +163,7 @@ def extract_1c(ctx):
 
 
 def transform_1c(ctx, raw):
-    archived, code_hosted, unhosted = [], [], []
+    archived, code_hosted, provider_site, unhosted = [], [], [], []
     for sw in raw["software"]:
         urls = ids_of(sw.get("contentUrl")) + ids_of(sw.get("codeRepository")) \
             + ids_of(sw.get("additionalDocumentation"))
@@ -143,10 +174,16 @@ def transform_1c(ctx, raw):
             archived.append(entry)
         elif match_host(url_blob, CODE_HOSTS):
             code_hosted.append(entry)
+        elif any(u.startswith(("http://", "https://")) for u in urls):
+            # v1.5: for proprietary commercial software, a URI to the
+            # provider's website scores 2 — whether the software IS
+            # proprietary commercial is the reviewer's call
+            provider_site.append(entry)
         else:
             unhosted.append(entry)
     return {"software_total": raw["software_total"], "archived": archived,
-            "code_hosted": code_hosted, "unhosted": unhosted}
+            "code_hosted": code_hosted, "provider_site": provider_site,
+            "unhosted": unhosted}
 
 
 def present_1c(facts):
@@ -160,10 +197,15 @@ def present_1c(facts):
                         len(facts["archived"]), of=facts["software_total"])),
         ev.sub(ev.count("Mutable code hosting only (GitHub and the like)",
                         len(facts["code_hosted"]), of=facts["software_total"])),
+        ev.sub(ev.count("Provider/vendor website URI only",
+                        len(facts["provider_site"]), of=facts["software_total"],
+                        detail="counts as 2 only for proprietary commercial "
+                               "software (reviewer's call)")),
         ev.sub(ev.count("No download/repository link", len(facts["unhosted"]),
                         of=facts["software_total"])),
         ev.sub(ev.listing("Archived software", fmt(facts["archived"]))),
         ev.sub(ev.listing("Code-hosted software", fmt(facts["code_hosted"]))),
+        ev.sub(ev.listing("Provider-site software", fmt(facts["provider_site"]))),
         ev.sub(ev.listing("Software without links", fmt(facts["unhosted"]))),
     ]
 
@@ -172,16 +214,24 @@ def estimate_1c(facts):
     total = facts["software_total"]
     if total == 0:
         return ev.estimate("0", "no software entities in the crate")
-    archived, hosted = len(facts["archived"]), len(facts["code_hosted"])
+    archived = len(facts["archived"])
+    hosted = len(facts["code_hosted"])
+    provider = len(facts["provider_site"])
     if archived == total:
         return ev.estimate("2", f"all {total} software entities point at an "
                                 "archive with a PID")
-    if archived or hosted:
+    if provider and archived + provider == total:
+        return None  # provider URIs score 2 only for proprietary commercial
+        # software — a human must judge what the software is
+    if archived or hosted or provider:
         return ev.estimate("1",
                            f"{archived} of {total} archived with a PID"
                            if archived else None,
                            f"{hosted} on mutable code hosting only"
                            if hosted else None,
+                           f"{provider} with a provider/vendor URI only "
+                           "(a 2 if proprietary commercial)"
+                           if provider else None,
                            f"{len(facts['unhosted'])} with no link"
                            if facts["unhosted"] else None)
     return ev.estimate("0", "software entities exist but none has a "

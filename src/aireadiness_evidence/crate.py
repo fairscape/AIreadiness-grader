@@ -142,7 +142,9 @@ class CrateStats:
         self.dataset_embargoed = 0
         self.dataset_with_hash = 0
         self.dataset_with_schema_ref = 0
-        self.dataset_with_summary_stats = 0
+        self.summary_stats_total = 0
+        self.summary_stats_entities = []
+        self.summary_stats_ids = set()
         self.dataset_split_names = []          # bounded
         self.dataset_split_count = 0
         self.dataset_image_total = 0           # image-format datasets
@@ -298,12 +300,35 @@ class CrateBundle:
 
         for e in graph:
             eid = e.get("@id")
+            ctype = canonical_type(e)
+
+            # Summary-statistics links are located on every entity type, root
+            # ROCrate entities included. This runs before the duplicate-id
+            # skip below: a parent crate embeds its own copy of each sub-crate
+            # root, and that copy can be a stale snapshot missing the link, so
+            # whichever copy actually carries it has to be the one that counts.
+            if has_any(e, SUMMARY_STATS_FIELDS):
+                key = eid or id(e)
+                if key not in stats.summary_stats_ids:
+                    stats.summary_stats_ids.add(key)
+                    stats.summary_stats_total += 1
+                    stats.add_sample("summary_stats", e)
+                    if len(stats.summary_stats_entities) < 25:
+                        target = next(
+                            (ids_of(e.get(f))[0] for f in SUMMARY_STATS_FIELDS
+                             if ids_of(e.get(f))), None)
+                        stats.summary_stats_entities.append({
+                            "@id": eid,
+                            "name": e.get("name"),
+                            "type": ctype,
+                            "target": target,
+                        })
+
             if eid and eid in self._seen_ids:
                 continue
             if eid:
                 self._seen_ids.add(eid)
 
-            ctype = canonical_type(e)
             if ctype in ("ROCrate", "CreativeWork"):
                 continue
             stats.type_counts[ctype] += 1
@@ -361,9 +386,6 @@ class CrateBundle:
             stats.add_sample("hashed_entity", e)
         if has_any(e, SCHEMA_REF_FIELDS):
             stats.dataset_with_schema_ref += 1
-        if has_any(e, SUMMARY_STATS_FIELDS):
-            stats.dataset_with_summary_stats += 1
-            stats.add_sample("summary_stats", e)
 
         fmt = e.get("format")
         if fmt:

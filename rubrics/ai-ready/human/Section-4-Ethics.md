@@ -1,4 +1,6 @@
 # AI-Readiness Human Questionnaire — Section 4: Ethics
+
+> **⚠ Written against rubric v1.0.** The rubric is now v1.5 (2026-08-29) — apply the changes in [V1.5-DELTA.md](V1.5-DELTA.md) (gates, N/A policy, dependency caps, and per-criterion rule changes) on top of this packet.
 *Was the data acquired, managed, shared, and secured responsibly — and can a reviewer tell?*
 
 For each question you are **given the relevant metadata, already extracted,

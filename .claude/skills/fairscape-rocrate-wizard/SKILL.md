@@ -169,7 +169,7 @@ Run the build *every time* you enter Phase 5, even on resume — Phase 4 may hav
 
 Frame the phase first:
 
-> *"**Phase 5 — Grading.** Now we measure how complete the crate is against the 28-rubric AI-Ready checklist. The rubric text is transcribed from "Rubric for Human Review of AI.docx" v1.0 into `src/aireadiness_evidence/rubric_defs.yaml` and covers seven criteria: FAIRness, Provenance, Characterization, Pre-model Explainability, Ethics, Sustainability, Computability. The flow is two-step: first I run the deterministic `aireadiness_evidence` pipeline, which walks the crate and dumps typed evidence per rubric — no LLM involved, just structured reading. Then I (Claude) read each rubric's scoring rules and the extracted evidence and give it a 0 (Absent), 1 (Partial), or 2 (Substantive), with a rationale and a list of gaps that would raise the score. The result is a per-rubric folder of `score.json` files plus an `aggregated_score.json` with the total."*
+> *"**Phase 5 — Grading.** Now we measure how complete the crate is against the 28-rubric AI-Ready checklist. The rubric text is transcribed from "Rubric for Human Review of AI-readiness Evaluation Criteria" v1.5 (2026-08-29) into `src/aireadiness_evidence/rubric_defs.yaml` and covers seven domains: FAIRness, Provenance, Characterization, Pre-model Explainability, Ethics, Sustainability, Computability. The flow is two-step: first I run the deterministic `aireadiness_evidence` pipeline, which walks the crate and dumps typed evidence per rubric — no LLM involved, just structured reading. Then I (Claude) read each rubric's scoring rules and the extracted evidence and give it a 0 (Absent), 1 (Partial), or 2 (Substantive) — or N/A on a non-gating rubric whose elements are all inapplicable — with a rationale and a list of gaps that would raise the score. The aggregate applies v1.5's rules: the overall score is the unweighted average of the seven domain percentages, the caps 1.b ≤ 1.a and 6.a ≤ 2.c are enforced, and four gates (FAIRness with 0.a = 2, Provenance, Standards/2.c, Ethics) are reported independently — a failed gate marks the result "Gating FAIL". The result is a per-rubric folder of `score.json` files plus an `aggregated_score.json`."*
 
 Then ask:
 
@@ -247,7 +247,8 @@ Schema (`schema_version: 2`):
   },
   "grading": {"dir": "...", "completed_rubrics": [...],
               "aggregated_score_path": "...",
-              "summary": {"total": N, "max": M, "percentage": P}},
+              "summary": {"total": N, "max": M, "percentage": P,
+                          "overall_score": D, "gating": "gates passed|Gating FAIL"}},
   "improvements": {
     "ran": ["link-authors-orcids", "ethics-questionnaire"],
     "skipped": [...],

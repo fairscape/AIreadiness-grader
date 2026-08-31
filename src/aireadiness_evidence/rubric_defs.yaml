@@ -1,12 +1,75 @@
 # Rubric for Human Review of AI-readiness Evaluation Criteria
-# Transcribed from "Rubric for Human Review of AI.docx"
-# Version 1.0  2026-08-14  Tim Clark and Monica Munoz Torres
+# Transcribed from "Rubric for Human Review of AI-readiness Evaluation
+# Criteria v1.5 2026-08-29.docx" — Timothy Clark and Monica Munoz Torres.
 #
 # This file is the single source of truth for the rubric text shown in the
 # presentation JSON and the human-review HTML. Edit here, not in code.
 #
+# Top level: version/date, glossary, methodology (scoring + gating spec).
 # sections: number, title, gating
-# criteria: id, name, practice, questions, scoring (2/1/0 rules), notes
+# criteria: id, name, practice, questions, scoring (2/1/0 rules), notes,
+#           gate_min (minimum score demanded by the gate, if gated),
+#           depends_on (id of the criterion whose score caps this one)
+
+version: "1.5"
+date: "2026-08-29"
+
+glossary:
+  standard_vocabulary: >
+    A vocabulary registered in NCBO BioPortal, EBI Ontology Lookup Service, or
+    OBO Foundry.
+  sustainable_repository: >
+    A service that assigns persistent identifiers, maintains descriptive
+    metadata that remains resolvable independently of the deposited object,
+    and has resources to persist long-term. Examples include large-scale
+    institutional and governmental repositories such as NIH and EBI databases,
+    DDBJ, and ICPSR; generalist repositories such as the NIH GREI
+    participants; and Software Heritage. Purely local or unmanaged resources,
+    e.g., departmental servers, S3 or GCS accounts, Google Drive, and Box
+    accounts, are excluded.
+
+methodology:
+  domain_score: >
+    Calculated as the sum of points earned divided by the maximum possible
+    points across all applicable (non-N/A) criteria within that domain.
+  overall_score: >
+    An unweighted average of all domain scores. Gate evaluation results are
+    reported independently; the overall score is still computed on a gate
+    failure but is marked "Gating FAIL."
+  na_policy: >
+    "N/A" applies at the criterion level. Where guidance names an inapplicable
+    element, score the criterion on its applicable elements; a criterion is
+    N/A only if every element is inapplicable. N/A is not permitted on a
+    gating criterion.
+  gating: >
+    The gates are "FAIRness," "Provenance," "Ethics," and "Standards"
+    (criterion 2.c, in "Characterization"). Thresholds — FAIRness: 0.a = 2
+    and all others > 0; Provenance: all scores > 0; Standards: 2.c > 0;
+    Ethics: all scores > 0. A criterion-level gate failure marks its full
+    domain "Gating FAIL", which propagates to the overall score. FAIRness 0.a
+    gates at maximum because a dataset that is not findable in a domain
+    repository cannot be retrieved or evaluated at all, while the remaining
+    gates are floors and scores of "2" are targets.
+  dependency_rules: >
+    1.b (Traceable) may never score higher than 1.a (Transparent) — a
+    transformation pipeline cannot be fully traced if the fundamental data
+    source is unidentified. 6.a (Standardized) may never score higher than
+    2.c (Standards) — validation depth is limited by the completeness of the
+    underlying schema and semantic bindings.
+  adjudication: >
+    Conformance adequacy on criteria 2.c, 2.d, 2.e, 3.a, 4.a, 4.c, and 5.c
+    requires domain-expert determinations, which may be made through
+    collaborators if required. For modalities outside their competence,
+    evaluators should reach out to a pre-identified qualified expert for that
+    modality. Log determinations with the adjudicator's name and domain.
+  score_record: >
+    A score record must be kept, including the dataset PID and version, the
+    date the evaluation was performed, per-element scores, the evaluator's
+    name/ORCID/ROR, adjudicated elements with the adjudicator name/ORCID/ROR,
+    and gate results. The score record should be a document referenced by the
+    provenance graph as an entity generated from the (meta)data by an
+    activity associated with the evaluator, using any software assist tools
+    employed.
 
 sections:
   - number: 0
@@ -34,23 +97,39 @@ sections:
 criteria:
   - id: "0.a"
     name: Findable
+    gate_min: 2
     practice: >
       Deposit datasets in a searchable FAIR-compliant data repository.
     questions:
       - "Does the dataset have a resolvable PID: ARK, CSTR, DOI, IGSN, PURL, URN, HDL?"
-      - Does the dataset have a compact ID whose prefix is registered with
-        identifiers.org (e.g., ena.embl:ERP001234, geo:GSE68086, dbgap:phs000001)?
-      - Is the dataset deposited in a repository listed in re3data or FAIRsharing?
+      - Does the dataset have a compact ID whose prefix is registered, for
+        example, with identifiers.org (e.g., ena.embl:ERP001234, geo:GSE68086,
+        dbgap:phs000001)?
     scoring:
-      "2": PID or prefix-registered compact ID is present, and the dataset was
-        deposited in a registered repository.
-      "1": Re3data or FAIRsharing registry is provided without a PID; or only a
-        PID is given, but the dataset is not in a registered repository.
+      "2": PID or prefix-registered compact ID is present, resolves to a
+        specific version of the dataset, and the dataset was deposited in a
+        sustainable repository. A domain-appropriate repository is one
+        recognized by the relevant research community as appropriate for the
+        specific datatype.
+      "1": Only a PID or compact ID is given, but the dataset is not in a
+        domain-appropriate repository; or the data was deposited in a
+        registered repository without a resolvable PID.
       "0": Neither is present.
-    gating_note: Scoring threshold for gating is all 2's for FAIRness.
+    notes: >
+      A sustainable repository assigns persistent identifiers, maintains
+      descriptive metadata that remains resolvable independently of the
+      deposited object, and has resources to persist long-term (e.g., NIH and
+      EBI databases, DDBJ, ICPSR, the NIH GREI generalist repositories,
+      Software Heritage). Purely local or unmanaged resources — departmental
+      servers, S3/GCS accounts, Google Drive, Box — are excluded.
+    gating_note: >
+      Gating threshold — 0.a must score 2 (FAIRness gates at maximum here
+      because a dataset that is not findable in a domain repository cannot be
+      retrieved or evaluated at all). N/A is not permitted.
 
   - id: "0.b"
     name: Accessible
+    gate_min: 1
     practice: >
       Descriptive metadata should always be available and accessible, even if
       the dataset is restricted, unavailable, or de-accessioned. Ensure metadata
@@ -60,49 +139,63 @@ criteria:
       - Is descriptive metadata available via PID or compact ID lookup
         independently of the dataset, i.e., even if the dataset is restricted or
         de-accessioned?
-      - Does descriptive metadata conform to a standard metadata vocabulary such
-        as DCAT 3, Datacite schema (datacite.org), schema.org, and/or
-        bioschemas.org?
+      - Does descriptive metadata conform to a standard metadata vocabulary
+        (for example DCAT 3, Datacite schema, schema.org, and/or
+        bioschemas.org)?
     scoring:
       "2": Both are true.
       "1": Metadata is always available but does not conform to a standard schema.
       "0": Metadata is not accessible.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "0.c"
     name: Interoperable
+    gate_min: 1
     practice: >
       Wherever possible, provide data and metadata using formally defined
       specifications for digital objects.
     questions:
-      - Is metadata presented using one of the following formal interoperable
-        specifications, such as JSON-LD, RDF, or OWL, referencing at least one
-        standard vocabulary such as SNOMED, LOINC, UBERON, OBI, etc.?
-      - Is metadata provided using a machine-readable schema such as JSON + JSON
-        Schema, XML + XSD, Parquet with embedded schema, or Frictionless Data?
+      - Is metadata about the dataset presented using one of the following
+        formal interoperable specifications (e.g., JSON-LD, DataCite XML, RDF),
+        referencing at least one standard vocabulary (such as SNOMED, LOINC,
+        UBERON, OBI, etc.)?
+      - Is metadata about the dataset provided using a machine-readable schema
+        such as JSON + JSON Schema, XML + XSD, Parquet with embedded schema, or
+        Frictionless Data?
     scoring:
-      "2": Formal interoperable specifications are provided.
-      "1": A machine-readable schema is provided.
+      "2": Formal interoperable specifications for metadata are provided.
+      "1": A machine-readable metadata schema is provided.
       "0": Neither is provided.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "0.d"
     name: Reusable
+    gate_min: 1
     practice: >
       Attach a clear and accessible data usage license that allows the
       responsible use of AI/ML applications or link to a Data Use Agreement (DUA).
     questions:
-      - Does the metadata reference a clear and accessible data usage license
-        such as a Creative Commons license (CC-BY, CC-BY-SA, etc.), public
-        domain dedication, or a Data Use Agreement?
-      - Does the license or DUA prohibit use of the data in AI/ML applications?
+      - Is a data usage license (e.g., Creative Commons, public domain) or a
+        DUA programmatically linked in the metadata (for example, via
+        schema.org:license)?
+      - Does the explicit text of the linked license or DUA permit (or at
+        minimum, not prohibit) the computational reuse of the data for AI/ML
+        applications?
     scoring:
-      "2": License, DUA, or public domain dedication is present, and there is no
-        AI/ML prohibition.
-      "0": No license, DUA, or public domain dedication is specified, or AI/ML
-        is prohibited.
-    notes: There is no intermediate "1" grade for this criterion.
+      "2": A machine-readable license or DUA is present, and it does not
+        prohibit AI/ML use.
+      "1": A license or DUA is present, but it is not machine-readable (e.g.,
+        buried in a PDF abstract), and does not prohibit AI/ML use.
+      "0": No license/DUA is linked in the metadata, or AI/ML is explicitly
+        prohibited.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "1.a"
     name: Transparent
+    gate_min: 1
     practice: >
       Identify data sources traceable to a reasonable ground truth, e.g.,
       clinical data from EHR at a given hospital, clinical trials, or laboratory
@@ -112,40 +205,55 @@ criteria:
         reach a real-world, trustworthy ground truth? E.g., a named EHR/hospital,
         a named drug trial, a named lab; for experimental labs, the ground truth
         must include samples, instruments, reagents, and generated dataset.
-      - "Is the source metadata provided in machine-readable form? Valid
-        ontologies are: W3C PROV-O, PROV-DM, or a derivation of either, e.g.,
-        EVI, CPM, PAV."
     scoring:
       "2": A source is named and traceable to a ground truth, in a structured
-        metadata field.
-      "1": The source is stated but not to a fully grounded truth, e.g., to a
-        hospital but not to an actual OMOP dataset, or to an experimental lab
-        dataset but not specifying samples, reagents, and instruments.
-      "0": No machine-readable source identified.
+        metadata field. To fully ground a source, the exact data artifact
+        (e.g., a specific dataset) must be specified instead of just listing
+        the providing hospital or laboratory.
+      "1": The source is named but either not to a fully grounded truth, or
+        not in a structured metadata field.
+      "0": No source is identified.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "1.b"
     name: Traceable
+    gate_min: 1
+    depends_on: "1.a"
     practice: >
       Identify important data transformation steps, with links to software, at
       an appropriate level of detail, using a machine-readable representation,
-      such as W3C PROV-O or EVI.
+      such as W3C PROV-O or EVI, to enable step tracing.
     questions:
-      - Have you described the key steps from a reliable data origin (e.g., raw
-        data from a reliable source with accompanying metadata about how the
-        data were generated) to data provided for analyses? Have you included
-        links to the software that was used?
-      - Have you utilized valid ontologies such as W3C PROV-O, PROV-DM, or a
-        derivation of either, e.g., EVI, CPM? (PAV is not allowed as it does not
-        provide step tracing and is single-source only.)
+      - "Does your documentation include the following: the raw data origin and
+        generation metadata (e.g., instrument details)? The key processing
+        steps used to create the final analytical dataset? Links to all
+        software used in data preparation?"
+      - Have you utilized valid ontologies such as W3C PROV-O, EVI, or CPM
+        (https://www.iso.org/standard/87714.html), etc.?
+      - Are any known gaps in the provenance records (e.g., missing original
+        collection circumstances or chain-of-custody breaks for retrospective
+        data) explicitly documented and disclosed to downstream users?
     scoring:
       "2": Steps are provided in a machine-readable provenance record, and it
-        includes software links.
-      "1": Machine-readable provenance record is provided, but software links
-        were not provided.
+        includes software links. The provenance records are either fully
+        complete or any known chain-of-custody gaps are explicitly documented
+        and disclosed.
+      "1": "Transformation steps are documented in enough detail to trace a
+        sequence of steps, but the record falls short on one or more of: it is
+        prose rather than machine-readable; software links are absent; known
+        provenance gaps are undisclosed."
       "0": No transformation steps were provided.
+    notes: >
+      Scoring dependency rule — 1.b ≤ 1.a. The score for 1.b (Traceable) may
+      never exceed the score for 1.a (Transparent). A transformation pipeline
+      cannot be fully traced if the fundamental data source is unidentified.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "1.c"
     name: Interpretable
+    gate_min: 1
     practice: >
       Make software for key data transformation and analysis steps available in
       a sustainable repository.
@@ -156,13 +264,17 @@ criteria:
       "2": Software is archived in a sustainable repository with a PID, that is,
         an immutable snapshot with a persistent identifier (e.g., Zenodo,
         Software Heritage, Dataverse, an institutional archive; includes a
-        GitHub release archived to such a repository).
+        GitHub release archived to such a repository). For proprietary
+        commercial software, a URI is provided to the provider's website.
       "1": Software is available but only in mutable code hosting with no PID
         (e.g., a GitHub/GitLab/BitBucket repo alone).
       "0": Software is not available.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "1.d"
     name: Key actors identified
+    gate_min: 1
     practice: >
       Identify people and organizations responsible for obtaining and processing
       the data, the samples, and subject groups involved in producing the data.
@@ -176,6 +288,8 @@ criteria:
         for orgs).
       "1": Key actors are named in free text, without PIDs.
       "0": Key actors are not identified.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "2.a"
     name: Semantics
@@ -193,6 +307,9 @@ criteria:
       "1": Abstract and keywords are present, but not controlled-vocabulary
         terms (free-text keywords only).
       "0": No abstract, or effectively no descriptive metadata is present.
+    notes: >
+      Scores the subject and discovery terms only, not the vocabulary bindings
+      already scored in 0.c and 2.c.
 
   - id: "2.b"
     name: Statistics
@@ -202,49 +319,63 @@ criteria:
       encoded consistently.
     questions:
       - Are descriptive statistics of key variables provided?
+      - Are the chosen statistics domain-appropriate?
       - Are missing values encoded consistently?
     scoring:
-      "2": Descriptive statistics of key variables are provided, and missing
-        values are encoded consistently.
+      "2": Missing values are encoded consistently, and descriptive statistics
+        of key variables are provided. Where applicable, the dataset provides
+        global record and variable counts, detailed per-variable descriptive
+        statistics (central tendency, spread, min/max, and valid counts for
+        numeric data; frequencies for categorical data), and strictly utilizes
+        a single, documented convention for representing missing values (not
+        mixed blanks/NA/-999/0).
       "1": Missing values are encoded consistently, but no descriptive
         statistics are present.
       "0": Missing values are not consistently encoded.
     notes: >
-      For non-tabular data this criterion is N/A. Descriptive statistics means
-      per-variable summaries: for numeric variables, central tendency and spread
-      with min/max and non-missing count; for categorical variables, category
-      frequencies; plus dataset-level record and variable counts. Missing-value
-      consistency means one documented convention used throughout (not mixed
-      blanks/NA/-999/0).
+      For non-tabular data, per-variable descriptive statistics are not
+      applicable (N/A); score on missing-value encoding consistency, expressed
+      in terms appropriate to the modality (e.g., absent channels, dropped
+      leads, corrupt or omitted slices, gaps in a time series). The criterion
+      is N/A only where the data has no representable missingness at all.
 
   - id: "2.c"
     name: Standards
     gating: true
+    gate_min: 1
     practice: >
       Provide a machine-readable data dictionary or schema for each dataset,
       linked to the dataset metadata, and referencing any relevant standards.
     questions:
-      - Is the file governed by a formal open specification with a built-in or
-        paired external schema that names and types its data elements? Examples
-        include RDF/JSON-LD, OWL, OME-TIFF, OME-NGFF, NWB, WFDB, DICOM, NIfTI,
-        Parquet, CSVW, Frictionless Table Schema, JSON Schema, XSD.
+      - Is each file governed by a formal open specification with a built-in or
+        paired external schema that names and types its data elements as
+        required for downstream usage? (e.g., RDF/JSON-LD, OME-TIFF, OME-NGFF,
+        NWB, WFDB, DICOM, NIfTI, Parquet, CSVW, Frictionless Table Schema,
+        JSON Schema, XSD.)
       - Is at least one data element bound to a standard vocabulary term through
         (a) a dataset-level JSON-LD sidecar, or (b) the format's inherent
         mechanism (vocabulary IRIs in RDF/JSON-LD data, DICOM Code Sequences,
         CSVW propertyUrl/aboutUrl, Frictionless rdfType, Define-XML NCI
-        Thesaurus codes, OME annotations, NWB ontology links)?
+        Thesaurus codes, OME annotations, NWB ontology links, etc.)?
       - Is the standard a true schema/model that dictates structure and content,
         or merely a generic file container?
     scoring:
-      "2": Formal schema and at least one populated standard vocabulary binding.
-      "1": Formal schema, no standard vocabulary binding.
-      "0": No formal schema.
+      "2": For every format class present in the deposit, a formal schema and
+        at least one populated standard vocabulary binding, as appropriate to
+        the datatype, have been provided.
+      "1": For every format class present in the deposit, a formal schema, but
+        no standard vocabulary binding.
+      "0": No formal schema has been provided — e.g., HDF5 with no NWB or
+        other schema layer, pickle, .mat, npy, or undocumented vendor binaries.
     notes: >
       A standard vocabulary is one registered in NCBO BioPortal, EBI Ontology
       Lookup Service, or OBO Foundry. A vocabulary binding must be populated in
       the deposited instance (capability alone scores 1). Scoring may be per
       format class, and a sidecar covering a class covers every file in it.
       Formats named are examples, not an enumeration.
+    gating_note: >
+      Gating threshold (the "Standards" gate) — must score above 0. N/A is not
+      permitted.
 
   - id: "2.d"
     name: Potential Sources of Bias
@@ -257,16 +388,23 @@ criteria:
     questions:
       - Does the metadata describe known biases and assumptions?
       - Does the metadata describe, where applicable, reasons for missingness?
-      - Does the metadata describe the state-vs-control balance?
+      - Does the metadata describe the case-vs-control balance?
+      - Are demographic gaps and limitations in cohort representativeness
+        (e.g., missing geographic or socioeconomic populations) explicitly
+        disclosed within the dataset metadata or linked documentation?
+      - If the data is derived from clinical settings, does the documentation
+        describe how admission patterns or site selection might introduce
+        systematic biases?
     scoring:
-      "2": Substantive description of known bias sources and assumptions in
-        collection/processing/interpretation is given, and the applicable
-        elements are addressed (reasons for missingness where there are missing
-        values; state-vs-control representation where relevant).
-      "1": Bias/assumptions are addressed but thinly, or applicable
-        missingness/state-control elements were omitted.
-      "0": No description of bias or assumptions is given, or a non-substantive
-        placeholder is offered (e.g., "no known bias" with no basis).
+      "2": Substantive and specific documentation details known biases and
+        assumptions throughout collection, processing, and interpretation,
+        including specific justifications for missing data and case-vs-control
+        representation where applicable.
+      "1": Bias/assumptions are addressed but only in general terms; or
+        applicable missingness/state-control elements were omitted.
+      "0": No description of bias or assumptions is given, or only a
+        non-substantive or generic placeholder is offered (e.g., "no known
+        bias" with no basis).
     notes: >
       "Substantive" means it engages the actual data (specific bias sources,
       assumptions, or reasons are named); it is not a boilerplate disclaimer.
@@ -280,8 +418,10 @@ criteria:
       Have quality control procedures been applied? If so, provide a link to a
       description.
     questions:
-      - Has a data quality assessment been applied?
-      - What was it?
+      - Has data-type specific quality control (QC) been applied?
+      - Is QC indicated? Does the link resolve? Is the description real and not
+        just a placeholder?
+      - Is a link provided to the specific protocol or software that was used?
     scoring:
       "2": QC was applied and appropriate for the domain.
       "1": QC was applied and documented, but it is incomplete for the domain.
@@ -302,6 +442,8 @@ criteria:
         metadata?
       - Is there a linked human-readable document, such as Datasheets for
         Datasets (Gebru et al.)?
+      - Does the datasheet substantively address its dimensions (composition,
+        collection, processing, limitations/uses)?
     scoring:
       "2": Both machine-readable metadata and a linked, human-readable
         datasheet-style document that substantively covers dataset composition,
@@ -309,6 +451,10 @@ criteria:
       "1": One is present but not the other, or one or both are present but are
         thin or partial.
       "0": Neither is provided.
+    notes: >
+      Scoring rule — score only whether the datasheet exists and covers its
+      dimensions; do not re-score bias documentation (2.d) or use-case
+      guidance (3.b) here.
 
   - id: "3.b"
     name: Fit for purpose
@@ -318,6 +464,8 @@ criteria:
     questions:
       - Does the dataset identify the appropriate and inappropriate use cases,
         and are there any links to previously published analyses using it?
+      - Were the use cases provided in a structured manner (i.e., Croissant RAI
+        or equivalent)?
     scoring:
       "2": Appropriate and inappropriate use cases are identified, ideally in
         structured machine-readable form (e.g., Croissant RAI
@@ -338,17 +486,19 @@ criteria:
       dataset, such as a cryptographic hash.
     questions:
       - Is there an integrity mechanism (e.g., cryptographic hash) for each raw
-        or processed dataset?
+        or processed dataset, recorded in the metadata that describes it?
     scoring:
-      "2": An integrity mechanism is provided for each dataset (e.g., SHA-256
-        per file/dataset, or a Merkle tree/manifest of hashes covering all
-        components).
+      "2": An integrity mechanism is provided in the metadata for each dataset
+        (e.g., SHA-256 per file/dataset, or a Merkle tree/manifest of hashes
+        covering all components), so metadata and data verifiably reference
+        each other.
       "1": An integrity mechanism is provided, but it is incomplete (some
         datasets/files are covered, others are not).
       "0": No integrity mechanism is provided.
 
   - id: "4.a"
     name: Ethically acquired
+    gate_min: 1
     practice: >
       Describe ethical data acquisition consistent with accepted principles
       (e.g., Belmont Report, Menlo Report, CARE Principles) sufficient to
@@ -356,23 +506,33 @@ criteria:
     questions:
       - Is ethical data acquisition consistent with accepted bioethics
         principles sufficient to evaluate for the intended use?
-      - "Are the following elements present? IRB/REC URL, IRB/REC protocol
-        number, data governance committee chair, and ethics reviewer."
-      - If an indigenous population is being studied, is CARE principles
-        conformance demonstrated?
-      - Is a management plan provided? (rai:dataReleaseMaintenancePlan link to
-        the DMP/DMSP.)
-      - Acquisition is legitimate - obtained without theft, coercion, or
-        deception, with required permissions/consent secured.
+      - "Are the following elements present: IRB/REC protocol, data governance
+        committee chair, and ethics reviewer and institution?"
+      - For Indigenous-sourced data, is CARE principles conformance
+        demonstrated, for example, by describing the composition of the
+        governance committee with tribal representation, etc.?
+      - Is acquisition legitimate — obtained without theft, coercion, or
+        deception — with required permissions/consent secured?
+      - For retrospective data, is the basis for secondary AI/ML use (e.g., a
+        documented IRB waiver of authorization) explicitly stated in the
+        metadata?
+      - For prospective data, does the documented consent language explicitly
+        cover downstream AI/ML training and potential commercialization?
     scoring:
-      "2": Acquisition is described with the source, including permission/consent
-        basis (or substantiated statement that it is not required), confirmation
-        of legitimate collection is included, and the DMP/DMSP is linked.
+      "2": "All of the following are present: acquisition is described with the
+        source, including permission or consent basis specifically covering
+        downstream AI/ML use (for prospective data), or the specific basis for
+        a waiver/exemption explicitly detailed (for retrospective data);
+        confirmation of legitimacy of data collection is included; and the
+        DMP/DMSP is linked."
       "1": Acquisition is described, but it is incomplete or generic.
       "0": No acquisition description.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "4.b"
     name: Ethically managed
+    gate_min: 1
     practice: >
       Data management must align with ethical principles throughout the health
       AI lifecycle. Indicate privacy-protection processing, if any, sufficient
@@ -381,37 +541,67 @@ criteria:
       - Is data sensitivity properly described in alignment with disclosure risks?
       - Is data sensitivity aligned with intended use?
       - Is privacy protection described in a way aligned with the above?
+      - Has a formal Privacy Impact Assessment (PIA; or equivalent risk
+        assessment) been conducted for high-sensitivity data types (e.g.,
+        biometrics, longitudinal EHR)?
+      - Is there a documented procedure or commitment to periodically reassess
+        re-identification risks as new data linkage technologies emerge?
     scoring:
-      "2": Confidentiality code or equivalent present and DMP/DMSP content
-        substantively describes management appropriate to that sensitivity.
-      "1": Code present but privacy protection inadequate.
-      "0": No classification, or no management description where sensitivity
-        requires it.
+      "2": DMP/DMSP content substantively describes management appropriate to
+        the data's sensitivity. A PIA or equivalent risk assessment for
+        high-sensitivity data exists OR the data is documented as
+        low-sensitivity with no privacy processing required, and that
+        determination is justified. A documented plan for periodic reassessment
+        of re-identification risks is detailed for sensitive data.
+      "1": Privacy protection is inadequate, and/or formal PIAs or reassessment
+        plans are absent for sensitive data.
+      "0": There is no management description where sensitivity requires it.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "4.c"
     name: Ethically Disseminated
+    gate_min: 1
     practice: >
       Specify a licensing agreement and/or data use agreement (DUA) on as open
       terms as ethical and sustainability considerations permit. Specify contact
       information for a data access committee.
     questions:
-      - Is the license and/or DUA specified on as-open-as-appropriate terms?
-      - Is a Data Access Committee (DAC) contact provided where access is
-        controlled?
-      - If a DUA exists, does the DUA specify permitted and prohibited uses?
+      - Assuming a license and/or DUA exists, are the permitted and prohibited
+        uses ethically justified (i.e., "as open as possible, as closed as
+        necessary" based on privacy/population risks)?
+      - Where the modality warrants it, do the DUA(s) include explicit ethical
+        prohibitions relevant to the specific data modality (e.g., prohibiting
+        biometric synthesis, identity cloning, or discriminatory use) that go
+        beyond minimum legal requirements?
+      - If the dataset requires controlled access, is active information for a
+        Data Access Committee (DAC) provided?
     scoring:
-      "2": The license and/or DUA do not restrict use unjustifiably, permitted
-        and prohibited uses are specified, terms are appropriately open given
-        ethical/sustainability constraints, and a DAC contact is present and
-        available where access is controlled.
-      "1": The license/DUA is present, but its use limits are unspecified, or
-        terms are more restrictive than warranted, or DAC contact is missing
-        where access is controlled.
-      "0": There is no license/DUA.
-    notes: DAC contact is N/A for openly licensed data with no access committee.
+      "2": The dataset is ethically cleared for fully open access under a
+        license that clearly defines permitted and prohibited ethical
+        boundaries. OR, for controlled-access datasets, the qualitative terms
+        of the DUA do not unjustifiably restrict use, explicit
+        modality-specific ethical prohibitions are clearly defined where
+        required, and active contact information for a Data Access Committee
+        (DAC) is present. Modality-specific prohibitions are required where
+        the data itself can be used to synthesize, impersonate, or re-identify
+        an individual beyond what a general re-identification prohibition
+        addresses — for example, raw voice or speech, personal genomes, face
+        or full-head imaging, dense longitudinal geolocation.
+      "1": The terms of access are more restrictive than ethically warranted;
+        use boundaries are vague; access is controlled and the DAC contact is
+        missing. OR, the DUA is well-scoped with an active DAC contact but
+        lacks modality-specific ethical prohibitions where the modality
+        warrants them.
+      "0": Access is controlled without any defined ethical framework or
+        oversight mechanisms, or the dataset is openly released with no
+        defined ethical terms.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "4.d"
     name: Secure
+    gate_min: 1
     practice: >
       Specify security requirements for storing and accessing this data, e.g.,
       "public", "controlled access only", etc.
@@ -426,7 +616,11 @@ criteria:
         using a standard, such as HL7 security labels.
       "1": Security level is specified in prose, without reference to a standard
         vocabulary.
-      "0": No security level metadata is provided.
+      "0": No security level metadata is provided, or the declared security
+        level is not enforced — meaning controlled-access data is retrievable
+        without authorization, or authorized users are blocked.
+    gating_note: >
+      Gating threshold — must score above 0. N/A is not permitted.
 
   - id: "5.a"
     name: Persistent
@@ -435,14 +629,14 @@ criteria:
       privacy laws and retention guidelines, enabling future reprocessing and
       publishing of revised data.
     questions:
-      - Is all unprocessed/raw and processed data preserved in an archive that
-        supports retention and future reprocessing?
+      - Is all unprocessed/raw data preserved in an archive that supports
+        retention and future reprocessing?
     scoring:
-      "2": Data is preserved in an accepted/sustainable repository (per 0.a
-        repository acceptance), with a persistent identifier.
-      "1": Data is preserved but only in non-sustainable storage (no PID, or
+      "2": Raw data is preserved in a domain-appropriate repository, with a
+        persistent identifier and a retention commitment.
+      "1": Raw data is preserved but only in non-sustainable storage (no PID, or
         mutable hosting with no retention commitment).
-      "0": Data is not preserved (only processed/derived data available).
+      "0": Raw data is not preserved (only processed/derived data available).
 
   - id: "5.b"
     name: Domain-appropriate
@@ -452,14 +646,16 @@ criteria:
     questions:
       - For single-domain data, is it deposited in the repository the domain
         community treats as appropriate, where one is available for this data?
+      - For multi-domain data, is it deposited in a widely recognized
+        generalist repository (e.g., NIH GREI participants)?
     scoring:
-      "2": Data is deposited in a domain-appropriate repository, i.e., one
-        normally used by a practice community for this data type, whether that
-        is a specialist archive or a generalist repository that serves as the
-        recognized domain resource.
+      "2": A specialist domain repository was used where one exists and accepts
+        this data type; or no specialist repository exists, and a recognized
+        generalist repository was used.
       "1": Data is deposited in a generalist repository even though a specialist
-        domain-appropriate repository that accepts this type of data exists.
-      "0": Data was not deposited in any community-accepted repository.
+        domain-appropriate repository that accepts this type of data exists and
+        is accepted by the community.
+      "0": Data was not deposited in any domain-accepted repository.
 
   - id: "5.c"
     name: Well-governed
@@ -468,14 +664,16 @@ criteria:
       repository that facilitates data stewardship in the future and governance
       that accounts for maintenance, terms, policy changes, and fairness.
     questions:
-      - Is a data governance plan specified? A rai:dataReleaseMaintenancePlan
-        should include a link to the Data Management Plan (DMP).
-      - Are terms of access specified? See schema.org conditionsOfAccess and
-        license.
+      - Is a formal Data Management Plan (DMP) or long-term governance
+        explicitly linked (i.e., via rai:dataReleaseMaintenancePlan)?
+      - Does the linked governance plan actively account for future repository
+        stewardship, data maintenance, and policy changes?
     scoring:
-      "2": Both are present.
-      "1": Terms of access are not specified but there is a data governance plan.
-      "0": Neither is present.
+      "2": A comprehensive DMP/governance plan is linked and explicitly details
+        long-term repository stewardship, maintenance, and policy handling.
+      "1": A DMP/governance plan is linked, but it lacks detail regarding
+        future maintenance, policy changes, or long-term stewardship.
+      "0": No formal DMP or governance model is specified.
 
   - id: "5.d"
     name: Associated
@@ -483,8 +681,11 @@ criteria:
       Document project-level connections between data components and elements in
       a machine-readable manner.
     questions:
-      - Will a future user be able to access all data components needed for the
-        declared analysis, as an associated set that persists?
+      - Will all data users be able to link to all data required for analysis,
+        as an associated set that persists?
+      - Are all declared components retrievable?
+      - Are the associations durable (archived with the data)?
+      - Is this information provided as machine-readable or prose?
     scoring:
       "2": >-
         All necessary components are accessible and associated in persistent
@@ -500,6 +701,7 @@ criteria:
 
   - id: "6.a"
     name: Standardized
+    depends_on: "2.c"
     practice: >
       Datasets adhere to established, documented standards, including metadata
       standards, and their adherence can be validated deterministically.
@@ -510,19 +712,22 @@ criteria:
         pipeline) exist to deterministically verify this adherence without
         human intervention?
     scoring:
-      "2": (Meta)data conforms to a declared and documented standard (e.g.,
-        RDF/JSON-LD, OWL, OME-TIFF, OME-NGFF, NWB, WFDB, DICOM, NIfTI, Parquet,
-        CSVW, Frictionless Table Schema, JSON Schema, XSD, GA4GH Phenopackets).
-        Deterministic programmatic validation exists for this standard (e.g.,
-        OMOP DQD, pyshacl, JSON Schema validators), and the dataset architecture
-        allows these tools to execute successfully.
-      "1": (Meta)data uses a recognized file format or container (e.g., base
-        HDF5, raw NIfTI) or conforms to a text-based specification, but it lacks
-        a machine-readable schema. Adherence cannot be deterministically
-        validated without manual review or custom one-off scripts.
+      "2": Given 2.c = 2, a deterministic programmatic validation exists for
+        this standard (e.g., OMOP DQD, pyshacl, JSON Schema validators, etc.),
+        and the dataset architecture allows these tools to execute
+        successfully.
+      "1": "Given 2.c = 1: a formal schema is present and structural validation
+        is possible, but there are no populated vocabulary bindings, so
+        semantic conformance cannot be deterministically validated."
       "0": No declared or documented standard is used. Data structures are
         arbitrary, proprietary, or undocumented, making programmatic validation
         impossible.
+    notes: >
+      Scoring dependency rule — 6.a ≤ 2.c. The score for 6.a (Standardized
+      validation) may never exceed the score for 2.c (Standards definition):
+      validation depth is limited by the completeness of the underlying schema
+      and semantic bindings. A dataset cannot be fully validated (6.a = 2) if
+      the standard itself is incomplete or missing (2.c < 2).
 
   - id: "6.b"
     name: Computationally accessible
@@ -546,10 +751,9 @@ criteria:
         pipelines (poorly documented, non-machine-readable API documentation,
         custom web scraping, or non-standard authentication with
         human-in-the-loop steps).
-      "0": Data is not accessible, or is accessible only via manual download, or
-        requires direct human intervention to transfer. Also 0 if a user can
-        access controlled-access data without permission, or a user cannot
-        access the data despite having permission.
+      "0": Data is not accessible, or is accessible only via manual download
+        (e.g., by clicking a link or submitting a web form), or requires direct
+        human intervention to transfer.
 
   - id: "6.c"
     name: Portable

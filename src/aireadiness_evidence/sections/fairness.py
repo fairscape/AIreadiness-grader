@@ -11,7 +11,7 @@ import re
 from .. import evidence as ev
 from ..crate import as_list
 from ..known import (
-    GENERALIST_REPOS, LICENSE_NAMES, SPECIALIST_REPOS,
+    GENERALIST_REPOS, LICENSE_NAMES, NON_SUSTAINABLE_HOSTS, SPECIALIST_REPOS,
     detect_pid, match_host, summarize_vocab_hits,
 )
 
@@ -62,6 +62,9 @@ def transform_0a(ctx, raw):
     publisher = raw["publisher"]
     repo = (match_host(publisher, SPECIALIST_REPOS)
             or match_host(publisher, GENERALIST_REPOS))
+    # the v1.5 glossary excludes unmanaged storage (S3/GCS/Drive/Box/…)
+    # from "sustainable repository"
+    unsustainable = match_host(publisher, NON_SUSTAINABLE_HOSTS)
     query = None
     if isinstance(publisher, str):
         host = re.sub(r"^https?://", "", publisher).split("/")[0]
@@ -74,6 +77,7 @@ def transform_0a(ctx, raw):
         "resolution": resolution,
         "publisher": publisher,
         "known_repo": repo[1] if repo else None,
+        "unsustainable_host": unsustainable[1] if unsustainable else None,
         "re3data": re3,
     }
 
@@ -91,8 +95,13 @@ def present_0a(facts):
                                     detail=res.get("note") or f"HTTP {res.get('status')}")))
     items += [
         ev.text("Publisher", facts["publisher"]),
-        ev.sub(ev.flag("Publisher is a recognized repository",
+        ev.sub(ev.flag("Publisher is a recognized sustainable repository",
                        bool(facts["known_repo"]), detail=facts["known_repo"])),
+        ev.sub(ev.flag(
+            "Publisher is unmanaged storage (excluded from 'sustainable "
+            "repository' by the rubric glossary)",
+            bool(facts["unsustainable_host"]),
+            detail=facts["unsustainable_host"])),
         ev.sub(ev.flag(
             "Publisher found in re3data",
             bool(re3["matches"]) if re3.get("checked") else None,
@@ -109,21 +118,30 @@ def estimate_0a(facts):
     re3 = facts["re3data"]
     repo = facts["known_repo"] or \
         (re3["matches"][0] if re3.get("matches") else None)
+    if facts["unsustainable_host"]:
+        repo = None  # unmanaged storage never counts as sustainable
     if pid and res and res.get("checked") and res.get("ok") is False:
         return ev.estimate("1", f"PID present (scheme: {pid}) but it did not "
                                 "resolve when checked")
     if pid and repo:
         return ev.estimate("2", f"PID present (scheme: {pid})",
                            "PID resolved" if res and res.get("ok") else None,
-                           f"deposited in a recognized repository ({repo})")
+                           f"deposited in a sustainable repository ({repo})",
+                           "that the PID resolves to a specific VERSION of "
+                           "the dataset is not verified — confirm before "
+                           "accepting (the gate requires a 2 here)")
     if pid or repo:
         return ev.estimate("1",
                            f"PID present (scheme: {pid})" if pid else None,
-                           f"recognized repository ({repo}) but no PID"
-                           if repo else "PID present but publisher not found "
-                                        "in re3data/known repositories")
+                           f"sustainable repository ({repo}) but no "
+                           "resolvable PID" if repo else
+                           "PID present but publisher is not a recognized "
+                           "sustainable repository"
+                           + (f" ({facts['unsustainable_host']} is excluded "
+                              "by the glossary)"
+                              if facts["unsustainable_host"] else ""))
     return ev.estimate("0", "no PID detected and publisher not a recognized "
-                            "repository")
+                            "sustainable repository")
 
 
 # --- 0.b Accessible --------------------------------------------------------
@@ -261,9 +279,19 @@ def extract_0d(ctx):
 
 
 def transform_0d(ctx, raw):
-    license_url = " ".join(str(x) for x in as_list(raw["license"])) or None
-    known = match_host(license_url, LICENSE_NAMES)
-    resolution = ctx.net.check_url(license_url) if license_url else None
+    vals = []
+    for x in as_list(raw["license"]):
+        if isinstance(x, dict):
+            x = x.get("@id") or x.get("url") or ""
+        if x:
+            vals.append(str(x))
+    license_value = " ".join(vals) or None
+    # v1.5's 2-vs-1 split: the license must be programmatically linked in the
+    # metadata (e.g. schema.org:license holding a resolvable IRI), not prose
+    machine_readable = bool(license_value) and bool(
+        re.match(r"https?://\S+$", license_value.strip()))
+    known = match_host(license_value, LICENSE_NAMES)
+    resolution = ctx.net.check_url(license_value) if machine_readable else None
 
     mentions = []
     for label in ("conditions", "usage_info", "prohibited"):
@@ -271,7 +299,8 @@ def transform_0d(ctx, raw):
             start, end = max(0, m.start() - 150), m.end() + 150
             mentions.append(f"[{label}] …{str(raw[label])[start:end]}…")
     return {
-        "license_url": license_url,
+        "license_url": license_value,
+        "license_machine_readable": machine_readable,
         "license_name": known[1] if known else None,
         "resolution": resolution,
         "conditions": raw["conditions"],
@@ -284,6 +313,9 @@ def present_0d(facts):
     items = [
         ev.link("License", facts["license_url"],
                 display=facts["license_name"] or facts["license_url"]),
+        ev.sub(ev.flag("License is machine-readable (an IRI linked in the "
+                       "metadata, not prose)",
+                       facts["license_machine_readable"])),
         ev.sub(ev.flag("License is a well-known open license",
                        bool(facts["license_name"]), detail=facts["license_name"])),
     ]
@@ -307,12 +339,17 @@ def present_0d(facts):
 def estimate_0d(facts):
     if not facts["license_url"]:
         return ev.estimate("0", "no license, DUA, or public-domain "
-                                "dedication in the metadata")
+                                "dedication linked in the metadata")
     if facts["mentions"]:
         return None  # AI/ML is mentioned — a human must read whether it
         # permits or prohibits
-    return ev.estimate("2",
-                       f"license present ({facts['license_name']})"
-                       if facts["license_name"] else "license present",
-                       "no AI/ML prohibition language found in license or "
-                       "use terms")
+    if facts["license_machine_readable"]:
+        return ev.estimate("2",
+                           "machine-readable license linked in the metadata"
+                           + (f" ({facts['license_name']})"
+                              if facts["license_name"] else ""),
+                           "no AI/ML prohibition language found in license or "
+                           "use terms")
+    return ev.estimate("1", "license/DUA present but not machine-readable "
+                            "(prose value, not a linked IRI)",
+                       "no AI/ML prohibition language found")
