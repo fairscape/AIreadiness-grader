@@ -329,11 +329,17 @@
       else if (l && typeof l === 'object') vals.push(l['@id'] || l.url || l.name || '');
     });
     var joined = vals.join(' ').trim();
+    // a bare IRI, or the first URL embedded in a text value ("CC BY 4.0, see https://…")
+    var bare = /^https?:\/\/\S+$/.test(joined);
+    var m = bare ? null : joined.match(/https?:\/\/[^\s<>()\[\]"']+/);
+    var url = bare ? joined : (m ? m[0].replace(/[.,;]+$/, '') : null);
     return {
       present: joined !== '',
       value: joined,
-      machineReadable: /^https?:\/\/\S+$/.test(joined),
-      known: matchHost(joined, LICENSE_NAMES)
+      url: url,
+      urlEmbedded: !!(m && url),
+      machineReadable: !!url,
+      known: matchHost(url || joined, LICENSE_NAMES)
     };
   }
 
@@ -377,8 +383,8 @@
     '0.d': function (c) {
       var root = c.root, li = licenseInfo(root), basis = [];
       if (!li.present) return est(0, ['no license or DUA linked in the metadata']);
-      basis.push(li.machineReadable ? 'machine-readable license linked in the metadata' + (li.known ? ' (' + li.known.label + ')' : '')
-        : 'license is not a bare resolvable IRI ("' + li.value.slice(0, 60) + '") — not machine-readable');
+      basis.push(li.machineReadable ? 'machine-readable license linked in the metadata' + (li.known ? ' (' + li.known.label + ')' : '') + (li.urlEmbedded ? ' — URL pulled from the license text "' + li.value.slice(0, 60) + '"' : '')
+        : 'license text has no resolvable IRI in it ("' + li.value.slice(0, 60) + '") — not machine-readable');
       var terms = joinedText(root, ['conditionsOfAccess', 'usageInfo', 'prohibitedUses']);
       if (AI_RE.test(terms)) { basis.push('use terms mention AI/ML — a human must confirm they permit, not prohibit, AI/ML reuse'); return est(null, basis); }
       basis.push('no AI/ML prohibition language found in license or use terms');

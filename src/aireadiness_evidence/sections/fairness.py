@@ -278,20 +278,37 @@ def extract_0d(ctx):
     }
 
 
+URL_RE = re.compile(r"https?://[^\s<>()\[\]\"']+")
+
+
+def _license_url(values):
+    """The license link: the whole value when it is a bare IRI, otherwise the
+    first URL embedded in the text (e.g. "CC BY 4.0, see https://…")."""
+    joined = " ".join(values).strip()
+    if re.fullmatch(r"https?://\S+", joined):
+        return joined, False
+    m = URL_RE.search(joined)
+    if m:
+        return m.group(0).rstrip(".,;"), True
+    return None, False
+
+
 def transform_0d(ctx, raw):
     vals = []
     for x in as_list(raw["license"]):
         if isinstance(x, dict):
-            x = x.get("@id") or x.get("url") or ""
+            x = x.get("@id") or x.get("url") or x.get("name") or ""
         if x:
             vals.append(str(x))
-    license_value = " ".join(vals) or None
+    license_text = " ".join(vals) or None
+    url, embedded = _license_url(vals)
     # the 0.d 2-vs-1 split: the license must be programmatically linked in the
-    # metadata (e.g. schema.org:license holding a resolvable IRI), not prose
-    machine_readable = bool(license_value) and bool(
-        re.match(r"https?://\S+$", license_value.strip()))
-    known = match_host(license_value, LICENSE_NAMES)
-    resolution = ctx.net.check_url(license_value) if machine_readable else None
+    # metadata (a resolvable IRI under schema.org:license), not prose. A URL
+    # inside a text value still links the license, so it counts — the reviewer
+    # sees that it was pulled out of prose.
+    machine_readable = bool(url)
+    known = match_host(url or license_text, LICENSE_NAMES)
+    resolution = ctx.net.check_url(url) if url else None
 
     mentions = []
     for label in ("conditions", "usage_info", "prohibited"):
@@ -299,7 +316,9 @@ def transform_0d(ctx, raw):
             start, end = max(0, m.start() - 150), m.end() + 150
             mentions.append(f"[{label}] …{str(raw[label])[start:end]}…")
     return {
-        "license_url": license_value,
+        "license_url": url or license_text,
+        "license_text": license_text,
+        "license_url_embedded": embedded,
         "license_machine_readable": machine_readable,
         "license_name": known[1] if known else None,
         "resolution": resolution,
@@ -312,10 +331,16 @@ def present_0d(facts):
     res = facts["resolution"]
     items = [
         ev.link("License", facts["license_url"],
-                display=facts["license_name"] or facts["license_url"]),
+                display=facts["license_name"] or facts["license_url"],
+                detail=(f"URL pulled from the license text: "
+                        f"{ev.clip(facts['license_text'], 200)}"
+                        if facts.get("license_url_embedded") else None)),
         ev.sub(ev.flag("License is machine-readable (an IRI linked in the "
                        "metadata, not prose)",
-                       facts["license_machine_readable"])),
+                       facts["license_machine_readable"],
+                       detail="the IRI is embedded in a text value, not the "
+                              "whole value" if facts.get("license_url_embedded")
+                       else None)),
     ]
     if res:
         items.append(ev.sub(ev.flag("License link resolves",
@@ -354,5 +379,5 @@ def estimate_0d(facts):
                            "no AI/ML prohibition language found in license or "
                            "use terms")
     return ev.estimate("1", "license/DUA present but not machine-readable "
-                            "(prose value, not a linked IRI)",
+                            "(prose value with no IRI in it)",
                        "no AI/ML prohibition language found")
