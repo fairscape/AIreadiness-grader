@@ -1,5 +1,5 @@
 """Load the rubric text (rubric_defs.yaml) — the transcription of
-"Rubric for Human Review of AI-readiness Evaluation Criteria" v1.5."""
+"Rubric for Review of AI-readiness Evaluation Criteria" v1.8."""
 
 from pathlib import Path
 
@@ -25,13 +25,13 @@ def load_rubric():
 def rubric_title(rubric=None):
     """The citable rubric name+version string used in reports."""
     rubric = rubric or load_rubric()
-    return ("Rubric for Human Review of AI-readiness Evaluation Criteria, "
+    return ("Rubric for Review of AI-readiness Evaluation Criteria, "
             f"v{rubric['version']} ({rubric['date']})")
 
 
 def gate_specs(rubric=None):
     """Gating thresholds: {criterion_id: minimum score demanded by the gate}.
-    v1.5 — FAIRness: 0.a = 2, others > 0; Provenance: all > 0;
+    v1.8 — FAIRness: 0.a = 2, others > 0; Provenance: all > 0;
     Standards: 2.c > 0; Ethics: all > 0."""
     rubric = rubric or load_rubric()
     return {cid: c["gate_min"] for cid, c in rubric["criteria"].items()
@@ -40,7 +40,7 @@ def gate_specs(rubric=None):
 
 def dependency_rules(rubric=None):
     """Score caps: {criterion_id: id of the criterion whose score caps it}.
-    v1.5 — 1.b ≤ 1.a, 6.a ≤ 2.c."""
+    v1.8 — 1.b ≤ 1.a, 6.a ≤ 2.c."""
     rubric = rubric or load_rubric()
     return {cid: c["depends_on"] for cid, c in rubric["criteria"].items()
             if c.get("depends_on")}

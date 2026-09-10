@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Ready Improvements{% if crate %} — {{ crate_label | default("") | replace("/ro-crate-metadata.json", "") }}{% endif %}</title>
+<style>
+  :root {
+    --ink: #1a1a1a; --muted: #6b6b6b; --line: #d9d9d9; --bg: #fafaf8;
+    --card: #ffffff; --accent: #b45309; --ok: #15803d; --bad: #b91c1c;
+    --unknown: #6b6b6b; --gate: #7c2d12; --edit: #1d4ed8;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 14px/1.45 "Source Sans 3", "Segoe UI", system-ui, sans-serif; }
+  .mono { font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 0.86em; }
+  a { color: var(--accent); }
+  header { border-bottom: 2px solid var(--ink); padding: 16px 0 12px; background: var(--card); }
+  footer { border-top: 1px solid var(--line); margin-top: 28px; padding: 10px 0 24px;
+           color: var(--muted); font-size: 0.8rem; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  h1 { font-size: 1.25rem; margin: 0 0 2px; }
+  h2 { font-size: 1.05rem; border-bottom: 1px solid var(--line); padding-bottom: 4px; margin: 26px 0 10px;
+       display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+       scroll-margin-top: 58px; }
+  .meta { color: var(--muted); font-size: 0.85rem; }
+  .badge { display: inline-block; border: 1px solid var(--gate); color: var(--gate); border-radius: 2px;
+           font-size: 0.68rem; padding: 0 5px; margin-left: 8px; vertical-align: 2px;
+           text-transform: uppercase; letter-spacing: 0.05em; }
+  .badge.sw { border-color: var(--muted); color: var(--muted); }
+  nav.toc { margin: 14px 0; font-size: 0.88rem; }
+  nav.toc a { margin-right: 12px; white-space: nowrap; }
+
+  .loadbox { background: var(--card); border: 1px dashed var(--line); border-radius: 2px; padding: 10px 12px;
+             margin: 12px 0; font-size: 0.88rem; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .loadbox.drag { border-color: var(--accent); background: #fdf6ec; }
+  .loadbox label { cursor: pointer; color: var(--accent); }
+  .loadbox input[type=file] { display: none; }
+  .intro { background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 8px 12px; margin: 12px 0; font-size: 0.88rem; }
+  .intro ul { margin: 4px 0 0; padding-left: 18px; }
+
+  .criterion { background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 10px 14px 8px; margin: 0 0 10px;
+               scroll-margin-top: 58px; }
+  .criterion h3 { margin: 0; font-size: 0.98rem; display: inline; }
+  .practice { color: var(--muted); font-style: italic; margin: 2px 0 6px; font-size: 0.85rem; }
+  details.rules { margin: 0 0 6px; font-size: 0.85rem; }
+  details.rules summary { cursor: pointer; color: var(--muted); }
+  .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 6px 0 8px; }
+  .scores > div { border: 1px solid var(--line); border-radius: 2px; padding: 4px 8px; font-size: 0.8rem; line-height: 1.35; color: #333; background: #fcfcfa; }
+  .scores .n { font-weight: 700; margin-right: 6px; font-size: 0.9rem; }
+  .rubric-note { color: var(--muted); font-size: 0.78rem; margin: -2px 0 6px; }
+  .oos { font-size: 0.8rem; color: var(--gate); background: #fdf6ec; border: 1px dashed var(--line); padding: 4px 8px; margin: 4px 0 8px; border-radius: 2px; }
+
+  .status { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 6px; margin-top: 4px; font-size: 0.82rem; }
+  .status .est { flex: 1 1 320px; }
+  .status ul { margin: 2px 0 0; padding-left: 18px; color: #555; }
+  .chip { display: inline-block; min-width: 22px; text-align: center; border: 1px dashed var(--line); border-radius: 2px;
+          font-size: 0.72rem; line-height: 1.5; text-decoration: none; color: var(--muted); padding: 0 3px;
+          font-family: "JetBrains Mono", Consolas, monospace; }
+  .chip.s2 { border: 1px solid var(--ok); color: var(--ok); background: #edf7ef; font-weight: 700; }
+  .chip.s1 { border: 1px solid var(--accent); color: var(--accent); background: #fdf3e7; font-weight: 700; }
+  .chip.s0 { border: 1px solid var(--bad); color: var(--bad); background: #fbeeee; font-weight: 700; }
+  .chip.sq { border: 1px solid var(--unknown); color: var(--unknown); background: #f1f1ef; font-weight: 700; }
+  .yes { color: var(--ok); font-weight: 600; }
+  .no { color: var(--bad); font-weight: 600; }
+  .dim { color: var(--muted); }
+  .est-badge { display: inline-block; border: 1px solid var(--accent); color: var(--accent); border-radius: 2px; font-size: 0.68rem; padding: 0 5px; margin-right: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .prior { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+
+  .fields { margin-top: 8px; }
+  .field { display: grid; grid-template-columns: 250px 1fr; gap: 4px 14px; padding: 7px 0; border-top: 1px dotted #ececea; font-size: 0.86rem; }
+  .field .label { font-weight: 600; }
+  .field .label .prop { display: block; font-weight: 400; color: var(--muted); }
+  .field .ctl input[type=text], .field .ctl textarea, .field .ctl select {
+    width: 100%; border: 1px solid var(--line); border-radius: 2px; padding: 4px 7px; font: inherit; font-size: 0.86rem; background: var(--card); }
+  .field .ctl textarea { min-height: 58px; resize: vertical; }
+  .field .ctl textarea.list { min-height: 46px; font-family: "JetBrains Mono", Consolas, monospace; font-size: 0.8rem; }
+  .field.edited .ctl input, .field.edited .ctl textarea, .field.edited .ctl select { border-color: var(--edit); box-shadow: inset 2px 0 0 var(--edit); }
+  .field.filled .label::before { content: "✓ "; color: var(--ok); }
+  .field.empty .label::before { content: "○ "; color: var(--muted); }
+  .help { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+  .state { font-size: 0.76rem; color: var(--muted); margin-top: 2px; }
+  .state .revert { color: var(--edit); cursor: pointer; margin-left: 6px; }
+  .state .warn { color: var(--gate); }
+  .terms .term-row { display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 4px 6px; align-items: center; margin-bottom: 4px; }
+  .terms .term-row input { width: 100%; border: 1px solid var(--line); border-radius: 2px; padding: 3px 6px; font: inherit; font-size: 0.82rem; }
+  .terms .term-row .t-iri { font-family: "JetBrains Mono", Consolas, monospace; font-size: 0.78rem; }
+  .terms .t-find { font-size: 0.78rem; }
+  .terms .t-del { padding: 0 7px; line-height: 1.4; }
+  .terms .t-badge { grid-column: 1 / -1; font-size: 0.74rem; color: var(--muted); }
+  .terms .t-badge.yes { color: var(--ok); }
+  .terms .t-badge.warn { color: var(--gate); }
+  .terms .term-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+  .terms .term-tools select { border: 1px solid var(--line); border-radius: 2px; padding: 2px 6px; font: inherit; font-size: 0.8rem; background: var(--card); max-width: 320px; }
+  .terms .term-tools .help { margin: 0; font-family: "JetBrains Mono", Consolas, monospace; font-size: 0.72rem; }
+  .related { font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+  .related a { margin-right: 8px; }
+  .dstoggle { font-size: 0.82rem; margin: 6px 0 2px; }
+
+  table.sw { border-collapse: collapse; width: 100%; font-size: 0.8rem; margin-top: 6px; }
+  table.sw th { text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted);
+                border-bottom: 1px solid var(--line); padding: 3px 6px 3px 0; vertical-align: bottom; }
+  table.sw td { padding: 3px 6px 3px 0; border-bottom: 1px dotted #ececea; vertical-align: top; }
+  table.sw input[type=text] { width: 100%; min-width: 120px; border: 1px solid var(--line); border-radius: 2px; padding: 2px 5px; font: inherit; font-size: 0.8rem; }
+  table.sw input.edited { border-color: var(--edit); box-shadow: inset 2px 0 0 var(--edit); }
+  table.sw .applyall { display: block; font-weight: 400; text-transform: none; letter-spacing: 0; }
+  table.sw .applyall input { width: 100%; min-width: 100px; font-size: 0.74rem; padding: 1px 4px; }
+  table.sw .applyall button { font-size: 0.7rem; padding: 0 5px; }
+  .swwrap { overflow-x: auto; }
+
+  .summarybar { position: sticky; top: 0; z-index: 10; background: var(--card); border-bottom: 1px solid var(--line); padding: 7px 0; font-size: 0.86rem; }
+  .summarybar .wrap { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .pct-bar { display: inline-block; width: 120px; height: 9px; background: #eee; border-radius: 2px; margin: 0 6px; vertical-align: 1px; }
+  .pct-bar span { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
+  .pct-bar span.base { background: #c9c9c5; position: relative; }
+  .pct-wrap { position: relative; display: inline-block; width: 120px; height: 9px; background: #eee; border-radius: 2px; margin: 0 6px; vertical-align: 1px; }
+  .pct-wrap span { position: absolute; left: 0; top: 0; height: 100%; border-radius: 2px; }
+  .pct-wrap .base { background: #c9c9c5; }
+  .pct-wrap .cur { background: var(--accent); }
+  .score { font-weight: 700; }
+  .delta { color: var(--ok); font-weight: 700; }
+  details.secmenu > summary { cursor: pointer; list-style: none; border: 1px solid var(--line); border-radius: 2px; padding: 2px 10px; font-size: 0.82rem; user-select: none; }
+  details.secmenu > summary::-webkit-details-marker { display: none; }
+  details.secmenu > summary::after { content: " ▾"; color: var(--muted); }
+  .secpanel { position: absolute; top: calc(100% + 1px); z-index: 30; left: calc((100% - min(100%, 1080px)) / 2 + 24px);
+              background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 8px 12px 10px;
+              min-width: min(640px, calc(100vw - 48px)); max-width: calc(100vw - 48px); max-height: 70vh; overflow: auto; }
+  .secrow { display: flex; align-items: baseline; gap: 10px; padding: 4px 0; border-top: 1px dotted #ececea; flex-wrap: wrap; }
+  .secrow:first-child { border-top: 0; }
+  .secrow .sec-title { flex: 0 0 210px; color: var(--ink); text-decoration: none; font-weight: 600; font-size: 0.85rem; }
+  .secrow .sec-stat { flex: 1; color: var(--muted); font-size: 0.78rem; white-space: nowrap; }
+  .chips { display: inline-flex; gap: 4px; }
+  .chip-key { margin-top: 6px; color: var(--muted); font-size: 0.75rem; }
+  .btn { background: none; border: 1px solid var(--line); border-radius: 2px; padding: 3px 10px; font: inherit; font-size: 0.82rem; cursor: pointer; color: var(--ink); }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { background: #9a4607; color: #fff; }
+  .btn.danger:hover { border-color: var(--bad); color: var(--bad); }
+  .axis-score { font-size: 0.75rem; font-weight: 400; color: var(--muted); border: 1px solid var(--line); border-radius: 2px; padding: 1px 8px; background: var(--card); white-space: nowrap; }
+  .axis-score b { color: var(--ink); }
+
+  .exportbar { position: sticky; bottom: 0; background: var(--card); border-top: 1px solid var(--line); padding: 8px 0; margin-top: 28px; z-index: 10; }
+  .exportbar .wrap { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .exportbar .msg { color: var(--muted); font-size: 0.82rem; }
+  .valid { font-size: 0.82rem; }
+  .valid.ok { color: var(--ok); }
+  .valid.bad { color: var(--bad); }
+  #validation { background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 8px 12px; margin: 12px 0; font-size: 0.85rem; }
+  #validation ul { margin: 4px 0 0; padding-left: 18px; }
+  #validation button { margin-left: 8px; }
+  #changes { background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 8px 12px; margin: 12px 0; font-size: 0.85rem; }
+  #changes ul { margin: 4px 0 0; padding-left: 18px; }
+  .hidden { display: none !important; }
+  .viewtoggle { display: inline-flex; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
+  .viewtoggle button { background: none; border: 0; padding: 3px 10px; font: inherit; font-size: 0.82rem; cursor: pointer; color: var(--muted); }
+  .viewtoggle button.on { background: var(--accent); color: #fff; }
+  .filterbox { font-size: 0.82rem; color: var(--muted); cursor: pointer; white-space: nowrap; }
+  .progress { font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
+  .progress b { color: var(--ink); }
+  .group { margin: 22px 0 6px; scroll-margin-top: 58px; }
+  .group h2 { margin-bottom: 2px; }
+  .group .gdesc { color: var(--muted); font-size: 0.85rem; margin: 0 0 8px; }
+  .group .gcount { font-size: 0.75rem; font-weight: 400; color: var(--muted); border: 1px solid var(--line); border-radius: 2px; padding: 1px 8px; background: var(--card); }
+  .glist { background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 2px 14px 6px; }
+  .glist .field:first-child { border-top: 0; }
+  .glist .field.field-sw { display: block; }
+  .why { font-size: 0.76rem; color: var(--muted); margin-top: 3px; }
+  .why a { color: var(--muted); text-decoration: none; border-bottom: 1px dotted var(--line); margin-right: 6px; }
+  .why a:hover { color: var(--accent); }
+  .why .chip { margin-right: 3px; }
+  .empty-note { color: var(--muted); font-size: 0.85rem; padding: 8px 0; }
+  .done-banner { background: #edf7ef; border: 1px solid var(--ok); color: var(--ok); border-radius: 2px; padding: 6px 12px; margin: 12px 0; font-size: 0.88rem; }
+  @media (max-width: 720px) { .field { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>AI-Ready Improvements</h1>
+    <div id="crate-line" style="margin-top:6px"><span class="dim">No crate loaded — drop a ro-crate-metadata.json below.</span></div>
+  </div>
+</header>
+
+<div class="summarybar">
+  <div class="wrap">
+    <span title="Mechanical rubric estimate (aireadiness_evidence estimate_ rules, no network)">Rubric est.
+      <span class="pct-wrap"><span class="base" id="est-base"></span><span class="cur" id="est-fill"></span></span>
+      <span class="score" id="est-score">–</span><span class="delta" id="est-delta"></span></span>
+    <span class="dim" id="gate-line"></span>
+    <span class="viewtoggle" role="group" aria-label="View">
+      <button type="button" id="view-checklist" class="on">Checklist</button>
+      <button type="button" id="view-criteria">By criterion</button>
+    </span>
+    <label class="filterbox"><input type="checkbox" id="hide-filled"> hide filled</label>
+    <span class="progress" id="field-progress"></span>
+    <details class="secmenu" id="secmenu">
+      <summary>By section</summary>
+      <div class="secpanel" id="secpanel"></div>
+    </details>
+    <button class="btn" id="next-empty" type="button">Next empty ↓</button>
+    <button class="btn primary" id="download-top" type="button">Download crate</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="loadbox" id="loadbox">
+    <span><label>📂 Load ro-crate-metadata.json <input type="file" id="file-crate" accept=".json,application/json"></label> (or drop it anywhere on this box)</span>
+    <span class="dim">·</span>
+    <span><label>Load a prior score <input type="file" id="file-score" accept=".json,application/json"></label> <span class="dim">aggregated_score.json</span></span>
+  </div>
+
+  <div class="intro">
+    <strong>How this works.</strong> The <em>checklist</em> lists every metadata field the AI-Ready graders read,
+    easiest first. Fill in what you know, skip the rest, tick <em>hide filled</em> to see only what is left, and download the
+    improved <span class="mono">ro-crate-metadata.json</span> whenever you like — every edit is validated against the
+    fairscape_models schema{% if schemas %} (fairscape-models {{ schemas.version }}){% endif %} first.
+    <em>By criterion</em> shows the same fields grouped under the 28 rubric criteria with the scoring rules and evidence.
+  </div>
+
+  <div id="validation" class="hidden"></div>
+
+  <div id="checklist">
+    <div id="done-banner" class="done-banner hidden">Every field is filled — switch to <em>By criterion</em> to see what the remaining gaps need, or download the crate.</div>
+  </div>
+
+  <nav class="toc hidden" id="toc"></nav>
+
+  <div id="sections" class="hidden"></div>
+
+  <div id="changes" class="hidden"></div>
+
+  <div class="exportbar">
+    <div class="wrap">
+      <button class="btn primary" id="download" type="button">Download ro-crate-metadata.json</button>
+      <button class="btn" id="copy" type="button">Copy JSON</button>
+      <button class="btn" id="download-patch" type="button">Download edits only</button>
+      <button class="btn danger" id="reset" type="button">Discard all edits</button>
+      <span class="valid" id="valid-line"></span>
+      <span class="msg" id="export-msg"></span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    {{ rubric_title }} · generated {{ generated }}{% if schemas %} · fairscape-models {{ schemas.version }}{% endif %}
+    <span id="footer-prior"></span>
+  </div>
+</footer>
+
+<script type="application/json" id="data-sections">{{ sections | embed_json }}</script>
+<script type="application/json" id="data-fields">{{ fields | embed_json }}</script>
+<script type="application/json" id="data-schemas">{{ schemas | embed_json }}</script>
+<script type="application/json" id="data-crate">{{ (crate if crate else none) | embed_json }}</script>
+<script type="application/json" id="data-prior">{{ prior | embed_json }}</script>
+<script type="application/json" id="data-label">{{ crate_label | embed_json }}</script>
+<script type="application/json" id="data-effort">{{ effort_labels | embed_json }}</script>
+
+<script>
+{{ core_js | safe }}
+</script>
+
+<script>
+(function () {
+  'use strict';
+  var I = window.IMPROVE;
+  var SECTIONS = JSON.parse(document.getElementById('data-sections').textContent);
+  var FIELDS = JSON.parse(document.getElementById('data-fields').textContent);
+  var SCHEMAS = JSON.parse(document.getElementById('data-schemas').textContent) || {};
+  var EMBEDDED = JSON.parse(document.getElementById('data-crate').textContent);
+  var PRIOR = JSON.parse(document.getElementById('data-prior').textContent) || {};
+  var LABEL = JSON.parse(document.getElementById('data-label').textContent) || '';
+  var EFFORT_LABELS = JSON.parse(document.getElementById('data-effort').textContent) || {};
+  var FIELD_BY_PROP = {};
+  FIELDS.forEach(function (f) { FIELD_BY_PROP[f.entity + ':' + f.prop] = f; });
+  var CRITERIA = {};
+  SECTIONS.forEach(function (s) { s.criteria.forEach(function (c) { CRITERIA[c.id] = c; }); });
+
+  var state = { orig: null, crate: null, edits: { root: {}, software: {} }, hasDatasheet: false, prior: PRIOR, base: null };
+
+  function $(sel, el) { return (el || document).querySelector(sel); }
+  function el(tag, attrs, children) {
+    var e = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      if (k === 'text') e.textContent = attrs[k];
+      else if (k === 'html') e.innerHTML = attrs[k];
+      else if (k === 'class') e.className = attrs[k];
+      else e.setAttribute(k, attrs[k]);
+    }
+    (children || []).forEach(function (c) { if (c) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); });
+    return e;
+  }
+  function anchorId(cid) { return 'c' + cid.replace('.', '-'); }
+  function storageKey() { return 'improve:' + (state.orig ? String(I.findRoot(state.orig['@graph']).root['@id']) : 'none'); }
+
+  // ------------------------------------------------ value <-> input
+  function toInput(field, v) {
+    if (v === undefined || v === null) return '';
+    switch (field.type) {
+      case 'list': return I.asList(v).map(I.text).join('\n');
+      case 'idlist': return I.idsOf(v).join('\n');
+      case 'bool': return v === true ? 'true' : v === false ? 'false' : '';
+      default:
+        if (Array.isArray(v)) return v.map(I.text).join('\n');
+        return I.text(v);
+    }
+  }
+  function fromInput(field, raw, orig) {
+    var s = String(raw);
+    var lines = s.split('\n').map(function (x) { return x.trim(); }).filter(Boolean);
+    switch (field.type) {
+      case 'list': return lines.length ? lines : null;
+      case 'idlist': return lines.length ? lines.map(function (l) { return { '@id': l }; }) : null;
+      case 'bool': return s === 'true' ? true : s === 'false' ? false : null;
+      case 'select': return s.trim() ? s.trim() : null;
+      default:
+        if (Array.isArray(orig)) return lines.length ? lines : null;
+        return s.trim() ? s.trim() : null;
+    }
+  }
+  function sameValue(a, b) { return JSON.stringify(a === undefined ? null : a) === JSON.stringify(b === undefined ? null : b); }
+
+  // ------------------------------------------------ crate loading
+  function loadDoc(doc, label) {
+    var crate;
+    try { crate = I.loadCrate(doc); }
+    catch (err) { alert('Could not load crate: ' + err.message); return; }
+    state.orig = doc;
+    state.edits = { root: {}, software: {} };
+    state.hasDatasheet = false;
+    try {
+      var saved = JSON.parse(localStorage.getItem('improve:' + String(crate.root['@id'])) || 'null');
+      if (saved && saved.edits) { state.edits = saved.edits; state.hasDatasheet = !!saved.hasDatasheet; }
+    } catch (e) { /* storage unavailable */ }
+    state.crate = I.loadCrate(I.applyEdits(doc, {}));
+    state.base = { est: I.aggregate(I.estimateAll(crate, { hasDatasheet: state.hasDatasheet })) };
+    renderHeader(label);
+    renderAll();
+  }
+  function currentDoc() { return I.applyEdits(state.orig, state.edits); }
+
+  function renderHeader(label) {
+    var root = state.crate.root;
+    $('#crate-line').innerHTML = '';
+    $('#crate-line').appendChild(el('strong', { text: root.name || '(unnamed crate)' }));
+    $('#crate-line').appendChild(el('span', { class: 'mono', text: ' ' + root['@id'] }));
+    $('#crate-line').appendChild(el('span', { class: 'meta', text: (root.identifier ? ' · ' + root.identifier : '') + (root.datePublished ? ' · published ' + root.datePublished : '') + (label ? ' · ' + label : '') }));
+    var st = state.crate.stats;
+    $('#crate-line').appendChild(el('div', { class: 'meta', text: st.entityTotal + ' entities — Dataset: ' + st.datasetTotal + ', Software: ' + st.softwareTotal + ', Computation: ' + st.computationTotal + ', Schema: ' + st.schemaTotal + (st.subcratesReferenced ? ', sub-crates referenced: ' + st.subcratesReferenced + ' (not read here)' : '') }));
+  }
+
+  // ------------------------------------------------ static structure
+  function buildStructure() {
+    var toc = $('#toc'), container = $('#sections'), panel = $('#secpanel');
+    toc.innerHTML = ''; container.innerHTML = ''; panel.innerHTML = '';
+    SECTIONS.forEach(function (s) {
+      toc.appendChild(el('a', { href: '#sec' + s.number, text: s.number + '. ' + s.title + (s.gating ? ' *' : '') }));
+      var h2 = el('h2', { id: 'sec' + s.number }, [
+        el('span', {}, [s.number + '. ' + s.title, s.gating ? el('span', { class: 'badge', text: 'Gating' }) : null]),
+        el('span', { class: 'axis-score', 'data-section': s.number })
+      ]);
+      container.appendChild(h2);
+      var row = el('div', { class: 'secrow' }, [
+        el('a', { class: 'sec-title', href: '#sec' + s.number, text: s.number + '. ' + s.title + (s.gating ? ' *' : '') }),
+        el('span', { class: 'chips' }, s.criteria.map(function (c) { return el('a', { class: 'chip', 'data-chip': c.id, href: '#' + anchorId(c.id), text: c.id.split('.')[1] }); })),
+        el('span', { class: 'sec-stat', 'data-secstat': s.number })
+      ]);
+      panel.appendChild(row);
+      s.criteria.forEach(function (c) { container.appendChild(buildCriterion(c)); });
+    });
+    panel.appendChild(el('div', { class: 'chip-key', html: '<span class="chip s2">2</span> <span class="chip s1">1</span> <span class="chip s0">0</span> <span class="chip sq">?</span> mechanical estimate (? = needs a human read) · click a chip to jump. * = gating section.' }));
+    buildChecklist();
+  }
+
+  // Checklist view: the same field rows, grouped by effort (easy first). Rows
+  // are moved between the two views so inputs keep their state and listeners.
+  function buildChecklist() {
+    var box = $('#checklist');
+    [1, 2, 3].forEach(function (level) {
+      var lab = EFFORT_LABELS[String(level)] || ('Level ' + level);
+      var g = el('div', { class: 'group', id: 'effort' + level, 'data-effort': level }, [
+        el('h2', {}, [el('span', { text: level + '. ' + lab }), el('span', { class: 'gcount', 'data-gcount': level })]),
+        el('div', { class: 'glist', 'data-glist': level }),
+        el('div', { class: 'empty-note hidden', 'data-gempty': level, text: 'Nothing left here.' })
+      ]);
+      box.appendChild(g);
+    });
+    var sw = el('div', { class: 'group', id: 'effort-software' }, [
+      el('h2', {}, [el('span', { text: '4. Software entities' }), el('span', { class: 'gcount', 'data-gcount': 'sw' })]),
+      el('div', { class: 'gdesc', text: 'One row per Software entity already in the crate — where the code lives, an archived release, the environment it ran in.' }),
+      el('div', { class: 'glist' }, [el('div', { class: 'swwrap', 'data-swtable': 'all' })])
+    ]);
+    box.appendChild(sw);
+  }
+
+  var view = 'checklist';
+  function setView(mode) {
+    view = mode;
+    $('#view-checklist').classList.toggle('on', mode === 'checklist');
+    $('#view-criteria').classList.toggle('on', mode === 'criteria');
+    $('#checklist').classList.toggle('hidden', mode !== 'checklist');
+    $('#sections').classList.toggle('hidden', mode !== 'criteria');
+    $('#toc').classList.toggle('hidden', mode !== 'criteria');
+    $('#secmenu').classList.toggle('hidden', mode !== 'criteria');
+    var rows = Array.prototype.slice.call(document.querySelectorAll('.field[data-prop]'));
+    if (mode === 'checklist') {
+      // order: effort, then fields whose score moves mechanically, then catalogue order
+      rows.sort(function (a, b) {
+        var fa = FIELD_BY_PROP['root:' + a.getAttribute('data-prop')], fb = FIELD_BY_PROP['root:' + b.getAttribute('data-prop')];
+        var ka = [fa.effort, fa.win ? 0 : 1, FIELDS.indexOf(fa)], kb = [fb.effort, fb.win ? 0 : 1, FIELDS.indexOf(fb)];
+        for (var i = 0; i < ka.length; i++) if (ka[i] !== kb[i]) return ka[i] - kb[i];
+        return 0;
+      });
+      rows.forEach(function (r) { $('[data-glist="' + r.getAttribute('data-effort') + '"]').appendChild(r); });
+    } else {
+      rows.forEach(function (r) { var home = $('#' + anchorId(r.getAttribute('data-home')) + ' .fields'); if (home) home.appendChild(r); });
+    }
+    try { localStorage.setItem('improve:view', mode); } catch (e) { /* ignore */ }
+    buildSoftwareTables();
+    applyFilter();
+  }
+  function isFilled(row) { return row.classList.contains('filled'); }
+  function applyFilter() {
+    var hide = $('#hide-filled').checked;
+    var rows = Array.prototype.slice.call(document.querySelectorAll('.field[data-prop]'));
+    var filled = 0;
+    rows.forEach(function (r) {
+      if (isFilled(r)) filled += 1;
+      r.classList.toggle('hidden', hide && isFilled(r));
+    });
+    [1, 2, 3].forEach(function (level) {
+      var inGroup = rows.filter(function (r) { return Number(r.getAttribute('data-effort')) === level; });
+      var left = inGroup.filter(function (r) { return !isFilled(r); }).length;
+      var gc = $('[data-gcount="' + level + '"]'); if (gc) gc.textContent = left ? left + ' of ' + inGroup.length + ' to fill' : 'all ' + inGroup.length + ' filled';
+      var ge = $('[data-gempty="' + level + '"]'); if (ge) ge.classList.toggle('hidden', !(hide && left === 0 && inGroup.length));
+      var g = $('#effort' + level); if (g) g.classList.toggle('hidden', view === 'checklist' && hide && left === 0);
+    });
+    $('#field-progress').innerHTML = '<b>' + filled + '</b> / ' + rows.length + ' fields filled';
+    $('#done-banner').classList.toggle('hidden', !(state.orig && filled === rows.length));
+    try { localStorage.setItem('improve:hideFilled', hide ? '1' : '0'); } catch (e) { /* ignore */ }
+  }
+  function visibleRow(r) {
+    for (var n = r; n; n = n.parentElement) if (n.classList && n.classList.contains('hidden')) return false;
+    return true;
+  }
+
+  function buildCriterion(c) {
+    var card = el('div', { class: 'criterion', id: anchorId(c.id) });
+    var head = el('div', {}, [el('h3', { text: c.id + ' ' + c.name })]);
+    if (c.gate_min) head.appendChild(el('span', { class: 'badge', text: 'Gate: must score ' + (c.gate_min === 2 ? '2' : 'above 0') }));
+    else if (c.gating) head.appendChild(el('span', { class: 'badge', text: 'Gating' }));
+    if (c.depends_on) head.appendChild(el('span', { class: 'badge', text: '≤ ' + c.depends_on }));
+    card.appendChild(head);
+    card.appendChild(el('div', { class: 'practice', text: c.practice }));
+    var rules = el('details', { class: 'rules' }, [el('summary', { text: 'Scoring rules & questions' })]);
+    var grid = el('div', { class: 'scores' });
+    ['2', '1', '0'].forEach(function (k) { if (c.scoring[k]) grid.appendChild(el('div', {}, [el('span', { class: 'n', text: k }), c.scoring[k]])); });
+    rules.appendChild(grid);
+    rules.appendChild(el('ul', {}, c.questions.map(function (q) { return el('li', { text: q }); })));
+    if (c.notes) rules.appendChild(el('div', { class: 'rubric-note', text: c.notes }));
+    card.appendChild(rules);
+    if (c.out_of_scope) card.appendChild(el('div', { class: 'oos', text: c.out_of_scope }));
+
+    var status = el('div', { class: 'status' }, [el('div', { class: 'est', 'data-est': c.id })]);
+    card.appendChild(status);
+    if (c.id === '3.a') {
+      var lab = el('label', { class: 'dstoggle' });
+      var cb = el('input', { type: 'checkbox', id: 'has-datasheet' });
+      cb.addEventListener('change', function () { state.hasDatasheet = cb.checked; onChange(); });
+      lab.appendChild(cb); lab.appendChild(document.createTextNode(' A human-readable datasheet (ro-crate-datasheet.html) sits beside the crate — not written to the crate, only used for the estimate'));
+      card.appendChild(lab);
+    }
+
+    var fieldsWrap = el('div', { class: 'fields' });
+    FIELDS.filter(function (f) { return f.entity === 'root' && f.criteria[0] === c.id; }).forEach(function (f) { fieldsWrap.appendChild(buildField(f)); });
+    if (FIELDS.some(function (f) { return f.entity === 'software' && f.criteria[0] === c.id; })) {
+      fieldsWrap.appendChild(el('div', { class: 'swwrap', 'data-swtable': c.id }));
+    }
+    card.appendChild(fieldsWrap);
+    var related = FIELDS.filter(function (f) { return f.criteria.indexOf(c.id) > 0; });
+    if (related.length) {
+      var rel = el('div', { class: 'related' }, [document.createTextNode('Also feeds this criterion: ')]);
+      related.forEach(function (f) { rel.appendChild(el('a', { href: '#' + anchorId(f.criteria[0]), text: f.label + (f.entity === 'software' ? ' (software)' : '') })); });
+      card.appendChild(rel);
+    }
+    return card;
+  }
+
+  function buildField(f) {
+    var row = el('div', { class: 'field empty', 'data-prop': f.prop, 'data-effort': f.effort, 'data-home': f.criteria[0] });
+    var why = el('span', { class: 'why' }, [document.createTextNode('for ')].concat(f.criteria.map(function (cid) {
+      var c = CRITERIA[cid];
+      return el('a', { href: '#' + anchorId(cid), 'data-why': cid, title: c ? c.practice : '' }, [
+        el('span', { class: 'chip', 'data-whychip': cid, text: '·' }), ' ' + cid + ' ' + (c ? c.name : '')
+      ]);
+    })));
+    var label = el('div', { class: 'label' }, [
+      f.label,
+      el('span', { class: 'prop mono', text: f.prop }),
+      why
+    ]);
+    var ctl = el('div', { class: 'ctl' });
+    var input;
+    if (f.type === 'textarea') input = el('textarea', { placeholder: f.placeholder || '' });
+    else if (f.type === 'list' || f.type === 'idlist') input = el('textarea', { class: 'list', placeholder: f.placeholder || 'one per line' });
+    else if (f.type === 'bool') {
+      input = el('select', {}, [el('option', { value: '', text: '— not set —' }), el('option', { value: 'true', text: 'true' }), el('option', { value: 'false', text: 'false' })]);
+    } else if (f.type === 'select') {
+      input = el('select', {}, [el('option', { value: '', text: '— not set —' })].concat(f.options.map(function (o) { return el('option', { value: o[0], text: o[1] }); })));
+    } else if (f.type === 'terms') {
+      input = null;
+      ctl.appendChild(buildTermsEditor(f, row));
+    } else {
+      input = el('input', { type: 'text', placeholder: f.placeholder || '' });
+      if (f.options && f.options.length) {
+        var dl = el('datalist', { id: 'dl-' + f.prop.replace(/[^a-z0-9]/gi, '_') }, f.options.map(function (o) { return el('option', { value: o }); }));
+        ctl.appendChild(dl); input.setAttribute('list', dl.id);
+      }
+    }
+    if (input) {
+      if ((f.type === 'list') && f.options && f.options.length) {
+        var dl2 = el('div', { class: 'help', text: 'Suggested: ' + f.options.join(' · ') });
+        ctl.appendChild(input); ctl.appendChild(dl2);
+      } else ctl.appendChild(input);
+      input.addEventListener('input', function () { setRootEdit(f, input.value); });
+      input.addEventListener('change', function () { setRootEdit(f, input.value); });
+    }
+    ctl.appendChild(el('div', { class: 'help', text: f.help }));
+    ctl.appendChild(el('div', { class: 'state' }));
+    row.appendChild(label); row.appendChild(ctl);
+    return row;
+  }
+
+  function setRootEdit(f, raw) {
+    if (!state.orig) return;
+    var orig = I.findRoot(state.orig['@graph']).root[f.prop];
+    commitRootEdit(f.prop, fromInput(f, raw, orig));
+  }
+  function commitRootEdit(prop, v) {
+    if (!state.orig) return;
+    var orig = I.findRoot(state.orig['@graph']).root[prop];
+    if (v === null && orig === undefined) delete state.edits.root[prop];      // never set, still empty
+    else if (sameValue(v, orig)) delete state.edits.root[prop];                 // back to original
+    else state.edits.root[prop] = v;                                            // null => remove
+    onChange();
+  }
+
+  // ---- ontology-term editor (about: [{"@id", "@type": "DefinedTerm", "name"}])
+  function termsFromValue(v) {
+    return I.asList(v).map(function (t) {
+      if (typeof t === 'string') return /^(https?:|urn:|ark:)/i.test(t) ? { iri: t, label: '', set: '' } : { iri: '', label: t, set: '' };
+      if (t && typeof t === 'object') return { iri: t['@id'] || t.identifier || '', label: t.name || '', set: typeof t.inDefinedTermSet === 'string' ? t.inDefinedTermSet : (t.inDefinedTermSet && t.inDefinedTermSet['@id']) || '' };
+      return { iri: '', label: '', set: '' };
+    });
+  }
+  function termsToValue(terms) {
+    var out = [];
+    terms.forEach(function (t) {
+      var iri = t.iri.trim(), label = t.label.trim(), set = t.set.trim();
+      if (!iri && !label) return;
+      if (!label) { out.push({ '@id': iri }); return; }
+      var o = { '@id': iri || undefined, '@type': 'DefinedTerm', name: label };
+      if (!iri) delete o['@id'];
+      if (set) o.inDefinedTermSet = set;
+      out.push(o);
+    });
+    return out.length ? out : null;
+  }
+  function buildTermsEditor(f, row) {
+    var box = el('div', { class: 'terms' });
+    var rows = el('div', { class: 'term-rows' });
+    var vocabSel = el('select', {}, f.options.map(function (v, i) { return el('option', { value: String(i), text: v.name }); }));
+    var add = el('button', { class: 'btn', type: 'button', text: '+ add term' });
+    var hint = el('span', { class: 'help', text: '' });
+    function currentVocab() { return f.options[Number(vocabSel.value)] || f.options[0]; }
+    function updateHint() { var v = currentVocab(); hint.textContent = 'IRI pattern ' + v.iri; }
+    vocabSel.addEventListener('change', updateHint); updateHint();
+    add.addEventListener('click', function () { rows.appendChild(termRow({ iri: '', label: '', set: '' }, true)); commit(); });
+    function commit() {
+      var terms = Array.prototype.map.call(rows.querySelectorAll('.term-row'), function (r) {
+        return { iri: r.querySelector('.t-iri').value, label: r.querySelector('.t-label').value, set: r.getAttribute('data-set') || '' };
+      });
+      commitRootEdit(f.prop, termsToValue(terms));
+    }
+    function termRow(t, focus) {
+      var r = el('div', { class: 'term-row', 'data-set': t.set || '' });
+      var iri = el('input', { type: 'text', class: 't-iri', placeholder: currentVocab().iri, value: t.iri });
+      var label = el('input', { type: 'text', class: 't-label', placeholder: 'label, e.g. osteosarcoma cell line', value: t.label });
+      var find = el('a', { class: 't-find', target: '_blank', rel: 'noopener', text: 'find' });
+      var badge = el('span', { class: 't-badge' });
+      var del = el('button', { class: 'btn t-del', type: 'button', text: '×', title: 'remove term' });
+      function refresh() {
+        var v = currentVocab();
+        find.href = v.search + encodeURIComponent(label.value.trim() || iri.value.trim());
+        var m = I.matchHost(iri.value, I.KNOWN.ONTOLOGY_HOSTS);
+        badge.textContent = iri.value.trim() ? (m ? '✓ ' + m.label : '⚠ host not in the grader\'s ontology table') : '';
+        badge.className = 't-badge ' + (iri.value.trim() ? (m ? 'yes' : 'warn') : '');
+        r.setAttribute('data-set', m ? m.label.replace(' PURL', '') : '');
+      }
+      [iri, label].forEach(function (inp) { inp.addEventListener('input', function () { refresh(); commit(); }); });
+      vocabSel.addEventListener('change', refresh);
+      del.addEventListener('click', function () { r.remove(); commit(); });
+      r.appendChild(iri); r.appendChild(label); r.appendChild(find); r.appendChild(del); r.appendChild(badge);
+      refresh();
+      if (focus) setTimeout(function () { iri.focus(); }, 0);
+      return r;
+    }
+    box.appendChild(rows);
+    box.appendChild(el('div', { class: 'term-tools' }, [vocabSel, add, hint]));
+    box.render = function (value) {
+      rows.innerHTML = '';
+      termsFromValue(value).forEach(function (t) { rows.appendChild(termRow(t, false)); });
+      if (!rows.children.length) rows.appendChild(el('div', { class: 'help', text: 'No terms yet — pick a vocabulary, add a term, paste its IRI (the "find" link searches the label).' }));
+    };
+    row._terms = box;
+    return box;
+  }
+
+  // ------------------------------------------------ software table
+  function buildSoftwareTables() {
+    var cols = FIELDS.filter(function (f) { return f.entity === 'software'; });
+    document.querySelectorAll('[data-swtable]').forEach(function (wrap) {
+      var cid = wrap.getAttribute('data-swtable');
+      wrap.innerHTML = '';
+      if ((cid === 'all') !== (view === 'checklist')) return;   // only render the tables of the active view
+      var sw = state.crate ? state.crate.stats.software : [];
+      var myCols = cid === 'all' ? cols.slice().sort(function (a, b) { return a.effort - b.effort; }) : cols.filter(function (f) { return f.criteria[0] === cid; });
+      var otherCols = cid === 'all' ? [] : cols.filter(function (f) { return f.criteria[0] !== cid && f.criteria.indexOf(cid) > 0; });
+      var gc = $('[data-gcount="sw"]');
+      if (gc && cid === 'all') {
+        var missing = 0;
+        sw.forEach(function (e) { myCols.forEach(function (f) { var ed = (state.edits.software[String(e['@id'])] || {})[f.prop]; if (!(ed !== undefined ? ed !== null : I.nonblank(e[f.prop]))) missing += 1; }); });
+        gc.textContent = sw.length ? sw.length + ' entities · ' + missing + ' empty cells' : 'none in crate';
+      }
+      if (!sw.length) { wrap.appendChild(el('div', { class: 'help', text: 'No Software entities in this crate.' })); return; }
+      wrap.appendChild(el('div', { class: 'help', text: sw.length + ' Software entities — edit any cell; "apply to all" fills the column for every row (rows you edited by hand keep their value).' }));
+      var table = el('table', { class: 'sw' });
+      var thead = el('tr', {}, [el('th', { text: 'Software' })]);
+      myCols.forEach(function (f) {
+        var th = el('th', {}, [f.label, el('span', { class: 'prop mono', text: ' ' + f.prop })]);
+        var all = el('span', { class: 'applyall' });
+        var ai = el('input', { type: 'text', placeholder: 'apply to all…' });
+        var ab = el('button', { class: 'btn', type: 'button', text: 'apply' });
+        ab.addEventListener('click', function () {
+          sw.forEach(function (e) { setSoftwareEdit(String(e['@id']), f, ai.value, true); });
+          buildSoftwareTables(); onChange();
+        });
+        all.appendChild(ai); all.appendChild(ab); th.appendChild(all);
+        th.title = f.help;
+        thead.appendChild(th);
+      });
+      table.appendChild(thead);
+      var origById = {};
+      state.orig['@graph'].forEach(function (e) { origById[String(e['@id'])] = e; });
+      sw.forEach(function (e) {
+        var id = String(e['@id']);
+        var tr = el('tr', {}, [el('td', {}, [el('strong', { text: e.name || id }), el('div', { class: 'help mono', text: id })])]);
+        myCols.forEach(function (f) {
+          var origV = origById[id] ? origById[id][f.prop] : undefined;
+          var edit = (state.edits.software[id] || {})[f.prop];
+          var val = edit !== undefined ? (edit === null ? '' : toInput(f, edit)) : toInput(f, origV);
+          var inp = el('input', { type: 'text', value: val, placeholder: f.placeholder || '' });
+          if (edit !== undefined) inp.className = 'edited';
+          inp.addEventListener('input', function () { setSoftwareEdit(id, f, inp.value, false); inp.className = (state.edits.software[id] || {})[f.prop] !== undefined ? 'edited' : ''; onChange(); });
+          tr.appendChild(el('td', {}, [inp]));
+        });
+        table.appendChild(tr);
+      });
+      wrap.appendChild(table);
+      if (otherCols.length) wrap.appendChild(el('div', { class: 'related', text: 'More software columns under ' + otherCols.map(function (f) { return f.criteria[0]; }).filter(function (v, i, a) { return a.indexOf(v) === i; }).join(', ') }));
+    });
+  }
+  function setSoftwareEdit(id, f, raw, onlyIfEmpty) {
+    var origE = null;
+    state.orig['@graph'].some(function (e) { if (String(e['@id']) === id) { origE = e; return true; } return false; });
+    var origV = origE ? origE[f.prop] : undefined;
+    var cur = state.edits.software[id] || {};
+    if (onlyIfEmpty && ((cur[f.prop] !== undefined && cur[f.prop] !== null) || (cur[f.prop] === undefined && I.nonblank(origV)))) return;
+    var v = fromInput(f, raw, origV);
+    if (v === null && origV === undefined) delete cur[f.prop];
+    else if (sameValue(v, origV)) delete cur[f.prop];
+    else cur[f.prop] = v;
+    if (Object.keys(cur).length) state.edits.software[id] = cur; else delete state.edits.software[id];
+  }
+
+  // ------------------------------------------------ rendering values & scores
+  function renderFields() {
+    var root = I.findRoot(state.orig['@graph']).root;
+    document.querySelectorAll('.field[data-prop]').forEach(function (row) {
+      var prop = row.getAttribute('data-prop'), f = FIELD_BY_PROP['root:' + prop];
+      var origV = root[prop], edit = state.edits.root[prop];
+      if (f.type === 'terms') {
+        if (!row.contains(document.activeElement)) row._terms.render(edit !== undefined ? edit : origV);
+      } else {
+        var input = row.querySelector('input, textarea, select');
+        var shown = edit !== undefined ? (edit === null ? '' : toInput(f, edit)) : toInput(f, origV);
+        if (document.activeElement !== input) input.value = shown;
+      }
+      var filled = edit !== undefined ? edit !== null : I.nonblank(origV);
+      row.classList.toggle('filled', filled); row.classList.toggle('empty', !filled);
+      row.classList.toggle('edited', edit !== undefined);
+      var st = row.querySelector('.state'); st.innerHTML = '';
+      if (edit !== undefined) {
+        st.appendChild(document.createTextNode(edit === null ? 'cleared — the property will be removed on download' : 'edited (was ' + (I.nonblank(origV) ? JSON.stringify(origV).slice(0, 80) : 'empty') + ')'));
+        var rv = el('span', { class: 'revert', text: 'revert' });
+        rv.addEventListener('click', function () { delete state.edits.root[prop]; onChange(); });
+        st.appendChild(rv);
+      } else if (I.nonblank(origV)) {
+        st.appendChild(document.createTextNode('from the crate'));
+        if (origV && typeof origV === 'object' && !Array.isArray(origV)) st.appendChild(el('span', { class: 'warn', text: ' — structured value (' + JSON.stringify(origV).slice(0, 60) + '); editing replaces it with plain text' }));
+        else if (Array.isArray(origV) && f.type !== 'list' && f.type !== 'idlist' && f.type !== 'terms') st.appendChild(el('span', { class: 'warn', text: ' — stored as a list; one item per line' }));
+      } else st.appendChild(document.createTextNode('not set'));
+    });
+    var ds = $('#has-datasheet'); if (ds) ds.checked = state.hasDatasheet;
+  }
+
+  function chip(score) {
+    var cls = score === null ? 'sq' : 's' + score;
+    return el('span', { class: 'chip ' + cls, text: score === null ? '?' : String(score) });
+  }
+  function priorFor(cid) {
+    var out = [];
+    var g = state.prior && state.prior.grade;
+    if (g && g.criteria) {
+      g.criteria.forEach(function (c) { (c.rubrics || []).forEach(function (r) { if (r.id === cid) out.push('graded ' + r.score + (g.model ? ' by ' + g.model : '')); }); });
+    }
+    return out.length ? 'Prior: ' + out.join(' · ') : '';
+  }
+
+  function renderFooterPrior() {
+    var g = state.prior && state.prior.grade;
+    $('#footer-prior').textContent = g
+      ? ' · prior grade ' + g.total_score + (g.max_score !== undefined ? '/' + g.max_score : '') +
+        (g.overall_score !== undefined ? ' (' + g.overall_score + '% overall)' : '') +
+        (g.model ? ' by ' + g.model : '')
+      : '';
+  }
+
+  function renderScores() {
+    var doc = currentDoc();
+    state.crate = I.loadCrate(doc);
+    var est = I.estimateAll(state.crate, { hasDatasheet: state.hasDatasheet });
+    var agg = I.aggregate(est);
+    // per criterion
+    for (var cid in CRITERIA) {
+      var e = est[cid];
+      var box = $('[data-est="' + cid + '"]'); box.innerHTML = '';
+      box.appendChild(el('span', { class: 'est-badge', text: 'Estimate' }));
+      box.appendChild(chip(e.score));
+      box.appendChild(document.createTextNode(e.score === null ? ' needs a human read' : ''));
+      box.appendChild(el('ul', {}, e.basis.map(function (b) { return el('li', { text: b }); })));
+      var pri = priorFor(cid); if (pri) box.appendChild(el('div', { class: 'prior', text: pri }));
+      var ch = $('[data-chip="' + cid + '"]');
+      ch.className = 'chip ' + (e.score === null ? 'sq' : 's' + e.score);
+      ch.textContent = cid.split('.')[1];
+      ch.title = cid + ' ' + CRITERIA[cid].name + ' — estimate ' + (e.score === null ? '?' : e.score);
+      document.querySelectorAll('[data-whychip="' + cid + '"]').forEach(function (wc) {
+        wc.className = 'chip ' + (e.score === null ? 'sq' : 's' + e.score);
+        wc.textContent = e.score === null ? '?' : String(e.score);
+      });
+    }
+    applyFilter();
+    // sections
+    SECTIONS.forEach(function (s) {
+      var sec = agg.sections[String(s.number)] || { points: 0, max: 0, human: 0 };
+      var ax = $('[data-section="' + s.number + '"]');
+      ax.innerHTML = '<b>' + sec.points + '</b> / ' + sec.max + ' est. pts' + (sec.human ? ' · ' + sec.human + ' human' : '');
+      var stat = $('[data-secstat="' + s.number + '"]');
+      stat.textContent = sec.points + '/' + sec.max + ' pts' + (sec.human ? ' · ' + sec.human + ' need' + (sec.human === 1 ? 's' : '') + ' a human read' : '');
+    });
+    // summary bar
+    var base = state.base;
+    $('#est-score').textContent = agg.points + '/' + agg.max + (agg.human ? ' (' + agg.human + ' need review)' : '');
+    $('#est-fill').style.width = (agg.max ? 100 * agg.points / agg.max : 0) + '%';
+    $('#est-base').style.width = (base.est.max ? 100 * base.est.points / base.est.max : 0) + '%';
+    $('#est-delta').textContent = agg.points > base.est.points ? ' +' + (agg.points - base.est.points) : (agg.points < base.est.points ? ' ' + (agg.points - base.est.points) : '');
+    $('#gate-line').textContent = agg.gateFailures.length ? '⚠ gate: ' + agg.gateFailures.join('; ') : 'estimated gates pass';
+    $('#gate-line').style.color = agg.gateFailures.length ? 'var(--bad)' : 'var(--ok)';
+    renderFooterPrior();
+    renderValidation(doc);
+    renderChanges();
+  }
+
+  function renderValidation(doc) {
+    var box = $('#validation'), line = $('#valid-line');
+    if (!SCHEMAS.root) { box.classList.add('hidden'); line.textContent = 'schema validation unavailable (fairscape_models not installed when this page was built)'; line.className = 'valid'; return; }
+    var root = I.findRoot(doc['@graph']).root;
+    var errors = I.validate(SCHEMAS.root, root).map(function (e) { return { where: 'root', path: e.path, message: e.message }; });
+    doc['@graph'].forEach(function (e) {
+      if (I.canonicalType(e) !== 'Software') return;
+      if (!state.edits.software[String(e['@id'])]) return;   // only validate software we touched
+      I.validate(SCHEMAS.software, e).forEach(function (err) { errors.push({ where: e.name || e['@id'], path: err.path, message: err.message }); });
+    });
+    var originalRoot = I.findRoot(state.orig['@graph']).root;
+    var origErrors = I.validate(SCHEMAS.root, originalRoot).length;
+    if (!errors.length) {
+      box.classList.add('hidden');
+      line.textContent = '✓ valid against fairscape_models ' + (SCHEMAS.version || '') + (origErrors ? ' (' + origErrors + ' pre-existing issue(s) fixed)' : '');
+      line.className = 'valid ok';
+      return;
+    }
+    box.classList.remove('hidden');
+    box.innerHTML = '';
+    box.appendChild(el('strong', { text: 'Schema check (fairscape_models ' + (SCHEMAS.version || '') + '): ' + errors.length + ' issue(s)' }));
+    box.appendChild(el('span', { class: 'dim', text: origErrors ? ' — ' + origErrors + ' were already in the crate before editing; the download is never blocked.' : ' — the download is never blocked.' }));
+    var ul = el('ul');
+    errors.forEach(function (err) {
+      var li = el('li', {}, [el('span', { class: 'mono', text: err.where + err.path }), ' ' + err.message]);
+      var prop = err.path.replace(/^\//, '').split(/[\/\[]/)[0];
+      var f = FIELD_BY_PROP['root:' + prop];
+      var val = root[prop];
+      if (err.where === 'root' && typeof val === 'string' && /array/.test(err.message) && f && f.type !== 'list' && f.type !== 'idlist') {
+        var b = el('button', { class: 'btn', type: 'button', text: 'fix: wrap in a list' });
+        b.addEventListener('click', function () { state.edits.root[prop] = [val]; onChange(); });
+        li.appendChild(b);
+      } else if (err.where === 'root' && f) {
+        var a = el('a', { href: '#' + anchorId(f.criteria[0]), text: 'go to field' }); li.appendChild(document.createTextNode(' ')); li.appendChild(a);
+      }
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+    line.textContent = '⚠ ' + errors.length + ' schema issue(s)';
+    line.className = 'valid bad';
+  }
+
+  function renderChanges() {
+    var box = $('#changes'), items = [];
+    for (var p in state.edits.root) items.push('root ' + p + (state.edits.root[p] === null ? ' — removed' : ''));
+    for (var id in state.edits.software) for (var q in state.edits.software[id]) items.push('software ' + id + ' ' + q + (state.edits.software[id][q] === null ? ' — removed' : ''));
+    if (!items.length) { box.classList.add('hidden'); return; }
+    box.classList.remove('hidden'); box.innerHTML = '';
+    box.appendChild(el('strong', { text: items.length + ' change(s) pending' }));
+    box.appendChild(el('ul', {}, items.map(function (t) { return el('li', { class: 'mono', text: t }); })));
+  }
+
+  function renderAll() { renderFields(); buildSoftwareTables(); renderScores(); }
+  var timer = null;
+  function onChange() {
+    try { localStorage.setItem(storageKey(), JSON.stringify({ edits: state.edits, hasDatasheet: state.hasDatasheet })); } catch (e) { /* ignore */ }
+    clearTimeout(timer);
+    timer = setTimeout(function () { renderFields(); renderScores(); }, 150);
+  }
+
+  // ------------------------------------------------ export
+  function downloadText(name, text, mime) {
+    var blob = new Blob([text], { type: mime || 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+  function doDownload() {
+    if (!state.orig) return;
+    downloadText('ro-crate-metadata.json', JSON.stringify(currentDoc(), null, 2));
+    $('#export-msg').textContent = 'downloaded ro-crate-metadata.json — replace the file in your crate directory';
+  }
+  $('#download').addEventListener('click', doDownload);
+  $('#download-top').addEventListener('click', doDownload);
+  $('#download-patch').addEventListener('click', function () {
+    if (!state.orig) return;
+    downloadText('ro-crate-edits.json', JSON.stringify({ crate: String(state.crate.root['@id']), edits: state.edits }, null, 2));
+  });
+  $('#copy').addEventListener('click', function () {
+    if (!state.orig) return;
+    var txt = JSON.stringify(currentDoc(), null, 2);
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { $('#export-msg').textContent = 'copied ' + txt.length + ' chars'; });
+    else { var ta = el('textarea', { text: txt }); document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); $('#export-msg').textContent = 'copied'; }
+  });
+  $('#reset').addEventListener('click', function () {
+    if (!state.orig) return;
+    if (!confirm('Discard every edit made in this page?')) return;
+    state.edits = { root: {}, software: {} };
+    try { localStorage.removeItem(storageKey()); } catch (e) { /* ignore */ }
+    renderAll();
+  });
+  $('#next-empty').addEventListener('click', function () {
+    var rows = Array.prototype.slice.call(document.querySelectorAll('.field.empty')).filter(visibleRow);
+    if (!rows.length) return;
+    var y = window.scrollY + 70;
+    var next = rows.filter(function (r) { return r.getBoundingClientRect().top + window.scrollY > y; })[0] || rows[0];
+    if (next.scrollIntoView) next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var inp = next.querySelector('input, textarea, select'); if (inp) setTimeout(function () { inp.focus(); }, 400);
+  });
+
+  // ------------------------------------------------ file loading
+  function readFile(file, cb) {
+    var r = new FileReader();
+    r.onload = function () { try { cb(JSON.parse(r.result)); } catch (err) { alert('Not JSON: ' + err.message); } };
+    r.readAsText(file);
+  }
+  function ingestScore(obj) {
+    if (obj && obj.criteria && obj.total_score !== undefined) state.prior.grade = obj;
+    else { alert('Unrecognised score file (expected aggregated_score.json)'); return; }
+    if (state.orig) renderScores();
+  }
+  $('#file-crate').addEventListener('change', function (ev) { if (ev.target.files[0]) readFile(ev.target.files[0], function (d) { loadDoc(d, ev.target.files[0].name); }); });
+  $('#file-score').addEventListener('change', function (ev) { if (ev.target.files[0]) readFile(ev.target.files[0], ingestScore); });
+  var lb = $('#loadbox');
+  ['dragenter', 'dragover'].forEach(function (t) { lb.addEventListener(t, function (e) { e.preventDefault(); lb.classList.add('drag'); }); });
+  ['dragleave', 'drop'].forEach(function (t) { lb.addEventListener(t, function (e) { e.preventDefault(); lb.classList.remove('drag'); }); });
+  lb.addEventListener('drop', function (e) {
+    var f = e.dataTransfer.files[0]; if (!f) return;
+    readFile(f, function (d) { if (d && d['@graph']) loadDoc(d, f.name); else ingestScore(d); });
+  });
+
+  // ------------------------------------------------ views & filter
+  $('#view-checklist').addEventListener('click', function () { setView('checklist'); });
+  $('#view-criteria').addEventListener('click', function () { setView('criteria'); });
+  $('#hide-filled').addEventListener('change', applyFilter);
+  // criterion links (from a field's "for …" line or the section panel) open the criterion view
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest ? ev.target.closest('a[href^="#c"], a[href^="#sec"]') : null;
+    if (a && view !== 'criteria') { setView('criteria'); }
+  });
+
+  buildStructure();
+  var savedView = 'checklist', savedHide = false;
+  try { savedView = localStorage.getItem('improve:view') || 'checklist'; savedHide = localStorage.getItem('improve:hideFilled') === '1'; } catch (e) { /* ignore */ }
+  $('#hide-filled').checked = savedHide;
+  setView(savedView === 'criteria' ? 'criteria' : 'checklist');
+  if (EMBEDDED && EMBEDDED['@graph']) loadDoc(EMBEDDED, LABEL);
+})();
+</script>
+</body>
+</html>

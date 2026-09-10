@@ -163,7 +163,7 @@ def present_3c(facts):
         ev.percent("Hash coverage (datasets + software, embargoed excluded)",
                    facts["hashed"], facts["denominator"],
                    detail="counts md5/sha256 recorded on the metadata "
-                          "entities themselves, which is what v1.5 requires "
+                          "entities themselves, which is what the rubric requires "
                           "(metadata and data verifiably reference each "
                           "other)"),
         ev.sub(ev.count("Embargoed datasets excluded from the denominator",

@@ -1,6 +1,6 @@
 # AI-Readiness Human Questionnaire — Section 1: Provenance
 
-> **⚠ Written against rubric v1.0.** The rubric is now v1.5 (2026-08-29) — apply the changes in [V1.5-DELTA.md](V1.5-DELTA.md) (gates, N/A policy, dependency caps, and per-criterion rule changes) on top of this packet.
+> **⚠ Written against rubric v1.0.** The rubric is now v1.8 (2026-09-10) — apply the changes in [V1.5-DELTA.md](V1.5-DELTA.md) (gates, N/A policy, dependency caps, and per-criterion rule changes) on top of this packet.
 *Can a reader trace this data back to its origin and reconstruct how it was made?*
 
 For this section you are given **two things** (not a field packet):

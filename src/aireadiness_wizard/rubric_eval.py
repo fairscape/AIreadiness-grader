@@ -48,7 +48,7 @@ CRITERION_NAMES = {
 
 SCORE_LABELS = {"0": "Absent", "1": "Partial", "2": "Substantive"}
 
-# v1.5 gating thresholds and score-dependency caps, read from rubric_defs.yaml
+# v1.8 gating thresholds and score-dependency caps, read from rubric_defs.yaml
 # ({criterion_id: min score} / {criterion_id: capping criterion_id}).
 GATE_MINIMUMS = gate_specs()
 DEPENDENCY_RULES = dependency_rules()
@@ -289,7 +289,7 @@ def cmd_aggregate(out_dir: Path, model: str = "agentic:claude-code") -> int:
 
 
 def _apply_dependency_caps(per_rubric: list[dict]) -> None:
-    """Enforce the v1.5 dependency rules in place (1.b ≤ 1.a, 6.a ≤ 2.c).
+    """Enforce the v1.8 dependency rules in place (1.b ≤ 1.a, 6.a ≤ 2.c).
     A capped rubric keeps the grader's original score in ``uncapped_score``
     and gains a ``capped_by`` note."""
     by_id = {r["id"]: r for r in per_rubric}
@@ -306,7 +306,7 @@ def _apply_dependency_caps(per_rubric: list[dict]) -> None:
 
 
 def _evaluate_gates(per_rubric: list[dict]) -> dict:
-    """Apply the v1.5 gate thresholds. Returns {"pass": bool|None,
+    """Apply the v1.8 gate thresholds. Returns {"pass": bool|None,
     "failures": [...], "unscored": [...]} — pass is None while any gated
     criterion is still unscored and nothing has failed yet."""
     by_id = {r["id"]: r for r in per_rubric}
@@ -327,7 +327,7 @@ def _evaluate_gates(per_rubric: list[dict]) -> dict:
 
 
 def _aggregate(per_rubric: list[dict], model: str) -> dict:
-    """v1.5 scoring methodology, shared with ``aireadiness_wizard.grade``.
+    """v1.8 scoring methodology, shared with ``aireadiness_wizard.grade``.
 
     Group by ``id[0]`` (domain). Domain score = points earned / max points over
     applicable (non-N/A) criteria. Overall score = unweighted average of domain
@@ -393,7 +393,7 @@ def _aggregate(per_rubric: list[dict], model: str) -> dict:
         "total_score": total,
         "max_score": max_total,
         "percentage": percentage,
-        # the v1.5 overall AI-readiness score: unweighted average of domain
+        # the v1.8 overall AI-readiness score: unweighted average of domain
         # percentages (differs from `percentage` since domains vary in size)
         "overall_score": domain_average,
         "gating": {

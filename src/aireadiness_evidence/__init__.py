@@ -1,7 +1,7 @@
 """Extraction -> transformation -> presentation for the AI-readiness rubric.
 
 Builds, from a FAIRSCAPE RO-Crate, the evidence document requested by
-"Rubric for Human Review of AI-readiness Evaluation Criteria" v1.5: a
+"Rubric for Review of AI-readiness Evaluation Criteria" v1.8: a
 presentation JSON handed to an LLM grader, and a human-review HTML page
 rendered from the same dict.
 """

@@ -62,7 +62,7 @@ def transform_0a(ctx, raw):
     publisher = raw["publisher"]
     repo = (match_host(publisher, SPECIALIST_REPOS)
             or match_host(publisher, GENERALIST_REPOS))
-    # the v1.5 glossary excludes unmanaged storage (S3/GCS/Drive/Box/…)
+    # the rubric glossary excludes unmanaged storage (S3/GCS/Drive/Box/…)
     # from "sustainable repository"
     unsustainable = match_host(publisher, NON_SUSTAINABLE_HOSTS)
     query = None
@@ -286,7 +286,7 @@ def transform_0d(ctx, raw):
         if x:
             vals.append(str(x))
     license_value = " ".join(vals) or None
-    # v1.5's 2-vs-1 split: the license must be programmatically linked in the
+    # the 0.d 2-vs-1 split: the license must be programmatically linked in the
     # metadata (e.g. schema.org:license holding a resolvable IRI), not prose
     machine_readable = bool(license_value) and bool(
         re.match(r"https?://\S+$", license_value.strip()))
@@ -316,8 +316,6 @@ def present_0d(facts):
         ev.sub(ev.flag("License is machine-readable (an IRI linked in the "
                        "metadata, not prose)",
                        facts["license_machine_readable"])),
-        ev.sub(ev.flag("License is a well-known open license",
-                       bool(facts["license_name"]), detail=facts["license_name"])),
     ]
     if res:
         items.append(ev.sub(ev.flag("License link resolves",
@@ -325,15 +323,20 @@ def present_0d(facts):
                                     detail=res.get("note"))))
     items += [
         ev.text("Conditions of access / DUA terms", ev.clip(facts["conditions"])),
-        ev.sub(ev.flag("AI/ML explicitly mentioned in license or use terms",
-                       bool(facts["mentions"]),
-                       detail="context excerpts below" if facts["mentions"] else None)),
+        ev.text("AI/ML language in license or use terms", _ai_ml_summary(facts),
+                detail="the reviewer decides whether the terms permit or "
+                       "prohibit AI/ML reuse" if facts["mentions"] else None),
     ]
-    if facts["mentions"]:
-        items.append(ev.sub(ev.listing(
-            "AI/ML mention excerpts (for the reviewer's call)",
-            facts["mentions"])))
     return items
+
+
+def _ai_ml_summary(facts):
+    """Plain-text summary of the AI/ML scan — not a pass/fail flag, since a
+    mention can be a permission just as easily as a prohibition."""
+    if not facts["mentions"]:
+        return "No specific mention of AI/ML detected"
+    sample = facts["mentions"][0]
+    return f"AI/ML language detected. Sample: {sample}"
 
 
 def estimate_0d(facts):

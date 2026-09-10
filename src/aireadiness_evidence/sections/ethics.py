@@ -271,7 +271,7 @@ def estimate_4d(facts):
         return ev.estimate("2", "confidentiality level is an HL7 "
                                 f"v3-Confidentiality code ('{facts['hl7_code']}')",
                            "whether the declared level is actually ENFORCED "
-                           "(v1.5 0-rule) is not verified — score 0 if "
+                           "(the 0-rule) is not verified — score 0 if "
                            "controlled data is retrievable without "
                            "authorization or authorized users are blocked")
     if facts["confidentiality"]:

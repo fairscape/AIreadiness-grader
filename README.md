@@ -9,9 +9,9 @@ that crate against the 28 AI-Ready rubrics.
   emission flow (`/fairscape-rocrate-wizard`) and everything around it.
 - **Evidence presentation** — `src/aireadiness_evidence/`, an extraction →
   transformation → presentation pipeline that builds the evidence document
-  requested by *Rubric for Human Review of AI-readiness Evaluation Criteria*
-  v1.5 (2026-08-29) (rubric text transcribed in `rubric_defs.yaml`, including
-  the v1.5 gate thresholds and the 1.b ≤ 1.a / 6.a ≤ 2.c dependency rules).
+  requested by *Rubric for Review of AI-readiness Evaluation Criteria*
+  v1.8 (2026-09-10) (rubric text transcribed in `rubric_defs.yaml`, including
+  the gate thresholds and the 1.b ≤ 1.a / 6.a ≤ 2.c dependency rules).
   See [Evidence presentation](#evidence-presentation).
 - **Grader** — the `aireadiness_wizard` helper module. It splits the presentation
   into per-criterion grading folders (`rubric_eval.py`, driven by the
@@ -134,6 +134,50 @@ print(result["percentage"], result["total_score"], "/", result["max_score"])
 `grade_crate` writes the same files to the output dir and returns the aggregate.
 Pass `verbose=False` to silence progress (it logs to stderr; the returned dict is
 the only thing on stdout).
+
+## Improving a crate: `fairscape-improve` (AI-Ready Improvements form)
+
+```bash
+fairscape-improve /path/to/crate                  # -> <crate>/ai-ready-improve.html
+fairscape-improve /path/to/crate -o out.html
+fairscape-improve -o generic.html                 # no crate embedded; load one in the page
+```
+
+A single, offline HTML page with two views of the same fields. The default
+**checklist** lists every root-entity (and Software-entity) property the
+graders read, easiest first — values you can paste, then a sentence or two,
+then narrative fields, then the Software table — with a *hide filled* filter,
+a progress count and a *next empty* button. **By criterion** is the review-page
+layout: one card per criterion with the scoring rules, the live evidence, and
+the fields it reads. Fill what you know, skip the rest, download the improved
+`ro-crate-metadata.json` at any time. Built for crates that come out of a
+workflow recorder (nf-fairscape) with provenance but little description.
+Effort levels live in `fields.EFFORT`.
+
+- **Scope**: the page only sets or edits single properties on entities that
+  already exist. No new entities, no new graph links. Checksums, schemas,
+  summary statistics and Sample/Instrument/Experiment/Person entities are named
+  as out of scope on the cards that need them.
+- **Live scores**: the mechanical rubric estimates of `aireadiness_evidence`
+  (`estimate_*`, no network) re-run on every edit and mark human-judgment
+  criteria with `?`. Each field shows the current estimate of every criterion
+  it feeds.
+- **Validation**: edits are checked in the page against the JSON schemas
+  generated from the `fairscape_models` pydantic classes (`ROCrateMetadataElem`,
+  `Software`) — the same models `fairscape-cli rocrate validate` and the JS
+  `@fairscape/utils` generators use. The download is never blocked; issues are
+  listed with a jump link (and a one-click fix for string-vs-list shape).
+- **Prior scores**: `grading/aggregated_score.json` in the crate directory is
+  embedded automatically and shown per criterion (and in the footer); it can
+  also be dropped onto the page.
+- Edits persist in the browser (localStorage, keyed by crate `@id`); "Download
+  edits only" writes just the patch.
+
+Layout of `src/aireadiness_improve/`: `fields.py` (the field catalogue —
+property, input type, criteria it feeds, effort level; edit here to add a
+field), `schemas.py` (pydantic → JSON schema), `templates/improve.js` (crate
+model, rubric estimators, schema validator, edit applier; loadable in node),
+`templates/improve.html.j2` (the page), `cli.py`.
 
 ## Install
 

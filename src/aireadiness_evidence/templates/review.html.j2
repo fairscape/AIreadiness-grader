@@ -520,7 +520,7 @@ grades.forEach(function (g) {
   if (e !== undefined && e !== 'N/A') { a.estPts += +e; a.estMax += 2; }
 });
 
-// v1.5 dependency rules, read off the criterion markup (1.b ≤ 1.a, 6.a ≤ 2.c)
+// v1.8 dependency rules, read off the criterion markup (1.b ≤ 1.a, 6.a ≤ 2.c)
 var deps = {};
 grades.forEach(function (g) {
   if (g.dataset.dependsOn) deps[g.dataset.criterion] = g.dataset.dependsOn;
@@ -682,7 +682,7 @@ function updateSummary() {
     if (warn) warn.hidden = !bad;
     if (bad) depViolations.push(id + ' > ' + deps[id]);
   });
-  // v1.5 overall score: unweighted average of section percentages + gates
+  // v1.8 overall score: unweighted average of section percentages + gates
   var gateFailures = [], gatePending = 0, sectionPcts = [];
   Object.keys(axes).forEach(function (k) {
     var a = axes[k];

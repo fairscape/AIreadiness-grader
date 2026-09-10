@@ -86,7 +86,7 @@ def estimate_6a(facts):
                            "validation is possible",
                            "no populated standard-vocabulary bindings — "
                            "semantic conformance cannot be deterministically "
-                           "validated (v1.5 1-rule)"
+                           "validated (the 1-rule)"
                            if not facts["vocab_found"] else
                            "no deterministic validator matched (an unlisted "
                            "one may exist)")

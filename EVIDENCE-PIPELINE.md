@@ -208,3 +208,27 @@ reviewer when provider-site URIs would decide the score.
   verified (would need content-negotiation on the PID landing page).
 - 4.d enforcement (controlled data actually blocked without auth) is not
   probed.
+
+## Rubric v1.8 migration (2026-09-10)
+
+The rubric doc moved from v1.5 (2026-08-29) to v1.8 (2026-09-10) and was
+retitled: "Rubric for Review of AI-readiness Evaluation Criteria v1.8
+2026-09-10.docx" (repo root, next to the v1.5 and v1.0 docx). No criteria,
+gates, thresholds, or dependency caps changed; `rubric_defs.yaml` is
+re-transcribed verbatim, the citable title (`rubric.rubric_title`) follows the
+new name, and the presentation JSON's `glossary` / `methodology` carry the
+expanded v1.8 glossary and the scoring-worksheet appendix (the v1.5 "score
+record" bullet was dropped from the rubric and from the YAML).
+
+Wording that reached code:
+- 0.a / 5.a scoring now says *sustainable* repository, not
+  *domain-appropriate* (5.a's evidence detail updated to match).
+- 2.d's question is "state-vs-control" again (improve.js basis text updated).
+- 0.d evidence: the "well-known open license" flag is gone (the rubric never
+  asked for it), and the AI/ML scan is a plain-text line — "No specific
+  mention of AI/ML detected" or "AI/ML language detected. Sample: …" — instead
+  of a ✓/✗ flag, since a mention is not a pass or a fail until a human reads
+  it.
+
+See `rubrics/ai-ready/human/V1.5-DELTA.md` for the per-criterion wording
+deltas. The human questionnaire packets there still reflect v1.0.

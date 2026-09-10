@@ -51,7 +51,7 @@ def present_5a(facts):
                        detail=f"scheme: {facts['pid_scheme']}" if facts["pid_scheme"] else None)),
         ev.listing("Recognized archives detected (publisher + content hosts)",
                    facts["archives"],
-                   detail="a 2 requires a domain-appropriate repository with "
+                   detail="a 2 requires a sustainable repository with "
                           "a PID and a retention commitment"),
         ev.sub(ev.listing("Unmanaged storage detected (excluded from "
                           "'sustainable' by the rubric glossary)",
@@ -213,7 +213,7 @@ def present_5c(facts):
                           [facts["governance"], facts["pi"], facts["contact"]]
                           if x)),
         ev.sub(ev.text("Context — terms of access (conditionsOfAccess; no "
-                       "longer scored under 5.c in v1.5)",
+                       "longer scored under 5.c)",
                        ev.clip(facts["conditions"]))),
     ]
     return items

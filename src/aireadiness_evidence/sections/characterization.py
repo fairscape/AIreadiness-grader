@@ -297,7 +297,7 @@ def present_2e(facts):
         ev.sub(ev.listing("Links to QC protocol/software found in the "
                           "collection description", facts["qc_links"],
                           detail=None if facts["qc_links"] else
-                          "v1.5 asks for a link to the specific protocol or "
+                          "the rubric asks for a link to the specific protocol or "
                           "software used")),
     ]
     for chk in facts["link_checks"]:

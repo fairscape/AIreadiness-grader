@@ -29,7 +29,7 @@ TEMPLATES = Path(__file__).parent / "templates"
 
 SCORE_LABELS = {0: "Absent", 1: "Partial", 2: "Substantive", "N/A": "N/A"}
 
-# v1.5 gate thresholds ({criterion_id: min score}) and dependency caps
+# v1.8 gate thresholds ({criterion_id: min score}) and dependency caps
 # ({criterion_id: capping criterion_id}), read from rubric_defs.yaml.
 GATE_MINIMUMS = gate_specs()
 DEPENDENCY_RULES = dependency_rules()
@@ -81,7 +81,7 @@ def radar_axis_label(index: int, count: int) -> dict:
 
 
 def _capped_scores(scores: dict[str, dict]) -> dict[str, dict]:
-    """Apply the v1.5 dependency rules (1.b ≤ 1.a, 6.a ≤ 2.c) to a copy of
+    """Apply the v1.8 dependency rules (1.b ≤ 1.a, 6.a ≤ 2.c) to a copy of
     the score map. A capped verdict keeps the grader's original score in
     ``uncapped_score`` and gains a ``capped_by`` note."""
     out = {cid: dict(v) for cid, v in scores.items()}
@@ -102,7 +102,7 @@ def build_report(presentation: dict, scores: dict[str, dict],
                  grader_label: str = "") -> dict:
     """Merge presentation + scores into the dict the template renders.
 
-    Implements the v1.5 scoring methodology: dependency caps, N/A excluded
+    Implements the v1.8 scoring methodology: dependency caps, N/A excluded
     from the denominator, per-criterion gate thresholds rolled up to domain
     "Gating FAIL", and an overall score that is the unweighted average of the
     domain percentages."""
@@ -207,7 +207,7 @@ def build_report(presentation: dict, scores: dict[str, dict],
             "points": total,
             "max": max_total,
             "percentage": round(100 * total / max_total, 1) if max_total else 0.0,
-            # v1.5 overall AI-readiness score: unweighted average of the
+            # v1.8 overall AI-readiness score: unweighted average of the
             # domain percentages (N/A criteria excluded from denominators)
             "overall_score": overall_score,
             "gate_pass": gate_pass,

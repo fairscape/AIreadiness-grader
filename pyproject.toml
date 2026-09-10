@@ -16,6 +16,7 @@ dependencies = [
 [project.scripts]
 fairscape-grade = "aireadiness_wizard.grade:main"
 fairscape-evidence = "aireadiness_evidence.cli:main"
+fairscape-improve = "aireadiness_improve.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/aireadiness_wizard", "src/aireadiness_evidence"]
+packages = ["src/aireadiness_wizard", "src/aireadiness_evidence", "src/aireadiness_improve"]
