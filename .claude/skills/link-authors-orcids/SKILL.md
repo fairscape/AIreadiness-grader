@@ -13,9 +13,12 @@ This skill turns the existing plain-string authors into linked Person entities w
 
 > *"Rubric 1.d wants ORCID URIs on authors so attribution is machine-resolvable. Right now most authors on this crate are plain strings. I'll show you the list of distinct people and organizations I found, ask for an ORCID per person (skip is fine — not every researcher has one), and for the publisher I'll ask for a ROR if it's an institution rather than a data archive. Then I'll add Person/Organization entities to the `@graph` and rewrite every reference to use `{\"@id\": \"<uri>\"}` stubs. Before I write, I validate the result against the fairscape_models schema — if anything won't parse I'll tell you and not save."*
 
+
+> `<crate>` is the `ro-crate-metadata.json` to edit and `<crate_dir>` its directory. Resolve them from the path the user gave, else `ro-crate-metadata.json` in the working directory, else `state.crate_path` if a `.fairscape-state.json` wizard state file is present. Ask if none resolve.
+
 ## 1. Read the crate, dedupe actors
 
-`Read` `state.crate_path` into `crate`. Walk `crate["@graph"]` collecting:
+`Read` `<crate>` into `crate`. Walk `crate["@graph"]` collecting:
 
 - **Authors**: every distinct string value (or `name` value inside an inline dict) appearing in any `author` field. Track which entity ids reference each author.
 - **Publisher**: the root entity's `publisher`. String or dict; capture name + existing identifier if any.

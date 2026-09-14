@@ -2,7 +2,7 @@
 per-criterion score.
 
 Input is a grading directory produced by
-``aireadiness_wizard.rubric_eval extract-evidence`` in which each
+``aireadiness_grader.rubric_eval extract-evidence`` in which each
 ``<id>-<slug>/`` folder has gained a ``score.json`` (score / rationale /
 evidence / gaps) written by an isolated grading agent. This module merges the
 two, rolls the scores up per section, and renders a read-only HTML report —

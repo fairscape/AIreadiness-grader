@@ -13,9 +13,12 @@ The CLI already does the actual computation. This skill is a thin wrapper: it fi
 
 > *"Rubric 2.b wants row/column counts and per-column statistics on tabular Datasets. fairscape-cli already has a `summary-stats` command that reads each file, computes the stats, and writes a child SummaryStats Dataset linked via `hasSummaryStatistics`. The catch is that this only works for Datasets whose `contentUrl` points at a local file or a URL the runtime can fetch. I'll show you the list of tabular Datasets, mark which are local-resolvable, and ask which to process. Remote-only Datasets get skipped (you can come back to those after downloading). After the CLI runs, I re-load the crate and validate it against the fairscape_models schema as a defense-in-depth check."*
 
+
+> `<crate>` is the `ro-crate-metadata.json` to edit and `<crate_dir>` its directory. Resolve them from the path the user gave, else `ro-crate-metadata.json` in the working directory, else `state.crate_path` if a `.fairscape-state.json` wizard state file is present. Ask if none resolve.
+
 ## 1. Enumerate the work
 
-`Read` `state.crate_path`. Walk `@graph` for `Dataset` entities (excluding the root crate). Bucket each:
+`Read` `<crate>`. Walk `@graph` for `Dataset` entities (excluding the root crate). Bucket each:
 
 - **Already has `hasSummaryStatistics`** → skip; report count.
 - **Non-tabular format** (image/binary/sequencing/audio — anything other than csv/tsv/parquet/h5ad/jsonl/xlsx/xls) → skip; report count. Detected via `encodingFormat` or filename suffix.
@@ -75,7 +78,7 @@ import json, sys
 from fairscape_models.rocrate import ROCrateV1_2
 ROCrateV1_2.model_validate(json.load(open(sys.argv[1])))
 print("OK")
-' <state.crate_path>
+' <crate>
 ```
 
 If validation passes (it should — the CLI uses the same models): continue.

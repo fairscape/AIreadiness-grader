@@ -1,81 +1,87 @@
-# AIreadiness-grader
+# AI-Readiness grader
 
-This repo is the **AIReadiness wizard**: a suite of skills that walks a non-expert
-user through documenting a research pipeline as a
-[FAIRSCAPE](https://fairscape.github.io/) RO-Crate, plus a **grader** that scores
-that crate against the 28 AI-Ready rubrics.
+Scores an RO-Crate against *Rubric for Review of AI-readiness Evaluation
+Criteria* v1.8 (2026-09-10): 28 criteria, seven domains, 0 / 1 / 2 each.
 
-- **Wizard** — the `.claude/skills/` bundle. The interview + build-script
-  emission flow (`/fairscape-rocrate-wizard`) and everything around it.
-- **Evidence presentation** — `src/aireadiness_evidence/`, an extraction →
-  transformation → presentation pipeline that builds the evidence document
-  requested by *Rubric for Review of AI-readiness Evaluation Criteria*
-  v1.8 (2026-09-10) (rubric text transcribed in `rubric_defs.yaml`, including
-  the gate thresholds and the 1.b ≤ 1.a / 6.a ≤ 2.c dependency rules).
-  See [Evidence presentation](#evidence-presentation).
-- **Grader** — the `aireadiness_wizard` helper module. It splits the presentation
-  into per-criterion grading folders (`rubric_eval.py`, driven by the
-  `agentic-rescore` skill) or grades them with an LLM of your choice
-  (`grade.py`, the `fairscape-grade` CLI).
-
-## Evidence presentation
-
-```
-fairscape-evidence /path/to/crate -o out/          # or: PYTHONPATH=src python3 -m aireadiness_evidence.cli
-fairscape-evidence /path/to/crate --no-network     # skip URL / registry lookups
+```bash
+pip install -e .
+fairscape-evidence /path/to/my-crate -o review/
+open review/ai-ready-review.html
 ```
 
-Writes two files built from the same presentation dict — no scoring in either:
+`ai-ready-review.html` is a self-contained page: every criterion, its scoring
+rules, and the evidence found in your crate. Score it by hand, or hand the
+evidence to a model.
 
-| Output | Audience |
+## Two halves
+
+Grading splits in two, and the code keeps them apart.
+
+**Finding evidence** is deterministic Python. For each criterion it collects
+the facts that criterion asks about: identifiers, license, schemas, checksums,
+ethics fields.
+
+**Applying the rules** is judgment. A human or a model reads the 0/1/2
+definitions against the evidence and picks a score.
+
+The upshot: `evidence.json` records exactly what a scorer was looking at, so
+any score can be checked, and two reviewers who disagree can point at the same
+file.
+
+## Outputs
+
+`fairscape-evidence` writes both files from one pass over the crate.
+
+| File | For |
 | --- | --- |
-| `ai-ready-presentation.json` | evidence handed to an LLM grader |
-| `ai-ready-review.html` | human reviewer: rubric text + scoring defs + evidence, score radios, live per-section score rollups (sticky-bar dropdown, end-of-page table + radar chart), per-section comment boxes, browser autosave, copy-as-JSON export |
+| `ai-ready-review.html` | A human. Rubric text, scoring rules, evidence. Score radios, per-domain rollups, radar chart, comment boxes, browser autosave, copy-as-JSON. |
+| `ai-ready-presentation.json` | A machine. The same evidence, typed. |
 
-Layout of `src/aireadiness_evidence/`:
-
-| File | Stage |
-| --- | --- |
-| `rubric_defs.yaml` | rubric text transcribed from the docx (practice / questions / 0-1-2 rules) — edit rubric wording here |
-| `crate.py` | extraction: one pass over root + sub-crates, aggregates + bounded samples (50k-entity crates stay cheap) |
-| `sections/*.py` | one module per rubric section; each criterion is an `extract_` / `transform_` / `present_` trio |
-| `known.py` | reference tables: PID schemes, re3data-style repo hosts, ontology hosts, HL7 confidentiality codes, vendor formats |
-| `network.py` | optional lookups: URL resolution, re3data search, DOI content negotiation; timeouts report as inconclusive |
-| `pipeline.py` / `render.py` / `templates/review.html.j2` | assembly and the Jinja HTML |
-
-Datasheet (`ro-crate-datasheet.html`) and every sub-crate evidence graph
-(`ro-crate-prov-graph.html`, `*-evidence-graph.html`) are discovered on disk and
-linked from both outputs. `examples/cm4ai-june-2026/` holds the output for the
-CM4AI June 2026 release.
-
-## Launching the wizard
-
-The wizard is a skill bundle, so you launch it from inside an agent host — either
-**Claude Code** or **opencode**. In the project directory you want to document,
-invoke the top-level skill:
-
-```
-/fairscape-rocrate-wizard
+```bash
+fairscape-evidence /path/to/crate -o out/       # both files
+fairscape-evidence /path/to/crate --no-network  # skip URL / registry lookups
+fairscape-evidence /path/to/crate --json-only   # evidence only
 ```
 
-It scans your folder, pre-fills crate metadata from a paper PDF or existing
-`ro-crate-metadata.json` if present, interviews you one step at a time
-(inputs → script → outputs), runs a plausibility check, then emits and runs
-`build_rocrate.py` to produce `ro-crate-metadata.json`. State is checkpointed to
-`.fairscape-wizard-state.json`, so you can quit and resume.
+Datasheets (`ro-crate-datasheet.html`) and provenance graphs
+(`ro-crate-prov-graph.html`, `*-evidence-graph.html`) found on disk are linked
+from both outputs.
 
-## Grading a crate
+Network lookups (URL resolution, re3data, DOI dereference) run by default and
+are time-bounded. A timeout is reported as inconclusive, not as a failure.
 
-There are two ways to grade.
+## Three ways to score
 
-**1. Inside the wizard (host LLM as grader).** The `agentic-rescore` skill has the
-agent driving the wizard (Claude, in Claude Code) read each rubric + extracted
-evidence and score it directly. No API key needed — it uses whatever model is
-already running the host.
+### A human, in the review page
 
-**2. LLM-agnostic CLI: `fairscape-grade`.** A standalone command that runs the
-full pipeline against the LLM of your choice. Use this when you want a specific
-model, a non-interactive/batch run, or grading outside an agent host.
+Open `ai-ready-review.html` and work down it. Scores roll up per domain as you
+go; the page keeps your work in browser storage and exports it as JSON. One
+file, nothing to install, emailable to a reviewer.
+
+Long-form notes for human reviewers are in `rubrics/ai-ready/human/`, one file
+per domain plus `HUMAN-GRADER-METADATA-SPEC.md`.
+
+### An agent you're already talking to
+
+In Claude Code or another agent host with this repo's `.claude/skills/`
+visible:
+
+```
+/agentic-rescore
+```
+
+It dumps the evidence, then fans out one subagent per criterion. Each subagent
+sees only its `rubric.json` and its `evidence.json`, writes a `score.json` with
+a rationale and a `gaps` list, and returns. A Python pass then aggregates.
+
+Subagents are isolated so a score depends on the prompt plus one criterion's
+evidence, and nothing else in the conversation. Re-running reproduces the
+verdict. No API key: it uses whatever model runs the host.
+
+### A specific model, from the command line
+
+`fairscape-grade` runs the same evidence through a model you name. Use it for
+batch runs or outside an agent host.
 
 ```bash
 fairscape-grade <crate-dir-or-metadata.json> <output-dir> \
@@ -83,11 +89,8 @@ fairscape-grade <crate-dir-or-metadata.json> <output-dir> \
     --api-key "$ANTHROPIC_API_KEY"
 ```
 
-Both paths grade from the same `aireadiness_evidence` presentation: per criterion,
-the docx practice / questions / 0-1-2 rules plus the typed evidence items. Pass
-`--no-network` to skip the pipeline's URL / registry checks.
-
-`--model` is a `pydantic-ai` model string — the provider prefix picks the LLM:
+`--model` is a [pydantic-ai](https://ai.pydantic.dev/) model string. The prefix
+picks the provider.
 
 | prefix | env var set from `--api-key` | example |
 | --- | --- | --- |
@@ -97,87 +100,118 @@ the docx practice / questions / 0-1-2 rules plus the typed evidence items. Pass
 | `groq` | `GROQ_API_KEY` | `groq:llama-3.3-70b-versatile` |
 | `uvarc` | *(used directly)* | `uvarc:Kimi K2.5` — UVA RC GenAI endpoint |
 
-**Local models.** Anything that speaks the OpenAI API (Ollama, LM Studio, vLLM,
-llama.cpp) works through the `openai:` prefix — point `OPENAI_BASE_URL` at your
-server and pass a throwaway key:
+Anything speaking the OpenAI API (Ollama, LM Studio, vLLM, llama.cpp) works
+through the `openai:` prefix. Point `OPENAI_BASE_URL` at your server:
 
 ```bash
 export OPENAI_BASE_URL=http://localhost:11434/v1   # e.g. Ollama
-fairscape-grade <crate.json> <out-dir> --model openai:llama3.1 --api-key local
+fairscape-grade <crate> <out-dir> --model openai:llama3.1 --api-key local
 ```
 
-It writes a per-rubric folder (`rubric.json` + `evidence.json` + `score.json`)
-under `<output-dir>/rubrics/`, a `summary.json` + `ai-ready-presentation.json`
-alongside them, and a top-level `aggregated_score.json` with totals grouped by
-criterion.
-
-Equivalent invocation:
-
-```bash
-python -m aireadiness_wizard.grade <crate> <out-dir> --model ... --api-key ...
-```
-
-Or call it from a script and get the aggregate back as a dict:
+From Python, to get the aggregate back as a dict:
 
 ```python
-from aireadiness_wizard import grade
+from aireadiness_grader import grade
 
-result = grade.grade_crate(
-    "path/to/crate",
-    "grading-out/",
-    model="anthropic:claude-opus-4-7",
-    api_key="...",
-)
+result = grade.grade_crate("path/to/crate", "grading-out/",
+                           model="anthropic:claude-opus-4-7", api_key="...")
 print(result["percentage"], result["total_score"], "/", result["max_score"])
 ```
 
-`grade_crate` writes the same files to the output dir and returns the aggregate.
-Pass `verbose=False` to silence progress (it logs to stderr; the returned dict is
-the only thing on stdout).
+### What a run leaves on disk
 
-## Improving a crate: `fairscape-improve` (AI-Ready Improvements form)
+The agentic path and `fairscape-grade` write the same layout, so downstream
+tools can read either.
 
-```bash
-fairscape-improve /path/to/crate                  # -> <crate>/ai-ready-improve.html
-fairscape-improve /path/to/crate -o out.html
-fairscape-improve -o generic.html                 # no crate embedded; load one in the page
+```
+grading/
+├── aggregated_score.json          totals, domain rollups, gate results
+├── summary.json                   crate header, inventory, criterion list
+├── ai-ready-presentation.json     the full evidence
+└── 0.a-findable/
+    ├── rubric.json                practice, questions, 0/1/2 rules
+    ├── evidence.json              what the crate says about this criterion
+    └── score.json                 score, rationale, gaps
 ```
 
-A single, offline HTML page with two views of the same fields. The default
-**checklist** lists every root-entity (and Software-entity) property the
-graders read, easiest first — values you can paste, then a sentence or two,
-then narrative fields, then the Software table — with a *hide filled* filter,
-a progress count and a *next empty* button. **By criterion** is the review-page
-layout: one card per criterion with the scoring rules, the live evidence, and
-the fields it reads. Fill what you know, skip the rest, download the improved
-`ro-crate-metadata.json` at any time. Built for crates that come out of a
-workflow recorder (nf-fairscape) with provenance but little description.
-Effort levels live in `fields.EFFORT`.
+## How the rubric scores
 
-- **Scope**: the page only sets or edits single properties on entities that
+28 criteria, seven domains, 0 (Absent) / 1 (Partial) / 2 (Substantive). Max 56
+points.
+
+| Domain | ids | gated |
+| --- | --- | --- |
+| FAIRness | `0.a`–`0.d` | yes — `0.a` must be 2, the rest above 0 |
+| Provenance | `1.a`–`1.d` | yes — all above 0 |
+| Characterization | `2.a`–`2.e` | `2.c` gates (Standards) |
+| Pre-model Explainability | `3.a`–`3.c` | no |
+| Ethics | `4.a`–`4.d` | yes — all above 0 |
+| Sustainability | `5.a`–`5.d` | no |
+| Computability | `6.a`–`6.d` | no |
+
+A non-gating criterion can be N/A when every element is inapplicable; N/A
+leaves the denominator.
+
+The overall score is the unweighted average of the seven domain percentages,
+not the raw point total, so a small domain isn't drowned out by a large one.
+
+Gates are evaluated independently. A failed gate marks the result *Gating
+FAIL*; the score is still reported.
+
+Two dependency caps apply at aggregation: `1.b ≤ 1.a` and `6.a ≤ 2.c`. A capped
+criterion keeps the grader's original verdict in `uncapped_score`.
+
+## Improving a crate
+
+### `fairscape-improve`, an offline form
+
+```bash
+fairscape-improve /path/to/crate       # -> <crate>/ai-ready-improve.html
+fairscape-improve -o generic.html      # no crate embedded; load one in the page
+```
+
+One HTML page, two views of the same fields. **Checklist** lists every property
+the graders read, easiest first: values you can paste, then a sentence or two,
+then narrative fields, then the Software table. It has a *hide filled* filter, a
+progress count and a *next empty* button. **By criterion** mirrors the review
+page, one card per criterion with its rules, its evidence, and the fields
+feeding it. Fill what you know, skip the rest, download the improved
+`ro-crate-metadata.json` whenever.
+
+- **Live scores.** The mechanical estimates (`estimate_*`, no network) re-run on
+  every edit. Human-judgment criteria are marked `?`.
+- **Validation.** Edits are checked against JSON schemas generated from the
+  `fairscape_models` pydantic classes, the same ones `fairscape-cli rocrate
+  validate` uses. Download is never blocked; issues get a jump link and a
+  one-click fix for string-vs-list shape.
+- **Prior scores.** `grading/aggregated_score.json` in the crate directory is
+  embedded automatically and shown per criterion.
+- **Scope.** The page only sets or edits single properties on entities that
   already exist. No new entities, no new graph links. Checksums, schemas,
-  summary statistics and Sample/Instrument/Experiment/Person entities are named
-  as out of scope on the cards that need them.
-- **Live scores**: the mechanical rubric estimates of `aireadiness_evidence`
-  (`estimate_*`, no network) re-run on every edit and mark human-judgment
-  criteria with `?`. Each field shows the current estimate of every criterion
-  it feeds.
-- **Validation**: edits are checked in the page against the JSON schemas
-  generated from the `fairscape_models` pydantic classes (`ROCrateMetadataElem`,
-  `Software`) — the same models `fairscape-cli rocrate validate` and the JS
-  `@fairscape/utils` generators use. The download is never blocked; issues are
-  listed with a jump link (and a one-click fix for string-vs-list shape).
-- **Prior scores**: `grading/aggregated_score.json` in the crate directory is
-  embedded automatically and shown per criterion (and in the footer); it can
-  also be dropped onto the page.
-- Edits persist in the browser (localStorage, keyed by crate `@id`); "Download
-  edits only" writes just the patch.
+  summary statistics and Sample/Instrument/Person entities are marked out of
+  scope on the cards that need them.
 
-Layout of `src/aireadiness_improve/`: `fields.py` (the field catalogue —
-property, input type, criteria it feeds, effort level; edit here to add a
-field), `schemas.py` (pydantic → JSON schema), `templates/improve.js` (crate
-model, rubric estimators, schema validator, edit applier; loadable in node),
-`templates/improve.html.j2` (the page), `cli.py`.
+Edits persist in the browser (localStorage, keyed by crate `@id`). "Download
+edits only" writes just the patch. Built for crates that come out of a workflow
+recorder with provenance but little description.
+
+### Guided improvement skills
+
+In an agent host, `/post-grade-improve` reads `aggregated_score.json`, shows
+which criteria scored below 2, and offers a skill for each gap it can close.
+Each one interviews you for what's needed, validates against the
+`fairscape_models` schema, and writes the crate in place.
+
+| Criterion | Skill | What it does |
+| --- | --- | --- |
+| `1.d` Key Actors | `link-authors-orcids` | resolve authors to ORCID URIs |
+| `2.a` Semantics | `link-subjects-ontologies` | ground keywords in MeSH / EDAM / NCIt / GO |
+| `2.b` Statistics | `compute-summary-stats` | summary stats for local tabular files |
+| `3.c` Verifiable | `hash-coverage` | md5 + sha256 across Datasets and Software |
+| `4.a` `4.b` `4.d` Ethics | `ethics-questionnaire` | ethics fields, one question at a time |
+| `6.c` Portable | `portability-interview` | container image, requirements, runtime |
+
+Each also runs on its own (`/hash-coverage`) against any crate.
 
 ## Install
 
@@ -185,25 +219,51 @@ model, rubric estimators, schema validator, edit applier; loadable in node),
 pip install -e .
 ```
 
-This installs the `aireadiness_wizard` and `aireadiness_evidence` modules and the
-`fairscape-grade` + `fairscape-evidence` console scripts, and pulls in
-`fairscape-models`, `fairscape-cli`, and `pydantic-ai`. The rubric text
-(`rubric_defs.yaml`) and the HTML template ship inside the `aireadiness_evidence`
-package, so everything works the same from a source checkout or a built wheel.
+| module | script | role |
+| --- | --- | --- |
+| `aireadiness_evidence` | `fairscape-evidence` | evidence extraction, review page |
+| `aireadiness_grader` | `fairscape-grade` | LLM scoring, agentic-path helpers |
+| `aireadiness_improve` | `fairscape-improve` | the improvement form |
 
-## Sandboxed run (Docker)
+Pulls in `fairscape-models`, `fairscape-cli`, and `pydantic-ai`. Rubric text and
+HTML templates ship inside the packages, so a source checkout and a built wheel
+behave the same.
 
-Run the wizard in a container that can only see one folder, where
-`--dangerously-skip-permissions` is safe because the container has
-no filesystem access outside the bind mount.
+## Layout
 
-```bash
-./sandbox.sh --build           # one-time: build the image
-./sandbox.sh ~/crates/my-paper # launch against any folder
+```
+src/aireadiness_evidence/
+├── rubric_defs.yaml      the rubric, transcribed from the docx; edit wording here
+├── crate.py              extraction: one pass over root + sub-crates, bounded
+│                         samples (50k-entity crates stay cheap)
+├── sections/*.py         one module per domain; each criterion is an
+│                         extract_ / transform_ / present_ trio
+├── known.py              PID schemes, repository hosts, ontology hosts,
+│                         HL7 confidentiality codes, vendor formats
+├── network.py            optional lookups; timeouts report as inconclusive
+└── pipeline.py, render.py, templates/review.html.j2
+
+src/aireadiness_grader/
+├── rubric_eval.py        evidence dump, score aggregation (agentic path)
+└── grade.py              the LLM round-trips (fairscape-grade)
+
+src/aireadiness_improve/
+├── fields.py             the field catalogue; add a field here
+├── schemas.py            pydantic -> JSON schema
+└── templates/            improve.js (crate model, estimators, validator),
+                          improve.html.j2, cli.py
+
+rubrics/ai-ready/human/   long-form notes for human reviewers
+.claude/skills/           agentic grading and improvement skills
 ```
 
-First launch drops you into `claude` with no credentials — run `/login` inside to
-OAuth with your Claude subscription. The token is saved to a named Docker volume
-(`fairscape-claude-auth`) and reused on every later launch. The folder you pass is
-mounted as `/workspace`; outputs land back in that folder on the host. Other
-commands: `--shell <folder>`, `--logout`, `--help`.
+`EVIDENCE-PIPELINE.md` is the working log: what changed in each rubric
+migration, known gaps, old-vs-new comparisons.
+
+## Not here
+
+Building a crate in the first place. The interview wizard, the Dataverse /
+PhysioNet / Figshare importers, the manifest builders and the
+`build_rocrate.py` emitters live in the sibling `fairscape_skills` bundle. If
+you don't have a crate yet, start there or with
+[fairscape-cli](https://github.com/fairscape/fairscape-cli).

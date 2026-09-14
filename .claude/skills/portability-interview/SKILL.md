@@ -13,9 +13,12 @@ This skill batches the interview by template — if many scripts share the same 
 
 > *"Rubric 6.c wants compute-environment info on your Software and Computation entities so a downstream user can reproduce a working environment. The fields are `containerImage` (a Docker / Singularity reference), `softwareRequirements` (path to your `environment.yml` / `requirements.txt` / `Pipfile.lock`, or a list of name+version pairs), and `hardwareRequirements` (free text — GPU model, RAM floor, OS). I'll group entities that look like they share an environment and ask once per group, so we don't interview 50 times. Validated against the fairscape_models schema before write."*
 
+
+> `<crate>` is the `ro-crate-metadata.json` to edit and `<crate_dir>` its directory. Resolve them from the path the user gave, else `ro-crate-metadata.json` in the working directory, else `state.crate_path` if a `.fairscape-state.json` wizard state file is present. Ask if none resolve.
+
 ## 1. Enumerate Software and Computation entities
 
-`Read` `state.crate_path`. Collect every entity in `@graph` whose `@type` (string or list) contains `Software`, `https://w3id.org/EVI#Software`, `Computation`, or `https://w3id.org/EVI#Computation`.
+`Read` `<crate>`. Collect every entity in `@graph` whose `@type` (string or list) contains `Software`, `https://w3id.org/EVI#Software`, `Computation`, or `https://w3id.org/EVI#Computation`.
 
 For each, capture what's already there: `containerImage`, `softwareRequirements`, `hardwareRequirements`, `runtimeRequirements`, `softwareVersion`. Track which entities still lack each of those three fields.
 

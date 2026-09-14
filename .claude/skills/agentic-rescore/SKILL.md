@@ -1,11 +1,11 @@
 ---
 name: agentic-rescore
-description: Phase 4 of the remote-source wizard. Score the 28 AI-Ready rubrics agentically — dump deterministic evidence via `python -m aireadiness_wizard.rubric_eval extract-evidence`, then have Claude (this skill) read each rubric.json + evidence.json and emit a RubricScore JSON per rubric. Never invokes fairscape-grade.
+description: Score an RO-Crate against the 28 AI-Ready rubrics agentically, with the host agent as the grader — dump deterministic evidence via `python -m aireadiness_grader.rubric_eval extract-evidence`, then have Claude (this skill) read each rubric.json + evidence.json and emit a RubricScore JSON per rubric. Never invokes fairscape-grade.
 ---
 
-# Agentic rescore — Phase 4
+# Agentic grading — the host agent as grader
 
-The grader (`aireadiness_wizard/grade.py`, the `fairscape-grade` CLI) normally drives a separate LLM via `pydantic-ai`. Here, **Claude is the grader** — we reuse the deterministic `aireadiness_evidence` presentation pipeline for evidence, then score each rubric inline. Output matches `fairscape-grade`'s file layout exactly so downstream tooling can consume either.
+The grader (`aireadiness_grader/grade.py`, the `fairscape-grade` CLI) normally drives a separate LLM via `pydantic-ai`. Here, **Claude is the grader** — we reuse the deterministic `aireadiness_evidence` presentation pipeline for evidence, then score each rubric inline. Output matches `fairscape-grade`'s file layout exactly so downstream tooling can consume either.
 
 ## What to tell the user before any commands run
 
@@ -13,14 +13,19 @@ Before invoking the evidence dump or asking about subset selection, give them on
 
 > *"This is the **AI-Ready scoring** phase. The 28 rubrics are transcribed from "Rubric for Review of AI-readiness Evaluation Criteria" v1.8 (2026-09-10) into `src/aireadiness_evidence/rubric_defs.yaml` and cover seven domains: FAIRness (`0.x`), Provenance (`1.x`), Characterization (`2.x`), Pre-model Explainability (`3.x`), Ethics (`4.x`), Sustainability (`5.x`), Computability (`6.x`). Each rubric scores 0 (Absent), 1 (Partial), or 2 (Substantive), with rules that say literally what evidence justifies each level; a non-gating rubric may also be N/A when every element is inapplicable (N/A leaves the denominator). Max total is 56 points (2 × 28) minus any N/A. The **overall score** is the unweighted average of the seven domain percentages. Four gates are evaluated independently — FAIRness (0.a must be 2, the rest above 0), Provenance (all above 0), Standards (2.c above 0), Ethics (all above 0) — and a failed gate marks the result "Gating FAIL" (the score is still computed). Two dependency rules cap scores at aggregation: 1.b ≤ 1.a and 6.a ≤ 2.c.*
 >
-> *The scoring is two-step. First a deterministic Python pass (`python -m aireadiness_wizard.rubric_eval extract-evidence`) walks the crate and dumps the relevant facts per rubric as typed evidence items — identifiers, license, schemas, format coverage, etc. — into a `grading/` folder. No LLM involved; just structured reading (plus optional URL/registry checks — pass `--no-network` to skip them). Then I fan the rubrics out to parallel subagents — one per rubric, all dispatched in a single message — and each subagent sees **only** its rubric JSON and its evidence JSON, nothing else. It writes its `score.json` and returns. After all rubrics are scored, a small Python aggregator computes the total and a per-criterion breakdown.*
+> *The scoring is two-step. First a deterministic Python pass (`python -m aireadiness_grader.rubric_eval extract-evidence`) walks the crate and dumps the relevant facts per rubric as typed evidence items — identifiers, license, schemas, format coverage, etc. — into a `grading/` folder. No LLM involved; just structured reading (plus optional URL/registry checks — pass `--no-network` to skip them). Then I fan the rubrics out to parallel subagents — one per rubric, all dispatched in a single message — and each subagent sees **only** its rubric JSON and its evidence JSON, nothing else. It writes its `score.json` and returns. After all rubrics are scored, a small Python aggregator computes the total and a per-criterion breakdown.*
 >
 > *The isolation matters for reproducibility: the score for any rubric is determined by the fixed prompt + that rubric + its evidence, not by anything I've seen earlier in this conversation (the paper, prior decisions, your phrasing). Anyone can re-run the same subagent prompt against the same `evidence.json` and reproduce the verdict. The evidence dump is itself reproducible and inspectable — `grading/<id>/evidence.json` is a self-contained audit trail. Each score comes with a written rationale and a `gaps` list that tells you what would raise it."*
 
 ## Preconditions
 
-- `.fairscape-remote-state.json` exists and `state.crate_path` points at a valid `ro-crate-metadata.json`.
-- Earlier phases don't have to be fully done — grading runs against whatever state the crate is in. But warn the user if `phase` is still `imported` ("you can grade now, but the score will be lower without phase 3").
+- A crate to grade. Resolve it from what the user gave you, in this order:
+  1. an explicit path argument — a crate directory or an `ro-crate-metadata.json`;
+  2. `ro-crate-metadata.json` in the current working directory;
+  3. if a `.fairscape-state.json` wizard state file is present, `state.crate_path`.
+
+  Ask if none of those resolve. Set `<crate>` = the metadata file, `<crate_dir>` = its directory; everything below writes to `<crate_dir>/grading/`.
+- Nothing else is required. Grading runs against whatever shape the crate is in — a sparse crate just scores lower.
 
 ## 0. Ask: full sweep, or one criterion?
 
@@ -35,7 +40,7 @@ If subset, only iterate the matching rubrics. Aggregated score still computes co
 ## 1. Dump evidence (deterministic, one shot)
 
 ```
-Bash python -m aireadiness_wizard.rubric_eval extract-evidence "<state.crate_path>" "<state.crate_dir>/grading/"
+Bash python -m aireadiness_grader.rubric_eval extract-evidence "<crate>" "<crate_dir>/grading/"
 ```
 
 This writes:
@@ -96,14 +101,14 @@ Pitfalls:
 
 1. `ls <grading>/*/score.json` to verify every dispatched rubric wrote its file. Re-dispatch any that are missing (same prompt, same paths).
 2. Print one consolidated status block to the user — the score lines the subagents returned, one per line.
-3. Update state once: set `state.grading.dir = "<crate_dir>/grading"`, set `state.grading.completed_rubrics` to the list of rubrics with `score.json` on disk, persist atomically.
+3. If a wizard state file is in play, record the run there once (see "Optional: wizard state" at the end). Otherwise the `grading/` folder is the only record needed.
 
 ## 3. Aggregate
 
 After the loop (full or filtered):
 
 ```
-Bash python -m aireadiness_wizard.rubric_eval aggregate "<state.crate_dir>/grading/"
+Bash python -m aireadiness_grader.rubric_eval aggregate "<crate_dir>/grading/"
 ```
 
 This writes `<grading>/aggregated_score.json` matching `fairscape-grade`'s shape: `total_score`, `max_score`, `percentage`, `overall_score` (the v1.8 unweighted domain average), `gating` (pass/fail label + the specific failures), `counts` (now including `na`), and `criteria` grouped by `id[0]` (each with its own `percentage`, and `gating`/`gate_failed` on gated domains). The aggregator also applies the dependency caps (1.b ≤ 1.a, 6.a ≤ 2.c) — a capped rubric keeps the grader's verdict in `uncapped_score` with a `capped_by` note.
@@ -125,7 +130,9 @@ Top gaps: ...   (pull 3 from the worst-scoring rubrics' `gaps`)
 Full per-rubric output: <crate_dir>/grading/
 ```
 
-## 4. State write
+## Optional: wizard state
+
+Standalone grading needs no state file — `<crate_dir>/grading/` holds everything. If this crate *was* built by the RO-Crate wizard (see the `fairscape_skills` bundle) and a `.fairscape-state.json` is present, append the run to it so the wizard can resume:
 
 ```json
 {
@@ -145,11 +152,11 @@ Full per-rubric output: <crate_dir>/grading/
 }
 ```
 
-If the user picked a subset, leave `phase` at `rai_done` (or whatever it was) and only set `state.grading.completed_rubrics` to the subset. Restating "phase: graded" should mean *all* 28 are done.
+Only claim `phase: graded` when all 28 rubrics are done; a subset run just updates `completed_rubrics`.
 
 ## Resume behavior
 
-On invocation, check `state.grading.completed_rubrics` AND the on-disk presence of `<grading>/<id>-<slug>/score.json`. The disk is the source of truth — a `score.json` that exists counts as done. Only dispatch subagents for rubrics with no `score.json`. If the user wants to rescore one, delete its `score.json` (and remove its id from `completed_rubrics`) before re-invoking.
+On invocation, check the on-disk presence of `<grading>/<id>-<slug>/score.json`. The disk is the source of truth — a `score.json` that exists counts as done. Only dispatch subagents for rubrics with no `score.json`. If the user wants to rescore one, delete its `score.json` (and remove its id from `completed_rubrics`) before re-invoking.
 
 ## Don't
 

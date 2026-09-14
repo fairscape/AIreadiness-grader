@@ -1,13 +1,13 @@
 ---
 name: post-grade-improve
-description: Phase 6 of the remote-source wizard. After agentic-rescore writes the aggregated score, offer the user a menu of focused improvement skills that target the rubrics that scored below 2. Each leaf skill edits ro-crate-metadata.json in place after validating against the fairscape_models pydantic schema. Optionally re-invokes agentic-rescore on touched rubrics so the user sees the new score. Delegates to link-authors-orcids, link-subjects-ontologies, ethics-questionnaire, compute-summary-stats, hash-coverage, portability-interview.
+description: After a grading run writes aggregated_score.json, offer the user a menu of focused improvement skills that target the rubrics that scored below 2. Each leaf skill edits ro-crate-metadata.json in place after validating against the fairscape_models pydantic schema. Optionally re-invokes agentic-rescore on touched rubrics so the user sees the new score. Delegates to link-authors-orcids, link-subjects-ontologies, ethics-questionnaire, compute-summary-stats, hash-coverage, portability-interview.
 ---
 
-# Post-grade improvements — Phase 6
+# Post-grade improvements
 
-Phase 5 (`agentic-rescore`) just wrote `<crate_dir>/grading/aggregated_score.json` with a per-rubric breakdown. Surveys of nine real crates show baselines cluster at 67–77 % (38–43 / 56). The same ~10 rubrics keep landing at score 1 (Partial), and most of those gaps are mechanical — the crate has the content, it just doesn't have the JSON-LD shape the rubric reads. This phase offers the user a short menu of focused skills that close those gaps in a few guided steps.
+A grading run (`agentic-rescore`, or `fairscape-grade`) has written `<crate_dir>/grading/aggregated_score.json` with a per-rubric breakdown. Surveys of nine real crates show baselines cluster at 67–77 % (38–43 / 56). The same ~10 rubrics keep landing at score 1 (Partial), and most of those gaps are mechanical — the crate has the content, it just doesn't have the JSON-LD shape the rubric reads. This phase offers the user a short menu of focused skills that close those gaps in a few guided steps.
 
-This phase is **always optional**. Skipping leaves the crate exactly as Phase 5 left it.
+This is **always optional**. Skipping leaves the crate exactly as the grading run left it.
 
 ## What to tell the user before showing the menu
 
@@ -17,15 +17,15 @@ One paragraph of context, then the menu:
 
 ## Preconditions
 
-- `state.grading.aggregated_score_path` exists and points at a readable `aggregated_score.json`. If not, tell the user "Phase 5 hasn't run yet" and stop.
-- `state.crate_path` and `state.crate_dir` resolve to real files.
+- A readable `aggregated_score.json`. Resolve it in this order: an explicit path the user gave; `<crate_dir>/grading/aggregated_score.json`; `state.grading.aggregated_score_path` if a `.fairscape-state.json` wizard state file is present. If none resolve, tell the user "nothing has graded this crate yet — run `/agentic-rescore` first" and stop.
+- `<crate>` (`ro-crate-metadata.json`) and `<crate_dir>` resolve to real files.
 
-If `state.phase == "improved"` already (resume case), say *"You ran improvements last session — `state.improvements.ran` lists which. Want to run more, re-grade, or stop?"* and branch from the answer.
+If a state file records `phase == "improved"` (resume case), say *"You ran improvements last session — `state.improvements.ran` lists which. Want to run more, re-grade, or stop?"* and branch from the answer.
 
 ## 1. Read the score and pick gap-rubrics
 
 ```python
-agg = json.load(open(state["grading"]["aggregated_score_path"]))
+agg = json.load(open("<crate_dir>/grading/aggregated_score.json"))
 ```
 
 `agg["criteria"]` is a dict keyed by criterion id (`"0"`–`"6"`); each contains a `"rubrics"` list of `{id, sub_criterion, score}`. Build a flat `[(id, score, sub_criterion)]` of every rubric whose `score < 2`, then keep **only** the ones a leaf skill in this phase can address:
@@ -72,12 +72,12 @@ For each chosen leaf, in the order the user gave (or numeric order for `all`):
 
 1. Tell the user one line: *"Starting `<leaf>` — targets rubric(s) `<ids>`."*
 2. Invoke the leaf via `Skill(<leaf-name>)`.
-3. When it returns, append to `state.improvements.ran` (creating the dict if missing).
-4. If the leaf reported a validation failure (pydantic error), append the rubric id to `state.improvements.validation_failures` and tell the user *"`<leaf>` couldn't write — the proposed edit didn't validate. Skipping. The crate is unchanged."* Continue to the next leaf.
+3. When it returns, note it in your running tally of leaves that ran.
+4. If the leaf reported a validation failure (pydantic error), note the rubric id as a validation failure and tell the user *"`<leaf>` couldn't write — the proposed edit didn't validate. Skipping. The crate is unchanged."* Continue to the next leaf.
 
 Leaves run sequentially, never in parallel. Each one re-reads `ro-crate-metadata.json` from disk, so later leaves see earlier leaves' edits.
 
-After every leaf, the leaf is responsible for atomic-writing the crate and appending its own `history` entry to state. This router only updates `state.improvements`.
+After every leaf, the leaf is responsible for atomic-writing the crate. This router only tracks which leaves ran and reports at the end.
 
 ## 4. Offer a rescore (don't force)
 
@@ -88,7 +88,7 @@ When all chosen leaves are done, ask:
 If yes:
 1. For each touched rubric id, delete `<crate_dir>/grading/<id>-<slug>/score.json`. (`agentic-rescore`'s resume logic skips rubrics that already have a `score.json` on disk — deleting forces a re-score.)
 2. Invoke `agentic-rescore` with no filter. It will re-run only the missing ones, then re-aggregate.
-3. Diff the old `summary` (from `state.grading.summary` before this phase) against the new one; report the delta, including the v1.8 overall score and gate status:
+3. Diff the old aggregate (read `aggregated_score.json` before running any leaf) against the new one; report the delta, including the v1.8 overall score and gate status:
    ```
    Score: 42 → 47 / 56  (+5) · overall 73.8% → 82.1% · gates: Gating FAIL → gates passed
      1.d  1 → 2
@@ -100,9 +100,11 @@ If yes:
 
 If no: leave grading state untouched, tell them how to re-grade later.
 
-## 5. State write
+## 5. Report, and optionally record state
 
-Update state once at the end of the phase:
+Close with a summary of what ran, what was skipped, and any validation failures.
+
+Standalone runs need no state file. If this crate was built by the RO-Crate wizard (see the `fairscape_skills` bundle) and `.fairscape-state.json` is present, append:
 
 ```json
 {

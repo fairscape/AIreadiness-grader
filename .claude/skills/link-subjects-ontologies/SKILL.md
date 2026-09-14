@@ -13,9 +13,12 @@ This skill enriches root `about` first (easier, higher impact). Per-Dataset enri
 
 > *"Rubric 2.a wants subject terms grounded in standard biomedical / scientific ontologies — MeSH, EDAM, NCIt, GO, Cellosaurus — not just free-text keywords. The free-text keywords stay; we add a parallel structured layer in `about`. I'll go through your keywords one at a time, propose an ontology IRI when I'm reasonably confident, and you accept it, edit it, or skip. I won't fabricate — if I don't know a good match I'll say so. Then I'll add `DefinedTerm` entities to the `@graph` and link them from the root `about` field. Validated against the fairscape_models schema before write."*
 
+
+> `<crate>` is the `ro-crate-metadata.json` to edit and `<crate_dir>` its directory. Resolve them from the path the user gave, else `ro-crate-metadata.json` in the working directory, else `state.crate_path` if a `.fairscape-state.json` wizard state file is present. Ask if none resolve.
+
 ## 1. Read the crate
 
-`Read` `state.crate_path`. Find the root Dataset entity (the one whose `@id` matches the `about["@id"]` of the `ro-crate-metadata.json` descriptor entity).
+`Read` `<crate>`. Find the root Dataset entity (the one whose `@id` matches the `about["@id"]` of the `ro-crate-metadata.json` descriptor entity).
 
 Collect:
 - `root["keywords"]` — the list to enrich.

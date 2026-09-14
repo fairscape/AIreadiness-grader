@@ -17,9 +17,12 @@ All three are root-level fields. This skill walks the user through them in one s
 
 > *"This skill targets three rubrics — Ethically Acquired (4.a), Ethically Managed (4.b), and Secure (4.d). They're all about ethics fields on the root of the crate: who reviewed it, what consent was obtained, what privacy-protection processing was applied, what the HL7 confidentiality classification is. I'll ask one question at a time — `skip` is fine on anything you don't have an answer for, but every field you do fill in helps the score. The fields go onto the root entity of `ro-crate-metadata.json`. Validated against the fairscape_models schema before write."*
 
+
+> `<crate>` is the `ro-crate-metadata.json` to edit and `<crate_dir>` its directory. Resolve them from the path the user gave, else `ro-crate-metadata.json` in the working directory, else `state.crate_path` if a `.fairscape-state.json` wizard state file is present. Ask if none resolve.
+
 ## 1. Read the crate, identify what's already set
 
-`Read` `state.crate_path`. Find the root Dataset entity. Note which of these fields already have a non-null value so you don't ask about them again:
+`Read` `<crate>`. Find the root Dataset entity. Note which of these fields already have a non-null value so you don't ask about them again:
 
 - `rai:dataCollection`, `rai:dataReleaseMaintenancePlan`, `rai:personalSensitiveInformation`
 - `ethicalReview`, `humanSubjectResearch`, `informedConsent`, `atRiskPopulations`
@@ -55,7 +58,7 @@ Walk the buckets in rubric order. Stop asking and exit early if the user says `d
    `none` is informative (the 4.a rubric explicitly says explicit "none" is a meaningful signal). Set the field to the literal string `"none"` if the user said so.
 
 6. **`rai:dataCollection`** *(string, the `rai_data_collection` field aliased `rai:dataCollection`)*
-   Only ask if it's empty AND Phase 3 (AI-Ready enrichment) was skipped. If Phase 3 ran, this is the field it would have filled — don't double-ask.
+   Only ask if it's empty. (On crates built by the RO-Crate wizard this is the field its AI-Ready enrichment step would have filled — don't double-ask.)
    > *"One or two sentences on how the data was collected (instruments, protocols, sources). `skip` if not relevant."*
 
 7. **`rai:dataReleaseMaintenancePlan`** *(string)*
@@ -110,7 +113,7 @@ Proposed root-entity additions:
   confidentialityLevel:        "restricted"
   deidentified:                true
 
-Untouched: rai:dataCollection (already filled by Phase 3), 2 other fields you said skip on.
+Untouched: rai:dataCollection (already filled), 2 other fields you said skip on.
 ```
 
 Ask: *"Apply, or revise something?"*

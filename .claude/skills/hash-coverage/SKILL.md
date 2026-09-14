@@ -15,9 +15,12 @@ This skill is pure mechanical — no user content input beyond "yes / what size 
 
 > *"Rubric 3.c wants cryptographic hashes on Datasets and Software so a downstream consumer can verify the bytes they received are the bytes you shipped. I'll walk every Dataset and Software entity, find the ones whose `contentUrl` resolves to a local file, stream-hash them with md5 and sha256, and set the entity's `md5` and `sha256` fields directly. Files over a size cap I'll skip unless you raise the cap. Remote-only files get skipped — those would need to be downloaded first. Validated against the fairscape_models schema before write."*
 
+
+> `<crate>` is the `ro-crate-metadata.json` to edit and `<crate_dir>` its directory. Resolve them from the path the user gave, else `ro-crate-metadata.json` in the working directory, else `state.crate_path` if a `.fairscape-state.json` wizard state file is present. Ask if none resolve.
+
 ## 1. Enumerate hashable entities
 
-`Read` `state.crate_path`. Walk `@graph` for entities whose `@type` (string or list) contains `Dataset`, `Software`, `MLModel`, or `https://w3id.org/EVI#Dataset`/`#Software`. Exclude the root crate entity.
+`Read` `<crate>`. Walk `@graph` for entities whose `@type` (string or list) contains `Dataset`, `Software`, `MLModel`, or `https://w3id.org/EVI#Dataset`/`#Software`. Exclude the root crate entity.
 
 For each candidate, bucket:
 

@@ -39,7 +39,7 @@ Decisions baked in (change in code if wrong):
 Both graders now consume the presentation instead of the old 28 YAMLs +
 `extract.py`:
 
-- `aireadiness_wizard/rubric_eval.py` — `extract-evidence` builds the
+- `aireadiness_grader/rubric_eval.py` — `extract-evidence` builds the
   presentation and splits it into `<out>/<id>-<slug>/{rubric.json,
   evidence.json}` (same folder names as before; slugs derive from the docx
   criterion names and match the retired filenames exactly). `rubric.json` =
@@ -47,7 +47,7 @@ Both graders now consume the presentation instead of the old 28 YAMLs +
   block carried over from the old YAMLs, now the `OUTPUT_SCHEMA` constant);
   `evidence.json` = the criterion's typed items + an `evidence_kinds` legend.
   `aggregate` unchanged. New `--no-network` flag.
-- `aireadiness_wizard/grade.py` — prompt built from one presentation criterion;
+- `aireadiness_grader/grade.py` — prompt built from one presentation criterion;
   pydantic-ai / UVARC agent machinery unchanged. Accepts a crate dir or its
   `ro-crate-metadata.json`. Note: a criterion may define no rule for a level
   (0.d has only 0 and 2), so the prompt's rules block is built dynamically.

@@ -8,7 +8,7 @@ scoring rules to the evidence. Writes a per-criterion folder containing
 ``aggregated_score.json`` grouped by criterion.
 
 Evidence extraction, folder layout, and aggregation are shared with the
-agentic (Claude-as-grader) path in ``aireadiness_wizard.rubric_eval``; this
+agentic (Claude-as-grader) path in ``aireadiness_grader.rubric_eval``; this
 module only adds the LLM round-trips.
 
 Run as a CLI (console script registered in pyproject.toml):
@@ -19,11 +19,11 @@ Run as a CLI (console script registered in pyproject.toml):
 
 Or equivalently::
 
-    python -m aireadiness_wizard.grade <crate> <out-dir> --model ... --api-key ...
+    python -m aireadiness_grader.grade <crate> <out-dir> --model ... --api-key ...
 
 Or from inside a script::
 
-    from aireadiness_wizard import grade
+    from aireadiness_grader import grade
     result = grade.grade_crate(
         "path/to/crate", "out/",
         model="anthropic:claude-opus-4-7", api_key=key,
@@ -59,7 +59,7 @@ from typing import Literal, Optional, Union
 from pydantic import BaseModel, field_validator
 from pydantic_ai import Agent
 
-from aireadiness_wizard.rubric_eval import (
+from aireadiness_grader.rubric_eval import (
     SCORE_LABELS,
     _aggregate,
     build_crate_presentation,

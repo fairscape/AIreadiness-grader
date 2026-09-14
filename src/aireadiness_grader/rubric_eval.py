@@ -13,16 +13,16 @@ extractors. The flow is split into two deterministic halves:
 * ``aggregate`` — scan ``<out_dir>/*/score.json`` (written by the wizard one
   criterion at a time, in-conversation) and emit
   ``<out_dir>/aggregated_score.json`` with totals grouped by criterion (id[0]).
-  Matches the shape that ``aireadiness_wizard.grade`` produces so downstream
+  Matches the shape that ``aireadiness_grader.grade`` produces so downstream
   tooling can consume either.
 
 The agentic scoring itself lives in the ``agentic-rescore`` SKILL — Claude
 reads ``rubric.json`` + ``evidence.json`` and writes ``score.json`` per
-criterion. The LLM-driven equivalent is ``aireadiness_wizard.grade``.
+criterion. The LLM-driven equivalent is ``aireadiness_grader.grade``.
 
 CLI:
-    python -m aireadiness_wizard.rubric_eval extract-evidence <crate> <out_dir> [--no-network]
-    python -m aireadiness_wizard.rubric_eval aggregate <out_dir>
+    python -m aireadiness_grader.rubric_eval extract-evidence <crate> <out_dir> [--no-network]
+    python -m aireadiness_grader.rubric_eval aggregate <out_dir>
 """
 from __future__ import annotations
 
@@ -327,7 +327,7 @@ def _evaluate_gates(per_rubric: list[dict]) -> dict:
 
 
 def _aggregate(per_rubric: list[dict], model: str) -> dict:
-    """v1.8 scoring methodology, shared with ``aireadiness_wizard.grade``.
+    """v1.8 scoring methodology, shared with ``aireadiness_grader.grade``.
 
     Group by ``id[0]`` (domain). Domain score = points earned / max points over
     applicable (non-N/A) criteria. Overall score = unweighted average of domain
