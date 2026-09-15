@@ -125,21 +125,6 @@ grading/
     └── score.json                 score, rationale, gaps
 ```
 
-## Two halves
-
-Whichever way you score, grading splits in two, and the code keeps them apart.
-
-**Finding evidence** is deterministic Python. For each criterion it collects
-the facts that criterion asks about: identifiers, license, schemas, checksums,
-ethics fields.
-
-**Applying the rules** is judgment. A human or a model reads the 0/1/2
-definitions against the evidence and picks a score.
-
-The upshot: `ai-ready-evidence.json` records exactly what a scorer was looking
-at, so any score can be checked, and two reviewers who disagree can point at
-the same file.
-
 ## Outputs
 
 ```bash
