@@ -1,7 +1,7 @@
 # AI-Readiness grader
 
-Scores an RO-Crate against the *Rubric for Review of AI-readiness Evaluation
-Criteria* v1.8: 28 criteria in seven domains, each scored 0 / 1 / 2.
+Grades an RO-Crate against the *Rubric for Review of AI-readiness Evaluation
+Criteria* v1.8: 28 criteria in seven domains, each graded 0 / 1 / 2.
 
 ## Install
 
@@ -18,7 +18,8 @@ fairscape-evidence /path/to/crate -o review/
 open review/ai-ready-review.html
 ```
 
-The crate is any directory with a `ro-crate-metadata.json`. A worked example
+The crate is any directory with a `ro-crate-metadata.json`
+([RO-Crate 1.2 spec](https://www.researchobject.org/ro-crate/specification/1.2/)). A worked example
 is in `examples/apms-paclitaxel/` (crate plus finished review).
 
 Options:
@@ -35,27 +36,13 @@ Options:
 | file | |
 | --- | --- |
 | `ai-ready-review.html` | Review page for a human. Each criterion shows the rubric rules, the evidence found in the crate, an automated estimate where one is possible, and a score radio with notes. Scores roll up per domain with a radar chart. |
-| `ai-ready-evidence.json` | The same evidence, typed, for scoring by a model. |
+| `ai-ready-evidence.json` | The same evidence, typed, for grading by a model. |
 
-The review page autosaves to the browser and has three buttons: **Save review
-as HTML** writes your scores into a copy of the page so it can be sent to
-someone else, **Copy scores as JSON** exports them, **Reset** clears them.
 
-The page links to the crate's datasheet, previews and provenance graphs by
-relative path. To share it with those links intact:
-
-```bash
-fairscape-review-bundle review/ai-ready-review.html -o review.zip
-```
-
-This zips the page, its evidence JSON and every linked crate page, with links
-rewritten to work wherever the zip is unpacked. Bundle a saved copy and the
-scores go with it.
-
-## Scoring with a model
+## Grading with a model
 
 **In an agent host** (Claude Code or similar) with this repo's `.claude/skills/`
-visible, run `/agentic-rescore`. It dumps the evidence, scores each criterion
+visible, run `/agentic-rescore`. It dumps the evidence, grades each criterion
 in an isolated subagent, and aggregates. No API key needed.
 
 **From the command line:**
@@ -122,18 +109,3 @@ In an agent host, `/post-grade-improve` reads `aggregated_score.json` and
 offers a skill per gap it can close: `link-authors-orcids`,
 `link-subjects-ontologies`, `compute-summary-stats`, `hash-coverage`,
 `ethics-questionnaire`, `portability-interview`. Each also runs on its own.
-
-## Layout
-
-```
-src/aireadiness_evidence/   evidence extraction and the review page
-    rubric_defs.yaml          the rubric text; edit wording here
-    sections/*.py             one module per domain
-    bundle.py                 fairscape-review-bundle
-src/aireadiness_grader/     fairscape-grade and the agentic-path helpers
-src/aireadiness_improve/    the improvement form
-rubrics/ai-ready/human/     reviewer notes
-.claude/skills/             grading and improvement skills
-```
-
-`EVIDENCE-PIPELINE.md` is the working log.
