@@ -16,6 +16,7 @@ dependencies = [
 [project.scripts]
 fairscape-grade = "aireadiness_grader.grade:main"
 fairscape-evidence = "aireadiness_evidence.cli:main"
+fairscape-review-bundle = "aireadiness_evidence.bundle:main"
 fairscape-improve = "aireadiness_improve.cli:main"
 
 [tool.hatch.build.targets.wheel]

@@ -1,0 +1,91 @@
+{
+  "@id": "ark:59852/schema-apms-paclitaxel-sample-annotation-tsv-schema-20260522-092752",
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "EVI": "https://w3id.org/EVI#"
+  },
+  "@type": "EVI:Schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "APMS_Paclitaxel_Sample_Annotation.tsv schema",
+  "description": "Inferred schema for APMS_Paclitaxel_Sample_Annotation.tsv, sampled from MassIVE MSV000101915 via FTPS on 2026-05-22.",
+  "type": "object",
+  "separator": "\t",
+  "header": true,
+  "required": [
+    "Raw_file",
+    "Sample_label",
+    "QC_Status",
+    "Tagged_Line",
+    "Treatment",
+    "Batch",
+    "Replicate",
+    "Experiment",
+    "Analysis",
+    "Enzyme",
+    "Cell_line",
+    "Species"
+  ],
+  "properties": {
+    "Raw_file": {
+      "type": "string",
+      "description": "Column Raw_file",
+      "index": 0
+    },
+    "Sample_label": {
+      "type": "string",
+      "description": "Column Sample_label",
+      "index": 1
+    },
+    "QC_Status": {
+      "type": "boolean",
+      "description": "Column QC_Status",
+      "index": 2
+    },
+    "Tagged_Line": {
+      "type": "string",
+      "description": "Column Tagged_Line",
+      "index": 3
+    },
+    "Treatment": {
+      "type": "string",
+      "description": "Column Treatment",
+      "index": 4
+    },
+    "Batch": {
+      "type": "string",
+      "description": "Column Batch",
+      "index": 5
+    },
+    "Replicate": {
+      "type": "string",
+      "description": "Column Replicate",
+      "index": 6
+    },
+    "Experiment": {
+      "type": "string",
+      "description": "Column Experiment",
+      "index": 7
+    },
+    "Analysis": {
+      "type": "string",
+      "description": "Column Analysis",
+      "index": 8
+    },
+    "Enzyme": {
+      "type": "string",
+      "description": "Column Enzyme",
+      "index": 9
+    },
+    "Cell_line": {
+      "type": "string",
+      "description": "Column Cell_line",
+      "index": 10
+    },
+    "Species": {
+      "type": "string",
+      "description": "Column Species",
+      "index": 11
+    }
+  },
+  "additionalProperties": true
+}

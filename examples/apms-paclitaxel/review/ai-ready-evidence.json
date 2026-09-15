@@ -1,0 +1,2292 @@
+{
+  "rubric": "Rubric for Review of AI-readiness Evaluation Criteria, v1.8 (2026-09-10)",
+  "rubric_version": "1.8",
+  "glossary": {
+    "criteria": "Criteria are each of the sub-items to be scored.\n",
+    "domains": "Domains are the seven major axes of evaluation, as described in the manuscript.\n",
+    "gating": "Gating is the process that defines domains or criteria whose failure critically undermines the AI-readiness of the entire dataset.\n",
+    "not_applicable": "Not Applicable (\"N/A\") flags a criterion that does not apply to the given type of data. \"N/A\" elements don't count against the score.\n",
+    "compact_id": "A concise string that resolves to a specific digital object using a registered prefix (e.g., via identifiers.org) to ensure global uniqueness and interoperability without requiring a full URL.\n",
+    "domain_appropriate_repository": "A sustainable repository recognized by the relevant research community as appropriate for a specific data type.\n",
+    "persistent_identifier": "A long-lasting, globally unique reference to a digital resource, researcher, or organization (e.g., DOI, ORCID, ROR) that ensures the entity can be reliably located even if its web location changes.\n",
+    "sustainable_repository": "A service that assigns persistent identifiers, maintains descriptive metadata that remains resolvable independently of the deposited object, and has resources to persist long-term. Examples include large-scale institutional and governmental repositories such as NIH and EBI databases, DDBJ, and ICPSR, generalist repositories such as the NIH GREI participants, and Software Heritage. Purely local or unmanaged resources (e.g., departmental servers, S3 or GCS accounts, Google Drive, and Box accounts) are excluded.\n",
+    "data_access_committee": "Data Access Committee (DAC): an oversight body responsible for reviewing external data requests and enforcing the terms of access for controlled or sensitive datasets.\n",
+    "data_management_plan": "Data Management Plan / Data Management and Sharing Plan (DMP/DMSP): a formal governance document outlining how data will be acquired, managed, preserved, and shared both during and after a research project.\n",
+    "data_use_agreement": "Data Use Agreement (DUA): a legal and ethical contract governing the terms, permitted uses, and specific prohibitions under which a dataset may be accessed and analyzed.\n",
+    "modality_specific_prohibitions": "Ethical and legal restrictions explicitly tailored to the unique risks of a specific data type (e.g., forbidding voice synthesis from audio files or identity cloning from genomic data).\n",
+    "privacy_impact_assessment": "Privacy Impact Assessment (PIA): a formal risk assessment used to identify, evaluate, and mitigate privacy and re-identification risks associated with collecting or sharing highly sensitive data (e.g., biometrics or longitudinal EHR).\n",
+    "format_class": "A category of file types that share a common structural or functional paradigm (e.g., tabular data, medical imaging, genomic sequences) requiring specific formal schemas for interoperability.\n",
+    "ground_truth": "Ground Truth (in the context of Provenance): the fundamental, real-world source or unmodified original artifact (e.g., a specific named clinical trial, raw instrument output, or named EHR system) from which a dataset is derived.\n",
+    "standard_vocabulary": "A vocabulary registered in NCBO BioPortal, EBI Ontology Lookup Service, or OBO Foundry.\n"
+  },
+  "methodology": {
+    "domain_score": "Calculated as the sum of points earned divided by the maximum possible points across all applicable (non-N/A) items within that domain.\n",
+    "overall_score": "An unweighted average of all domain scores. Gate evaluation results are reported independently alongside standard scores; the overall score is still computed on a gate failure but is marked \"Gating FAIL.\"\n",
+    "na_policy": "\"N/A\" applies at the criterion level. Where guidance names an inapplicable element, score the criterion based only on its applicable elements; a criterion is \"N/A\" only if every element within it is inapplicable. \"N/A\" is never permitted on a Gating criterion.\n",
+    "gating": "Gates are critical domains or criteria whose failure fundamentally undermines the AI-readiness of the entire dataset. The designated gates and their minimum passing thresholds — FAIRness: criterion 0.a must score a 2 (because a dataset not findable in a sustainable repository cannot be retrieved or evaluated at all) and all other criteria must score > 0; Provenance: all criteria must score > 0; Standards (within the Characterization domain): criterion 2.c must score > 0; Ethics: all criteria must score > 0. While most gates (except 0.a) act as minimum floors (where a score of 2 remains the target), failing to meet any threshold results in a criterion-level gate failure. This failure marks its full domain as a \"Gating FAIL,\" which propagates up to mark the Overall AI-readiness score as a \"Gating FAIL\" (even though the numerical score is still computed).\n",
+    "dependency_rules": "1.b (Traceable) may never score higher than 1.a (Transparent) — a transformation pipeline cannot be fully traced if the fundamental data source is unidentified. 6.a (Standardized) may never score higher than 2.c (Standards) — validation depth is limited by the completeness of the underlying schema and semantic bindings.\n",
+    "adjudication": "Assessing conformance adequacy on criteria 2.c, 2.d, 2.e, 3.a, 4.a, 4.c, and 5.c requires domain-expert determinations. If these modalities fall outside the primary evaluator's competence, they should reach out to a pre-identified, qualified collaborator. Evaluators must log these determinations, explicitly recording the adjudicator's name and area of expertise.\n",
+    "worksheet": "The rubric's appendix is a Scoring Calculation Worksheet: record the dataset name/PID, the evaluation date, the primary evaluator's name and ORCID (or ROR), and any expert adjudicators consulted (name and expertise); record each criterion score (0, 1, 2, or N/A) and check the gating requirements; compute each domain score as points earned divided by the maximum possible points excluding N/A (default maxima — FAIRness 8, Provenance 8, Characterization 10, Pre-model Explainability 6, Ethics 8, Sustainability 8, Computability 8); the overall AI-readiness score is the sum of the seven domain percentages divided by 7. If any domain triggered a \"Gating FAIL\", the overall status is \"Gating FAIL\" regardless of the final percentage.\n"
+  },
+  "generated": "2026-09-15 18:34 UTC",
+  "network_checks": true,
+  "crate": {
+    "@id": "ark:59853/rocrate-endotag-ap-ms-in-mda-mb-468-cells-paclitaxel",
+    "name": "EndoTag AP-MS Profiling of Chromatin Modifier Interactome Rewiring in MDA-MB-468 Cells Upon Paclitaxel Perturbation",
+    "identifier": null,
+    "version": "1.0",
+    "datePublished": "2026-05-22T13:23:35.699025+00:00",
+    "path": "/home/oj/fairscape/AIreadiness-grader/examples/apms-paclitaxel/crate"
+  },
+  "inventory": {
+    "entities": 854,
+    "by_type": {
+      "Instrument": 1,
+      "Dataset": 557,
+      "Schema": 2,
+      "BioChemEntity": 59,
+      "Sample": 117,
+      "Experiment": 118
+    },
+    "sub_crates": [],
+    "hasPart_count": 562
+  },
+  "artifacts": {
+    "datasheets": [],
+    "evidence_graphs": []
+  },
+  "sections": [
+    {
+      "number": 0,
+      "title": "FAIRness",
+      "gating": true,
+      "criteria": [
+        {
+          "id": "0.a",
+          "name": "Findable",
+          "gating": false,
+          "practice": "Deposit datasets in a searchable FAIR-compliant data repository.",
+          "questions": [
+            "Does the dataset have a resolvable PID: ARK, CSTR, DOI, IGSN, PURL, URN, HDL?",
+            "Does the dataset have a compact ID whose prefix is registered, for example, with identifiers.org (e.g., IDs such as ena.embl:ERP001234, geo:GSE68086, dbgap:phs000001)?"
+          ],
+          "scoring": {
+            "2": "PID or prefix-registered compact ID is present, and resolves to a specific version of the dataset, deposited in a sustainable repository.",
+            "1": "Only a PID or compact ID is given, but the dataset is not in a sustainable repository. Alternatively, the data was deposited in a registered repository without a resolvable PID.",
+            "0": "Neither is present."
+          },
+          "evidence": [
+            {
+              "label": "Identifier",
+              "kind": "text",
+              "value": "ark:59853/rocrate-endotag-ap-ms-in-mda-mb-468-cells-paclitaxel"
+            },
+            {
+              "label": "Persistent identifier present",
+              "kind": "bool",
+              "value": true,
+              "detail": "scheme: ARK",
+              "sub": true
+            },
+            {
+              "label": "Identifier resolves",
+              "kind": "bool",
+              "value": false,
+              "detail": "URLError",
+              "sub": true
+            },
+            {
+              "label": "Publisher",
+              "kind": "text",
+              "value": "MassIVE"
+            },
+            {
+              "label": "Publisher is a recognized sustainable repository",
+              "kind": "bool",
+              "value": false,
+              "sub": true
+            },
+            {
+              "label": "Publisher is unmanaged storage (excluded from 'sustainable repository' by the rubric glossary)",
+              "kind": "bool",
+              "value": false,
+              "sub": true
+            },
+            {
+              "label": "Publisher found in re3data",
+              "kind": "bool",
+              "value": true,
+              "detail": "Mass Spectrometry Interactive Virtual Environment, CosmoHub, FILER: Functional genomics repository",
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "1",
+            "basis": [
+              "PID present (scheme: ARK) but it did not resolve when checked"
+            ]
+          },
+          "notes": "A sustainable repository assigns persistent identifiers, maintains descriptive metadata that remains resolvable independently of the deposited object, and has resources to persist long-term (e.g., NIH and EBI databases, DDBJ, ICPSR, the NIH GREI generalist repositories, Software Heritage). Purely local or unmanaged resources — departmental servers, S3/GCS accounts, Google Drive, Box — are excluded.",
+          "gating_note": "Gating threshold — 0.a must score 2 (because a dataset not findable in a sustainable repository cannot be retrieved or evaluated at all). N/A is not permitted.",
+          "gate_min": 2
+        },
+        {
+          "id": "0.b",
+          "name": "Accessible",
+          "gating": false,
+          "practice": "Descriptive metadata should always be available and accessible, even if the dataset is restricted, unavailable, or de-accessioned. Ensure metadata conforms to standards such as DCAT (Data Catalog Vocabulary), Datacite schema, and/or schema.org.",
+          "questions": [
+            "Is descriptive metadata available via PID or compact ID lookup independently of the dataset, i.e., even if the dataset is restricted or de-accessioned?",
+            "Does descriptive metadata conform to a standard metadata vocabulary (for example DCAT 3, Datacite schema, schema.org, and/or bioschemas.org)?"
+          ],
+          "scoring": {
+            "2": "Both are true.",
+            "1": "Metadata is always available but does not conform to a standard schema.",
+            "0": "Metadata is not accessible."
+          },
+          "evidence": [
+            {
+              "label": "Identifier used for lookup",
+              "kind": "text",
+              "value": null
+            },
+            {
+              "label": "Descriptive metadata fetchable via PID alone",
+              "kind": "bool",
+              "value": null,
+              "detail": "no identifier",
+              "sub": true
+            },
+            {
+              "label": "@context vocabularies of the crate metadata",
+              "kind": "list",
+              "value": [
+                "https://schema.org/",
+                "https://w3id.org/EVI#"
+              ],
+              "detail": "schema.org / EVI here means the metadata follows a standard vocabulary"
+            },
+            {
+              "label": "Standard vocabulary references found in metadata",
+              "kind": "bool",
+              "value": true,
+              "detail": "Cellosaurus (117 refs), UniProt (57 refs), OBO Foundry PURL (2 refs)"
+            }
+          ],
+          "estimate": null,
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        },
+        {
+          "id": "0.c",
+          "name": "Interoperable",
+          "gating": false,
+          "practice": "Wherever possible, provide data and metadata using formally defined specifications for digital objects.",
+          "questions": [
+            "Is metadata about the dataset presented using one of the following formal interoperable specifications (e.g., JSON-LD, DataCite XML, RDF), referencing at least one standard vocabulary (such as SNOMED, LOINC, UBERON, OBI, etc.)?",
+            "Is metadata about the dataset provided using a machine-readable schema such as JSON + JSON Schema, XML + XSD, Parquet with embedded schema, or Frictionless Data?"
+          ],
+          "scoring": {
+            "2": "Formal interoperable specifications for metadata are provided.",
+            "1": "A machine-readable metadata schema is provided.",
+            "0": "Neither is provided."
+          },
+          "evidence": [
+            {
+              "label": "Metadata is JSON-LD (formal interoperable specification)",
+              "kind": "bool",
+              "value": true
+            },
+            {
+              "label": "@context vocabularies of the crate metadata",
+              "kind": "list",
+              "value": [
+                "https://schema.org/",
+                "https://w3id.org/EVI#"
+              ],
+              "detail": "schema.org / EVI here means the metadata follows a standard vocabulary"
+            },
+            {
+              "label": "Standard vocabulary references found in metadata",
+              "kind": "bool",
+              "value": true,
+              "detail": "Cellosaurus (117 refs), UniProt (57 refs), OBO Foundry PURL (2 refs)"
+            },
+            {
+              "label": "Subject terms on the root (about)",
+              "kind": "list",
+              "value": []
+            },
+            {
+              "label": "Machine-readable schema entities (EVI:Schema)",
+              "kind": "count",
+              "value": 2
+            },
+            {
+              "label": "Datasets linked to a schema",
+              "kind": "count",
+              "value": 2,
+              "sub": true
+            },
+            {
+              "label": "Parquet-format datasets (embedded schema)",
+              "kind": "count",
+              "value": 0,
+              "sub": true
+            },
+            {
+              "label": "Example schema entity",
+              "kind": "entity",
+              "value": {
+                "@id": "ark:59853/schema-summary-tsv-schema-20260522-092748",
+                "@context": {
+                  "@vocab": "https://schema.org/",
+                  "EVI": "https://w3id.org/EVI#"
+                },
+                "@type": "EVI:Schema",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "name": "summary.tsv schema",
+                "description": "Inferred schema for summary.tsv, sampled from MassIVE MSV000101915 via FTPS on 2026-05-22.",
+                "type": "object",
+                "separator": "\t",
+                "header": true,
+                "required": [
+                  "Metadata_file",
+                  "Uploaded_file",
+                  "File_descriptor",
+                  "Conditions",
+                  "Conditions_url_params",
+                  "…(+4 more)"
+                ],
+                "properties": {
+                  "Metadata_file": "{…}",
+                  "Uploaded_file": "{…}",
+                  "File_descriptor": "{…}",
+                  "Conditions": "{…}",
+                  "Conditions_url_params": "{…}",
+                  "Bio_replicates": "{…}",
+                  "Bio_replicates_url_params": "{…}",
+                  "Tech_replicates": "{…}",
+                  "Tech_replicates_url_params": "{…}"
+                },
+                "additionalProperties": true,
+                "conformsTo": [
+                  {
+                    "@id": "https://json-schema.org/draft/2020-12/schema"
+                  }
+                ]
+              },
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "metadata is JSON-LD",
+              "standard vocabularies referenced: Cellosaurus, UniProt, OBO Foundry PURL"
+            ]
+          },
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        },
+        {
+          "id": "0.d",
+          "name": "Reusable",
+          "gating": false,
+          "practice": "Attach a clear and accessible data usage license that allows the responsible use of AI/ML applications or link to a Data Use Agreement (DUA).",
+          "questions": [
+            "Is a data usage license (e.g., Creative Commons, public domain) or a DUA programmatically linked in the metadata (for example, via schema.org:license)?",
+            "Does the explicit text of the linked license or DUA permit (or at minimum, not prohibit) the computational reuse of the data for AI/ML applications?"
+          ],
+          "scoring": {
+            "2": "A machine-readable license or DUA is present, and it does not prohibit AI/ML use.",
+            "1": "A license or DUA is present, but it is not machine-readable (e.g., buried in a PDF abstract), and does not prohibit AI/ML use.",
+            "0": "No license/DUA is linked in the metadata, or AI/ML is explicitly prohibited."
+          },
+          "evidence": [
+            {
+              "label": "License",
+              "kind": "link",
+              "value": "https://creativecommons.org/publicdomain/zero/1.0/",
+              "text": "CC0 1.0"
+            },
+            {
+              "label": "License is machine-readable (an IRI linked in the metadata, not prose)",
+              "kind": "bool",
+              "value": true,
+              "sub": true
+            },
+            {
+              "label": "License link resolves",
+              "kind": "bool",
+              "value": true,
+              "sub": true
+            },
+            {
+              "label": "Conditions of access / DUA terms",
+              "kind": "text",
+              "value": "Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection."
+            },
+            {
+              "label": "AI/ML language in license or use terms",
+              "kind": "text",
+              "value": "No specific mention of AI/ML detected"
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "machine-readable license linked in the metadata (CC0 1.0)",
+              "no AI/ML prohibition language found in license or use terms"
+            ]
+          },
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        }
+      ]
+    },
+    {
+      "number": 1,
+      "title": "Provenance",
+      "gating": true,
+      "criteria": [
+        {
+          "id": "1.a",
+          "name": "Transparent",
+          "gating": false,
+          "practice": "Identify data sources traceable to a reasonable ground truth, e.g., clinical data from EHR at a given hospital, clinical trials, or laboratory data.",
+          "questions": [
+            "Does the metadata identify the data's source specifically enough to reach a real-world, trustworthy ground truth? E.g., a privacy-protected dataset from: a named EHR/hospital or consortium, drug trial, or named lab; for experimental labs, the ground truth should include samples, instruments, reagents, and generated dataset."
+          ],
+          "scoring": {
+            "2": "A source is named and traceable to a ground truth, in a structured metadata field. To fully ground a source, you must specify the exact data artifact (e.g., a specific dataset) instead of just listing the providing hospital or laboratory.",
+            "1": "The source is named but either not to a fully grounded truth, or not in a structured metadata field.",
+            "0": "No source is identified."
+          },
+          "evidence": [
+            {
+              "label": "Datasets carrying provenance links (EVI/PROV terms)",
+              "kind": "percent",
+              "value": 100.0,
+              "n": 557,
+              "total": 557
+            },
+            {
+              "label": "Example dataset with provenance links",
+              "kind": "entity",
+              "value": {
+                "@id": "ark:59853/dataset-msv000101915-7c441f304dddb5e2",
+                "name": "exLewis009053.raw",
+                "@type": [
+                  "prov:Entity",
+                  "https://w3id.org/EVI#Dataset"
+                ],
+                "author": "Richa Tiwari",
+                "description": "RAW from MassIVE MSV000101915 at raw/APMS_RawFiles/Batch02_RawFiles/exLewis009053.raw.",
+                "version": "1.0",
+                "associatedPublication": "",
+                "contentUrl": "ftp://massive-ftp.ucsd.edu/v13/MSV000101915/raw/APMS_RawFiles/Batch02_RawFiles/exLewis009053.raw",
+                "isPartOf": [],
+                "usedByComputation": [],
+                "fairscapeVersion": "1.1.3",
+                "prov:wasAttributedTo": [
+                  "Richa Tiwari"
+                ],
+                "additionalType": "Dataset",
+                "datePublished": "2026-05-22T13:23:35.699025+00:00",
+                "keywords": [
+                  "proteomics",
+                  "mass spectrometry",
+                  "MassIVE",
+                  "Endotagging",
+                  "AP-MS",
+                  "…(+6 more)"
+                ],
+                "format": "raw",
+                "generatedBy": [
+                  {
+                    "@id": "ark:59853/experiment-msv000101915-morf4l1-dmso"
+                  }
+                ],
+                "derivedFrom": [
+                  {
+                    "@id": "ark:59853/sample-msv000101915-morf4l1-dmso"
+                  }
+                ],
+                "contentSize": "879 MB"
+              },
+              "sub": true
+            },
+            {
+              "label": "Ground-truth elements present as structured entities",
+              "kind": "list",
+              "value": [
+                "samples: yes",
+                "instruments: yes",
+                "experiments: yes",
+                "datasets_with_provenance: yes"
+              ]
+            },
+            {
+              "label": "Sample entities",
+              "kind": "count",
+              "value": 117,
+              "sub": true
+            },
+            {
+              "label": "Instrument entities",
+              "kind": "count",
+              "value": 1,
+              "sub": true
+            },
+            {
+              "label": "Experiment entities",
+              "kind": "count",
+              "value": 118,
+              "sub": true
+            },
+            {
+              "label": "Example sample entity",
+              "kind": "entity",
+              "value": {
+                "@id": "ark:59853/sample-msv000101915-atm-dmso",
+                "name": "MDA-MB-468 ATM-tagged + DMSO",
+                "@type": [
+                  "prov:Entity",
+                  "https://w3id.org/EVI#Sample"
+                ],
+                "author": "Richa Tiwari",
+                "description": "MDA-MB-468 cells with endogenous ATM EndoTag knock-in, treated with DMSO, used for AP-MS pulldown of the ATM interactome.",
+                "keywords": [
+                  "proteomics",
+                  "mass spectrometry",
+                  "MassIVE",
+                  "Endotagging",
+                  "AP-MS",
+                  "…(+3 more)"
+                ],
+                "cellLineReference": {
+                  "@id": "https://www.cellosaurus.org/CVCL_0419"
+                },
+                "isPartOf": [],
+                "fairscapeVersion": "1.1.3",
+                "bait": {
+                  "@id": "ark:59853/protein-msv000101915-atm"
+                },
+                "usedTreatment": {
+                  "@id": "ark:59853/treatment-msv000101915-dmso"
+                },
+                "additionalProperty": [
+                  "{…}",
+                  "{…}",
+                  "{…}",
+                  "{…}",
+                  "{…}"
+                ],
+                "derivedTo": [
+                  {
+                    "@id": "ark:59853/dataset-msv000101915-6ef6e7d957f01950"
+                  },
+                  {
+                    "@id": "ark:59853/dataset-msv000101915-ebb95e949d689b9d"
+                  },
+                  {
+                    "@id": "ark:59853/dataset-msv000101915-7f0b86bbab8614df"
+                  },
+                  {
+                    "@id": "ark:59853/dataset-msv000101915-44b97023d35b4bf7"
+                  }
+                ]
+              },
+              "sub": true
+            },
+            {
+              "label": "Example instrument entity",
+              "kind": "entity",
+              "value": {
+                "@id": "ark:59853/instrument-msv000101915-1",
+                "name": "Orbitrap Exploris 480",
+                "@type": [
+                  "prov:Entity",
+                  "https://w3id.org/EVI#Instrument"
+                ],
+                "manufacturer": "Thermo Fisher Scientific",
+                "model": "Orbitrap Exploris 480",
+                "description": "Orbitrap Exploris 480 mass spectrometer used for proteomics analysis in MassIVE dataset MSV000101915.",
+                "usedByExperiment": [
+                  {
+                    "@id": "ark:59853/experiment-msv000101915-1"
+                  }
+                ],
+                "isPartOf": [],
+                "fairscapeVersion": "1.1.3",
+                "metadataType": "https://w3id.org/EVI#Instrument"
+              },
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "557 datasets carry provenance links",
+              "all ground-truth elements present as structured entities (samples, instruments, experiments)"
+            ]
+          },
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        },
+        {
+          "id": "1.b",
+          "name": "Traceable",
+          "gating": false,
+          "practice": "Identify important data transformation steps, with links to software, at an appropriate level of detail, using a machine-readable representation, such as W3C PROV-O or EVI, to enable step tracing.",
+          "questions": [
+            "Does your documentation include the generation metadata (e.g., instrument details), the key processing steps used to create the final analytical dataset, and links to all software used in data preparation?",
+            "Have you utilized valid ontologies such as W3C PROV-O, EVI, or CPM (https://www.iso.org/standard/87714.html), etc.?",
+            "Are any known gaps in the provenance records (e.g., missing original collection circumstances or chain-of-custody breaks for retrospective data) explicitly documented and disclosed to downstream users?"
+          ],
+          "scoring": {
+            "2": "Steps are provided in a machine-readable provenance record, and it includes software links. These provenance records are either fully complete or any known chain-of-custody gaps are explicitly documented and disclosed.",
+            "1": "Transformation steps are documented in enough detail to trace a sequence of steps, but the record falls short on one or more of the following: it is prose rather than machine-readable; software links are absent; known provenance gaps are undisclosed.",
+            "0": "No transformation steps were provided."
+          },
+          "evidence": [
+            {
+              "label": "Transformation steps (Computation + Experiment entities)",
+              "kind": "count",
+              "value": 118,
+              "detail": "0 computations, 118 experiments"
+            },
+            {
+              "label": "Steps with inputs and outputs declared",
+              "kind": "percent",
+              "value": 100.0,
+              "n": 118,
+              "total": 118,
+              "sub": true
+            },
+            {
+              "label": "Computations linked to software",
+              "kind": "percent",
+              "value": null,
+              "n": 0,
+              "total": 0,
+              "sub": true
+            },
+            {
+              "label": "Example transformation step",
+              "kind": "entity",
+              "value": {
+                "@id": "ark:59853/experiment-msv000101915-atm-dmso",
+                "@type": [
+                  "prov:Activity",
+                  "https://w3id.org/EVI#Experiment"
+                ],
+                "name": "EndoTag AP-MS LFQ — ATM + DMSO (Paclitaxel study)",
+                "experimentType": "AP-MS LFQ",
+                "runBy": "Richa Tiwari",
+                "datePerformed": "2026-05-22T15:24:41.220165+00:00",
+                "description": "AP-MS LFQ measurement of MDA-MB-468 cells with endogenous ATM EndoTag under DMSO treatment, part of the Paclitaxel perturbation study (MSV000101915). Captured 4 replicate run(s); batches: Batch 01.",
+                "usedInstrument": [
+                  {
+                    "@id": "ark:59853/instrument-msv000101915-1"
+                  }
+                ],
+                "usedSample": [
+                  {
+                    "@id": "ark:59853/sample-msv000101915-atm-dmso"
+                  }
+                ],
+                "usedTreatment": [
+                  {
+                    "@id": "ark:59853/treatment-msv000101915-dmso"
+                  }
+                ],
+                "usedStain": [],
+                "isPartOf": [],
+                "fairscapeVersion": "1.1.3",
+                "prov:wasAssociatedWith": [
+                  "Richa Tiwari"
+                ],
+                "additionalType": "Experiment",
+                "additionalProperty": [
+                  "{…}",
+                  "{…}",
+                  "{…}",
+                  "{…}",
+                  "{…}"
+                ],
+                "bait": {
+                  "@id": "ark:59853/protein-msv000101915-atm"
+                },
+                "generated": [
+                  {
+                    "@id": "ark:59853/dataset-msv000101915-6ef6e7d957f01950"
+                  },
+                  {
+                    "@id": "ark:59853/dataset-msv000101915-ebb95e949d689b9d"
+                  },
+                  {
+                    "@id": "ark:59853/dataset-msv000101915-7f0b86bbab8614df"
+                  },
+                  {
+                    "@id": "ark:59853/dataset-msv000101915-44b97023d35b4bf7"
+                  }
+                ]
+              },
+              "sub": true
+            },
+            {
+              "label": "Provenance-gap / chain-of-custody disclosure language found in the prose metadata",
+              "kind": "bool",
+              "value": false,
+              "detail": "a 2 requires records to be complete OR known gaps explicitly disclosed — absence of this language is fine if the record is complete"
+            },
+            {
+              "label": "Evidence graphs (visual provenance per sub-crate)",
+              "kind": "links",
+              "value": []
+            }
+          ],
+          "estimate": {
+            "score": "1",
+            "basis": [
+              "118 machine-readable transformation steps",
+              "software linked on 0 of 0 computations — consider 2 if the gap is negligible",
+              "final score is capped at 1.a's score (rule 1.b ≤ 1.a)"
+            ]
+          },
+          "notes": "Scoring dependency rule — 1.b ≤ 1.a. The score for 1.b (Traceable) may never exceed the score for 1.a (Transparent). A transformation pipeline cannot be fully traced if the fundamental data source is unidentified.",
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1,
+          "depends_on": "1.a"
+        },
+        {
+          "id": "1.c",
+          "name": "Interpretable",
+          "gating": false,
+          "practice": "Make software for key data transformation and analysis steps available in a sustainable repository.",
+          "questions": [
+            "Is the software for key transformation/analysis steps deposited where it will persist and is citable?"
+          ],
+          "scoring": {
+            "2": "Software is archived in a sustainable repository with a PID, that is, an immutable snapshot with a persistent identifier (e.g., Zenodo, Software Heritage, Dataverse, an institutional archive; includes a GitHub release archived to such a repository). For proprietary commercial software, a URI is provided to the provider's website.",
+            "1": "Software is available but only in mutable code hosting with no PID (e.g., a GitHub/GitLab/BitBucket repo alone).",
+            "0": "Software is not available."
+          },
+          "evidence": [
+            {
+              "label": "Software entities",
+              "kind": "count",
+              "value": 0
+            },
+            {
+              "label": "Archived with a PID (Zenodo / Software Heritage / DOI / PyPI)",
+              "kind": "count",
+              "value": 0,
+              "of": 0,
+              "sub": true
+            },
+            {
+              "label": "Mutable code hosting only (GitHub and the like)",
+              "kind": "count",
+              "value": 0,
+              "of": 0,
+              "sub": true
+            },
+            {
+              "label": "Provider/vendor website URI only",
+              "kind": "count",
+              "value": 0,
+              "detail": "counts as 2 only for proprietary commercial software (reviewer's call)",
+              "of": 0,
+              "sub": true
+            },
+            {
+              "label": "No download/repository link",
+              "kind": "count",
+              "value": 0,
+              "of": 0,
+              "sub": true
+            },
+            {
+              "label": "Archived software",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            },
+            {
+              "label": "Code-hosted software",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            },
+            {
+              "label": "Provider-site software",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            },
+            {
+              "label": "Software without links",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "0",
+            "basis": [
+              "no software entities in the crate"
+            ]
+          },
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        },
+        {
+          "id": "1.d",
+          "name": "Key actors identified",
+          "gating": false,
+          "practice": "Identify people and organizations responsible for obtaining and processing the data, the samples, and the subject groups from which the data were produced. Reference these parties along with other dataset metadata.",
+          "questions": [
+            "Does the metadata identify the key actors? \"Key actors\" are the people and organizations who obtained and processed the data/samples and who recruited the participants."
+          ],
+          "scoring": {
+            "2": "Key actors are identified with resolvable PIDs (Open Researcher and Contributor ID (ORCID) for people, Research Organization Registry (ROR) for organizations).",
+            "1": "Key actors are named in free text, without PIDs.",
+            "0": "Key actors are not identified."
+          },
+          "evidence": [
+            {
+              "label": "Key actors identified",
+              "kind": "bool",
+              "value": true
+            },
+            {
+              "label": "Authors identified with a PID (ORCID)",
+              "kind": "percent",
+              "value": 0.0,
+              "n": 0,
+              "total": 1,
+              "sub": true
+            },
+            {
+              "label": "Authors with PIDs (first 10)",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            },
+            {
+              "label": "Authors named in free text only",
+              "kind": "list",
+              "value": [
+                "Richa Tiwari"
+              ],
+              "sub": true
+            },
+            {
+              "label": "Principal investigator",
+              "kind": "text",
+              "value": "Trey Ideker"
+            },
+            {
+              "label": "Contact",
+              "kind": "text",
+              "value": "tideker@health.ucsd.edu"
+            },
+            {
+              "label": "Organizations (root isPartOf)",
+              "kind": "list",
+              "value": [
+                "ark:59853/rocrate-cell-maps-for-artificial-intelligence-January-2026-data-release,",
+                "ark:59853/rocrate-cell-maps-for-artificial-intelligence-June-2026-data-release,",
+                "ark:59853/rocrate-cell-maps-for-artificial-intelligence-June-2026-data-release"
+              ]
+            },
+            {
+              "label": "Organizations identified with ROR PIDs",
+              "kind": "bool",
+              "value": false,
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "1",
+            "basis": [
+              "0 of 1 authors carry a PID",
+              "1 named in free text only"
+            ]
+          },
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Characterization",
+      "gating": false,
+      "criteria": [
+        {
+          "id": "2.a",
+          "name": "Semantics",
+          "gating": false,
+          "practice": "Use comprehensive descriptive metadata for datasets, including a detailed abstract, dataset keywords, and subject-specific vocabularies (e.g., MeSH) to enable detailed search and discovery.",
+          "questions": [
+            "Does the metadata support search and discovery through a substantive abstract, keywords, and subject-specific controlled-vocabulary terms?"
+          ],
+          "scoring": {
+            "2": "The abstract, keywords, and controlled-vocabulary terms are present and from recognized vocabularies (e.g., MeSH, or another subject-specific ontology/thesaurus).",
+            "1": "Abstract and keywords are present, but not controlled-vocabulary terms (free-text keywords only).",
+            "0": "No abstract, or effectively no descriptive metadata is present."
+          },
+          "evidence": [
+            {
+              "label": "Dataset abstract/description",
+              "kind": "text",
+              "value": "This submission comprises affinity purification mass spectrometry (AP-MS) raw data generated from endogenously tagged MDA-MB-468 cells under Paclitaxel perturbation. The dataset focuses on drug-induced interactome rewiring of chromatin modifiers relevant to the triple-negative breast cancer context. All AP-MS experiments were performed in four biological replicates. Each AP-MS batch includes an untagged parental control, 10 chromatin modifier tagged cell lines, and a positive control tagged line. DMSO-treated samples serve as vehicle control across all AP-MS experiments (Unpublished data).",
+              "detail": "596 chars"
+            },
+            {
+              "label": "Keywords",
+              "kind": "list",
+              "value": [
+                "proteomics",
+                "mass spectrometry",
+                "MassIVE",
+                "Endotagging",
+                "AP-MS",
+                "Triple Negative Breast Cancer",
+                "MDA-MB-468",
+                "Paclitaxel",
+                "CM4AI",
+                "Bridge2AI"
+              ]
+            },
+            {
+              "label": "Controlled-vocabulary terms present",
+              "kind": "bool",
+              "value": false,
+              "detail": "0 MeSH terms of 0 DefinedTerms"
+            },
+            {
+              "label": "Controlled-vocabulary terms",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "1",
+            "basis": [
+              "abstract and keywords present, no controlled-vocabulary terms"
+            ]
+          },
+          "notes": "Scores the subject and discovery terms only, not the vocabulary bindings already scored in 0.c (Interoperable) and 2.c (Standards)."
+        },
+        {
+          "id": "2.b",
+          "name": "Statistics",
+          "gating": false,
+          "practice": "Provide domain-appropriate statistical characterizations of key features of the dataset to inform analysis planning. Ensure missing values are encoded consistently.",
+          "questions": [
+            "Are descriptive statistics of key variables provided?",
+            "Are the chosen statistics domain-appropriate?",
+            "Are missing values encoded consistently?"
+          ],
+          "scoring": {
+            "2": "Missing values are encoded consistently, and descriptive statistics of key variables are provided. Where applicable, the dataset provides global record and variable counts, detailed per-variable descriptive statistics (central tendency, spread, min/max, and valid counts for numeric data; frequencies for categorical data), and strictly utilizes a single, documented convention for representing missing values (not mixed; e.g., blanks/NA/-999/0).",
+            "1": "Missing values are encoded consistently, but no descriptive statistics are present.",
+            "0": "Missing values are not consistently encoded."
+          },
+          "evidence": [
+            {
+              "label": "Entities carrying a summary-statistics link (hasSummaryStatistics)",
+              "kind": "count",
+              "value": 2
+            },
+            {
+              "label": "Entities located",
+              "kind": "list",
+              "value": [
+                "Dataset: summary.tsv -> ark:59853/dataset-msv000101915-183e739aaf87928c/summary-stats",
+                "Dataset: APMS_Paclitaxel_Sample_Annotation.tsv -> ark:59853/dataset-msv000101915-a8731f7640588a0b/summary-stats"
+              ],
+              "sub": true
+            },
+            {
+              "label": "Example summary-statistics reference",
+              "kind": "entity",
+              "value": {
+                "@id": "ark:59853/dataset-msv000101915-183e739aaf87928c",
+                "name": "summary.tsv",
+                "@type": [
+                  "prov:Entity",
+                  "https://w3id.org/EVI#Dataset"
+                ],
+                "author": "Richa Tiwari",
+                "description": "TSV from MassIVE MSV000101915 at ccms_metadata/summary.tsv.",
+                "version": "1.0",
+                "associatedPublication": "",
+                "contentUrl": "ftp://massive-ftp.ucsd.edu/v13/MSV000101915/ccms_metadata/summary.tsv",
+                "isPartOf": [],
+                "usedByComputation": [],
+                "fairscapeVersion": "1.1.3",
+                "prov:wasGeneratedBy": [
+                  {
+                    "@id": "ark:59853/experiment-msv000101915-unannotated"
+                  }
+                ],
+                "prov:wasDerivedFrom": [],
+                "prov:wasAttributedTo": [
+                  "Richa Tiwari"
+                ],
+                "additionalType": "Dataset",
+                "datePublished": "2026-05-22T13:23:35.699025+00:00",
+                "keywords": [
+                  "proteomics",
+                  "mass spectrometry",
+                  "MassIVE",
+                  "Endotagging",
+                  "AP-MS",
+                  "…(+6 more)"
+                ],
+                "format": "tsv",
+                "generatedBy": [
+                  {
+                    "@id": "ark:59853/experiment-msv000101915-unannotated"
+                  }
+                ],
+                "derivedFrom": [],
+                "evi:Schema": {
+                  "@id": "ark:59853/schema-summary-tsv-schema-20260522-092748"
+                },
+                "contentSize": "577 B",
+                "sha256": "5ad464dcab0ec7567d361e07440ac4c9e27fc7e609d0e306532a13feb0af39ff",
+                "rowCount": 1,
+                "columnCount": 9,
+                "sampleSize": 1,
+                "hasSummaryStatistics": {
+                  "@id": "ark:59853/dataset-msv000101915-183e739aaf87928c/summary-stats"
+                },
+                "derivedTo": [
+                  {
+                    "@id": "ark:59853/dataset-msv000101915-183e739aaf87928c/summary-stats"
+                  }
+                ]
+              },
+              "sub": true
+            },
+            {
+              "label": "Missing-data statement (rai:dataCollectionMissingData)",
+              "kind": "text",
+              "value": "Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release."
+            },
+            {
+              "label": "Tabular formats in the crate",
+              "kind": "list",
+              "value": [
+                "tsv: 2"
+              ],
+              "detail": "for non-tabular data, per-variable statistics are N/A but missing-value consistency is still scored in modality terms (absent channels, dropped leads, corrupt slices, time-series gaps); the criterion is N/A only if the data has no representable missingness at all"
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "2 entities carry a summary-statistics link",
+              "missing-data statement present (its consistency and domain-appropriateness are asserted, not verified against the files)"
+            ]
+          },
+          "notes": "Score on missing-value encoding consistency, expressed in terms appropriate to the modality (e.g., absent channels, dropped leads, corrupt or omitted slices, or gaps in a time series). For non-tabular data, per-variable descriptive statistics are not applicable (N/A). This criterion is N/A when the data has no representable missingness."
+        },
+        {
+          "id": "2.c",
+          "name": "Standards",
+          "gating": true,
+          "practice": "Provide a machine-readable data dictionary or schema for each dataset, linked to the dataset metadata, and referencing any relevant standards.",
+          "questions": [
+            "Is each file governed by a formal open specification with a built-in or paired external schema that names and types its data elements as required for downstream usage? (e.g., RDF/JSON-LD, OME-TIFF, OME-NGFF, NWB, WFDB, DICOM, NIfTI, Parquet, CSVW, Frictionless Table Schema, JSON Schema, XSD.)",
+            "Is at least one data element bound to a standard vocabulary term through (a) a dataset-level JSON-LD sidecar, or (b) through the format's inherent mechanism? Examples of inherent mechanisms include vocabulary IRIs in the data itself (where the data is RDF/JSON-LD), DICOM Code Sequences, CSVW propertyUrl or aboutUrl, Frictionless rdfType, Define-XML NCI Thesaurus codes, OME annotations, NWB ontology links, etc.",
+            "Is the standard a true schema/model that dictates structure and content, or merely a generic file container?"
+          ],
+          "scoring": {
+            "2": "For every format class present in the deposit, a formal schema and at least one populated standard vocabulary binding — as appropriate to the datatype — have been provided.",
+            "1": "For every format class present in the deposit, a formal schema is available, but no standard vocabulary binding has been provided.",
+            "0": "No formal schema has been provided. E.g., HDF5 with no NWB or other schema layer, such as pickle, .mat, npy, or undocumented vendor binaries."
+          },
+          "evidence": [
+            {
+              "label": "Machine-readable schema entities (EVI:Schema, JSON Schema dialect)",
+              "kind": "count",
+              "value": 2
+            },
+            {
+              "label": "Non-image datasets linked to a schema",
+              "kind": "percent",
+              "value": 0.4,
+              "detail": "0 image datasets excluded — image files don't take a data dictionary; a schema covering a format class covers every file in that class",
+              "n": 2,
+              "total": 557,
+              "sub": true
+            },
+            {
+              "label": "Standard vocabulary bindings populated",
+              "kind": "bool",
+              "value": true,
+              "detail": "Cellosaurus (117), UniProt (57), OBO Foundry PURL (2)"
+            },
+            {
+              "label": "File formats present (format-class view)",
+              "kind": "list",
+              "value": [
+                "raw: 549",
+                "tsv: 2",
+                "application/json: 2",
+                "pdf: 1",
+                "txt: 1",
+                "fasta: 1",
+                "xml: 1"
+              ]
+            },
+            {
+              "label": "Example schema entity",
+              "kind": "entity",
+              "value": {
+                "@id": "ark:59853/schema-summary-tsv-schema-20260522-092748",
+                "@context": {
+                  "@vocab": "https://schema.org/",
+                  "EVI": "https://w3id.org/EVI#"
+                },
+                "@type": "EVI:Schema",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "name": "summary.tsv schema",
+                "description": "Inferred schema for summary.tsv, sampled from MassIVE MSV000101915 via FTPS on 2026-05-22.",
+                "type": "object",
+                "separator": "\t",
+                "header": true,
+                "required": [
+                  "Metadata_file",
+                  "Uploaded_file",
+                  "File_descriptor",
+                  "Conditions",
+                  "Conditions_url_params",
+                  "…(+4 more)"
+                ],
+                "properties": {
+                  "Metadata_file": "{…}",
+                  "Uploaded_file": "{…}",
+                  "File_descriptor": "{…}",
+                  "Conditions": "{…}",
+                  "Conditions_url_params": "{…}",
+                  "Bio_replicates": "{…}",
+                  "Bio_replicates_url_params": "{…}",
+                  "Tech_replicates": "{…}",
+                  "Tech_replicates_url_params": "{…}"
+                },
+                "additionalProperties": true,
+                "conformsTo": [
+                  {
+                    "@id": "https://json-schema.org/draft/2020-12/schema"
+                  }
+                ]
+              },
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "2 schema entities",
+              "standard vocabulary bindings populated: Cellosaurus, UniProt, OBO Foundry PURL"
+            ]
+          },
+          "notes": "A standard vocabulary is one registered in NCBO BioPortal, EBI Ontology Lookup Service, or OBO Foundry. A standard vocabulary binding must be populated in the deposited instance (capability alone scores 1). Scoring may be done per format class, and a sidecar covering a class covers every file in it. The formats named here are examples, not an enumeration.",
+          "gating_note": "Gating threshold (the \"Standards\" gate) — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        },
+        {
+          "id": "2.d",
+          "name": "Potential Sources of Bias",
+          "gating": false,
+          "practice": "Describe known sources of bias in the data and assumptions made in collecting, processing, or interpreting the data. Include any known explanations regarding missing values, including reasons for missingness, and the degree to which data represents a state vs. a control (e.g., disease state vs. healthy state).",
+          "questions": [
+            "Does the metadata describe known biases and assumptions?",
+            "Does the metadata describe, where applicable, reasons for missingness?",
+            "Does the metadata describe the state-vs-control balance?",
+            "Are demographic gaps and limitations in cohort representativeness (e.g., missing geographic or socioeconomic populations) explicitly disclosed within the dataset metadata or linked documentation?",
+            "If the data is derived from clinical settings, does the documentation describe how admission patterns or site selection might introduce systematic biases?"
+          ],
+          "scoring": {
+            "2": "Substantive and specific documentation details known biases and assumptions throughout collection, processing, and interpretation, including specific justifications for missing data and case-vs-control representation where applicable.",
+            "1": "Bias/assumptions are addressed but only in general terms; or applicable missingness/state-control elements were omitted.",
+            "0": "No description of bias or assumptions is given, or only a non-substantive or generic placeholder is offered (e.g., \"no known bias\" with no basis)."
+          },
+          "evidence": [
+            {
+              "label": "Bias description (rai:dataBiases)",
+              "kind": "text",
+              "value": "Data in this release was derived from commercially available de-identified human cell lines, and does not represent all biological variants which may be seen in the population at large."
+            },
+            {
+              "label": "Bias description present and substantive-length",
+              "kind": "bool",
+              "value": true,
+              "sub": true
+            },
+            {
+              "label": "Missing-data reasons (rai:dataCollectionMissingData)",
+              "kind": "text",
+              "value": "Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release."
+            },
+            {
+              "label": "Missingness explanation present and substantive-length",
+              "kind": "bool",
+              "value": true,
+              "sub": true
+            },
+            {
+              "label": "Completeness statement",
+              "kind": "text",
+              "value": "These data are not yet in completed final form, and some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release."
+            },
+            {
+              "label": "Limitations (rai:dataLimitations)",
+              "kind": "text",
+              "value": "This is an interim release. It does not contain predicted cell maps, which will be added in future releases. The current release is most suitable for bioinformatics analysis of the individual datasets. Requires domain expertise for meaningful analysis."
+            },
+            {
+              "label": "Demographic / cohort-representativeness language found",
+              "kind": "bool",
+              "value": true,
+              "detail": "represent"
+            },
+            {
+              "label": "Case-vs-control language found",
+              "kind": "bool",
+              "value": false,
+              "sub": true
+            },
+            {
+              "label": "Clinical admission-pattern / site-selection language found",
+              "kind": "bool",
+              "value": false,
+              "detail": "only applicable to clinically-derived data",
+              "sub": true
+            }
+          ],
+          "estimate": null,
+          "notes": "\"Substantive\" means that it engages the actual data (specific bias sources, assumptions, or reasons are named); it is not a boilerplate disclaimer. \"Reasons for missingness\" does not apply (N/A) if the dataset has no missing values. \"State-vs-control\" is not applicable (N/A) if the dataset has no such structure."
+        },
+        {
+          "id": "2.e",
+          "name": "Data quality",
+          "gating": false,
+          "practice": "Have quality control procedures been applied? If so, provide a link to a description.",
+          "questions": [
+            "Has data-type specific quality control (QC) been applied?",
+            "Is QC indicated? Does the link resolve? Is the description real and not just a placeholder?",
+            "Is a link provided to the specific protocol or software that was used?"
+          ],
+          "scoring": {
+            "2": "QC was applied and appropriate for the domain.",
+            "1": "QC was applied and documented, but it is incomplete for the domain.",
+            "0": "No QC was applied, or the description link doesn't resolve, or the description is inadequate."
+          },
+          "evidence": [
+            {
+              "label": "Collection / QC description (rai:dataCollection)",
+              "kind": "text",
+              "value": "Data collection processes are generally described in Clark T et al. (2024) \"Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines\" bioRxiv 2024.05.21.589311; doi: https://doi.org/10.1101/2024.05.21.589311. Additional data collection details will be subsequently published once finalized. "
+            },
+            {
+              "label": "Missing-data handling",
+              "kind": "text",
+              "value": "Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release."
+            },
+            {
+              "label": "QC language found in metadata",
+              "kind": "bool",
+              "value": false,
+              "sub": true
+            },
+            {
+              "label": "Links to QC protocol/software found in the collection description",
+              "kind": "list",
+              "value": [
+                "https://doi.org/10.1101/2024.05.21.589311"
+              ],
+              "sub": true
+            },
+            {
+              "label": "QC description link resolves: https://doi.org/10.1101/2024.05.21.589311",
+              "kind": "bool",
+              "value": null,
+              "detail": "HTTP 429 — inconclusive",
+              "sub": true
+            }
+          ],
+          "estimate": null,
+          "notes": "Adequacy (1 vs 2) is a domain-expert determination."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Pre-model Explainability",
+      "gating": false,
+      "criteria": [
+        {
+          "id": "3.a",
+          "name": "Data documentation template",
+          "gating": false,
+          "practice": "Machine-readable metadata and a linked human-readable document should support a domain-appropriate extension of the original Gebru Datasheets concept for pre-model explainability, as detailed in the present article. Healthsheets information may be a helpful supplement.",
+          "questions": [
+            "Is there datasheet-style documentation of the dataset as machine-readable metadata?",
+            "Is there a linked human-readable document, such as Datasheets for Datasets (Gebru et al.)?",
+            "Does the datasheet substantively address its dimensions (composition, collection, processing, limitations/uses)?"
+          ],
+          "scoring": {
+            "2": "Both machine-readable metadata and a linked, human-readable datasheet-style document that substantively covers dataset composition, collection, processing, and known limitations/uses are provided.",
+            "1": "One is present but not the other, or one or both are present but are thin or partial.",
+            "0": "Neither is provided."
+          },
+          "evidence": [
+            {
+              "label": "Human-readable datasheet(s)",
+              "kind": "links",
+              "value": []
+            },
+            {
+              "label": "Machine-readable datasheet sections populated",
+              "kind": "count",
+              "value": 7,
+              "of": 7
+            },
+            {
+              "label": "Missing sections",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            },
+            {
+              "label": "Section — Collection",
+              "kind": "text",
+              "value": "Data collection processes are generally described in Clark T et al. (2024) \"Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines\" bioRxiv 2024.05.21.589311; doi: https://doi.org/10.1101/2024.05.21.589311. Additional data collection details will be subsequently published once finalized. ",
+              "sub": true
+            },
+            {
+              "label": "Section — Use cases",
+              "kind": "text",
+              "value": "AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable biologically-driven, interpretable ML applications, for example as proposed in Ma et al. 2018 (PMID: 29505029) and Kuenzi et al. 2020 (PMID: 33096023).",
+              "sub": true
+            },
+            {
+              "label": "Section — Limitations",
+              "kind": "text",
+              "value": "This is an interim release. It does not contain predicted cell maps, which will be added in future releases. The current release is most suitable for bioinformatics analysis of the individual datasets. Requires domain expertise for meaningful analysis.",
+              "sub": true
+            },
+            {
+              "label": "Section — Biases",
+              "kind": "text",
+              "value": "Data in this release was derived from commercially available de-identified human cell lines, and does not represent all biological variants which may be seen in the population at large.",
+              "sub": true
+            },
+            {
+              "label": "Section — Release/maintenance plan",
+              "kind": "text",
+              "value": "Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the https://dataverse.lib.virginia.edu/, supported by committed institutional funds.",
+              "sub": true
+            },
+            {
+              "label": "Section — License",
+              "kind": "text",
+              "value": "https://creativecommons.org/publicdomain/zero/1.0/",
+              "sub": true
+            },
+            {
+              "label": "Section — Conditions of access",
+              "kind": "text",
+              "value": "Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.",
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "1",
+            "basis": [
+              "no human-readable datasheet",
+              "7 of 7 machine-readable sections populated"
+            ]
+          },
+          "notes": "Scoring rule — score only whether the datasheet exists and covers its dimensions, and do not re-score bias documentation (2.d Potential Sources of Bias) or use-case guidance (3.b Fit for purpose) here."
+        },
+        {
+          "id": "3.b",
+          "name": "Fit for purpose",
+          "gating": false,
+          "practice": "Identify appropriate and inappropriate use cases for the data set. Link to any previously published analyses using this data.",
+          "questions": [
+            "Does the dataset identify the appropriate and inappropriate use cases, and are there any links to previously published analyses using it?",
+            "Were the use cases provided in a structured manner (i.e., Croissant RAI or equivalent)?"
+          ],
+          "scoring": {
+            "2": "Appropriate and inappropriate use cases are identified, ideally in structured machine-readable form (e.g., Croissant RAI recommended/prohibited-use fields), and links to prior analyses are provided where such analyses exist.",
+            "1": "Use cases are identified but only partially (e.g., only appropriate uses are listed, or they are provided in prose with no structured form), or links to prior analyses are missing where such analyses exist.",
+            "0": "No use-case guidance is provided."
+          },
+          "evidence": [
+            {
+              "label": "Appropriate use cases (rai:dataUseCases)",
+              "kind": "text",
+              "value": "AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable biologically-driven, interpretable ML applications, for example as proposed in Ma et al. 2018 (PMID: 29505029) and Kuenzi et al. 2020 (PMID: 33096023)."
+            },
+            {
+              "label": "Limitations / inappropriate uses (rai:dataLimitations)",
+              "kind": "text",
+              "value": "This is an interim release. It does not contain predicted cell maps, which will be added in future releases. The current release is most suitable for bioinformatics analysis of the individual datasets. Requires domain expertise for meaningful analysis."
+            },
+            {
+              "label": "Prohibited uses",
+              "kind": "text",
+              "value": "These laboratory data are not to be used in clinical decision-making or in any context involving patient care without appropriate regulatory oversight and approval."
+            },
+            {
+              "label": "Both appropriate and inappropriate uses stated",
+              "kind": "bool",
+              "value": true,
+              "sub": true
+            },
+            {
+              "label": "Prior publications listed",
+              "kind": "count",
+              "value": 1
+            },
+            {
+              "label": "Prior publications",
+              "kind": "links",
+              "value": [
+                {
+                  "href": "",
+                  "text": ""
+                }
+              ],
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "appropriate and inappropriate uses both stated",
+              "1 prior publications linked"
+            ]
+          },
+          "notes": "\"Link to prior analyses\" is not applicable (N/A) if the dataset is newly released with no published analyses; its absence doesn't count against the score."
+        },
+        {
+          "id": "3.c",
+          "name": "Verifiable",
+          "gating": false,
+          "practice": "Provide a mechanism for ensuring the integrity of each raw or processed dataset, such as a cryptographic hash.",
+          "questions": [
+            "Is there an integrity mechanism (e.g., cryptographic hash) for each raw or processed dataset, recorded in the metadata that describes it?"
+          ],
+          "scoring": {
+            "2": "An integrity mechanism is provided in the metadata for each dataset (e.g., SHA-256 per file/dataset, or a Merkle tree/manifest of hashes covering all components), so metadata and data verifiably reference each other.",
+            "1": "An integrity mechanism is provided, but it is incomplete (i.e., some datasets/files are covered, others are not).",
+            "0": "No integrity mechanism is provided."
+          },
+          "evidence": [
+            {
+              "label": "Hash coverage (datasets + software, embargoed excluded)",
+              "kind": "percent",
+              "value": 0.4,
+              "detail": "counts md5/sha256 recorded on the metadata entities themselves, which is what the rubric requires (metadata and data verifiably reference each other)",
+              "n": 2,
+              "total": 557
+            },
+            {
+              "label": "Embargoed datasets excluded from the denominator",
+              "kind": "count",
+              "value": 0,
+              "sub": true
+            },
+            {
+              "label": "Example entity with a checksum",
+              "kind": "entity",
+              "value": {
+                "@id": "ark:59853/dataset-msv000101915-183e739aaf87928c",
+                "name": "summary.tsv",
+                "@type": [
+                  "prov:Entity",
+                  "https://w3id.org/EVI#Dataset"
+                ],
+                "author": "Richa Tiwari",
+                "description": "TSV from MassIVE MSV000101915 at ccms_metadata/summary.tsv.",
+                "version": "1.0",
+                "associatedPublication": "",
+                "contentUrl": "ftp://massive-ftp.ucsd.edu/v13/MSV000101915/ccms_metadata/summary.tsv",
+                "isPartOf": [],
+                "usedByComputation": [],
+                "fairscapeVersion": "1.1.3",
+                "prov:wasGeneratedBy": [
+                  {
+                    "@id": "ark:59853/experiment-msv000101915-unannotated"
+                  }
+                ],
+                "prov:wasDerivedFrom": [],
+                "prov:wasAttributedTo": [
+                  "Richa Tiwari"
+                ],
+                "additionalType": "Dataset",
+                "datePublished": "2026-05-22T13:23:35.699025+00:00",
+                "keywords": [
+                  "proteomics",
+                  "mass spectrometry",
+                  "MassIVE",
+                  "Endotagging",
+                  "AP-MS",
+                  "…(+6 more)"
+                ],
+                "format": "tsv",
+                "generatedBy": [
+                  {
+                    "@id": "ark:59853/experiment-msv000101915-unannotated"
+                  }
+                ],
+                "derivedFrom": [],
+                "evi:Schema": {
+                  "@id": "ark:59853/schema-summary-tsv-schema-20260522-092748"
+                },
+                "contentSize": "577 B",
+                "sha256": "5ad464dcab0ec7567d361e07440ac4c9e27fc7e609d0e306532a13feb0af39ff",
+                "rowCount": 1,
+                "columnCount": 9,
+                "sampleSize": 1,
+                "hasSummaryStatistics": {
+                  "@id": "ark:59853/dataset-msv000101915-183e739aaf87928c/summary-stats"
+                },
+                "derivedTo": [
+                  {
+                    "@id": "ark:59853/dataset-msv000101915-183e739aaf87928c/summary-stats"
+                  }
+                ]
+              },
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "1",
+            "basis": [
+              "checksums on 2 of 557 entities"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Ethics",
+      "gating": true,
+      "criteria": [
+        {
+          "id": "4.a",
+          "name": "Ethically acquired",
+          "gating": false,
+          "practice": "Describe ethical data acquisition consistent with accepted principles (e.g., Belmont Report, Menlo Report, CARE Principles) sufficient to evaluate for intended use, along with a management plan.",
+          "questions": [
+            "Is ethical data acquisition consistent with accepted bioethics principles sufficient to evaluate for the intended use?",
+            "Are the following elements present: IRB/REC protocol, data governance committee chair, and ethics reviewer and institution?",
+            "For Indigenous-sourced data, is CARE principles conformance demonstrated, for example, by describing the composition of the governance committee with tribal representation, etc.?",
+            "Is acquisition legitimate — obtained without theft, coercion, or deception — with required permissions/consent secured?",
+            "For retrospective data, is the basis for secondary AI/ML use (e.g., a documented IRB waiver of authorization) explicitly stated in the metadata?",
+            "For prospective data, does the documented consent language explicitly cover downstream AI/ML training and potential commercialization?"
+          ],
+          "scoring": {
+            "2": "All of the following are present: acquisition is described with the source, including a permission or consent basis that specifically covers downstream AI/ML use (for prospective data), or explicitly details the specific basis for a waiver/exemption (for retrospective data); confirmation of legitimacy of data collection is included; and the DMP/DMSP is linked.",
+            "1": "Acquisition is described, but it is incomplete or generic.",
+            "0": "No acquisition description was offered."
+          },
+          "evidence": [
+            {
+              "label": "Collection description (rai:dataCollection)",
+              "kind": "text",
+              "value": "Data collection processes are generally described in Clark T et al. (2024) \"Cell Maps for Artificial Intelligence: AI-Ready Maps of Human Cell Architecture from Disease-Relevant Cell Lines\" bioRxiv 2024.05.21.589311; doi: https://doi.org/10.1101/2024.05.21.589311. Additional data collection details will be subsequently published once finalized. "
+            },
+            {
+              "label": "Ethics reviewers (ethicalReview)",
+              "kind": "text",
+              "value": "Vardit Ravistky ravitskyv@thehastingscenter.org and Jean-Christophe Belisle-Pipon jean-christophe_belisle-pipon@sfu.ca."
+            },
+            {
+              "label": "Human subjects research",
+              "kind": "text",
+              "value": "None - data collected from commercially available cell lines"
+            },
+            {
+              "label": "Human subjects exemption",
+              "kind": "text",
+              "value": "Exempt — research with commercially available de-identified human cell lines does not constitute human subjects research.",
+              "sub": true
+            },
+            {
+              "label": "Informed consent",
+              "kind": "text",
+              "value": null
+            },
+            {
+              "label": "At-risk populations",
+              "kind": "text",
+              "value": null
+            },
+            {
+              "label": "IRB / ethics-review references found",
+              "kind": "bool",
+              "value": false,
+              "sub": true
+            },
+            {
+              "label": "Consent/ethics text mentions AI/ML or commercialization (prospective data: consent must explicitly cover downstream AI/ML use)",
+              "kind": "bool",
+              "value": true,
+              "detail": "AI, Artificial Intelligence",
+              "sub": true
+            },
+            {
+              "label": "Waiver / exemption / secondary-use language found (retrospective data: the basis for secondary AI/ML use must be explicit)",
+              "kind": "bool",
+              "value": true,
+              "detail": "exempt",
+              "sub": true
+            },
+            {
+              "label": "Management plan (rai:dataReleaseMaintenancePlan)",
+              "kind": "text",
+              "value": "Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the https://dataverse.lib.virginia.edu/, supported by committed institutional funds."
+            },
+            {
+              "label": "DMP link resolves: https://dataverse.lib.virginia.edu/",
+              "kind": "bool",
+              "value": true,
+              "sub": true
+            }
+          ],
+          "estimate": null,
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        },
+        {
+          "id": "4.b",
+          "name": "Ethically managed",
+          "gating": false,
+          "practice": "Data management must align with ethical principles throughout the health AI lifecycle. Indicate privacy-protection processing, if any, sufficient to evaluate ethical status for intended use.",
+          "questions": [
+            "Is data sensitivity properly described in alignment with disclosure risks?",
+            "Is data sensitivity aligned with intended use?",
+            "Is privacy protection described in a way aligned with the above?",
+            "Has a formal Privacy Impact Assessment (PIA; or equivalent risk assessment) been conducted for high-sensitivity data types (e.g., biometrics, longitudinal EHR)?",
+            "Is there a documented procedure or commitment to periodically reassess re-identification risks as new data linkage technologies emerge?"
+          ],
+          "scoring": {
+            "2": "DMP/DMSP content substantively describes management appropriate to that sensitivity. A PIA or equivalent risk assessment for high-sensitivity data exists. Alternatively, the data is documented as low-sensitivity with no privacy processing required, and that determination is justified. A documented plan for periodic reassessment of re-identification risks is detailed for sensitive data.",
+            "1": "Privacy protection is inadequate, and/or formal PIAs or reassessment plans are absent for sensitive data.",
+            "0": "There is no management description where sensitivity requires it."
+          },
+          "evidence": [
+            {
+              "label": "Confidentiality level",
+              "kind": "text",
+              "value": "Unrestricted"
+            },
+            {
+              "label": "Personal/sensitive information statement",
+              "kind": "text",
+              "value": null
+            },
+            {
+              "label": "Data governance committee",
+              "kind": "text",
+              "value": "Jilian Parker"
+            },
+            {
+              "label": "Ethics review",
+              "kind": "text",
+              "value": "Vardit Ravistky ravitskyv@thehastingscenter.org and Jean-Christophe Belisle-Pipon jean-christophe_belisle-pipon@sfu.ca."
+            },
+            {
+              "label": "Management plan content (judge adequacy for the declared sensitivity)",
+              "kind": "text",
+              "value": "Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the https://dataverse.lib.virginia.edu/, supported by committed institutional funds."
+            },
+            {
+              "label": "Privacy Impact Assessment / risk-assessment language found (required for high-sensitivity data)",
+              "kind": "bool",
+              "value": false
+            },
+            {
+              "label": "Periodic re-identification-risk reassessment language found (required for sensitive data)",
+              "kind": "bool",
+              "value": false,
+              "sub": true
+            }
+          ],
+          "estimate": null,
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        },
+        {
+          "id": "4.c",
+          "name": "Ethically Disseminated",
+          "gating": false,
+          "practice": "Specify a licensing agreement and/or data use agreement (DUA) on as open terms as ethical and sustainability considerations permit. Specify contact information for a data access committee.",
+          "questions": [
+            "Assuming a license and/or DUA exists, are the permitted and prohibited uses ethically justified (i.e., \"as open as possible, as closed as necessary\" based on privacy/population risks)?",
+            "Where the modality warrants it, do the DUA(s) include explicit ethical prohibitions relevant to the specific data modality (e.g., prohibiting biometric synthesis, identity cloning, or discriminatory use) that go beyond minimum legal requirements?",
+            "If the dataset requires controlled access, is active information for a Data Access Committee (DAC) provided?"
+          ],
+          "scoring": {
+            "2": "The dataset is ethically cleared for fully open access under a license that clearly defines permitted and prohibited ethical boundaries. Or, for controlled-access datasets, the qualitative terms of the DUA do not unjustifiably restrict use, explicit modality-specific ethical prohibitions are clearly defined where required, and active contact information for a Data Access Committee (DAC) is present. Modality-specific prohibitions are required where the data itself can be used to synthesize, impersonate, or re-identify an individual beyond what a general re-identification prohibition addresses; for example, raw voice or speech, personal genomes, face or full-head imaging, dense longitudinal geolocation.",
+            "1": "The terms of access are more restrictive than ethically warranted; use boundaries are vague; access is controlled, and the DAC contact is missing. Alternatively, the DUA is well-scoped with an active DAC contact but lacks modality-specific ethical prohibitions where the modality warrants them.",
+            "0": "Access is controlled without any defined ethical framework or oversight mechanisms, or the dataset is openly released with no defined ethical terms."
+          },
+          "evidence": [
+            {
+              "label": "License",
+              "kind": "text",
+              "value": "https://creativecommons.org/publicdomain/zero/1.0/"
+            },
+            {
+              "label": "Conditions of access / DUA",
+              "kind": "text",
+              "value": "Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection."
+            },
+            {
+              "label": "Permitted uses stated",
+              "kind": "bool",
+              "value": true,
+              "detail": "AI-ready datasets to support research in functional genomics, AI/machine learning model training, cellular process analysis, cell architectural changes, and interactions in presence of specific disease processes, treatment conditions, or genetic perturbations. A major goal is to enable …[truncated, 438 chars total]"
+            },
+            {
+              "label": "Prohibited uses stated",
+              "kind": "bool",
+              "value": true,
+              "detail": "These laboratory data are not to be used in clinical decision-making or in any context involving patient care without appropriate regulatory oversight and approval."
+            },
+            {
+              "label": "High-risk modality signals in the metadata (voice, genomes, face imaging, geolocation, …)",
+              "kind": "bool",
+              "value": false,
+              "detail": "where such a modality is present, a 2 requires explicit modality-specific ethical prohibitions (e.g., no biometric synthesis, identity cloning, discriminatory use)"
+            },
+            {
+              "label": "Access-committee / dataset contact",
+              "kind": "text",
+              "value": "tideker@health.ucsd.edu",
+              "detail": "required (and active) where access is controlled"
+            }
+          ],
+          "estimate": null,
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        },
+        {
+          "id": "4.d",
+          "name": "Secure",
+          "gating": false,
+          "practice": "Specify security requirements for storing and accessing this data, e.g., \"public\", \"controlled access only\", etc.",
+          "questions": [
+            "Are security requirements for storing and accessing the dataset specified, following standards such as HL7's Confidentiality security labels (http://terminology.hl7.org/ValueSet/v3-Confidentiality)?"
+          ],
+          "scoring": {
+            "2": "Security level metadata is provided, indicating whether or not any level of protection is required to safeguard sensitive information contained in the dataset. These security requirements are specified using a standard, such as the HL7 security labels.",
+            "1": "Security level is specified in prose, without reference to a standard vocabulary.",
+            "0": "No security level metadata is provided, or the declared security level is not enforced, meaning controlled-access data is retrievable without authorization or authorized users are blocked."
+          },
+          "evidence": [
+            {
+              "label": "Confidentiality level",
+              "kind": "text",
+              "value": "Unrestricted"
+            },
+            {
+              "label": "Value is an HL7 v3-Confidentiality code",
+              "kind": "bool",
+              "value": true,
+              "detail": "matches code 'U' in http://terminology.hl7.org/ValueSet/v3-Confidentiality",
+              "sub": true
+            },
+            {
+              "label": "De-identification statement",
+              "kind": "text",
+              "value": null
+            },
+            {
+              "label": "Personal/sensitive information statement",
+              "kind": "text",
+              "value": null
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "confidentiality level is an HL7 v3-Confidentiality code ('U')",
+              "whether the declared level is actually ENFORCED (the 0-rule) is not verified — score 0 if controlled data is retrievable without authorization or authorized users are blocked"
+            ]
+          },
+          "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
+          "gate_min": 1
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Sustainability",
+      "gating": false,
+      "criteria": [
+        {
+          "id": "5.a",
+          "name": "Persistent",
+          "gating": false,
+          "practice": "Ensure unprocessed data is preserved in an archive that complies with privacy laws and retention guidelines, enabling future reprocessing and publishing of revised data.",
+          "questions": [
+            "Is all unprocessed/raw data preserved in an archive that supports retention and future reprocessing?"
+          ],
+          "scoring": {
+            "2": "Raw data is preserved in a sustainable repository, with a persistent identifier and a retention commitment.",
+            "1": "Raw data is preserved but only in non-sustainable storage (no PID, or mutable hosting with no retention commitment).",
+            "0": "Raw data is not preserved (only processed/derived data are available)."
+          },
+          "evidence": [
+            {
+              "label": "Identifier",
+              "kind": "text",
+              "value": null
+            },
+            {
+              "label": "Identifier is a PID",
+              "kind": "bool",
+              "value": true,
+              "detail": "scheme: ARK",
+              "sub": true
+            },
+            {
+              "label": "Recognized archives detected (publisher + content hosts)",
+              "kind": "list",
+              "value": [
+                "MassIVE (proteomics)"
+              ],
+              "detail": "a 2 requires a sustainable repository with a PID and a retention commitment"
+            },
+            {
+              "label": "Unmanaged storage detected (excluded from 'sustainable' by the rubric glossary)",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            },
+            {
+              "label": "Datasets with a contentUrl (data parked somewhere)",
+              "kind": "percent",
+              "value": 99.6,
+              "detail": "555 of these are remote archive links; the rest live inside the crate deposit",
+              "n": 555,
+              "total": 557
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "PID present (scheme: ARK)",
+              "recognized archive(s): MassIVE (proteomics)",
+              "an explicit retention commitment is assumed for recognized repositories, not verified",
+              "note the criterion covers RAW/unprocessed data — confirm the raw data itself is what's archived"
+            ]
+          }
+        },
+        {
+          "id": "5.b",
+          "name": "Domain-appropriate",
+          "gating": false,
+          "practice": "Ensure single-domain raw or processed data are deposited in a FAIR, domain-appropriate specialist repository if available.",
+          "questions": [
+            "For single-domain data, is it deposited in the repository the domain community treats as appropriate, where one is available for this data?",
+            "For multi-domain data, is it deposited in a widely recognized generalist repository (e.g., NIH GREI participants)?"
+          ],
+          "scoring": {
+            "2": "A specialist domain repository was used where one exists and accepts this data type, or no specialist repository exists, and a recognized generalist repository was used.",
+            "1": "Data is deposited in a generalist repository even though a specialist, domain-appropriate repository that accepts this type of data exists and is accepted by the community.",
+            "0": "Data was not deposited in any domain-appropriate repository."
+          },
+          "evidence": [
+            {
+              "label": "Publisher repository",
+              "kind": "text",
+              "value": "MassIVE"
+            },
+            {
+              "label": "Specialist (domain) hosts",
+              "kind": "list",
+              "value": [
+                "ftp://massive-ftp.ucsd.edu — MassIVE (proteomics): 555 files"
+              ]
+            },
+            {
+              "label": "Generalist repository hosts",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            },
+            {
+              "label": "Unrecognized hosts",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            },
+            {
+              "label": "Dataset files on recognized repository hosts",
+              "kind": "percent",
+              "value": 100.0,
+              "n": 555,
+              "total": 555,
+              "sub": true
+            },
+            {
+              "label": "Domain hint — collection types",
+              "kind": "list",
+              "value": [
+                "Perturb-seq; IF imaging; SEC-MS"
+              ]
+            },
+            {
+              "label": "Domain hint — keywords",
+              "kind": "list",
+              "value": [
+                "proteomics",
+                "mass spectrometry",
+                "MassIVE",
+                "Endotagging",
+                "AP-MS",
+                "Triple Negative Breast Cancer",
+                "MDA-MB-468",
+                "Paclitaxel",
+                "CM4AI",
+                "Bridge2AI"
+              ],
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "data on specialist (domain) hosts: ftp://massive-ftp.ucsd.edu — MassIVE (proteomics)"
+            ]
+          },
+          "notes": "A domain-appropriate repository is a sustainable repository recognized by the relevant research community as appropriate for a specific data type."
+        },
+        {
+          "id": "5.c",
+          "name": "Well-governed",
+          "gating": false,
+          "practice": "Implement a data governance model before data capture, including a repository that facilitates data stewardship in the future and governance that accounts for maintenance, terms, policy changes, and fairness.",
+          "questions": [
+            "Is a formal Data Management Plan (DMP) or long-term governance explicitly linked (i.e., via rai:dataReleaseMaintenancePlan)?",
+            "Does the linked governance plan actively account for future repository stewardship, data maintenance, and policy changes?"
+          ],
+          "scoring": {
+            "2": "A comprehensive DMP/governance plan is linked and explicitly details long-term repository stewardship, maintenance, and policy handling.",
+            "1": "A DMP/governance plan is linked, but it lacks detail regarding future maintenance, policy changes, or long-term stewardship.",
+            "0": "No formal DMP or governance model is specified."
+          },
+          "evidence": [
+            {
+              "label": "Governance / maintenance plan (rai:dataReleaseMaintenancePlan)",
+              "kind": "text",
+              "value": "Dataset will be regularly updated and augmented on a quarterly basis through the end of the project (November, 2026). Long term preservation in the https://dataverse.lib.virginia.edu/, supported by committed institutional funds."
+            },
+            {
+              "label": "DMP link extracted from the plan",
+              "kind": "link",
+              "value": "https://dataverse.lib.virginia.edu/",
+              "text": "https://dataverse.lib.virginia.edu/",
+              "sub": true
+            },
+            {
+              "label": "DMP link resolves",
+              "kind": "bool",
+              "value": true,
+              "sub": true
+            },
+            {
+              "label": "Governance plan present",
+              "kind": "bool",
+              "value": true,
+              "sub": true
+            },
+            {
+              "label": "Stewardship / maintenance / policy language in the plan (the 1-vs-2 question)",
+              "kind": "bool",
+              "value": true,
+              "detail": "long term, preservation",
+              "sub": true
+            },
+            {
+              "label": "Data governance committee",
+              "kind": "text",
+              "value": "Jilian Parker"
+            },
+            {
+              "label": "Responsible party",
+              "kind": "text",
+              "value": "Jilian Parker; Trey Ideker; tideker@health.ucsd.edu"
+            },
+            {
+              "label": "Context — terms of access (conditionsOfAccess; no longer scored under 5.c)",
+              "kind": "text",
+              "value": "Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection.",
+              "sub": true
+            }
+          ],
+          "estimate": null
+        },
+        {
+          "id": "5.d",
+          "name": "Associated",
+          "gating": false,
+          "practice": "Document project-level connections between data components and elements in a machine-readable manner.",
+          "questions": [
+            "Will all data users be able to link to all data required for analysis, as an associated set that persists?",
+            "Are all declared components retrievable?",
+            "Are the associations durable (archived with the data)?",
+            "Is this information provided as machine-readable or prose?"
+          ],
+          "scoring": {
+            "2": "All necessary components are accessible and associated in persistent machine-readable form (single-modality: sole component accessible and self-contained; multimodal: components linked machine-readably in an archived record, e.g. RO-Crate, Frictionless Data).",
+            "1": "All components are accessible, and associations are durable, but they are only documented in human-readable prose (persists with the deposit, not machine-actionable).",
+            "0": "Necessary components are not all accessible, or associations are only in a non-durable location (project page/README not archived with the data), or associations are absent."
+          },
+          "evidence": [
+            {
+              "label": "Entities carrying at least one machine-readable provenance link",
+              "kind": "percent",
+              "value": 92.9,
+              "n": 793,
+              "total": 854
+            },
+            {
+              "label": "Sub-crates linked from the parent and present",
+              "kind": "count",
+              "value": 0,
+              "of": 0
+            },
+            {
+              "label": "hasPart references on the root",
+              "kind": "count",
+              "value": 562,
+              "sub": true
+            },
+            {
+              "label": "Evidence graphs (machine-derived association views)",
+              "kind": "links",
+              "value": []
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "components associated machine-readably in the archived RO-Crate (hasPart + provenance links)",
+              "accessibility of every component not verified — downgrade if pieces are missing"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Computability",
+      "gating": false,
+      "criteria": [
+        {
+          "id": "6.a",
+          "name": "Standardized",
+          "gating": false,
+          "practice": "Datasets adhere to established, documented standards, including metadata standards, and their adherence can be validated deterministically.",
+          "questions": [
+            "Can the adherence to standards, as described in 2.c, be validated deterministically?",
+            "Does a programmatic validator (e.g., script, CLI tool, or automated pipeline) exist to deterministically verify this adherence without human intervention?"
+          ],
+          "scoring": {
+            "2": "Given a score of 2 in criterion 2.c: deterministic programmatic validation tools (e.g., OMOP DQD, pyshacl, JSON Schema validators, etc.) exist for the declared standard, and the dataset architecture allows these tools to execute successfully.",
+            "1": "Given a score of 1 in criterion 2.c: a formal schema is present, enabling structural validation. However, because no vocabulary bindings are populated, semantic conformance cannot be deterministically validated.",
+            "0": "No declared or documented standard is used. The data structures are arbitrary, proprietary, or undocumented, making programmatic validation impossible."
+          },
+          "evidence": [
+            {
+              "label": "conformsTo declarations (metadata descriptor + root)",
+              "kind": "list",
+              "value": [
+                "https://w3id.org/ro/crate/1.2"
+              ]
+            },
+            {
+              "label": "Recognized standards in @context / conformsTo",
+              "kind": "list",
+              "value": [
+                "RO-Crate",
+                "schema.org"
+              ],
+              "sub": true
+            },
+            {
+              "label": "Deterministic validator known for the declared standards",
+              "kind": "bool",
+              "value": true,
+              "detail": "JSON Schema — any JSON Schema validator (e.g. python-jsonschema); RO-Crate profile — rocrate-validator / ro-crate-py",
+              "sub": true
+            },
+            {
+              "label": "Machine-readable schema entities",
+              "kind": "count",
+              "value": 2
+            },
+            {
+              "label": "Populated standard vocabulary bindings (2.c evidence — without them 6.a caps at 1)",
+              "kind": "bool",
+              "value": true,
+              "detail": "Cellosaurus (117), UniProt (57), OBO Foundry PURL (2)",
+              "sub": true
+            },
+            {
+              "label": "File formats present",
+              "kind": "list",
+              "value": [
+                "raw: 549",
+                "tsv: 2",
+                "application/json: 2",
+                "pdf: 1",
+                "txt: 1",
+                "fasta: 1",
+                "xml: 1"
+              ]
+            }
+          ],
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "declared standards: RO-Crate, schema.org",
+              "deterministic validator known: JSON Schema — any JSON Schema validator (e.g. python-jsonschema); RO-Crate profile — rocrate-validator / ro-crate-py",
+              "populated vocabulary bindings present (final score is capped at 2.c's score — rule 6.a ≤ 2.c)"
+            ]
+          },
+          "notes": "Scoring dependency rule — 6.a ≤ 2.c. The score for 6.a (Standardized validation) may never exceed the score for 2.c (Standards definition). Because 6.a evaluates the deterministic validation of the standards defined in 2.c, validation depth is limited by the completeness of the underlying schema and semantic bindings. A dataset cannot be fully validated (6.a = 2) if the standard itself is incomplete or missing (2.c < 2).",
+          "depends_on": "2.c"
+        },
+        {
+          "id": "6.b",
+          "name": "Computationally accessible",
+          "gating": false,
+          "practice": "Provide a mechanism to access data either through established exchange protocols or a well-documented API.",
+          "questions": [
+            "Is there a programmatic mechanism to access the data at scale (e.g., cloud object storage, standard API)?",
+            "Does the access mechanism utilize standard interoperability protocols (e.g., GA4GH DRS, HL7 FHIR APIs, other REST API endpoints, etc.)?",
+            "Are the endpoints, payloads, and authentication methods formally documented (e.g., via an OpenAPI/Swagger specification)?"
+          ],
+          "scoring": {
+            "2": "Programmatic access is provided via formally documented APIs or standardized interoperability exchange protocols (e.g., cloud-native S3/GCS Buckets, GA4GH DRS URIs, HL7 FHIR Bulk Data Access, etc.). For access-controlled data, the documentation clearly details a straightforward, executable process for obtaining access.",
+            "1": "Programmatic access exists, but it introduces friction for automated pipelines. The access mechanism may rely on poorly documented or non-machine-readable API documentation (e.g., a plain-text README), require custom web scraping, or use non-standard authentication that requires human-in-the-loop intervention.",
+            "0": "Programmatic access is absent. The data is either entirely inaccessible, restricted to manual downloads (e.g., clicking a link or submitting a web form), or requires direct human intervention to complete the transfer."
+          },
+          "evidence": [
+            {
+              "label": "Datasets with a distribution link (contentUrl)",
+              "kind": "percent",
+              "value": 99.6,
+              "n": 555,
+              "total": 557
+            },
+            {
+              "label": "Datasets with a REMOTE distribution link (http/ftp/s3-style)",
+              "kind": "percent",
+              "value": 99.6,
+              "detail": "the rest are file:// paths inside the crate or embargoed placeholders",
+              "n": 555,
+              "total": 557,
+              "sub": true
+            },
+            {
+              "label": "Protocols used by distribution links",
+              "kind": "list",
+              "value": [
+                "ftp: 555 files"
+              ],
+              "detail": "file = paths inside the crate; none = placeholder values such as 'Embargoed'",
+              "sub": true
+            },
+            {
+              "label": "Distribution hosts",
+              "kind": "list",
+              "value": [
+                "ftp://massive-ftp.ucsd.edu: 555 files"
+              ],
+              "sub": true
+            },
+            {
+              "label": "Access instructions (conditionsOfAccess)",
+              "kind": "text",
+              "value": "Attribution is required to the copyright holders and the authors. Any publications referencing this data or derived data products should cite the Related Publications below, as well as directly citing this data collection."
+            }
+          ],
+          "estimate": null
+        },
+        {
+          "id": "6.c",
+          "name": "Portable",
+          "gating": false,
+          "practice": "Maximize portability across computational resources where possible. If data use requires specific resources, provide machine-readable documentation defining these resources.",
+          "questions": [
+            "Can the data be processed or utilized without being locked into a specific, proprietary, or localized compute environment?",
+            "Are software dependencies (libraries, OS versions) and hardware requirements (GPUs, memory) explicitly documented?",
+            "Is this documentation provided in a machine-executable format (e.g., containers, workflow languages) that automates environment setup?"
+          ],
+          "scoring": {
+            "2": "The data requires no specialized compute environment, or all required resources and software dependencies are defined using standard, machine-executable deployment formats. These formats include containerization (e.g., Dockerfiles, Singularity images), environment managers (e.g., Conda environment.yml), or standard workflow languages (e.g., CWL, WDL, Nextflow), which allow the execution environment to be programmatically spun up across various infrastructures (e.g., cloud, HPC, local).",
+            "1": "Hardware constraints and software dependencies are documented in plain text (e.g., a README.md listing required Python versions or RAM limits), but lack machine-executable formats. Consequently, a user must manually provision the hardware and install dependencies to interact with the data.",
+            "0": "Compute requirements and software dependencies are undocumented. Alternatively, the data is tightly coupled to a proprietary system, an unshareable internal cluster, or hardcoded local file paths, making it virtually impossible for external users to port to their own environments."
+          },
+          "evidence": [
+            {
+              "label": "Files in open/common formats",
+              "kind": "count",
+              "value": 8,
+              "detail": "tsv: 2, application/json: 2, pdf: 1, txt: 1, fasta: 1, xml: 1"
+            },
+            {
+              "label": "Files in proprietary vendor formats",
+              "kind": "count",
+              "value": 549,
+              "detail": "raw — Thermo .raw (mass spec, vendor): 549"
+            },
+            {
+              "label": "Computations with a container declared (usedContainer)",
+              "kind": "percent",
+              "value": null,
+              "n": 0,
+              "total": 0
+            },
+            {
+              "label": "Example computation (environment description)",
+              "kind": "entity",
+              "value": null,
+              "sub": true
+            },
+            {
+              "label": "Software descriptions",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            }
+          ],
+          "estimate": null
+        },
+        {
+          "id": "6.d",
+          "name": "Contextualized",
+          "gating": false,
+          "practice": "Include any considerations regarding splits of the data, including any information withheld at any point of data collection and processing. Provide examples of data components to aid understanding of their general structure and content.",
+          "questions": [
+            "Are machine-learning data splits (train/test/validation) explicitly defined, or is the rationale for a contiguous dataset documented?",
+            "Is any withheld information (such as de-identified/redacted fields, censored variables, or blinded evaluation holdouts) clearly described?",
+            "Are representative examples or synthetic datasets provided that strictly mirror the structure of the full dataset?"
+          ],
+          "scoring": {
+            "2": "The dataset composition is fully transparent. Any predefined splits (train/test/validation) are explicitly defined, including stratification strategies or random seeds, or the dataset is explicitly documented as not requiring splits. Redacted, censored, or blinded data — including information withheld during collection or processing — is clearly detailed so users understand exactly what is missing. Critically, machine-readable example data (e.g., a synthetic set or representative subset) is provided, enabling users to write and test code against the exact schema without needing access to the full cohort.",
+            "1": "Context is provided but incomplete. For example, splits are mentioned, but the underlying methodology (e.g., stratification) is missing; or withheld data is noted vaguely (e.g., \"some patient data removed\") without specifying the exact fields affected. Alternatively, structural examples are provided in a non-actionable format (e.g., a PDF screenshot of a table rather than a machine-readable JSON/CSV snippet).",
+            "0": "No context is provided regarding how the data might be split for training and evaluation. No documentation details what information was withheld or redacted during processing, and no structural examples or synthetic datasets are provided to help users understand the data format."
+          },
+          "evidence": [
+            {
+              "label": "Datasets with split-like names (train/test/validation/holdout)",
+              "kind": "bool",
+              "value": false
+            },
+            {
+              "label": "Split-named datasets",
+              "kind": "list",
+              "value": [],
+              "sub": true
+            },
+            {
+              "label": "Sampling strategies (d4d:samplingStrategies)",
+              "kind": "text",
+              "value": null
+            },
+            {
+              "label": "Withheld / missing information",
+              "kind": "text",
+              "value": "Some datasets are under temporary pre-publication embargo. Protein-protein interaction (SEC-MS), protein localization (IF imaging), and CRISPRi perturbSeq data interrogate sets of proteins which incompletely overlap. Computed cell maps not included in this release."
+            },
+            {
+              "label": "Preprocessing protocol (rai:dataPreprocessingProtocol)",
+              "kind": "text",
+              "value": null
+            },
+            {
+              "label": "Example / synthetic dataset provided",
+              "kind": "entity",
+              "value": null
+            },
+            {
+              "label": "Structural example — schema entity (documents exact record structure)",
+              "kind": "entity",
+              "value": {
+                "@id": "ark:59853/schema-summary-tsv-schema-20260522-092748",
+                "@context": {
+                  "@vocab": "https://schema.org/",
+                  "EVI": "https://w3id.org/EVI#"
+                },
+                "@type": "EVI:Schema",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "name": "summary.tsv schema",
+                "description": "Inferred schema for summary.tsv, sampled from MassIVE MSV000101915 via FTPS on 2026-05-22.",
+                "type": "object",
+                "separator": "\t",
+                "header": true,
+                "required": [
+                  "Metadata_file",
+                  "Uploaded_file",
+                  "File_descriptor",
+                  "Conditions",
+                  "Conditions_url_params",
+                  "…(+4 more)"
+                ],
+                "properties": {
+                  "Metadata_file": "{…}",
+                  "Uploaded_file": "{…}",
+                  "File_descriptor": "{…}",
+                  "Conditions": "{…}",
+                  "Conditions_url_params": "{…}",
+                  "Bio_replicates": "{…}",
+                  "Bio_replicates_url_params": "{…}",
+                  "Tech_replicates": "{…}",
+                  "Tech_replicates_url_params": "{…}"
+                },
+                "additionalProperties": true,
+                "conformsTo": [
+                  {
+                    "@id": "https://json-schema.org/draft/2020-12/schema"
+                  }
+                ]
+              },
+              "sub": true
+            }
+          ],
+          "estimate": {
+            "score": "1",
+            "basis": [
+              "some context present but incomplete (example data or withheld-information description missing)"
+            ]
+          },
+          "notes": "\"Splits\" is not applicable (N/A) where the dataset has no defined splits; the withholding and its example components still apply. Score on the applicable elements."
+        }
+      ]
+    }
+  ]
+}

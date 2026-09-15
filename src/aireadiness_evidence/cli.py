@@ -1,8 +1,8 @@
-"""fairscape-evidence: build the AI-readiness presentation for an RO-Crate.
+"""fairscape-evidence: collect AI-readiness evidence from an RO-Crate.
 
     fairscape-evidence /path/to/crate -o out/
 
-Writes ai-ready-presentation.json (evidence for the LLM grader) and
+Writes ai-ready-evidence.json (evidence for the LLM grader) and
 ai-ready-review.html (the human review page). Links to datasheets and
 evidence graphs are resolved relative to the output directory.
 """
@@ -27,7 +27,10 @@ def main(argv=None):
     parser.add_argument("--no-network", action="store_true",
                         help="skip URL resolution / registry lookups")
     parser.add_argument("--json-only", action="store_true",
-                        help="write the presentation JSON but not the HTML")
+                        help="write the evidence JSON but not the HTML")
+    parser.add_argument("--zip", metavar="ZIP",
+                        help="also write a shareable zip of the review page plus every "
+                             "datasheet, preview and graph it links to")
     parser.add_argument("-q", "--quiet", action="store_true")
     args = parser.parse_args(argv)
 
@@ -43,7 +46,7 @@ def main(argv=None):
     presentation = build_presentation(
         crate_dir, network=not args.no_network, progress=progress)
 
-    json_path = out_dir / "ai-ready-presentation.json"
+    json_path = out_dir / "ai-ready-evidence.json"
     json_path.write_text(json.dumps(presentation, indent=2, ensure_ascii=False))
     print(json_path)
 
@@ -52,6 +55,10 @@ def main(argv=None):
         html_path = out_dir / "ai-ready-review.html"
         html_path.write_text(render_review(presentation, link_base=link_base))
         print(html_path)
+        if args.zip:
+            from .bundle import bundle_review
+            bundle_review(html_path, args.zip, crate_dir=crate_dir, progress=progress)
+            print(Path(args.zip).resolve())
 
 
 if __name__ == "__main__":

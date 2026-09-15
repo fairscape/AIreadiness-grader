@@ -1,0 +1,73 @@
+{
+  "@id": "ark:59852/schema-summary-tsv-schema-20260522-092748",
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "EVI": "https://w3id.org/EVI#"
+  },
+  "@type": "EVI:Schema",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "summary.tsv schema",
+  "description": "Inferred schema for summary.tsv, sampled from MassIVE MSV000101915 via FTPS on 2026-05-22.",
+  "type": "object",
+  "separator": "\t",
+  "header": true,
+  "required": [
+    "Metadata_file",
+    "Uploaded_file",
+    "File_descriptor",
+    "Conditions",
+    "Conditions_url_params",
+    "Bio_replicates",
+    "Bio_replicates_url_params",
+    "Tech_replicates",
+    "Tech_replicates_url_params"
+  ],
+  "properties": {
+    "Metadata_file": {
+      "type": "string",
+      "description": "Column Metadata_file",
+      "index": 0
+    },
+    "Uploaded_file": {
+      "type": "string",
+      "description": "Column Uploaded_file",
+      "index": 1
+    },
+    "File_descriptor": {
+      "type": "string",
+      "description": "Column File_descriptor",
+      "index": 2
+    },
+    "Conditions": {
+      "type": "integer",
+      "description": "Column Conditions",
+      "index": 3
+    },
+    "Conditions_url_params": {
+      "type": "string",
+      "description": "Column Conditions_url_params",
+      "index": 4
+    },
+    "Bio_replicates": {
+      "type": "integer",
+      "description": "Column Bio_replicates",
+      "index": 5
+    },
+    "Bio_replicates_url_params": {
+      "type": "string",
+      "description": "Column Bio_replicates_url_params",
+      "index": 6
+    },
+    "Tech_replicates": {
+      "type": "integer",
+      "description": "Column Tech_replicates",
+      "index": 7
+    },
+    "Tech_replicates_url_params": {
+      "type": "string",
+      "description": "Column Tech_replicates_url_params",
+      "index": 8
+    }
+  },
+  "additionalProperties": true
+}

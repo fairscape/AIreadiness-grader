@@ -277,7 +277,7 @@ def main(argv: list[str] | None = None) -> int:
         description="Render an agentic AI-readiness review from a scored grading dir.",
     )
     ap.add_argument("grading_dir", type=Path,
-                    help="dir holding ai-ready-presentation.json and <id>-<slug>/score.json")
+                    help="dir holding ai-ready-evidence.json and <id>-<slug>/score.json")
     ap.add_argument("-o", "--out-dir", type=Path, required=True)
     ap.add_argument("--link-base", default="",
                     help="prefix for crate-relative hrefs (datasheets, evidence graphs)")
@@ -285,8 +285,10 @@ def main(argv: list[str] | None = None) -> int:
                     help="how the scores were produced, shown in the header")
     args = ap.parse_args(argv)
 
-    presentation = json.loads(
-        (args.grading_dir / "ai-ready-presentation.json").read_text())
+    evidence_path = args.grading_dir / "ai-ready-evidence.json"
+    if not evidence_path.exists():  # dumps written before the rename
+        evidence_path = args.grading_dir / "ai-ready-presentation.json"
+    presentation = json.loads(evidence_path.read_text())
     scores = load_scores(args.grading_dir)
     report = build_report(presentation, scores, grader_label=args.label)
 

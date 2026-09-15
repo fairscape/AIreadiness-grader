@@ -45,7 +45,7 @@ Bash python -m aireadiness_grader.rubric_eval extract-evidence "<crate>" "<crate
 
 This writes:
 - `<crate_dir>/grading/summary.json` — crate header, inventory, artifact links, list of rubric ids.
-- `<crate_dir>/grading/ai-ready-presentation.json` — the full presentation the folders were split from.
+- `<crate_dir>/grading/ai-ready-evidence.json` — the full presentation the folders were split from.
 - `<crate_dir>/grading/<id>-<slug>/rubric.json` — the criterion's practice / questions / 0-1-2 scoring rules (from `rubric_defs.yaml`) plus the shared `output_schema`.
 - `<crate_dir>/grading/<id>-<slug>/evidence.json` — the criterion's typed evidence items.
 

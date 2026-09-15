@@ -12,5 +12,7 @@ rubrics/ai-ready/UpdatesNeeded.md
 __pycache__/
 *.py[cod]
 
-# Example crate outputs (kept local only)
-examples/
+
+# Example crate outputs (kept local only), except the checked-in worked example
+examples/*
+!examples/apms-paclitaxel/

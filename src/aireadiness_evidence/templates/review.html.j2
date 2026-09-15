@@ -413,7 +413,7 @@
       {% endif %}
 
       <div class="grade" data-criterion="{{ c.id }}"{% if c.estimate %} data-estimate="{{ c.estimate.score }}"{% endif %}{% if c.gate_min %} data-gate-min="{{ c.gate_min }}"{% endif %}{% if c.depends_on %} data-depends-on="{{ c.depends_on }}"{% endif %}>
-        <strong>Score:</strong>
+        <strong>Your score:</strong>
         {% for opt in ["2", "1", "0", "N/A"] %}
           <label><input type="radio" name="score-{{ c.id }}" value="{{ opt }}"> {{ opt }}</label>
         {% endfor %}
@@ -485,11 +485,17 @@
   </div>
 
   <div class="exportbar">
+    <button id="save-html" type="button"
+            title="Download this page with every score, note and section comment written into it — send that file to share or continue the review elsewhere">Save review as HTML</button>
     <button id="export">Copy scores as JSON</button>
     <button id="reset" class="next-btn" type="button">Reset all scores</button>
     <span class="status" id="export-status"></span>
   </div>
 </div>
+
+{# scores embedded by "Save review as HTML"; empty in a freshly generated page.
+   restoreState() prefers whichever of this block and the browser copy is newer. #}
+<script type="application/json" id="review-state">{}</script>
 
 <script>
 var grades = document.querySelectorAll('.grade');
@@ -734,12 +740,22 @@ function updateSummary() {
                             overall: overall, dep_violations: depViolations };
 }
 
-// ---- local autosave ----------------------------------------------------
-// keyed by crate id so parallel reviews of different crates don't collide
-var STORE_KEY = 'ai-ready-review:' + {{ p.crate["@id"] | tojson }};
+// ---- autosave: browser storage + state embedded in the file -------------
+// A freshly generated page keys browser storage by crate id. A page written by
+// "Save review as HTML" carries a review id as well, so a copy someone sent
+// you never collides with your own review of the same crate.
+var stateEl = document.getElementById('review-state');
+var embedded = {};
+try { embedded = JSON.parse(stateEl.textContent || '{}') || {}; }
+catch (err) { embedded = {}; }
+var REVIEW_ID = embedded.review_id || null;
+var STORE_KEY = 'ai-ready-review:' + {{ p.crate["@id"] | tojson }} +
+  (REVIEW_ID ? ':' + REVIEW_ID : '');
 
-function saveState() {
-  var state = { scores: {}, section_notes: {} };
+function collectState() {
+  var state = { scores: {}, section_notes: {},
+                saved_at: new Date().toISOString() };
+  if (REVIEW_ID) state.review_id = REVIEW_ID;
   grades.forEach(function (g) {
     var checked = g.querySelector('input:checked');
     var notes = g.querySelector('input[type=text]').value;
@@ -751,15 +767,15 @@ function saveState() {
   secNotes.forEach(function (t) {
     if (t.value) state.section_notes[t.dataset.secnote] = t.value;
   });
-  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  return state;
+}
+
+function saveState() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(collectState())); }
   catch (err) { /* private mode / quota — grading still works, just unsaved */ }
 }
 
-function restoreState() {
-  var raw;
-  try { raw = localStorage.getItem(STORE_KEY); } catch (err) { return; }
-  if (!raw) return;
-  var state = JSON.parse(raw);
+function applyState(state) {
   var n = 0;
   grades.forEach(function (g) {
     var saved = (state.scores || {})[g.dataset.criterion];
@@ -774,11 +790,67 @@ function restoreState() {
     var v = (state.section_notes || {})[t.dataset.secnote];
     if (v) t.value = v;
   });
+  return n;
+}
+
+function restoreState() {
+  var local = null;
+  try {
+    var raw = localStorage.getItem(STORE_KEY);
+    if (raw) local = JSON.parse(raw);
+  } catch (err) { local = null; }
+  var hasEmbedded = embedded.scores && Object.keys(embedded.scores).length;
+  // newer wins; a browser copy with no timestamp predates embedded saves
+  var useLocal = local && (!hasEmbedded ||
+    (local.saved_at && embedded.saved_at && local.saved_at >= embedded.saved_at));
+  var state = useLocal ? local : (hasEmbedded ? embedded : null);
+  if (!state) return;
+  var n = applyState(state);
   if (n) {
-    document.getElementById('export-status').textContent =
-      'restored ' + n + ' saved scores from this browser';
+    document.getElementById('export-status').textContent = 'restored ' + n +
+      ' saved scores from ' + (useLocal ? 'this browser' : 'this file') +
+      (state.saved_at ? ' (saved ' + state.saved_at.replace('T', ' ')
+        .replace(/\.\d+Z$/, ' UTC') + ')' : '');
   }
 }
+
+function randomId() {
+  var s = '', chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  for (var i = 0; i < 10; i++) s += chars[Math.floor(Math.random() * 36)];
+  return s;
+}
+
+// Serialize the whole page with the current state written into #review-state
+// and hand it to the browser as a download. Everything the scripts derive
+// (summary bar, chips, radar) is recomputed on load, so the snapshot only has
+// to carry the scores and notes.
+function saveAsHtml() {
+  if (!REVIEW_ID) {
+    REVIEW_ID = randomId();
+    STORE_KEY += ':' + REVIEW_ID;
+  }
+  var state = collectState();
+  stateEl.textContent = JSON.stringify(state).replace(/</g, '\\u003c');
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
+  catch (err) { }
+  var html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  var name = 'ai-ready-review.html';
+  try {
+    var last = decodeURIComponent(location.pathname.split('/').pop());
+    if (/\.html?$/i.test(last)) name = last;
+  } catch (err) { }
+  var blob = new Blob([html], { type: 'text/html' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  var n = Object.keys(state.scores).length;
+  document.getElementById('export-status').textContent =
+    'saved ' + name + ' with ' + n + ' scored criteria — send that file to share the review';
+}
+
+document.getElementById('save-html').addEventListener('click', saveAsHtml);
 
 var saveTimer;
 document.addEventListener('input', function (e) {
@@ -819,7 +891,7 @@ document.getElementById('reset').addEventListener('click', function () {
     g.querySelector('input[type=text]').value = '';
   });
   secNotes.forEach(function (t) { t.value = ''; });
-  try { localStorage.removeItem(STORE_KEY); } catch (err) { }
+  saveState();  // an empty, newer state also outranks scores embedded in the file
   document.getElementById('export-status').textContent = 'cleared';
   updateSummary();
 });

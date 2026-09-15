@@ -9,46 +9,22 @@ fairscape-evidence /path/to/my-crate -o review/
 open review/ai-ready-review.html
 ```
 
-`ai-ready-review.html` is a self-contained page: every criterion, its scoring
-rules, and the evidence found in your crate. Score it by hand, or hand the
-evidence to a model.
+`ai-ready-review.html` is the review page: one self-contained HTML file that
+walks the rubric criterion by criterion. For each criterion it shows the
+rubric's practice statement and its 0 / 1 / 2 scoring rules, then the evidence
+the tool found in the crate for that criterion (identifiers, license, schemas,
+checksums, ethics fields, and so on), an automated estimate where the rules
+can be applied mechanically to that evidence, and a *Your score* radio with a
+notes box. Scores roll up per domain in a sticky bar and a radar chart; the page
+autosaves to the browser, saves as HTML with your scores in place, and exports
+as JSON. Nothing to install to open it.
 
-## Two halves
+The same evidence is also written as `ai-ready-evidence.json`, for scoring by
+a model rather than a person. Both files come from one pass over the crate.
 
-Grading splits in two, and the code keeps them apart.
-
-**Finding evidence** is deterministic Python. For each criterion it collects
-the facts that criterion asks about: identifiers, license, schemas, checksums,
-ethics fields.
-
-**Applying the rules** is judgment. A human or a model reads the 0/1/2
-definitions against the evidence and picks a score.
-
-The upshot: `evidence.json` records exactly what a scorer was looking at, so
-any score can be checked, and two reviewers who disagree can point at the same
-file.
-
-## Outputs
-
-`fairscape-evidence` writes both files from one pass over the crate.
-
-| File | For |
-| --- | --- |
-| `ai-ready-review.html` | A human. Rubric text, scoring rules, evidence. Score radios, per-domain rollups, radar chart, comment boxes, browser autosave, copy-as-JSON. |
-| `ai-ready-presentation.json` | A machine. The same evidence, typed. |
-
-```bash
-fairscape-evidence /path/to/crate -o out/       # both files
-fairscape-evidence /path/to/crate --no-network  # skip URL / registry lookups
-fairscape-evidence /path/to/crate --json-only   # evidence only
-```
-
-Datasheets (`ro-crate-datasheet.html`) and provenance graphs
-(`ro-crate-prov-graph.html`, `*-evidence-graph.html`) found on disk are linked
-from both outputs.
-
-Network lookups (URL resolution, re3data, DOI dereference) run by default and
-are time-bounded. A timeout is reported as inconclusive, not as a failure.
+No crate yet? See [Getting an RO-Crate](#getting-an-ro-crate). A worked
+example, crate and finished review, is in
+[`examples/apms-paclitaxel/`](examples/apms-paclitaxel/).
 
 ## Three ways to score
 
@@ -57,6 +33,21 @@ are time-bounded. A timeout is reported as inconclusive, not as a failure.
 Open `ai-ready-review.html` and work down it. Scores roll up per domain as you
 go; the page keeps your work in browser storage and exports it as JSON. One
 file, nothing to install, emailable to a reviewer.
+
+**Save review as HTML** downloads the page with every score, note and section
+comment written into it. Send that file and the recipient opens it with your
+scores in place; anything they add is kept apart from their own review of the
+same crate, and the newer of the file's scores and the browser's wins on
+reload. Saving again keeps the same file identity.
+
+The page links to the crate's datasheet, previews and provenance graphs by
+relative path, so on its own it only works next to the crate.
+`fairscape-review-bundle out/ai-ready-review.html -o out.zip` (or
+`fairscape-evidence ... --zip out.zip`) writes a zip with the page, its
+evidence JSON and every locally linked page — following the links those
+pages make to sub-crate previews and graphs — under `crate/`, with the links
+rewritten so they work wherever the zip is unpacked. Bundle a saved copy and
+the scores travel with it.
 
 Long-form notes for human reviewers are in `rubrics/ai-ready/human/`, one file
 per domain plus `HUMAN-GRADER-METADATA-SPEC.md`.
@@ -127,12 +118,85 @@ tools can read either.
 grading/
 ├── aggregated_score.json          totals, domain rollups, gate results
 ├── summary.json                   crate header, inventory, criterion list
-├── ai-ready-presentation.json     the full evidence
+├── ai-ready-evidence.json         the full evidence
 └── 0.a-findable/
     ├── rubric.json                practice, questions, 0/1/2 rules
     ├── evidence.json              what the crate says about this criterion
     └── score.json                 score, rationale, gaps
 ```
+
+## Two halves
+
+Whichever way you score, grading splits in two, and the code keeps them apart.
+
+**Finding evidence** is deterministic Python. For each criterion it collects
+the facts that criterion asks about: identifiers, license, schemas, checksums,
+ethics fields.
+
+**Applying the rules** is judgment. A human or a model reads the 0/1/2
+definitions against the evidence and picks a score.
+
+The upshot: `ai-ready-evidence.json` records exactly what a scorer was looking
+at, so any score can be checked, and two reviewers who disagree can point at
+the same file.
+
+## Outputs
+
+```bash
+fairscape-evidence /path/to/crate -o out/
+```
+
+| File | For |
+| --- | --- |
+| `out/ai-ready-review.html` | A human. Rubric text, scoring rules, evidence. Score radios, per-domain rollups, radar chart, comment boxes, browser autosave, save-as-HTML, copy-as-JSON. |
+| `out/ai-ready-evidence.json` | A machine. The same evidence, typed. |
+
+Datasheets (`ro-crate-datasheet.html`) and provenance graphs
+(`ro-crate-prov-graph.html`, `*-evidence-graph.html`) found on disk are linked
+from both outputs.
+
+Network lookups (URL resolution, re3data, DOI dereference) run by default and
+are time-bounded. A timeout or a transient response (HTTP 429, 502, 503, 504)
+is reported as inconclusive, with the status, not as a failure.
+
+Options:
+
+| flag | |
+| --- | --- |
+| `-o DIR` | output directory (default `./ai-ready-review`) |
+| `--no-network` | skip URL resolution and registry lookups; offline, faster |
+| `--json-only` | write the evidence JSON and skip the review page |
+| `--zip FILE` | also write a shareable zip of the review page and every local page it links to |
+
+`fairscape-review-bundle out/ai-ready-review.html -o out.zip` zips an existing
+review the same way.
+
+## Getting an RO-Crate
+
+The grader reads a directory with a `ro-crate-metadata.json` in it.
+
+**Try the example.** `examples/apms-paclitaxel/` holds a CM4AI crate (EndoTag
+AP-MS profiling of MDA-MB-468 cells under paclitaxel, September 2026 release:
+`crate/ro-crate-metadata.json` plus its two data schemas) and the review the
+tool produced from it, `review/ai-ready-review.html` and
+`review/ai-ready-evidence.json`. Open the review page to see what a finished
+run looks like, or regenerate it:
+
+```bash
+fairscape-evidence examples/apms-paclitaxel/crate -o examples/apms-paclitaxel/review
+```
+
+**Build one with fairscape-cli.**
+[fairscape-cli](https://github.com/fairscape/fairscape-cli) creates and
+validates crates from the command line: `fairscape-cli rocrate init` starts a
+crate in the current directory (`create` takes a path), `add` copies a file in
+and registers it, `register` adds metadata for a dataset, software or
+computation, and `validate` checks the result against the RO-Crate 1.2 and
+`fairscape_models` schemas.
+
+**Or use the wizard.** The interview wizard, the Dataverse / PhysioNet /
+Figshare importers and the manifest builders live in the sibling
+`fairscape_skills` bundle; none of that is in this repo.
 
 ## How the rubric scores
 
@@ -259,11 +323,3 @@ rubrics/ai-ready/human/   long-form notes for human reviewers
 
 `EVIDENCE-PIPELINE.md` is the working log: what changed in each rubric
 migration, known gaps, old-vs-new comparisons.
-
-## Not here
-
-Building a crate in the first place. The interview wizard, the Dataverse /
-PhysioNet / Figshare importers, the manifest builders and the
-`build_rocrate.py` emitters live in the sibling `fairscape_skills` bundle. If
-you don't have a crate yet, start there or with
-[fairscape-cli](https://github.com/fairscape/fairscape-cli).

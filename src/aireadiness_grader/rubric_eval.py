@@ -6,7 +6,7 @@ extractors. The flow is split into two deterministic halves:
 
 * ``extract-evidence`` — build the presentation for a crate and split it into
   per-criterion folders ``<out_dir>/<id>-<slug>/{rubric.json,evidence.json}``.
-  Also writes the full ``ai-ready-presentation.json`` and a ``summary.json``.
+  Also writes the full ``ai-ready-evidence.json`` and a ``summary.json``.
   No LLM involved; deterministic apart from the optional network checks
   (``--no-network`` disables URL resolution / registry lookups).
 
@@ -131,7 +131,7 @@ def build_crate_presentation(crate_path, network: bool = True, verbose: bool = T
 def dump_presentation(presentation: dict, out_dir: Path) -> list[dict]:
     """Split a presentation into per-criterion grading folders.
 
-    Writes ``<out_dir>/ai-ready-presentation.json``, ``<out_dir>/summary.json``
+    Writes ``<out_dir>/ai-ready-evidence.json``, ``<out_dir>/summary.json``
     and, per criterion, ``<out_dir>/<id>-<slug>/rubric.json`` (the rubric text
     + output_schema) and ``evidence.json`` (the typed evidence items).
 
@@ -141,7 +141,7 @@ def dump_presentation(presentation: dict, out_dir: Path) -> list[dict]:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    (out_dir / "ai-ready-presentation.json").write_text(
+    (out_dir / "ai-ready-evidence.json").write_text(
         json.dumps(presentation, indent=2, ensure_ascii=False) + "\n"
     )
 
