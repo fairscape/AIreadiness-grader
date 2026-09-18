@@ -35,6 +35,12 @@ anthropic, openai, google-gla, google, groq. The ``api_key`` value is written to
 the matching env var (ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_API_KEY,
 GROQ_API_KEY) before the Agent is instantiated.
 
+pydantic-ai ships each provider's client SDK separately. anthropic, openai and
+google come with the base install; groq needs its extra::
+
+    pip install "aireadiness-grader[groq]"          # one provider
+    pip install "aireadiness-grader[all-providers]" # all of them
+
 The ``uvarc`` prefix routes to the UVA Research Computing GenAI
 OpenAI-compatible endpoint (bypasses pydantic-ai; uses urllib + RubricScore
 validation directly). Example::

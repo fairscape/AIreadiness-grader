@@ -11,6 +11,22 @@ pip install -e .
 
 Requires Python 3.10+. Pulls in `pydantic-ai`, `jinja2` and `pyyaml`.
 
+### Provider SDKs
+
+`fairscape-grade --model <provider>:<name>` goes through pydantic-ai, which
+keeps each provider's client SDK in a separate optional group. The base install
+covers **anthropic**, **openai** and **google**; other providers need the
+matching extra, or pydantic-ai raises `ImportError: ... you can use the
+<provider> optional group` when the Agent is built:
+
+```bash
+pip install -e ".[groq]"            # one provider
+pip install -e ".[all-providers]"   # anthropic + openai + google + groq
+```
+
+`--model uvarc:...` (UVA RC GenAI) needs no extra — it calls the
+OpenAI-compatible endpoint over stdlib `urllib`.
+
 ## Run
 
 ```bash
