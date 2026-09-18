@@ -77,6 +77,15 @@ PROVIDER_ENV_MAP = {
     "groq": "GROQ_API_KEY",
 }
 
+# pip extra that installs each provider's client SDK (see pyproject.toml).
+PROVIDER_EXTRA_MAP = {
+    "anthropic": "anthropic",
+    "openai": "openai",
+    "google-gla": "google",
+    "google": "google",
+    "groq": "groq",
+}
+
 UVARC_PROVIDER = "uvarc"
 UVARC_BASE_URL = "https://open-webui.rc.virginia.edu/api/chat/completions"
 
@@ -271,12 +280,21 @@ def _make_agent(model: str, api_key: str, system_prompt: str):
     prefix, _, model_name = model.partition(":")
     if prefix == UVARC_PROVIDER:
         return UVARCClient(model_name, api_key, system_prompt)
-    return Agent(
-        model,
-        output_type=RubricScore,
-        system_prompt=system_prompt,
-        model_settings={"temperature": 0},
-    )
+    try:
+        return Agent(
+            model,
+            output_type=RubricScore,
+            system_prompt=system_prompt,
+            model_settings={"temperature": 0},
+        )
+    except ImportError as exc:
+        # pydantic-ai keeps each provider's client SDK in an optional group;
+        # point at the extra that installs it rather than at pydantic-ai itself.
+        extra = PROVIDER_EXTRA_MAP.get(prefix, prefix)
+        raise ImportError(
+            f"provider {prefix!r} needs its client package: "
+            f"pip install \"aireadiness-grader[{extra}]\" ({exc})"
+        ) from exc
 
 
 def grade_crate(

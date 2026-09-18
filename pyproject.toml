@@ -8,9 +8,36 @@ version = "0.4.0"
 description = "Grade a FAIRSCAPE RO-Crate against the AI-Ready rubric, and improve it"
 requires-python = ">=3.10"
 dependencies = [
-    "pydantic-ai>=0.0.14",
+    # the full `pydantic-ai` meta-package, which bundles the anthropic, openai
+    # and google clients. groq (and anything else) is an extra — see below.
+    "pydantic-ai>=1.0",
     "pyyaml",
     "jinja2",
+]
+
+# pydantic-ai ships each provider's client SDK as a separate optional group, so
+# a model string for a provider you have not installed fails at Agent() time
+# with "you can use the `<provider>` optional group". These extras install the
+# matching group at the same pydantic-ai version, e.g.
+#
+#     pip install "aireadiness-grader[groq]"
+#     pip install "aireadiness-grader[all-providers]"
+#
+# anthropic/openai/google are already covered by the base install; they are
+# listed so the extra works the same way for every provider the grader accepts
+# (and if you swap the base dependency for pydantic-ai-slim). The `uvarc`
+# provider talks to the OpenAI-compatible endpoint over stdlib urllib and
+# needs nothing extra.
+[project.optional-dependencies]
+anthropic = ["pydantic-ai-slim[anthropic]"]
+openai = ["pydantic-ai-slim[openai]"]
+google = ["pydantic-ai-slim[google]"]
+groq = ["pydantic-ai-slim[groq]"]
+all-providers = [
+    "pydantic-ai-slim[anthropic]",
+    "pydantic-ai-slim[openai]",
+    "pydantic-ai-slim[google]",
+    "pydantic-ai-slim[groq]",
 ]
 
 [project.scripts]
