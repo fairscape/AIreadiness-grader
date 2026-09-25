@@ -110,7 +110,7 @@ def match_host(url_or_name, table):
         return None
     low = url_or_name.lower()
     for fragment, label in table.items():
-        if fragment in low:
+        if fragment.lower() in low:
             return fragment, label
     return None
 
@@ -157,11 +157,30 @@ STANDARD_NAMESPACES = {
     "bioschemas.org": "Bioschemas",
 }
 
+# Compact-IRI prefixes people write in @type values and property names,
+# mapped to a STANDARD_NAMESPACES key. Crates often use `prov:Entity` or
+# `EVI:Dataset` without declaring the prefix in @context; the intent is
+# unambiguous, so the term usage counts as using that standard.
+TERM_PREFIXES = {
+    "prov": "w3.org/ns/prov",
+    "evi": "w3id.org/EVI",
+    "schema": "schema.org",
+    "sc": "schema.org",
+    "dcat": "w3.org/ns/dcat",
+    "dc": "purl.org/dc/",
+    "dct": "purl.org/dc/",
+    "dcterms": "purl.org/dc/",
+    "cr": "mlcommons.org/croissant",
+    "rai": "mlcommons.org/croissant",
+    "bioschemas": "bioschemas.org",
+}
+
 # conformsTo / declared-standard values for which a deterministic programmatic
 # validator exists (rubric 6.a).
 KNOWN_VALIDATORS = {
     "w3id.org/ro/crate": "RO-Crate profile — rocrate-validator / ro-crate-py",
     "w3id.org/EVI": "EVI — fairscape-cli `rocrate validate` (pydantic models)",
+    "w3.org/ns/prov": "PROV-O — PROV-CONSTRAINTS validation (ProvToolbox `provconvert -validate`)",
     "json-schema.org": "JSON Schema — any JSON Schema validator (e.g. python-jsonschema)",
     "mlcommons.org/croissant": "Croissant — mlcroissant validator",
     "frictionlessdata.io": "Frictionless — frictionless-py validate",

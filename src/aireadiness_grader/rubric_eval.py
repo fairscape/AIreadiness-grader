@@ -110,22 +110,26 @@ def slugify(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
 
 
-def resolve_crate_dir(crate_path: Path) -> Path:
-    """Accept either the crate directory or its ro-crate-metadata.json."""
-    crate_path = Path(crate_path)
-    crate_dir = crate_path.parent if crate_path.is_file() else crate_path
-    if not (crate_dir / "ro-crate-metadata.json").exists():
-        raise FileNotFoundError(f"no ro-crate-metadata.json in {crate_dir}")
-    return crate_dir
+def resolve_crate_dir(crate_path) -> Path:
+    """Accept a crate directory, a metadata file (RO-Crate, Croissant or
+    schema.org JSON-LD), or a URL / kaggle: / hf: shortcut. Returns the
+    directory the review's crate-relative links resolve against."""
+    from aireadiness_evidence.source import is_remote, resolve_source
+    if is_remote(str(crate_path)):
+        return Path.cwd()
+    return resolve_source(crate_path).root_dir
 
 
-def build_crate_presentation(crate_path, network: bool = True, verbose: bool = True):
+def build_crate_presentation(crate_path, network: bool = True, verbose: bool = True,
+                             cache_dir=None):
     """Run the aireadiness_evidence pipeline. Returns (crate_dir, presentation)."""
-    crate_dir = resolve_crate_dir(crate_path)
+    from aireadiness_evidence.source import is_remote
     progress = (lambda msg: print(f"[rubric_eval] {msg}", file=sys.stderr)) if verbose \
         else (lambda msg: None)
-    presentation = build_presentation(crate_dir, network=network, progress=progress)
-    return crate_dir, presentation
+    source = str(crate_path) if is_remote(str(crate_path)) else Path(crate_path)
+    presentation = build_presentation(source, network=network, progress=progress,
+                                      cache_dir=cache_dir)
+    return Path(presentation["crate"]["path"]), presentation
 
 
 def dump_presentation(presentation: dict, out_dir: Path) -> list[dict]:
@@ -209,12 +213,14 @@ def dump_presentation(presentation: dict, out_dir: Path) -> list[dict]:
     return records
 
 
-def cmd_extract_evidence(crate_path: Path, out_dir: Path, network: bool = True) -> int:
-    if not Path(crate_path).exists():
+def cmd_extract_evidence(crate_path, out_dir: Path, network: bool = True) -> int:
+    from aireadiness_evidence.source import is_remote
+    if not is_remote(str(crate_path)) and not Path(crate_path).exists():
         raise SystemExit(f"crate not found: {crate_path}")
 
     try:
-        crate_dir, presentation = build_crate_presentation(crate_path, network=network)
+        crate_dir, presentation = build_crate_presentation(
+            crate_path, network=network, cache_dir=out_dir)
     except FileNotFoundError as e:
         raise SystemExit(str(e))
 
@@ -419,8 +425,9 @@ def main(argv: list[str] | None = None) -> int:
         "extract-evidence",
         help="Build the presentation and dump rubric.json + evidence.json per criterion.",
     )
-    ee.add_argument("crate_path", type=Path,
-                    help="crate directory or its ro-crate-metadata.json")
+    ee.add_argument("crate_path",
+                    help="crate directory, metadata file (RO-Crate / Croissant / "
+                         "JSON-LD), URL, or kaggle:owner/slug / hf:org/name")
     ee.add_argument("out_dir", type=Path)
     ee.add_argument("--no-network", action="store_true",
                     help="skip URL resolution / registry lookups")

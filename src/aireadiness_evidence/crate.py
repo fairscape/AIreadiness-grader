@@ -13,7 +13,8 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .known import ONTOLOGY_HOSTS
+from .known import ONTOLOGY_HOSTS, STANDARD_NAMESPACES, TERM_PREFIXES, match_host
+from .source import resolve_source
 
 # Fields that link an entity into the provenance graph (EVI + PROV spellings).
 PROV_LINK_FIELDS = [
@@ -49,7 +50,16 @@ _TYPE_TOKENS = {
     "Experiment": "Experiment", "Person": "Person", "Organization": "Organization",
     "BioChemEntity": "BioChemEntity", "Container": "Container",
     "CreativeWork": "CreativeWork", "DefinedTerm": "DefinedTerm",
+    # RO-Crate / schema.org / Croissant spellings of "a file of data"
+    "File": "Dataset", "DataDownload": "Dataset",
+    "FileObject": "Dataset", "FileSet": "Dataset",
+    # Croissant's data dictionary: a RecordSet of typed Fields is a schema
+    "RecordSet": "Schema", "Field": "Field",
+    "SoftwareSourceCode": "Software", "SoftwareApplication": "Software",
 }
+
+# Croissant Field.source links a RecordSet back to the file(s) it describes.
+CROISSANT_SOURCE_FIELDS = ["fileObject", "fileSet", "distribution"]
 
 
 def as_list(value):
@@ -67,6 +77,56 @@ def ids_of(value):
         elif isinstance(v, str):
             out.append(v)
     return out
+
+
+def flatten_document(doc):
+    """(root, graph) for any JSON-LD dialect.
+
+    RO-Crate documents already carry a flat ``@graph``; the root is found by
+    the caller through the metadata descriptor. Croissant and plain schema.org
+    JSON-LD are a single top-level node with nested objects (``distribution``,
+    ``recordSet``, ``creator``, ``license`` …). Those nested objects are
+    collected into a graph list in document order, without minting ``@id``s
+    or rewriting the parents, so the same one-pass aggregation applies.
+    """
+    graph = doc.get("@graph")
+    if isinstance(graph, list):
+        return None, graph
+    nodes = []
+
+    def walk(value):
+        if isinstance(value, dict):
+            if "@type" in value:
+                nodes.append(value)
+            for key, child in value.items():
+                if not key.startswith("@"):
+                    walk(child)
+        elif isinstance(value, list):
+            for child in value:
+                walk(child)
+
+    walk(doc)
+    return doc, nodes
+
+
+def normalize_root(root):
+    """Fill the property names the extractors read from their schema.org /
+    Croissant synonyms. Only missing values are filled; nothing is removed."""
+    if not root.get("author") and root.get("creator"):
+        root["author"] = root["creator"]
+    pub = root.get("publisher")
+    if isinstance(pub, dict):
+        root["publisher"] = " ".join(
+            str(pub[k]) for k in ("name", "url", "@id") if pub.get(k)) or pub
+    if not root.get("identifier"):
+        for key in ("@id", "sameAs", "url"):
+            for v in ids_of(root.get(key)):
+                if re.search(r"doi\.org/|ark:|hdl\.handle\.net|purl\.|w3id\.org|^urn:", v, re.I):
+                    root["identifier"] = v
+                    break
+            if root.get("identifier"):
+                break
+    return root
 
 
 def canonical_type(entity):
@@ -166,6 +226,7 @@ class CrateStats:
         self.hosts = Counter()                 # contentUrl "scheme://host" buckets
         self.url_schemes = Counter()           # contentUrl scheme -> dataset count
         self.vocab_hits = Counter()            # ontology-host -> occurrence count
+        self.term_namespaces = Counter()       # standard namespace -> terms using it
 
         self.samples = {}                      # category -> [trimmed entities]
 
@@ -183,11 +244,33 @@ _VOCAB_RE = re.compile("|".join(re.escape(h) for h in ONTOLOGY_HOSTS), re.I)
 _URL_RE = re.compile(r"^([a-z][a-z0-9+.-]*)://([^/]+)", re.I)
 
 
+def term_namespace(term):
+    """STANDARD_NAMESPACES key for a type or property name written as a full
+    IRI (`https://w3id.org/EVI#Dataset`) or a compact one (`prov:Entity`,
+    `EVI:Schema`), declared in @context or not. None for bare terms."""
+    if not isinstance(term, str) or ":" not in term:
+        return None
+    if "://" in term:
+        hit = match_host(term, STANDARD_NAMESPACES)
+        return hit[0] if hit else None
+    return TERM_PREFIXES.get(term.split(":", 1)[0].lower())
+
+
+def _count_term_namespaces(entity, counter):
+    for term in [*as_list(entity.get("@type")), *entity]:
+        ns = term_namespace(term)
+        if ns:
+            counter[ns] += 1
+
+
 class CrateBundle:
     """Everything the section extractors need, loaded once."""
 
     def __init__(self, root_dir):
         self.root_dir = Path(root_dir)
+        self.source = None       # what was loaded (path or URL), for the header
+        self.format = "ro-crate"  # ro-crate | croissant | jsonld
+        self.meta_path = None
         self.root = {}           # root dataset entity
         self.descriptor = {}     # ro-crate-metadata.json CreativeWork entity
         self.context = {}
@@ -202,25 +285,35 @@ class CrateBundle:
     # -- loading ------------------------------------------------------------
 
     @classmethod
-    def load(cls, root_dir, progress=None):
-        bundle = cls(root_dir)
+    def load(cls, source, progress=None, cache_dir=None):
+        """`source` is a crate directory, a metadata file, an http(s) URL, or
+        a ``kaggle:``/``hf:`` shortcut (see ``source.resolve_source``)."""
+        src = resolve_source(source, cache_dir=cache_dir)
+        bundle = cls(src.root_dir)
+        bundle.source = src.label
+        bundle.format = src.format
+        bundle.meta_path = src.meta_path
         say = progress or (lambda msg: None)
 
-        meta_path = bundle.root_dir / "ro-crate-metadata.json"
-        doc = json.loads(meta_path.read_text())
-        graph = doc.get("@graph", [])
+        meta_path = src.meta_path
+        doc = src.doc
+        top, graph = flatten_document(doc)
         bundle.context = doc.get("@context", {})
 
-        for e in graph:
-            types = [str(t) for t in as_list(e.get("@type"))]
-            if "CreativeWork" in types and e.get("@id", "").endswith("ro-crate-metadata.json"):
-                bundle.descriptor = e
-                break
-        root_id = ids_of(bundle.descriptor.get("about"))
-        bundle.root = next(
-            (e for e in graph if e.get("@id") in root_id),
-            next((e for e in graph if "ROCrate" in str(e.get("@type"))), {}),
-        )
+        if top is None:
+            for e in graph:
+                types = [str(t) for t in as_list(e.get("@type"))]
+                if "CreativeWork" in types and e.get("@id", "").endswith("ro-crate-metadata.json"):
+                    bundle.descriptor = e
+                    break
+            root_id = ids_of(bundle.descriptor.get("about"))
+            bundle.root = next(
+                (e for e in graph if e.get("@id") in root_id),
+                next((e for e in graph if "ROCrate" in str(e.get("@type"))), {}),
+            )
+        else:
+            bundle.root = top
+        normalize_root(bundle.root)
 
         for e in graph:
             ctype = canonical_type(e)
@@ -230,11 +323,11 @@ class CrateBundle:
                 bundle.defined_terms.append(e)
 
         bundle._discover_subcrates(graph)
-        say(f"root graph: {len(graph)} entities, "
+        say(f"{src.format} document: {len(graph)} entities, "
             f"{len(bundle.subcrates)} sub-crates found on disk "
             f"({bundle.subcrates_referenced} referenced)")
 
-        bundle._absorb_graph(graph, raw_text=meta_path.read_text())
+        bundle._absorb_graph(graph, raw_text=meta_path.read_text(encoding="utf-8"))
         for sub in bundle.subcrates:
             sub_path = bundle.root_dir / sub.metadata_rel
             raw = sub_path.read_text()
@@ -298,6 +391,17 @@ class CrateBundle:
             for m in _VOCAB_RE.finditer(raw_text):
                 stats.vocab_hits[m.group(0).lower()] += 1
 
+        # Croissant links data dictionaries to files from the RecordSet side
+        # (Field.source.fileObject), the reverse of EVI's dataset -> Schema.
+        schema_covered = set()
+        for e in graph:
+            if canonical_type(e) == "Schema":
+                for f in as_list(e.get("field")):
+                    src = f.get("source") if isinstance(f, dict) else None
+                    if isinstance(src, dict):
+                        for key in CROISSANT_SOURCE_FIELDS:
+                            schema_covered.update(ids_of(src.get(key)))
+
         for e in graph:
             eid = e.get("@id")
             ctype = canonical_type(e)
@@ -329,7 +433,9 @@ class CrateBundle:
             if eid:
                 self._seen_ids.add(eid)
 
-            if ctype in ("ROCrate", "CreativeWork"):
+            _count_term_namespaces(e, stats.term_namespaces)
+
+            if ctype in ("ROCrate", "CreativeWork") or e is self.root:
                 continue
             stats.type_counts[ctype] += 1
             stats.entity_total += 1
@@ -339,7 +445,7 @@ class CrateBundle:
                 stats.entity_with_prov_link += 1
 
             if ctype == "Dataset":
-                self._absorb_dataset(e, has_prov)
+                self._absorb_dataset(e, has_prov, schema_covered)
             elif ctype in ("Computation", "Experiment"):
                 self._absorb_activity(e, ctype)
             elif ctype == "Software":
@@ -352,12 +458,17 @@ class CrateBundle:
             elif ctype == "Schema":
                 stats.schema_total += 1
                 stats.add_sample("schema", e)
+                # a Croissant RecordSet typed cr:Split enumerates the splits
+                if any("Split" in str(t) for t in as_list(e.get("dataType"))):
+                    stats.dataset_split_count += 1
+                    if len(stats.dataset_split_names) < 8:
+                        stats.dataset_split_names.append(str(e.get("name", eid)))
             elif ctype == "Sample":
                 stats.add_sample("biosample", e)
             elif ctype == "Instrument":
                 stats.add_sample("instrument", e)
 
-    def _absorb_dataset(self, e, has_prov):
+    def _absorb_dataset(self, e, has_prov, schema_covered=()):
         stats = self.stats
         stats.dataset_total += 1
         if has_prov:
@@ -384,10 +495,10 @@ class CrateBundle:
         if has_any(e, HASH_FIELDS):
             stats.dataset_with_hash += 1
             stats.add_sample("hashed_entity", e)
-        if has_any(e, SCHEMA_REF_FIELDS):
+        if has_any(e, SCHEMA_REF_FIELDS) or (e.get("@id") in schema_covered):
             stats.dataset_with_schema_ref += 1
 
-        fmt = e.get("format")
+        fmt = e.get("format") or e.get("encodingFormat")
         if fmt:
             fmt_strs = [str(f) for f in as_list(fmt)]
             for f in fmt_strs:

@@ -1,6 +1,12 @@
-"""fairscape-evidence: collect AI-readiness evidence from an RO-Crate.
+"""fairscape-evidence: collect AI-readiness evidence from dataset metadata.
 
-    fairscape-evidence /path/to/crate -o out/
+    fairscape-evidence /path/to/crate -o out/            # RO-Crate directory
+    fairscape-evidence metadata.json -o out/             # Croissant / JSON-LD file
+    fairscape-evidence kaggle:owner/slug -o out/         # Kaggle Croissant export
+    fairscape-evidence hf:org/name -o out/               # Hugging Face Croissant
+    fairscape-evidence https://…/croissant.json -o out/  # any URL
+
+Remote documents are cached in the output directory.
 
 Writes ai-ready-evidence.json (evidence for the LLM grader) and
 ai-ready-review.html (the human review page). Links to datasheets and
@@ -15,13 +21,16 @@ from pathlib import Path
 
 from .pipeline import build_presentation
 from .render import render_review
+from .source import is_remote
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(
         prog="fairscape-evidence", description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("crate", help="directory containing ro-crate-metadata.json")
+    parser.add_argument("crate", help="RO-Crate directory, metadata file (RO-Crate, "
+                                      "Croissant or schema.org JSON-LD), URL, or "
+                                      "kaggle:owner/slug / hf:org/name")
     parser.add_argument("-o", "--out", default="ai-ready-review",
                         help="output directory (default: ./ai-ready-review)")
     parser.add_argument("--no-network", action="store_true",
@@ -34,17 +43,21 @@ def main(argv=None):
     parser.add_argument("-q", "--quiet", action="store_true")
     args = parser.parse_args(argv)
 
-    crate_dir = Path(args.crate).resolve()
-    if not (crate_dir / "ro-crate-metadata.json").exists():
-        parser.error(f"no ro-crate-metadata.json in {crate_dir}")
+    source = args.crate if is_remote(args.crate) else Path(args.crate).resolve()
+    if not is_remote(args.crate) and not source.exists():
+        parser.error(f"not found: {source}")
     out_dir = Path(args.out).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
 
     progress = (lambda msg: None) if args.quiet else \
         (lambda msg: print(msg, file=sys.stderr))
 
-    presentation = build_presentation(
-        crate_dir, network=not args.no_network, progress=progress)
+    try:
+        presentation = build_presentation(
+            source, network=not args.no_network, progress=progress, cache_dir=out_dir)
+    except (FileNotFoundError, ValueError) as err:
+        parser.error(str(err))
+    crate_dir = Path(presentation["crate"]["path"])
 
     json_path = out_dir / "ai-ready-evidence.json"
     json_path.write_text(json.dumps(presentation, indent=2, ensure_ascii=False))

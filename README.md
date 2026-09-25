@@ -1,7 +1,9 @@
 # AI-Readiness grader
 
-Grades an RO-Crate against the *Rubric for Review of AI-readiness Evaluation
-Criteria* v1.8: 28 criteria in seven domains, each graded 0 / 1 / 2.
+Grades a dataset's metadata against the *Rubric for Review of AI-readiness
+Evaluation Criteria* v1.8: 28 criteria in seven domains, each graded 0 / 1 / 2.
+The metadata can be an RO-Crate (FAIRSCAPE or plain), a
+[Croissant](https://mlcommons.org/croissant/) file, or plain schema.org JSON-LD.
 
 ## Install
 
@@ -34,9 +36,26 @@ fairscape-evidence /path/to/crate -o review/
 open review/ai-ready-review.html
 ```
 
-The crate is any directory with a `ro-crate-metadata.json`
-([RO-Crate 1.2 spec](https://www.researchobject.org/ro-crate/specification/1.2/)). A worked example
-is in `examples/apms-paclitaxel/` (crate plus finished review).
+The input is any of:
+
+| input | |
+| --- | --- |
+| `crate/` | directory with a `ro-crate-metadata.json` ([RO-Crate 1.2](https://www.researchobject.org/ro-crate/specification/1.2/)) |
+| `metadata.json` | a single JSON-LD file: RO-Crate, Croissant 1.0, or a schema.org `Dataset` |
+| `https://…` | the same, fetched and cached in the output directory |
+| `kaggle:owner/slug` | the Croissant export Kaggle publishes for every dataset (a Kaggle dataset page URL works too) |
+| `hf:org/name` | the Croissant export from the Hugging Face Hub (a dataset page URL works too) |
+
+A worked example is in `examples/apms-paclitaxel/` (crate plus finished review).
+
+Croissant and plain JSON-LD are single documents, so the nested `distribution`,
+`recordSet` and `creator` objects are flattened into the same entity list an
+RO-Crate `@graph` gives. `FileObject`/`FileSet`/`DataDownload`/`File` count as
+datasets, a `RecordSet` of typed `Field`s counts as a schema, `creator` stands in
+for `author`, and the `rai:` Responsible-AI properties are read from the root
+exactly as they are from a crate. What these formats cannot express (samples,
+instruments, computations, derivation links, software) is marked as such on the
+affected criteria rather than reported as missing.
 
 Options:
 

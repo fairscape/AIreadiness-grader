@@ -264,6 +264,16 @@ def transform_1d(ctx, raw):
                 with_pid.append(f"{label} ({aid})" if label != aid else aid)
             else:
                 free_text.append(aid)
+        elif isinstance(a, dict):
+            # nested Person/Organization object (schema.org creator style):
+            # a PID may sit in identifier, sameAs or url rather than @id
+            name = a.get("name") or a.get("givenName") or "unnamed"
+            pids = [v for k in ("identifier", "sameAs", "url")
+                    for v in ids_of(a.get(k)) if "orcid.org" in v or "ror.org" in v]
+            if pids:
+                with_pid.append(f"{name} ({pids[0]})")
+            else:
+                free_text.append(name)
         elif isinstance(a, str):
             free_text.append(a)
     ror_orgs = [o for o in raw["orgs"] if "ror.org" in str(o)]

@@ -24,10 +24,12 @@ was missing.
 *You are given:*
 - **Declared standards** — the raw `conformsTo` values on the root/sub-crates
   (RO-Crate spec URL, Croissant…).
-- **Vocabularies** — the metadata namespaces declared (schema.org, EVI,
-  Croissant).
+- **Vocabularies** — the metadata namespaces declared or used (schema.org,
+  EVI, W3C PROV-O, Croissant). A term like `prov:Entity` or `EVI:Dataset`
+  counts even when its prefix is missing from `@context`.
 - **Recognized standards detected** — which of RO-Crate / Croissant /
-  schema.org / EVI / Frictionless / JSON Schema were found.
+  schema.org / EVI / PROV-O / Frictionless / JSON Schema were found. EVI and
+  PROV-O are treated alike: both have a deterministic validator.
 - **Schemas citing validation standards** — how many Schema entities reference
   a validation standard (Frictionless, JSON Schema draft).
 - **Validation report** — whether any conformance/validation claim is present.

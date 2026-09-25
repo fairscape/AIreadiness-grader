@@ -15,6 +15,7 @@ def extract_6a(ctx):
         "descriptor_conforms": ids_of(ctx.bundle.descriptor.get("conformsTo")),
         "root_conforms": ids_of(ctx.bundle.root.get("conformsTo")),
         "context": ctx.bundle.context,
+        "term_namespaces": dict(ctx.bundle.stats.term_namespaces),
         "schema_total": ctx.bundle.stats.schema_total,
         "vocab_hits": dict(ctx.bundle.stats.vocab_hits),
         "formats": dict(ctx.bundle.stats.formats),
@@ -36,14 +37,23 @@ def transform_6a(ctx, raw):
         if hit:
             standards[hit[1]] = value
 
+    # Namespaces the graph's types and properties actually use, prefix
+    # declared or not (`prov:Entity` with no `prov` in @context still means
+    # PROV-O).
+    used = {STANDARD_NAMESPACES[ns]: n
+            for ns, n in raw["term_namespaces"].items()}
+    for ns in raw["term_namespaces"]:
+        standards.setdefault(STANDARD_NAMESPACES[ns], ns)
+
     validators = {}
-    for value in conforms + ns_values + (["json-schema.org"] if raw["schema_total"] else []):
+    for value in (conforms + ns_values + list(raw["term_namespaces"])
+                  + (["json-schema.org"] if raw["schema_total"] else [])):
         hit = match_host(value, KNOWN_VALIDATORS)
         if hit:
             validators[hit[1]] = value
 
     return {**raw, "conforms": conforms, "standards": standards,
-            "validators": validators,
+            "used_namespaces": used, "validators": validators,
             "vocab_found": summarize_vocab_hits(raw["vocab_hits"])}
 
 
@@ -51,8 +61,14 @@ def present_6a(facts):
     return [
         ev.listing("conformsTo declarations (metadata descriptor + root)",
                    facts["conforms"]),
-        ev.sub(ev.listing("Recognized standards in @context / conformsTo",
+        ev.sub(ev.listing("Recognized standards in @context / conformsTo / "
+                          "term prefixes",
                           sorted(facts["standards"]))),
+        ev.sub(ev.listing("Standard vocabularies used by entity types and "
+                          "properties (prefix declared or not)",
+                          [f"{k}: {n} terms" for k, n in
+                           sorted(facts["used_namespaces"].items(),
+                                  key=lambda kv: -kv[1])])),
         ev.sub(ev.flag("Deterministic validator known for the declared standards",
                        bool(facts["validators"]),
                        detail="; ".join(sorted(facts["validators"])) or
@@ -90,7 +106,8 @@ def estimate_6a(facts):
                            if not facts["vocab_found"] else
                            "no deterministic validator matched (an unlisted "
                            "one may exist)")
-    return ev.estimate("0", "no declared standard in conformsTo or @context")
+    return ev.estimate("0", "no declared standard in conformsTo, @context "
+                            "or term prefixes")
 
 
 # --- 6.b Computationally accessible ----------------------------------------

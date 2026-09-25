@@ -13,10 +13,41 @@ scores attached are the per-criterion mechanical estimates (see the
 import datetime
 from dataclasses import dataclass
 
+from . import evidence as ev
 from .crate import CrateBundle, as_list
 from .network import Network
+from .source import FORMAT_LABELS
 from .rubric import load_rubric, rubric_title
 from .sections import CRITERIA
+
+
+# Criteria that a single-document dialect cannot satisfy structurally. The
+# estimate stays what the facts say (usually 0); the note tells the grader why.
+_PROV_NOTE = ("{fmt} has no provenance vocabulary: samples, instruments, "
+              "computations and derivation links cannot be expressed in this "
+              "format, only described in prose (description, rai:dataCollection).")
+FORMAT_NOTES = {
+    "croissant": {
+        "1.a": _PROV_NOTE,
+        "1.b": _PROV_NOTE,
+        "1.c": "{fmt} carries no software entities; code used to produce the "
+               "data can only be cited in prose.",
+        "5.d": "{fmt} is a single document without sub-crates or a hasPart "
+               "graph; association is limited to distribution and recordSet "
+               "links.",
+    },
+    "jsonld": {
+        "1.a": _PROV_NOTE,
+        "1.b": _PROV_NOTE,
+        "1.c": "{fmt} carries no software entities; code used to produce the "
+               "data can only be cited in prose.",
+        "2.c": "{fmt} has no data-dictionary construct (Croissant recordSets "
+               "or EVI schemas); variable-level structure can only be described "
+               "in prose.",
+        "5.d": "{fmt} is a single document without sub-crates or a hasPart "
+               "graph.",
+    },
+}
 
 
 @dataclass
@@ -25,10 +56,12 @@ class RunContext:
     net: Network
 
 
-def build_presentation(crate_dir, network=True, progress=None):
+def build_presentation(crate_dir, network=True, progress=None, cache_dir=None):
     say = progress or (lambda msg: None)
-    say(f"loading crate: {crate_dir}")
-    bundle = CrateBundle.load(crate_dir, progress=progress)
+    say(f"loading metadata: {crate_dir}")
+    bundle = CrateBundle.load(crate_dir, progress=progress, cache_dir=cache_dir)
+    fmt_label = FORMAT_LABELS.get(bundle.format, bundle.format)
+    say(f"format: {fmt_label}")
     ctx = RunContext(bundle=bundle, net=Network(enabled=network))
 
     rubric = load_rubric()
@@ -50,6 +83,10 @@ def build_presentation(crate_dir, network=True, progress=None):
         except Exception as err:
             items, estimate = [], None
             error = f"{type(err).__name__}: {err}"
+        note = FORMAT_NOTES.get(bundle.format, {}).get(criterion.id)
+        if note:
+            items = [ev.text("Metadata format", fmt_label,
+                             detail=note.format(fmt=fmt_label)), *items]
         entry = {
             "id": criterion.id,
             "name": defs["name"],
@@ -89,6 +126,9 @@ def build_presentation(crate_dir, network=True, progress=None):
             "version": bundle.root.get("version"),
             "datePublished": bundle.root.get("datePublished"),
             "path": str(bundle.root_dir),
+            "source": bundle.source,
+            "format": bundle.format,
+            "format_label": fmt_label,
         },
         "inventory": {
             "entities": stats.entity_total,

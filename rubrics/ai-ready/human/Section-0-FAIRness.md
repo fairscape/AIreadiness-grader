@@ -27,7 +27,7 @@ was missing.
 - **Publisher / host** — the raw publisher value, plus any recognized FAIR
   repositories detected (Dataverse, Zenodo, PhysioNet, FAIRhub, BioStudies,
   dbGaP, GEO…) vs. a lab web page.
-- **Vocabularies** — the metadata namespaces declared (schema.org / DCAT / EVI).
+- **Vocabularies** — the metadata namespaces declared (schema.org / DCAT / EVI / W3C PROV-O).
 - **Access** — the confidentiality level and conditions of access, so you can
   judge whether the *metadata* stays publicly readable even when the *data*
   itself is access-controlled.

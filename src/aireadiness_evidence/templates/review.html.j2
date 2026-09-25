@@ -243,6 +243,8 @@
       <strong>{{ p.crate.name }}</strong>
       <span class="mono">{{ p.crate["@id"] }}</span>
       <span class="meta"> · {{ p.crate.identifier }} · published {{ p.crate.datePublished }}</span>
+      {%- if p.crate.format_label %} · <span class="meta">{{ p.crate.format_label }}{% if p.crate.format != 'ro-crate' %} (single document, no provenance graph){% endif %}</span>{% endif %}
+      {%- if p.crate.source and p.crate.source.startswith('http') %} · <a class="meta" href="{{ p.crate.source }}">source</a>{% endif %}
     </div>
     <div class="toplinks">
       {% for d in p.artifacts.datasheets %}

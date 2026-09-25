@@ -316,7 +316,9 @@ def grade_crate(
     """Run the full 28-criterion LLM scoring pipeline against an RO-Crate.
 
     Args:
-        crate_path: crate directory, or path to its ``ro-crate-metadata.json``.
+        crate_path: crate directory, a metadata file (RO-Crate, Croissant or
+            schema.org JSON-LD), a URL, or a ``kaggle:owner/slug`` /
+            ``hf:org/name`` shortcut.
         output_dir: directory to write per-criterion folders + aggregate into
             (created if missing).
         model: pydantic-ai model string, e.g. ``anthropic:claude-opus-4-7`` or
@@ -337,10 +339,12 @@ def grade_crate(
         FileNotFoundError: if the crate is missing.
         ValueError: if ``model`` is malformed or its provider is unsupported.
     """
-    crate_path = Path(crate_path)
+    from aireadiness_evidence.source import is_remote
+    remote = is_remote(str(crate_path))
+    crate_path = str(crate_path) if remote else Path(crate_path)
     output_dir = Path(output_dir)
 
-    if not crate_path.exists():
+    if not remote and not crate_path.exists():
         raise FileNotFoundError(f"crate not found: {crate_path}")
 
     _setup_api_key(model, api_key)
@@ -351,7 +355,7 @@ def grade_crate(
 
     log(f"[grade] loading {crate_path}")
     crate_dir, presentation = build_crate_presentation(
-        crate_path, network=network, verbose=verbose,
+        crate_path, network=network, verbose=verbose, cache_dir=output_dir,
     )
     inv = presentation["inventory"]
     log(
@@ -417,8 +421,9 @@ def main(argv: Optional[list[str]] = None) -> int:
         prog="fairscape-grade",
         description="Score an RO-Crate against the 28 AI-Ready criteria using an LLM.",
     )
-    ap.add_argument("crate_path", type=Path,
-                    help="crate directory or its ro-crate-metadata.json")
+    ap.add_argument("crate_path",
+                    help="crate directory, metadata file (RO-Crate / Croissant / "
+                         "JSON-LD), URL, or kaggle:owner/slug / hf:org/name")
     ap.add_argument("output_dir", type=Path, help="output directory (created if missing)")
     ap.add_argument(
         "--model",

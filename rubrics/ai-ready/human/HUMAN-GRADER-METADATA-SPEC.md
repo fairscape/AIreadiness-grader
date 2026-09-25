@@ -29,7 +29,7 @@ packet and the LLM.
 | `publisher_info` | root `publisher` | object or string |
 | `archive_indicators` | publisher / distribution / description | list of recognized repo names/hosts found (dataverse, zenodo, physionet, fairhub, biostudies, dbgap, geo…) |
 | `context_namespaces` | `@context` | the vocab namespaces declared |
-| `recognized_vocabularies` | derived from `@context` | schema.org / DCAT / EVI / Croissant detected |
+| `recognized_vocabularies` | derived from `@context` | schema.org / DCAT / EVI / PROV-O / Croissant detected, from `@context` or term prefixes (`prov:`, `EVI:`) even when undeclared |
 | `confidentiality_level` | root `confidentialityLevel` | needed to judge metadata-open-vs-data-restricted |
 | `conditions_of_access` | root `conditionsOfAccess` | |
 
@@ -240,7 +240,7 @@ confirmed upstream (deterministic check / LLM grader), not by the human.
 |---|---|---|
 | `root_conformsTo` | root `conformsTo` | standard URLs / @id refs |
 | `context_namespaces` | `@context` | |
-| `recognized_standards` | derived | RO-Crate / Croissant / schema.org / EVI / Frictionless / JSON Schema detected |
+| `recognized_standards` | derived | RO-Crate / Croissant / schema.org / EVI / PROV-O / Frictionless / JSON Schema detected |
 | `schemas_referencing_standards_count` | Schema entities | |
 | `validation_report_present` | derived | any conformance/validation claim |
 
