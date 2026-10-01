@@ -54,7 +54,7 @@ was missing.
 - **2** — Reachable via a standard protocol or documented API, with the auth/request procedure documented where access is gated.
 
 ### Q6.3 — Portable & contextualized `[6.c + 6.d]`
-**Are the formats widely readable with compute environment documented where needed, and can a reader preview the data's structure (splits, withheld info, examples) before downloading?**
+**Are the formats widely readable with compute environment (or a designated trusted execution environment) documented where needed, and can a reader preview the data's structure (splits, withheld info, examples) before downloading?**
 
 *You are given (portable):*
 - **Format mix** — counts by format, split into widely-readable (CSV, Parquet,
@@ -78,7 +78,7 @@ was missing.
 
 - **0** — Proprietary/unspecified formats with no environment docs *and* no structural context (no examples, no withheld-info notes).
 - **1** — Formats mostly readable but compute environment undocumented where needed, **or** only thin context (examples in passing, splits implied by name without explanation).
-- **2** — Widely-readable formats with environment/hardware documented where needed *and* a reader can preview structure (examples/withheld-info documented; splits described where they apply).
+- **2** — Widely-readable formats with environment/hardware documented where needed *and* a reader can preview structure (examples/withheld-info documented; splits described where they apply). Data confined to a designated trusted execution environment (TEE) for sensitivity reasons still earns full credit when the TEE, its access procedure, and its in-TEE software environment are documented — do not penalize the confinement itself.
 
 ---
 
