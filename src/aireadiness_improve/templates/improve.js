@@ -463,10 +463,11 @@
       basis.push(kw.length + ' keywords');
       var aboutIris = idsOf(root.about).filter(function (i) { return matchHost(i, ONTOLOGY_HOSTS); });
       var inlineTerms = asList(root.about).filter(function (t) { return t && typeof t === 'object' && String(t['@type'] || '').indexOf('DefinedTerm') >= 0; }).length;
+      var grounded = s.definedTermTotal || aboutIris.length || inlineTerms;
       if (s.definedTermTotal) basis.push(s.definedTermTotal + ' DefinedTerm entities (controlled vocabulary)');
-      else if (aboutIris.length) basis.push(aboutIris.length + ' recognised ontology IRIs under about' + (inlineTerms ? ' (' + inlineTerms + ' as inline DefinedTerm objects)' : '') + ' — credited as vocabulary references for 0.c/2.c/6.a; the 2.a extractor counts DefinedTerm graph entities, so this reads as 1 mechanically and leaves the rest to the grader');
-      else basis.push('no controlled-vocabulary terms (free-text keywords only)');
-      return est(s.definedTermTotal ? 2 : 1, basis);
+      if (aboutIris.length || inlineTerms) basis.push((aboutIris.length || inlineTerms) + ' subject terms under about' + (aboutIris.length ? ' (' + aboutIris.length + ' on a recognised ontology host)' : ''));
+      if (!grounded) basis.push('no controlled-vocabulary terms (free-text keywords only)');
+      return est(grounded ? 2 : 1, basis);
     },
     '2.b': function (c) {
       var root = c.root, s = c.stats, basis = [];

@@ -14,19 +14,23 @@ def extract_2a(ctx):
     return {
         "description": root.get("description"),
         "keywords": as_list(root.get("keywords")),
-        "terms": ctx.bundle.defined_terms,
+        "terms": ctx.bundle.subject_terms,
     }
 
 
 def transform_2a(ctx, raw):
-    terms = [{"@id": t.get("@id"), "name": t.get("name")} for t in raw["terms"]]
-    mesh = [t for t in terms if "mesh" in str(t["@id"]).lower()]
+    terms = raw["terms"]
+    by_ontology = {}
+    for t in terms:
+        if t["ontology"]:
+            by_ontology[t["ontology"]] = by_ontology.get(t["ontology"], 0) + 1
     return {
         "description": raw["description"],
         "description_len": len(str(raw["description"] or "")),
         "keywords": raw["keywords"],
         "terms": terms,
-        "mesh": mesh,
+        "from_about": sum(t["source"] == "about" for t in terms),
+        "by_ontology": by_ontology,
     }
 
 
@@ -36,10 +40,13 @@ def present_2a(facts):
                 detail=f"{facts['description_len']} chars"),
         ev.listing("Keywords", facts["keywords"][:25]),
         ev.flag("Controlled-vocabulary terms present", bool(facts["terms"]),
-                detail=f"{len(facts['mesh'])} MeSH terms of "
-                       f"{len(facts['terms'])} DefinedTerms"),
+                detail=f"{len(facts['terms'])} subject terms "
+                       f"({facts['from_about']} from root `about`); "
+                       + (", ".join(f"{n} {o}" for o, n in
+                                    facts["by_ontology"].items())
+                          or "none on a recognised ontology host")),
         ev.sub(ev.listing("Controlled-vocabulary terms",
-                          [f"{t['name']} — {t['@id']}"
+                          [f"{t['name'] or '(no label)'} — {t['@id']}"
                            for t in facts["terms"][:10]])),
     ]
 
