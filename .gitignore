@@ -13,6 +13,9 @@ __pycache__/
 *.py[cod]
 
 
-# Example crate outputs (kept local only), except the checked-in worked example
+# Example crate outputs (kept local only), except the checked-in worked examples
 examples/*
 !examples/apms-paclitaxel/
+!examples/dices-350-croissant/
+!examples/croissant-samples/
+!examples/score_estimates.py

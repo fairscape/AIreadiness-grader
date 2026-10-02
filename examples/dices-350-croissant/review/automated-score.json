@@ -1,0 +1,241 @@
+{
+  "model": "fairscape-evidence automated estimates (no LLM)",
+  "total_score": 10,
+  "max_score": 36,
+  "percentage": 27.8,
+  "overall_score": 22.0,
+  "gating": {
+    "pass": false,
+    "label": "Gating FAIL",
+    "failures": [
+      "0.a scored 0 (gate requires 2)",
+      "1.c scored 0 (gate requires above 0)",
+      "2.c scored 0 (gate requires above 0)",
+      "4.b scored 0 (gate requires above 0)",
+      "4.d scored 0 (gate requires above 0)"
+    ],
+    "unscored": [
+      "0.b",
+      "4.a",
+      "4.c"
+    ],
+    "thresholds": {
+      "0.a": 2,
+      "0.b": 1,
+      "0.c": 1,
+      "0.d": 1,
+      "1.a": 1,
+      "1.b": 1,
+      "1.c": 1,
+      "1.d": 1,
+      "2.c": 1,
+      "4.a": 1,
+      "4.b": 1,
+      "4.c": 1,
+      "4.d": 1
+    }
+  },
+  "counts": {
+    "substantive": 2,
+    "partial": 6,
+    "absent": 10,
+    "na": 0,
+    "error": 0
+  },
+  "criteria": [
+    {
+      "id": "0",
+      "name": "FAIRness",
+      "score": 3,
+      "max": 6,
+      "percentage": 50.0,
+      "rubrics": [
+        {
+          "id": "0.a",
+          "name": "Findable",
+          "score": 0,
+          "rationale": "no PID detected and publisher not a recognized sustainable repository"
+        },
+        {
+          "id": "0.c",
+          "name": "Interoperable",
+          "score": 1,
+          "rationale": "metadata is JSON-LD but references no standard vocabulary"
+        },
+        {
+          "id": "0.d",
+          "name": "Reusable",
+          "score": 2,
+          "rationale": "machine-readable license linked in the metadata (CC-BY-SA-4.0); no AI/ML prohibition language found in license or use terms"
+        }
+      ],
+      "gating": true,
+      "gate_failed": true
+    },
+    {
+      "id": "1",
+      "name": "Provenance",
+      "score": 3,
+      "max": 8,
+      "percentage": 37.5,
+      "rubrics": [
+        {
+          "id": "1.a",
+          "name": "Transparent",
+          "score": 1,
+          "rationale": "source described in prose only (rai:dataCollectionRawData, rai:dataCollection); score 0 if the text does not actually name a source"
+        },
+        {
+          "id": "1.b",
+          "name": "Traceable",
+          "score": 1,
+          "rationale": "processing steps described in prose only (Annotation); no machine-readable transformation steps \u2014 score 0 if the prose is too thin to trace a sequence of steps"
+        },
+        {
+          "id": "1.c",
+          "name": "Interpretable",
+          "score": 0,
+          "rationale": "no software entities in the crate"
+        },
+        {
+          "id": "1.d",
+          "name": "Key actors identified",
+          "score": 1,
+          "rationale": "0 of 1 authors carry a PID; 1 named in free text only"
+        }
+      ],
+      "gating": true,
+      "gate_failed": true
+    },
+    {
+      "id": "2",
+      "name": "Characterization",
+      "score": 0,
+      "max": 2,
+      "percentage": 0.0,
+      "rubrics": [
+        {
+          "id": "2.c",
+          "name": "Standards",
+          "score": 0,
+          "rationale": "no machine-readable schema entities"
+        }
+      ],
+      "gating": true,
+      "gate_failed": true
+    },
+    {
+      "id": "3",
+      "name": "Pre-model Explainability",
+      "score": 3,
+      "max": 6,
+      "percentage": 50.0,
+      "rubrics": [
+        {
+          "id": "3.a",
+          "name": "Data documentation template",
+          "score": 1,
+          "rationale": "no human-readable datasheet; 4 of 9 machine-readable sections populated"
+        },
+        {
+          "id": "3.b",
+          "name": "Fit for purpose",
+          "score": 0,
+          "rationale": "no use-case guidance in the metadata"
+        },
+        {
+          "id": "3.c",
+          "name": "Verifiable",
+          "score": 2,
+          "rationale": "checksums on all 2 datasets and software (embargoed excluded)"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Ethics",
+      "score": 0,
+      "max": 4,
+      "percentage": 0.0,
+      "rubrics": [
+        {
+          "id": "4.b",
+          "name": "Ethically managed",
+          "score": 0,
+          "rationale": "no sensitivity classification, sensitivity statement, or management description"
+        },
+        {
+          "id": "4.d",
+          "name": "Secure",
+          "score": 0,
+          "rationale": "no security-level metadata"
+        }
+      ],
+      "gating": true,
+      "gate_failed": true
+    },
+    {
+      "id": "5",
+      "name": "Sustainability",
+      "score": 1,
+      "max": 6,
+      "percentage": 16.7,
+      "rubrics": [
+        {
+          "id": "5.a",
+          "name": "Persistent",
+          "score": 1,
+          "rationale": "no PID on the deposit; 2 datasets have a contentUrl but no recognized archive detected"
+        },
+        {
+          "id": "5.b",
+          "name": "Domain-appropriate",
+          "score": 0,
+          "rationale": "no recognized repository host detected"
+        },
+        {
+          "id": "5.c",
+          "name": "Well-governed",
+          "score": 0,
+          "rationale": "no DMP / governance plan in the metadata"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Computability",
+      "score": 0,
+      "max": 4,
+      "percentage": 0.0,
+      "rubrics": [
+        {
+          "id": "6.a",
+          "name": "Standardized",
+          "score": 0,
+          "rationale": "formal schema/standard declared, so structural validation is possible; no populated standard-vocabulary bindings \u2014 semantic conformance cannot be deterministically validated (the 1-rule)",
+          "uncapped_score": 1,
+          "capped_by": "dependency rule 6.a \u2264 2.c: score lowered from 1 to 0"
+        },
+        {
+          "id": "6.d",
+          "name": "Contextualized",
+          "score": 0,
+          "rationale": "no splits, withheld-information statement, or example data anywhere in the metadata"
+        }
+      ]
+    }
+  ],
+  "note": "Only criteria with an automated estimate are counted; the rest need human or model judgment and are listed in unestimated_criteria.",
+  "unestimated_criteria": [
+    "0.b Accessible",
+    "2.a Semantics",
+    "2.b Statistics",
+    "2.d Potential Sources of Bias",
+    "2.e Data quality",
+    "4.a Ethically acquired",
+    "4.c Ethically Disseminated",
+    "5.d Associated",
+    "6.b Computationally accessible",
+    "6.c Portable"
+  ]
+}

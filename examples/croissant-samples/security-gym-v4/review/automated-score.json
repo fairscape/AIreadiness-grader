@@ -1,0 +1,230 @@
+{
+  "model": "fairscape-evidence automated estimates (no LLM)",
+  "total_score": 20,
+  "max_score": 34,
+  "percentage": 58.8,
+  "overall_score": 61.3,
+  "gating": {
+    "pass": false,
+    "label": "Gating FAIL",
+    "failures": [
+      "1.c scored 0 (gate requires above 0)"
+    ],
+    "unscored": [
+      "4.a",
+      "4.b",
+      "4.c"
+    ],
+    "thresholds": {
+      "0.a": 2,
+      "0.b": 1,
+      "0.c": 1,
+      "0.d": 1,
+      "1.a": 1,
+      "1.b": 1,
+      "1.c": 1,
+      "1.d": 1,
+      "2.c": 1,
+      "4.a": 1,
+      "4.b": 1,
+      "4.c": 1,
+      "4.d": 1
+    }
+  },
+  "counts": {
+    "substantive": 4,
+    "partial": 12,
+    "absent": 1,
+    "na": 0,
+    "error": 0
+  },
+  "criteria": [
+    {
+      "id": "0",
+      "name": "FAIRness",
+      "score": 6,
+      "max": 8,
+      "percentage": 75.0,
+      "rubrics": [
+        {
+          "id": "0.a",
+          "name": "Findable",
+          "score": 2,
+          "rationale": "PID present (scheme: DOI); PID resolved; deposited in a sustainable repository (Zenodo); that the PID resolves to a specific VERSION of the dataset is not verified \u2014 confirm before accepting (the gate requires a 2 here)"
+        },
+        {
+          "id": "0.b",
+          "name": "Accessible",
+          "score": 1,
+          "rationale": "metadata fetchable via PID lookup but no standard-vocabulary references found"
+        },
+        {
+          "id": "0.c",
+          "name": "Interoperable",
+          "score": 1,
+          "rationale": "metadata is JSON-LD but references no standard vocabulary; 1 machine-readable schema entities"
+        },
+        {
+          "id": "0.d",
+          "name": "Reusable",
+          "score": 2,
+          "rationale": "machine-readable license linked in the metadata (Apache-2.0); no AI/ML prohibition language found in license or use terms"
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "1",
+      "name": "Provenance",
+      "score": 3,
+      "max": 8,
+      "percentage": 37.5,
+      "rubrics": [
+        {
+          "id": "1.a",
+          "name": "Transparent",
+          "score": 1,
+          "rationale": "source data linked from the root in a structured field (isBasedOn / prov:wasDerivedFrom); no per-file provenance or ground-truth entities \u2014 consider 2 if the link names the exact source artifact"
+        },
+        {
+          "id": "1.b",
+          "name": "Traceable",
+          "score": 1,
+          "rationale": "processing steps described in prose only (Preprocessing, Annotation); no machine-readable transformation steps \u2014 score 0 if the prose is too thin to trace a sequence of steps"
+        },
+        {
+          "id": "1.c",
+          "name": "Interpretable",
+          "score": 0,
+          "rationale": "no software entities in the crate"
+        },
+        {
+          "id": "1.d",
+          "name": "Key actors identified",
+          "score": 1,
+          "rationale": "0 of 2 authors carry a PID; 2 named in free text only"
+        }
+      ],
+      "gating": true,
+      "gate_failed": true
+    },
+    {
+      "id": "2",
+      "name": "Characterization",
+      "score": 2,
+      "max": 4,
+      "percentage": 50.0,
+      "rubrics": [
+        {
+          "id": "2.a",
+          "name": "Semantics",
+          "score": 1,
+          "rationale": "abstract and keywords present, no controlled-vocabulary terms"
+        },
+        {
+          "id": "2.c",
+          "name": "Standards",
+          "score": 1,
+          "rationale": "1 schema entities but no standard-vocabulary binding found"
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "3",
+      "name": "Pre-model Explainability",
+      "score": 4,
+      "max": 6,
+      "percentage": 66.7,
+      "rubrics": [
+        {
+          "id": "3.a",
+          "name": "Data documentation template",
+          "score": 1,
+          "rationale": "no human-readable datasheet; 8 of 9 machine-readable sections populated"
+        },
+        {
+          "id": "3.b",
+          "name": "Fit for purpose",
+          "score": 2,
+          "rationale": "appropriate and inappropriate uses both stated; 1 prior publications linked"
+        },
+        {
+          "id": "3.c",
+          "name": "Verifiable",
+          "score": 1,
+          "rationale": "checksums on 6 of 9 entities"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Ethics",
+      "score": 1,
+      "max": 2,
+      "percentage": 50.0,
+      "rubrics": [
+        {
+          "id": "4.d",
+          "name": "Secure",
+          "score": 1,
+          "rationale": "sensitivity stated in prose (rai:personalSensitiveInformation), not a standard security label; score 0 if the statement does not say whether protection is required"
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "5",
+      "name": "Sustainability",
+      "score": 2,
+      "max": 2,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "5.a",
+          "name": "Persistent",
+          "score": 2,
+          "rationale": "PID present (scheme: DOI); recognized archive(s): Zenodo; an explicit retention commitment is assumed for recognized repositories, not verified; note the criterion covers RAW/unprocessed data \u2014 confirm the raw data itself is what's archived"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Computability",
+      "score": 2,
+      "max": 4,
+      "percentage": 50.0,
+      "rubrics": [
+        {
+          "id": "6.a",
+          "name": "Standardized",
+          "score": 1,
+          "rationale": "formal schema/standard declared, so structural validation is possible; no populated standard-vocabulary bindings \u2014 semantic conformance cannot be deterministically validated (the 1-rule)"
+        },
+        {
+          "id": "6.d",
+          "name": "Contextualized",
+          "score": 1,
+          "rationale": "some context present but incomplete (example data or withheld-information description missing)"
+        }
+      ]
+    }
+  ],
+  "note": "Only criteria with an automated estimate are counted; the rest need human or model judgment and are listed in unestimated_criteria.",
+  "unestimated_criteria": [
+    "2.b Statistics",
+    "2.d Potential Sources of Bias",
+    "2.e Data quality",
+    "4.a Ethically acquired",
+    "4.b Ethically managed",
+    "4.c Ethically Disseminated",
+    "5.b Domain-appropriate",
+    "5.c Well-governed",
+    "5.d Associated",
+    "6.b Computationally accessible",
+    "6.c Portable"
+  ]
+}

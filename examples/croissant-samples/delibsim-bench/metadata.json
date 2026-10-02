@@ -1,0 +1,3264 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "wasDerivedFrom": {
+      "@id": "prov:wasDerivedFrom",
+      "@type": "@id"
+    },
+    "wasGeneratedBy": "prov:wasGeneratedBy",
+    "dataLimitations": "rai:dataLimitations",
+    "dataBiases": "rai:dataBiases",
+    "personalSensitiveInformation": "rai:personalSensitiveInformation",
+    "dataUseCases": "rai:dataUseCases",
+    "dataSocialImpact": "rai:dataSocialImpact",
+    "hasSyntheticData": "rai:hasSyntheticData",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "equivalentProperty": "cr:equivalentProperty",
+    "examples": {
+      "@id": "cr:examples",
+      "@type": "@json"
+    },
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "excludes": "cr:excludes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "samplingRate": "cr:samplingRate",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "name": "delibsim-bench",
+  "description": "delib-sim-bench is a benchmark of multi-agent LLM deliberation simulations. It contains pre/post Deliberative Reason Index (DRI) survey responses, deliberation transcripts, AQuA discourse-quality scores, and full simulation configurations across 11 model setups (single-model and mixed-model, with and without reasoning), 12 policy topics, and 3 prompt conditions (control_1, control_2, treatment), plus five secondary studies varying agent count, persona use, prompt design, deliberation rounds, and temperature. See DATASHEET.md (Gebru et al. style) for the full datasheet.",
+  "conformsTo": "http://mlcommons.org/croissant/1.1",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "url": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench",
+  "version": "1.0.0",
+  "datePublished": "2026-05-06",
+  "creator": [
+    {
+      "@type": "sc:Person",
+      "name": "Anonymous",
+      "description": "Authors anonymized for double-blind NeurIPS 2026 submission."
+    }
+  ],
+  "publisher": {
+    "@type": "sc:Organization",
+    "name": "Anonymous (NeurIPS 2026 Datasets and Benchmarks submission)"
+  },
+  "citeAs": "@misc{delib_sim_bench_2026,\n  title={delib-sim-bench: A Benchmark of Multi-Agent LLM Deliberation Simulations},\n  author={Anonymous},\n  year={2026},\n  note={Submitted to NeurIPS 2026 Datasets and Benchmarks Track}\n}",
+  "keywords": [
+    "deliberation",
+    "multi-agent",
+    "large language models",
+    "DRI",
+    "Deliberative Reason Index",
+    "AQuA",
+    "discourse quality",
+    "social science benchmark"
+  ],
+  "isLiveDataset": false,
+  "hasSyntheticData": true,
+  "dataLimitations": [
+    "Reasoning-trace transcripts (*_with_reasoning.txt) are intentionally excluded from the released bundle to keep the download small. Only the public-facing turn text is shipped.",
+    "control_1 is a no-deliberation baseline condition used to estimate intrinsic DRI survey re-test noise. By design, no agent discussion is run in control_1; therefore transcript fields and transcript files are empty for these runs. Consequently, discourse-quality analysis (AQuA) is only defined for conditions where deliberation exists (control_2 and treatment).",
+    "AQuA discourse-quality scoring is itself produced by an LLM (separate from the deliberation agents) and inherits its noise and biases. Per-turn quality-index 0/1 indicators are not human-validated.",
+    "LLM output drifts over time. The snapshot reflects model versions available via OpenRouter between November 2025 and March 2026; exact reproduction of agent responses requires the same model snapshots, which providers may deprecate.",
+    "All deliberations are conducted in English. The 12 deliberation topics are predominantly Western policy debates (Australia, Switzerland, Sweden, Germany); generalisation to non-Western contexts and other languages is unverified.",
+    "The benchmark is not recommended for: (a) drawing conclusions about human deliberative behaviour (agents are LLMs, not humans); (b) real-world policy decisions on the 12 topics (agent positions are model artefacts, not citizen views); (c) training models to imitate specific human individuals (no such data exists in the bundle); (d) claims about 'deliberative AI' replacing human deliberation."
+  ],
+  "dataBiases": [
+    "Model bias: agents inherit the political, cultural, and linguistic training biases of their underlying LLMs. All models in the main grid are commercially trained on predominantly Western internet text.",
+    "Topic bias: the 12 topics are skewed toward Anglophone-Western deliberative-democracy traditions, with Australia over-represented (acp, auscj, bep, biobanking_wa, ccps, energy_futures, fnqcj, forestera, fremantle = 9 of 12). Switzerland (swiss_health), Sweden (uppsala_speaks), and Germany (zukunft) make up the remaining 3.",
+    "Selection bias on models: only commercially-served LLMs accessible via OpenRouter at the time of data collection are included. Smaller open-weight models, fine-tuned variants, and self-hosted models are not represented.",
+    "Sycophantic-agreement bias: contemporary instruction-tuned LLMs are known to over-agree under multi-turn discussion conditions. Apparent post-deliberation consensus measured by ΔDRI may therefore inflate genuine deliberative impact relative to human-only deliberation.",
+    "AQuA-scorer normative bias: the AQuA quality indicators operationalise Habermasian deliberation theory (justification, respect, reference to common good, etc.). Communities that value other deliberative norms (consensus-building over argumentation, oral / narrative traditions, ritualised disagreement) will score artificially low on these indicators.",
+    "Prompt bias: deliberation prompts are written in English and frame the deliberation as a Western citizen-assembly-style process; agents are therefore biased toward Anglophone discourse norms regardless of the underlying model."
+  ],
+  "personalSensitiveInformation": [
+    "No personal or sensitive information is contained in the dataset. All deliberators are LLM agents; no human subjects participated at any stage of data collection. The agents' role-played expressions of opinion on policy topics are model artefacts and do not reflect the views of any real person, organisation, or community.",
+    "No personally identifying information about the dataset's authors, API account holders, or any third party is present in the shipped files. Absolute filesystem paths from the original collection machine were stripped during anonymisation (see claude/dataset/anonymize.py)."
+  ],
+  "dataUseCases": [
+    "Construct: 'deliberative reason' (DRI) operationalises intersubjective consistency on a policy question across agents and time. Construct validity established for: ranking LLMs on deliberative impact (ΔDRI), comparing prompt conditions (control vs. treatment), and comparing reasoning vs. non-reasoning model variants under identical conditions.",
+    "Construct: 'discourse quality' (AQuA) operationalises Habermasian deliberation criteria via per-turn 0/1 indicators across 20 quality categories. Construct validity established for: ranking transcripts on aggregate quality, identifying low-quality transcripts for filtering, and training discourse-quality classifiers.",
+    "Recommended use cases:",
+    "  - benchmarking LLMs on deliberative quality and impact",
+    "  - studying treatment effects of normative deliberation prompts",
+    "  - comparing reasoning vs non-reasoning model variants",
+    "  - studying mixed-model deliberation dynamics",
+    "  - methodological work on multi-agent LLM deliberation simulation (group size, persona, prompt design, rounds, temperature)",
+    "  - training transcript-quality classifiers using the per-turn AQuA indicators as supervised signals",
+    "Use cases for which validity has NOT been established:",
+    "  - drawing conclusions about human deliberative behaviour from these LLM-generated deliberations",
+    "  - using ΔDRI as a proxy for the social impact of any deployed deliberation system",
+    "  - cross-cultural deliberation research (the dataset is monolingual English and Western-centric)",
+    "  - safety / alignment evaluation (DRI and AQuA are not safety metrics)"
+  ],
+  "dataSocialImpact": "Positive impact: provides a standardised benchmark for measuring deliberative quality and impact across LLMs, enabling more principled comparisons between model families and prompt designs. Supports methodological research on whether automated deliberation can augment human deliberative processes such as citizen assemblies, policy consultations, and structured public engagement. Releases all transcripts, configurations, and per-turn scores under an open licence to enable reproducibility and re-analysis. Negative impact / risks: (1) misuse to claim that LLM deliberations substitute for human deliberation, undermining democratic legitimacy; (2) over-reliance on these benchmarks for model selection without recognising that high deliberative-quality scores reflect surface text patterns, not normative virtues; (3) several topics include politically contested questions (constitutional reform, criminal justice, biobanking) and a naive reading of agent positions could be cited out of context to misrepresent model 'opinions'. Mitigations: explicit datasheet warnings, the requirement to cite the dataset's synthetic origin, and an authors' statement that this benchmark is not used to draw policy conclusions.",
+  "wasDerivedFrom": [
+    "https://openrouter.ai/anthropic/claude-opus-4.5",
+    "https://openrouter.ai/openai/gpt-5.1",
+    "https://openrouter.ai/google/gemini-3-pro-preview",
+    "https://openrouter.ai/deepseek/deepseek-v3.2-exp",
+    "https://openrouter.ai/moonshotai/kimi-k2-thinking"
+  ],
+  "wasGeneratedBy": "All records are synthetic and generated by the open-source deliberation_simulator framework (released alongside this submission, anonymised for double-blind review) using the OpenRouter API to access the listed LLMs. Per-run pipeline: (1) administer pre-deliberation DRI survey to each of N agents independently (N = group_size, typically 5); (2) run a free-flow group deliberation between agents over T turns (typically 10); (3) administer post-deliberation DRI survey; (4) compute group DRI score (Niemeyer et al. methodology); (5) optionally run AQuA discourse-quality assessment on the transcript via a separate LLM scorer. Survey items for the 12 topics are sourced from publicly documented citizen-assembly deliberations and stored in delib_sim/data/dri_surveys/surveys.xlsx in the framework repo. Sampling temperature = 0.0 in the main grid (varied 0.0/0.5/1.0 in the temp_study). Random seed = 42 for group assignment and persona shuffling. Time frame: November 2025 - March 2026. No human annotators were involved at any stage.",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "manifest",
+      "name": "manifest.csv",
+      "description": "Per-file manifest: relative path, kind, size, sha256, shipped flag, partitioning fields.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/normalized/manifest.csv",
+      "encodingFormat": "text/csv",
+      "contentSize": "4614902",
+      "sha256": "a8ab6608b22c5bfcd4993004eebbcea81a6ff186de1f3e88661f6d61cccb0a58"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "runs-parquet",
+      "name": "runs.parquet",
+      "description": "One row per (study, model_setup, topic, prompt_type, iteration); pre/post group DRI scores and summary stats.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/normalized/runs.parquet",
+      "encodingFormat": "application/x-parquet",
+      "contentSize": "243193",
+      "sha256": "f30e227c9d0e9515dd906972eabff19cbbda5d2570e382e13dd42b1ae247c7df"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "dri-individual-parquet",
+      "name": "dri_individual.parquet",
+      "description": "One row per (run, agent, item, time). Long-format individual ratings.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/normalized/dri_individual.parquet",
+      "encodingFormat": "application/x-parquet",
+      "contentSize": "896849",
+      "sha256": "0ef03d4256a0a896babf62c0b0cfb645409b8e9cde04f1d304eaa9e087884136"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "aqua-transcripts-parquet",
+      "name": "aqua_transcripts.parquet",
+      "description": "One row per transcript: AQuA score and 20 quality indices (means).",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/normalized/aqua_transcripts.parquet",
+      "encodingFormat": "application/x-parquet",
+      "contentSize": "93789",
+      "sha256": "d241aef8e6a790aa7af5938c764d1eac2a1a3ef52113dfe025bc34c764154724"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "aqua-turns-parquet",
+      "name": "aqua_turns.parquet",
+      "description": "Per-turn AQuA scoring with the 20 quality indices as 0/1 indicators.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/normalized/aqua_turns.parquet",
+      "encodingFormat": "application/x-parquet",
+      "contentSize": "124755",
+      "sha256": "3828e23aab4cc320915e8d55dd3bef0bb4f4b9182e216b1f686291db05843934"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "opinion-change-parquet",
+      "name": "opinion_change.parquet",
+      "description": "One row per (run, iteration) with consideration/preference change and agreement metrics.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/normalized/opinion_change.parquet",
+      "encodingFormat": "application/x-parquet",
+      "contentSize": "137642",
+      "sha256": "d8d3ac67befadb6680b42da8f254b7fb47a162b8ee87b6a13725b17a135e486f"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "transcripts-index-parquet",
+      "name": "transcripts_index.parquet",
+      "description": "One row per shipped transcript file: path, sha256, partitioning fields.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/normalized/transcripts_index.parquet",
+      "encodingFormat": "application/x-parquet",
+      "contentSize": "184584",
+      "sha256": "6e9d892584d24e1cc54fc9969e1c1e085d448d90da747592a6530d872cc6810c"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "configurations-parquet",
+      "name": "configurations.parquet",
+      "description": "One row per config_used.yaml with flat parameters and a JSON-encoded llm_setup blob.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/normalized/configurations.parquet",
+      "encodingFormat": "application/x-parquet",
+      "contentSize": "27659",
+      "sha256": "77c71259bceca1e22d58daac2768c4a7724636f057ce066f405cc914d688d1f0"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "configurations-jsonl",
+      "name": "configurations.jsonl",
+      "description": "One JSON line per config_used.yaml; preserves the full nested YAML payload (incl. llm_setup).",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/normalized/configurations.jsonl",
+      "encodingFormat": "application/jsonlines",
+      "contentSize": "933724",
+      "sha256": "cf9783e8a0c9fa07c5674f92718f096498c2cdcc5c5d2e542345610ddaae41dd"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "aqua-scores-csv",
+      "name": "aqua_scores.csv",
+      "description": "Original AQuA scoring CSV (one row per transcript). Superseded by aqua_transcripts.parquet but kept for parity.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/aqua_scores.csv",
+      "encodingFormat": "text/csv",
+      "contentSize": "6774746",
+      "sha256": "64db3fb9ba36d6631aeb0fd82ace9f566766ae66d440ee8b50ea1cc612992728"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "opinion-change-all-csv",
+      "name": "opinion_change_all.csv",
+      "description": "Original opinion change CSV; superseded by opinion_change.parquet.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/opinion_change_all.csv",
+      "encodingFormat": "text/csv",
+      "contentSize": "653524",
+      "sha256": "cf090014f6cef811b037c6a870892d48e40f7fd76e1d95f824e8149b0d1168b1"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "opinion-change-output-json",
+      "name": "opinion_change_output.json",
+      "description": "Aggregated opinion-change output produced by analysis scripts.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/opinion_change_output.json",
+      "encodingFormat": "application/json",
+      "contentSize": "8696",
+      "sha256": "7b2f5926be2f29ab3383b7d49f4577f917d64a8157dad7b44b652d4d84d297ef"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "persona-descriptions-json",
+      "name": "persona_descriptions.json",
+      "description": "Persona descriptions used to seed agents in the persona study.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/persona_descriptions.json",
+      "encodingFormat": "application/json",
+      "contentSize": "1157696",
+      "sha256": "3b9b0060cdb33068037b79460aecb3d994ed96ffc1cdbdc2873db695be2cda8b"
+    },
+    {
+      "@type": "cr:FileObject",
+      "@id": "raw-archive",
+      "name": "delibsim-bench-1.0.0-raw.tar.zst",
+      "description": "Compressed archive of the full anonymised raw output tree. Decompress to obtain the original simulation_results/ folder layout: per-run config_used.yaml, deliberation_transcript_*_main.txt, deliberation_turn_log_*.json, dri_survey_prompts_pre/post_*.json, simulation_results_*.json, pilot_data_*.csv, dqi assessment JSONs, and per-batch study summary CSVs. Reasoning-trace transcripts (*_with_reasoning.txt) and DRI-distribution PNGs are excluded; all other files are included.",
+      "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/delibsim-bench-1.0.0-raw.tar.zst",
+      "encodingFormat": "application/zstd",
+      "sha256": "913653090c257f6e093216702143122d8b9fc8f27d65f642e7011223e4f96127",
+      "contentSize": "36962021"
+    }
+  ],
+  "recordSet": [
+    {
+      "@type": "cr:RecordSet",
+      "@id": "runs",
+      "name": "runs",
+      "description": "One row per (study, model_setup, topic, prompt_type, iteration). Pre/post group DRI plus run-level summary statistics.",
+      "key": [
+        {
+          "@id": "runs/run_key"
+        },
+        {
+          "@id": "runs/iteration"
+        }
+      ],
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "runs/run_key",
+          "name": "run_key",
+          "description": "Stable run identifier composed of study/model/topic/condition/extras/timestamp.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "run_key"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/source_file",
+          "name": "source_file",
+          "description": "Relative path of the simulation_results JSON this row came from.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "source_file"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/is_merged",
+          "name": "is_merged",
+          "description": "True if the source file is a merged run (control_2 sometimes merges two execs).",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "is_merged"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/study_kind",
+          "name": "study_kind",
+          "description": "One of: main, agent_study, persona_study, prompt_study, round_study, temp_study.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "study_kind"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/study_run_id",
+          "name": "study_run_id",
+          "description": "Sub-study batch timestamp (e.g. 20260325_222039), empty for the main grid.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "study_run_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/model_setup",
+          "name": "model_setup",
+          "description": "Model setup label (e.g. claude-opus-4.5, mixed-models-reasoning).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "model_setup"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/topic",
+          "name": "topic",
+          "description": "DRI survey topic id (e.g. acp, swiss_health, energy_futures).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "topic"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/prompt_type",
+          "name": "prompt_type",
+          "description": "Deliberation prompt condition: control_1, control_2, or treatment.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "prompt_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/extra",
+          "name": "extra",
+          "description": "Extra parameters parsed from sub-study run dirs (semicolon-separated key=value).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "extra"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/timestamp",
+          "name": "timestamp",
+          "description": "Run start timestamp YYYYMMDD_HHMMSS.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "timestamp"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/iteration",
+          "name": "iteration",
+          "description": "Iteration / repetition index inside the simulation_results JSON.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "iteration"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/deliberation_protocol",
+          "name": "deliberation_protocol",
+          "description": "free_flow or guided.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "deliberation_protocol"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/num_deliberation_turns",
+          "name": "num_deliberation_turns",
+          "description": "Number of turns per deliberation.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "num_deliberation_turns"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/group_size",
+          "name": "group_size",
+          "description": "Number of agents in a deliberation group.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "group_size"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/global_temperature",
+          "name": "global_temperature",
+          "description": "LLM sampling temperature.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "global_temperature"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/deliberation_prompt_type",
+          "name": "deliberation_prompt_type",
+          "description": "control_1 / control_2 / treatment (mirrors prompt_type).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "deliberation_prompt_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/survey_name",
+          "name": "survey_name",
+          "description": "DRI survey identifier used for pre/post questionnaire.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "survey_name"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/random_seed",
+          "name": "random_seed",
+          "description": "Random seed used for group assignment / persona shuffling.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "random_seed"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/assess_dqi",
+          "name": "assess_dqi",
+          "description": "Whether DQI / AQuA assessment was run for this configuration.",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "assess_dqi"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/persona_simulation_enabled",
+          "name": "persona_simulation_enabled",
+          "description": "Whether persona simulation was enabled.",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "persona_simulation_enabled"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_num_observations",
+          "name": "summary_num_observations",
+          "description": "Number of (agent, item) observations summarised over.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_num_observations"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_pre_deliberation_mean_group_score",
+          "name": "summary_pre_deliberation_mean_group_score",
+          "description": "Mean pre-deliberation group DRI across runs.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_pre_deliberation_mean_group_score"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_pre_deliberation_median_group_score",
+          "name": "summary_pre_deliberation_median_group_score",
+          "description": "Median pre-deliberation group DRI.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_pre_deliberation_median_group_score"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_pre_deliberation_std_group_score",
+          "name": "summary_pre_deliberation_std_group_score",
+          "description": "Std dev of pre-deliberation group DRI.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_pre_deliberation_std_group_score"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_post_deliberation_mean_group_score",
+          "name": "summary_post_deliberation_mean_group_score",
+          "description": "Mean post-deliberation group DRI.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_post_deliberation_mean_group_score"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_post_deliberation_median_group_score",
+          "name": "summary_post_deliberation_median_group_score",
+          "description": "Median post-deliberation group DRI.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_post_deliberation_median_group_score"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_post_deliberation_std_group_score",
+          "name": "summary_post_deliberation_std_group_score",
+          "description": "Std dev of post-deliberation group DRI.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_post_deliberation_std_group_score"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_group_dri_change_mean_delta_group_dri",
+          "name": "summary_group_dri_change_mean_delta_group_dri",
+          "description": "Mean change in group DRI (post - pre).",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_group_dri_change_mean_delta_group_dri"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_group_dri_change_median_delta_group_dri",
+          "name": "summary_group_dri_change_median_delta_group_dri",
+          "description": "Median change in group DRI.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_group_dri_change_median_delta_group_dri"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_group_dri_change_std_dev_delta_group_dri",
+          "name": "summary_group_dri_change_std_dev_delta_group_dri",
+          "description": "Std dev of change in group DRI.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_group_dri_change_std_dev_delta_group_dri"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_individual_dri_change_mean_of_mean_individual_change",
+          "name": "summary_individual_dri_change_mean_of_mean_individual_change",
+          "description": "Mean of per-agent mean DRI change.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_individual_dri_change_mean_of_mean_individual_change"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_individual_dri_change_std_dev_of_mean_individual_change",
+          "name": "summary_individual_dri_change_std_dev_of_mean_individual_change",
+          "description": "Std dev of per-agent mean DRI change.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_individual_dri_change_std_dev_of_mean_individual_change"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_individual_dri_change_mean_of_std_dev_individual_change",
+          "name": "summary_individual_dri_change_mean_of_std_dev_individual_change",
+          "description": "Mean of per-agent std-dev of DRI change.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_individual_dri_change_mean_of_std_dev_individual_change"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/pre_deliberation_group_score",
+          "name": "pre_deliberation_group_score",
+          "description": "Pre-deliberation group DRI for this iteration.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "pre_deliberation_group_score"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/pre_deliberation_n_agents",
+          "name": "pre_deliberation_n_agents",
+          "description": "Number of agents at pre-deliberation.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "pre_deliberation_n_agents"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/post_deliberation_group_score",
+          "name": "post_deliberation_group_score",
+          "description": "Post-deliberation group DRI for this iteration.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "post_deliberation_group_score"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/post_deliberation_n_agents",
+          "name": "post_deliberation_n_agents",
+          "description": "Number of agents at post-deliberation.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "post_deliberation_n_agents"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/change_mean",
+          "name": "change_mean",
+          "description": "Mean per-agent DRI change for this iteration.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "change_mean"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/change_std",
+          "name": "change_std",
+          "description": "Std-dev of per-agent DRI change for this iteration.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "change_std"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/change_dri_group",
+          "name": "change_dri_group",
+          "description": "post_deliberation_group_score - pre_deliberation_group_score.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "change_dri_group"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_merged_from",
+          "name": "summary_merged_from",
+          "description": "If is_merged: JSON-encoded list of source files that were merged.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_merged_from"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "runs/summary_num_runs",
+          "name": "summary_num_runs",
+          "description": "If is_merged: number of source files merged.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "runs-parquet"
+            },
+            "extract": {
+              "column": "summary_num_runs"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "dri_individual",
+      "name": "dri_individual",
+      "description": "Long-format individual DRI ratings: one row per (run, iteration, agent, time, item).",
+      "key": [
+        {
+          "@id": "dri_individual/run_key"
+        },
+        {
+          "@id": "dri_individual/iteration"
+        },
+        {
+          "@id": "dri_individual/agent_id"
+        },
+        {
+          "@id": "dri_individual/time"
+        },
+        {
+          "@id": "dri_individual/item_kind"
+        },
+        {
+          "@id": "dri_individual/item_id"
+        }
+      ],
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "dri_individual/run_key",
+          "name": "run_key",
+          "description": "Joins back to runs.run_key.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "dri-individual-parquet"
+            },
+            "extract": {
+              "column": "run_key"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dri_individual/source_file",
+          "name": "source_file",
+          "description": "Relative path of source simulation_results JSON.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "dri-individual-parquet"
+            },
+            "extract": {
+              "column": "source_file"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dri_individual/iteration",
+          "name": "iteration",
+          "description": "Iteration index.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "dri-individual-parquet"
+            },
+            "extract": {
+              "column": "iteration"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dri_individual/time",
+          "name": "time",
+          "description": "pre or post.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "dri-individual-parquet"
+            },
+            "extract": {
+              "column": "time"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dri_individual/agent_id",
+          "name": "agent_id",
+          "description": "Agent identifier within the iteration (e.g. agent_0).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "dri-individual-parquet"
+            },
+            "extract": {
+              "column": "agent_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dri_individual/agent_individual_dri",
+          "name": "agent_individual_dri",
+          "description": "Agent's individual DRI score at this time.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "dri-individual-parquet"
+            },
+            "extract": {
+              "column": "agent_individual_dri"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dri_individual/item_kind",
+          "name": "item_kind",
+          "description": "consideration or preference.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "dri-individual-parquet"
+            },
+            "extract": {
+              "column": "item_kind"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dri_individual/item_id",
+          "name": "item_id",
+          "description": "Survey item id (C1..Cn for considerations, P1..Pn for preferences).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "dri-individual-parquet"
+            },
+            "extract": {
+              "column": "item_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "dri_individual/value",
+          "name": "value",
+          "description": "Likert rating (considerations) or preference rank.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "dri-individual-parquet"
+            },
+            "extract": {
+              "column": "value"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "aqua_transcripts",
+      "name": "aqua_transcripts",
+      "description": "Per-transcript AQuA discourse-quality scores and 20 quality-index means.",
+      "key": {
+        "@id": "aqua_transcripts/transcript_path"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/study_timestamp",
+          "name": "study_timestamp",
+          "description": "Timestamp of the study folder this transcript came from.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "study_timestamp"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/model_key",
+          "name": "model_key",
+          "description": "Model key used in AQuA tooling (matches simulation_results model id).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "model_key"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/condition",
+          "name": "condition",
+          "description": "Prompt condition: control_1 / control_2 / treatment.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "condition"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/topic",
+          "name": "topic",
+          "description": "DRI survey topic.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "topic"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/repetition",
+          "name": "repetition",
+          "description": "Repetition index of the transcript.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "repetition"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/aqua_score",
+          "name": "aqua_score",
+          "description": "Mean AQuA discourse-quality score for the transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "aqua_score"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/num_comments",
+          "name": "num_comments",
+          "description": "Number of comments in the transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "num_comments"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/num_turns",
+          "name": "num_turns",
+          "description": "Number of deliberation turns.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "num_turns"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/translation_method",
+          "name": "translation_method",
+          "description": "Translation tool / mode used to bring transcript to English (if any).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "translation_method"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/transcript_path",
+          "name": "transcript_path",
+          "description": "Repo-relative path to the transcript .txt file.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "transcript_path"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/assessment_timestamp",
+          "name": "assessment_timestamp",
+          "description": "ISO timestamp at which AQuA was run.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "assessment_timestamp"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/translation_applied",
+          "name": "translation_applied",
+          "description": "True if translation was applied prior to AQuA.",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "translation_applied"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/original_language",
+          "name": "original_language",
+          "description": "Original transcript language code.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "original_language"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/is_error",
+          "name": "is_error",
+          "description": "True if the AQuA scoring errored.",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "is_error"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/error",
+          "name": "error",
+          "description": "Error code if applicable.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "error"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_addknowledge",
+          "name": "qi_addknowledge",
+          "description": "Quality index: mean per-turn 'addknowledge' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_addknowledge"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_address",
+          "name": "qi_address",
+          "description": "Quality index: mean per-turn 'address' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_address"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_discrimination",
+          "name": "qi_discrimination",
+          "description": "Quality index: mean per-turn 'discrimination' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_discrimination"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_fact",
+          "name": "qi_fact",
+          "description": "Quality index: mean per-turn 'fact' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_fact"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_insult",
+          "name": "qi_insult",
+          "description": "Quality index: mean per-turn 'insult' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_insult"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_justification",
+          "name": "qi_justification",
+          "description": "Quality index: mean per-turn 'justification' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_justification"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_opinion",
+          "name": "qi_opinion",
+          "description": "Quality index: mean per-turn 'opinion' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_opinion"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_question",
+          "name": "qi_question",
+          "description": "Quality index: mean per-turn 'question' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_question"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_refcontents",
+          "name": "qi_refcontents",
+          "description": "Quality index: mean per-turn 'refcontents' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_refcontents"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_refformat",
+          "name": "qi_refformat",
+          "description": "Quality index: mean per-turn 'refformat' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_refformat"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_refmedium",
+          "name": "qi_refmedium",
+          "description": "Quality index: mean per-turn 'refmedium' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_refmedium"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_refpersonal",
+          "name": "qi_refpersonal",
+          "description": "Quality index: mean per-turn 'refpersonal' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_refpersonal"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_refusers",
+          "name": "qi_refusers",
+          "description": "Quality index: mean per-turn 'refusers' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_refusers"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_relevance",
+          "name": "qi_relevance",
+          "description": "Quality index: mean per-turn 'relevance' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_relevance"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_respect",
+          "name": "qi_respect",
+          "description": "Quality index: mean per-turn 'respect' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_respect"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_sarcasm",
+          "name": "qi_sarcasm",
+          "description": "Quality index: mean per-turn 'sarcasm' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_sarcasm"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_screaming",
+          "name": "qi_screaming",
+          "description": "Quality index: mean per-turn 'screaming' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_screaming"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_solproposal",
+          "name": "qi_solproposal",
+          "description": "Quality index: mean per-turn 'solproposal' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_solproposal"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_storytelling",
+          "name": "qi_storytelling",
+          "description": "Quality index: mean per-turn 'storytelling' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_storytelling"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_transcripts/qi_vulgar",
+          "name": "qi_vulgar",
+          "description": "Quality index: mean per-turn 'vulgar' score for this transcript.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-transcripts-parquet"
+            },
+            "extract": {
+              "column": "qi_vulgar"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "aqua_turns",
+      "name": "aqua_turns",
+      "description": "Per-turn AQuA scores and 20 quality-index 0/1 indicators.",
+      "key": [
+        {
+          "@id": "aqua_turns/transcript_path"
+        },
+        {
+          "@id": "aqua_turns/turn"
+        },
+        {
+          "@id": "aqua_turns/instance_id"
+        }
+      ],
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/transcript_path",
+          "name": "transcript_path",
+          "description": "Joins back to aqua_transcripts.transcript_path.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "transcript_path"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/study_timestamp",
+          "name": "study_timestamp",
+          "description": "Study timestamp.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "study_timestamp"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/model_key",
+          "name": "model_key",
+          "description": "Model key.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "model_key"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/condition",
+          "name": "condition",
+          "description": "Prompt condition.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "condition"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/topic",
+          "name": "topic",
+          "description": "Topic.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "topic"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/repetition",
+          "name": "repetition",
+          "description": "Repetition.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "repetition"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/turn",
+          "name": "turn",
+          "description": "Turn index inside the transcript.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "turn"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/instance_id",
+          "name": "instance_id",
+          "description": "LLM instance id that produced the turn.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "instance_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/aqua_score",
+          "name": "aqua_score",
+          "description": "AQuA score for this turn.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "aqua_score"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_addknowledge",
+          "name": "qi_addknowledge",
+          "description": "Quality index 'addknowledge' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_addknowledge"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_address",
+          "name": "qi_address",
+          "description": "Quality index 'address' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_address"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_discrimination",
+          "name": "qi_discrimination",
+          "description": "Quality index 'discrimination' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_discrimination"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_fact",
+          "name": "qi_fact",
+          "description": "Quality index 'fact' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_fact"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_insult",
+          "name": "qi_insult",
+          "description": "Quality index 'insult' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_insult"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_justification",
+          "name": "qi_justification",
+          "description": "Quality index 'justification' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_justification"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_opinion",
+          "name": "qi_opinion",
+          "description": "Quality index 'opinion' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_opinion"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_question",
+          "name": "qi_question",
+          "description": "Quality index 'question' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_question"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_refcontents",
+          "name": "qi_refcontents",
+          "description": "Quality index 'refcontents' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_refcontents"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_refformat",
+          "name": "qi_refformat",
+          "description": "Quality index 'refformat' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_refformat"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_refmedium",
+          "name": "qi_refmedium",
+          "description": "Quality index 'refmedium' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_refmedium"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_refpersonal",
+          "name": "qi_refpersonal",
+          "description": "Quality index 'refpersonal' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_refpersonal"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_refusers",
+          "name": "qi_refusers",
+          "description": "Quality index 'refusers' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_refusers"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_relevance",
+          "name": "qi_relevance",
+          "description": "Quality index 'relevance' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_relevance"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_respect",
+          "name": "qi_respect",
+          "description": "Quality index 'respect' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_respect"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_sarcasm",
+          "name": "qi_sarcasm",
+          "description": "Quality index 'sarcasm' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_sarcasm"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_screaming",
+          "name": "qi_screaming",
+          "description": "Quality index 'screaming' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_screaming"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_solproposal",
+          "name": "qi_solproposal",
+          "description": "Quality index 'solproposal' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_solproposal"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_storytelling",
+          "name": "qi_storytelling",
+          "description": "Quality index 'storytelling' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_storytelling"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "aqua_turns/qi_vulgar",
+          "name": "qi_vulgar",
+          "description": "Quality index 'vulgar' (0/1) for this turn.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "aqua-turns-parquet"
+            },
+            "extract": {
+              "column": "qi_vulgar"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "opinion_change",
+      "name": "opinion_change",
+      "description": "Per-iteration opinion-change metrics (consideration/preference deltas, agreement, rank stability).",
+      "key": [
+        {
+          "@id": "opinion_change/source_file"
+        },
+        {
+          "@id": "opinion_change/iteration_idx"
+        }
+      ],
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/study",
+          "name": "study",
+          "description": "Study label (main_study or sub-study name).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "study"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/model",
+          "name": "model",
+          "description": "Full model name.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "model"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/model_key",
+          "name": "model_key",
+          "description": "Short model key (joins to aqua_transcripts).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "model_key"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/topic",
+          "name": "topic",
+          "description": "DRI topic id.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "topic"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/condition",
+          "name": "condition",
+          "description": "Prompt condition.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "condition"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/temperature",
+          "name": "temperature",
+          "description": "Sampling temperature.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "temperature"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/group_size",
+          "name": "group_size",
+          "description": "Group size.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "group_size"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/num_turns",
+          "name": "num_turns",
+          "description": "Number of deliberation turns.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "num_turns"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/prompt_type",
+          "name": "prompt_type",
+          "description": "Prompt type (control_1/control_2/treatment).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "prompt_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/persona",
+          "name": "persona",
+          "description": "Whether persona simulation was enabled.",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "persona"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/iteration_idx",
+          "name": "iteration_idx",
+          "description": "Iteration index.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "iteration_idx"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/pre_dri",
+          "name": "pre_dri",
+          "description": "Pre-deliberation group DRI.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "pre_dri"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/post_dri",
+          "name": "post_dri",
+          "description": "Post-deliberation group DRI.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "post_dri"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/dri_change",
+          "name": "dri_change",
+          "description": "post_dri - pre_dri.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "dri_change"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/consideration_change_mean",
+          "name": "consideration_change_mean",
+          "description": "Mean absolute change in agent consideration ratings.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "consideration_change_mean"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/preference_change_mean",
+          "name": "preference_change_mean",
+          "description": "Mean absolute change in agent preference rankings.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "preference_change_mean"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/consideration_agreement_pre",
+          "name": "consideration_agreement_pre",
+          "description": "Pre-deliberation agreement on considerations.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "consideration_agreement_pre"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/consideration_agreement_post",
+          "name": "consideration_agreement_post",
+          "description": "Post-deliberation agreement on considerations.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "consideration_agreement_post"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/consideration_agreement_delta",
+          "name": "consideration_agreement_delta",
+          "description": "Change in consideration agreement.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "consideration_agreement_delta"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/preference_agreement_pre",
+          "name": "preference_agreement_pre",
+          "description": "Pre-deliberation agreement on preferences.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "preference_agreement_pre"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/preference_agreement_post",
+          "name": "preference_agreement_post",
+          "description": "Post-deliberation agreement on preferences.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "preference_agreement_post"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/preference_agreement_delta",
+          "name": "preference_agreement_delta",
+          "description": "Change in preference agreement.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "preference_agreement_delta"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/preference_rank_stability_tau",
+          "name": "preference_rank_stability_tau",
+          "description": "Kendall's tau preference rank stability.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "preference_rank_stability_tau"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/n_agents",
+          "name": "n_agents",
+          "description": "Number of agents.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "n_agents"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "opinion_change/source_file",
+          "name": "source_file",
+          "description": "Relative path to the source simulation_results JSON.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "opinion-change-parquet"
+            },
+            "extract": {
+              "column": "source_file"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "transcripts_index",
+      "name": "transcripts_index",
+      "description": "Index of all shipped deliberation transcripts with provenance fields and run keys for joins.",
+      "key": {
+        "@id": "transcripts_index/relative_path"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/relative_path",
+          "name": "relative_path",
+          "description": "Relative path of the transcript .txt file inside raw/.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "relative_path"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/sha256",
+          "name": "sha256",
+          "description": "SHA-256 of the transcript file.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "sha256"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/bytes",
+          "name": "bytes",
+          "description": "File size in bytes.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "bytes"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/study_kind",
+          "name": "study_kind",
+          "description": "main / agent_study / persona_study / prompt_study / round_study / temp_study.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "study_kind"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/study_run_id",
+          "name": "study_run_id",
+          "description": "Sub-study batch timestamp.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "study_run_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/model_setup",
+          "name": "model_setup",
+          "description": "Model setup label.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "model_setup"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/topic",
+          "name": "topic",
+          "description": "Topic id.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "topic"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/prompt_type",
+          "name": "prompt_type",
+          "description": "Prompt condition.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "prompt_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/extra",
+          "name": "extra",
+          "description": "Extra parameters from run dir.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "extra"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/repetition",
+          "name": "repetition",
+          "description": "Repetition index.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "repetition"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/group",
+          "name": "group",
+          "description": "Group index within iteration.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "group"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/timestamp",
+          "name": "timestamp",
+          "description": "Run timestamp.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "timestamp"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "transcripts_index/run_key",
+          "name": "run_key",
+          "description": "Joins back to runs.run_key.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "transcripts-index-parquet"
+            },
+            "extract": {
+              "column": "run_key"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "files_manifest",
+      "name": "files_manifest",
+      "description": "Per-file manifest of the entire shipped bundle (paths, hashes, partitioning fields).",
+      "key": {
+        "@id": "files_manifest/relative_path"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/relative_path",
+          "name": "relative_path",
+          "description": "Path of the file relative to the raw/ root.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "relative_path"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/file_kind",
+          "name": "file_kind",
+          "description": "Logical file kind (e.g. simulation_results, transcript_main, config_used).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "file_kind"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/bytes",
+          "name": "bytes",
+          "description": "File size in bytes.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "bytes"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/sha256",
+          "name": "sha256",
+          "description": "SHA-256 hex digest of the file content.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "sha256"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/shipped",
+          "name": "shipped",
+          "description": "True if the file is included in the released bundle.",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "shipped"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/study_kind",
+          "name": "study_kind",
+          "description": "Study partition: main, agent_study, etc.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "study_kind"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/model_setup",
+          "name": "model_setup",
+          "description": "Model setup label.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "model_setup"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/topic",
+          "name": "topic",
+          "description": "Topic id.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "topic"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/prompt_type",
+          "name": "prompt_type",
+          "description": "Prompt condition.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "prompt_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/study_run_id",
+          "name": "study_run_id",
+          "description": "Sub-study batch timestamp.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "study_run_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/repetition",
+          "name": "repetition",
+          "description": "Repetition index.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "repetition"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/group",
+          "name": "group",
+          "description": "Group index.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "group"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/timestamp",
+          "name": "timestamp",
+          "description": "File timestamp.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "timestamp"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "files_manifest/extra",
+          "name": "extra",
+          "description": "Extra parameters from run dir.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "manifest"
+            },
+            "extract": {
+              "column": "extra"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "cr:RecordSet",
+      "@id": "configurations",
+      "name": "configurations",
+      "description": "Frozen YAML configurations used by every run, with the standard parameters expanded into queryable columns. The full nested YAML (incl. llm_setup) is also available in configurations.jsonl.",
+      "key": {
+        "@id": "configurations/relative_path"
+      },
+      "field": [
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/relative_path",
+          "name": "relative_path",
+          "description": "Path of the source config_used.yaml inside raw/.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "relative_path"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/study_kind",
+          "name": "study_kind",
+          "description": "Study partition.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "study_kind"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/study_run_id",
+          "name": "study_run_id",
+          "description": "Sub-study batch id.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "study_run_id"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/model_setup",
+          "name": "model_setup",
+          "description": "Model setup label.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "model_setup"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/topic",
+          "name": "topic",
+          "description": "Topic id.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "topic"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/prompt_type",
+          "name": "prompt_type",
+          "description": "Prompt condition.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "prompt_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/extra",
+          "name": "extra",
+          "description": "Extra run-dir params.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "extra"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/deliberation_protocol",
+          "name": "deliberation_protocol",
+          "description": "free_flow / guided.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "deliberation_protocol"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/num_deliberation_turns",
+          "name": "num_deliberation_turns",
+          "description": "Turns per deliberation.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "num_deliberation_turns"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/group_size",
+          "name": "group_size",
+          "description": "Agents per group.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "group_size"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/group_assignment_strategy",
+          "name": "group_assignment_strategy",
+          "description": "mixed / random / by_model / individual_model.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "group_assignment_strategy"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/survey_name",
+          "name": "survey_name",
+          "description": "DRI survey id.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "survey_name"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/global_temperature",
+          "name": "global_temperature",
+          "description": "LLM temperature.",
+          "dataType": "sc:Float",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "global_temperature"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/random_seed",
+          "name": "random_seed",
+          "description": "Random seed.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "random_seed"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/deliberation_prompt_type",
+          "name": "deliberation_prompt_type",
+          "description": "control_1 / control_2 / treatment.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "deliberation_prompt_type"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/assess_dqi",
+          "name": "assess_dqi",
+          "description": "DQI assessment enabled.",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "assess_dqi"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/persona_simulation_enabled",
+          "name": "persona_simulation_enabled",
+          "description": "Persona simulation enabled.",
+          "dataType": "sc:Boolean",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "persona_simulation_enabled"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/results_directory",
+          "name": "results_directory",
+          "description": "Configured output directory at run time.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "results_directory"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/transcript_directory",
+          "name": "transcript_directory",
+          "description": "Configured transcript output directory at run time.",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "transcript_directory"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/llm_setup_n",
+          "name": "llm_setup_n",
+          "description": "Number of model entries declared in llm_setup.",
+          "dataType": "sc:Integer",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "llm_setup_n"
+            }
+          }
+        },
+        {
+          "@type": "cr:Field",
+          "@id": "configurations/llm_setup",
+          "name": "llm_setup",
+          "description": "JSON-encoded list of llm_setup model entries (model_name, provider, enabled, reasoning_enabled, count).",
+          "dataType": "sc:Text",
+          "source": {
+            "fileObject": {
+              "@id": "configurations-parquet"
+            },
+            "extract": {
+              "column": "llm_setup"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "rai:hasSyntheticData": true,
+  "rai:dataLimitations": [
+    "Reasoning-trace transcripts (*_with_reasoning.txt) are intentionally excluded from the released bundle to keep the download small. Only the public-facing turn text is shipped.",
+    "control_1 is a no-deliberation baseline condition used to estimate intrinsic DRI survey re-test noise. By design, no agent discussion is run in control_1; therefore transcript fields and transcript files are empty for these runs. Consequently, discourse-quality analysis (AQuA) is only defined for conditions where deliberation exists (control_2 and treatment).",
+    "AQuA discourse-quality scoring is itself produced by an LLM (separate from the deliberation agents) and inherits its noise and biases. Per-turn quality-index 0/1 indicators are not human-validated.",
+    "LLM output drifts over time. The snapshot reflects model versions available via OpenRouter between November 2025 and March 2026; exact reproduction of agent responses requires the same model snapshots, which providers may deprecate.",
+    "All deliberations are conducted in English. The 12 deliberation topics are predominantly Western policy debates (Australia, Switzerland, Sweden, Germany); generalisation to non-Western contexts and other languages is unverified.",
+    "The benchmark is not recommended for: (a) drawing conclusions about human deliberative behaviour (agents are LLMs, not humans); (b) real-world policy decisions on the 12 topics (agent positions are model artefacts, not citizen views); (c) training models to imitate specific human individuals (no such data exists in the bundle); (d) claims about 'deliberative AI' replacing human deliberation."
+  ],
+  "rai:dataBiases": [
+    "Model bias: agents inherit the political, cultural, and linguistic training biases of their underlying LLMs. All models in the main grid are commercially trained on predominantly Western internet text.",
+    "Topic bias: the 12 topics are skewed toward Anglophone-Western deliberative-democracy traditions, with Australia over-represented (acp, auscj, bep, biobanking_wa, ccps, energy_futures, fnqcj, forestera, fremantle = 9 of 12). Switzerland (swiss_health), Sweden (uppsala_speaks), and Germany (zukunft) make up the remaining 3.",
+    "Selection bias on models: only commercially-served LLMs accessible via OpenRouter at the time of data collection are included. Smaller open-weight models, fine-tuned variants, and self-hosted models are not represented.",
+    "Sycophantic-agreement bias: contemporary instruction-tuned LLMs are known to over-agree under multi-turn discussion conditions. Apparent post-deliberation consensus measured by ΔDRI may therefore inflate genuine deliberative impact relative to human-only deliberation.",
+    "AQuA-scorer normative bias: the AQuA quality indicators operationalise Habermasian deliberation theory (justification, respect, reference to common good, etc.). Communities that value other deliberative norms (consensus-building over argumentation, oral / narrative traditions, ritualised disagreement) will score artificially low on these indicators.",
+    "Prompt bias: deliberation prompts are written in English and frame the deliberation as a Western citizen-assembly-style process; agents are therefore biased toward Anglophone discourse norms regardless of the underlying model."
+  ],
+  "rai:personalSensitiveInformation": [
+    "No personal or sensitive information is contained in the dataset. All deliberators are LLM agents; no human subjects participated at any stage of data collection. The agents' role-played expressions of opinion on policy topics are model artefacts and do not reflect the views of any real person, organisation, or community.",
+    "No personally identifying information about the dataset's authors, API account holders, or any third party is present in the shipped files. Absolute filesystem paths from the original collection machine were stripped during anonymisation (see claude/dataset/anonymize.py)."
+  ],
+  "rai:dataUseCases": [
+    "Construct: 'deliberative reason' (DRI) operationalises intersubjective consistency on a policy question across agents and time. Construct validity established for: ranking LLMs on deliberative impact (ΔDRI), comparing prompt conditions (control vs. treatment), and comparing reasoning vs. non-reasoning model variants under identical conditions.",
+    "Construct: 'discourse quality' (AQuA) operationalises Habermasian deliberation criteria via per-turn 0/1 indicators across 20 quality categories. Construct validity established for: ranking transcripts on aggregate quality, identifying low-quality transcripts for filtering, and training discourse-quality classifiers.",
+    "Recommended use cases:",
+    "  - benchmarking LLMs on deliberative quality and impact",
+    "  - studying treatment effects of normative deliberation prompts",
+    "  - comparing reasoning vs non-reasoning model variants",
+    "  - studying mixed-model deliberation dynamics",
+    "  - methodological work on multi-agent LLM deliberation simulation (group size, persona, prompt design, rounds, temperature)",
+    "  - training transcript-quality classifiers using the per-turn AQuA indicators as supervised signals",
+    "Use cases for which validity has NOT been established:",
+    "  - drawing conclusions about human deliberative behaviour from these LLM-generated deliberations",
+    "  - using ΔDRI as a proxy for the social impact of any deployed deliberation system",
+    "  - cross-cultural deliberation research (the dataset is monolingual English and Western-centric)",
+    "  - safety / alignment evaluation (DRI and AQuA are not safety metrics)"
+  ],
+  "rai:dataSocialImpact": "Positive impact: provides a standardised benchmark for measuring deliberative quality and impact across LLMs, enabling more principled comparisons between model families and prompt designs. Supports methodological research on whether automated deliberation can augment human deliberative processes such as citizen assemblies, policy consultations, and structured public engagement. Releases all transcripts, configurations, and per-turn scores under an open licence to enable reproducibility and re-analysis. Negative impact / risks: (1) misuse to claim that LLM deliberations substitute for human deliberation, undermining democratic legitimacy; (2) over-reliance on these benchmarks for model selection without recognising that high deliberative-quality scores reflect surface text patterns, not normative virtues; (3) several topics include politically contested questions (constitutional reform, criminal justice, biobanking) and a naive reading of agent positions could be cited out of context to misrepresent model 'opinions'. Mitigations: explicit datasheet warnings, the requirement to cite the dataset's synthetic origin, and an authors' statement that this benchmark is not used to draw policy conclusions."
+}
