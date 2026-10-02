@@ -28,7 +28,7 @@
     "adjudication": "Assessing conformance adequacy on criteria 2.c, 2.d, 2.e, 3.a, 4.a, 4.c, and 5.c requires domain-expert determinations. If these modalities fall outside the primary evaluator's competence, they should reach out to a pre-identified, qualified collaborator. Evaluators must log these determinations, explicitly recording the adjudicator's name and area of expertise.\n",
     "worksheet": "The rubric's appendix is a Scoring Calculation Worksheet: record the dataset name/PID, the evaluation date, the primary evaluator's name and ORCID (or ROR), and any expert adjudicators consulted (name and expertise); record each criterion score (0, 1, 2, or N/A) and check the gating requirements; compute each domain score as points earned divided by the maximum possible points excluding N/A (default maxima — FAIRness 8, Provenance 8, Characterization 10, Pre-model Explainability 6, Ethics 8, Sustainability 8, Computability 8); the overall AI-readiness score is the sum of the seven domain percentages divided by 7. If any domain triggered a \"Gating FAIL\", the overall status is \"Gating FAIL\" regardless of the final percentage.\n"
   },
-  "generated": "2026-10-02 13:17 UTC",
+  "generated": "2026-10-02 15:54 UTC",
   "network_checks": true,
   "crate": {
     "@id": null,
@@ -1207,6 +1207,12 @@
               "sub": true
             },
             {
+              "label": "PROV software agents without a file excluded from the denominator",
+              "kind": "count",
+              "value": 0,
+              "sub": true
+            },
+            {
               "label": "Example entity with a checksum",
               "kind": "entity",
               "value": {
@@ -1465,7 +1471,7 @@
           },
           "evidence": [
             {
-              "label": "Confidentiality level",
+              "label": "Confidentiality level (confidentialityLevel / dct:accessRights)",
               "kind": "text",
               "value": null
             },
@@ -1723,9 +1729,9 @@
               "of": 0
             },
             {
-              "label": "hasPart references on the root",
+              "label": "hasPart / distribution references on the root",
               "kind": "count",
-              "value": 0,
+              "value": 2,
               "sub": true
             },
             {
@@ -1928,6 +1934,17 @@
               "label": "Software descriptions",
               "kind": "list",
               "value": [],
+              "sub": true
+            },
+            {
+              "label": "Software environment declared (softwareRequirements / runtimePlatform / installUrl)",
+              "kind": "list",
+              "value": []
+            },
+            {
+              "label": "Environment in a machine-executable format (container, conda environment, workflow language)",
+              "kind": "bool",
+              "value": false,
               "sub": true
             }
           ],

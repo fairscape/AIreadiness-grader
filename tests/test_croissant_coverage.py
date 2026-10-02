@@ -151,3 +151,74 @@ def test_ror_ids_and_citeas_authors(tmp_path):
     assert facts["cite_authors"] == ["Lora Aroyo", "Gregory Serapio-Garcia"]
     _, est = run(provenance, "1.d", load(tmp_path, citeAs=cite))
     assert est["score"] == "1"
+
+
+# --- standard-vocabulary provenance, statistics, security, datasheets ------
+
+def test_prov_activities_count_as_steps_with_software(tmp_path):
+    release = {"@type": ["prov:SoftwareAgent", "sc:SoftwareApplication"],
+               "@id": "https://pypi.org/project/x/1.0/", "name": "x 1.0",
+               "downloadUrl": "https://files.pythonhosted.org/x-1.0.whl"}
+    acts = [
+        {"@type": "prov:Activity", "@id": "act/collect", "name": "collect",
+         "prov:wasAssociatedWith": {"@type": "prov:Person", "name": "A"}},
+        {"@type": "prov:Activity", "@id": "act/compose", "name": "compose",
+         "prov:used": [{"@id": "raw"}], "prov:wasAssociatedWith": release},
+    ]
+    dist = [{"@type": "cr:FileObject", "@id": "raw", "name": "raw", "sha256": "a",
+             "contentUrl": "https://zenodo.org/r/1/raw", "prov:wasGeneratedBy": {"@id": "act/collect"}},
+            {"@type": "cr:FileObject", "@id": "out", "name": "out", "sha256": "b",
+             "contentUrl": "https://zenodo.org/r/1/out", "prov:wasGeneratedBy": {"@id": "act/compose"}}]
+    b = load(tmp_path, distribution=dist, recordSet=[], **{"prov:wasGeneratedBy": acts})
+    st = b.stats
+    assert (st.computation_total, st.experiment_total) == (1, 1)   # software vs person
+    assert st.computation_with_software == 1 and st.activity_with_io == 1
+    assert st.dataset_with_prov == 2
+    assert run(provenance, "1.b", b)[1]["score"] == "2"
+    assert run(provenance, "1.c", b)[1]["score"] == "2"            # PyPI release
+    # a provenance agent is not a file of the deposit
+    assert run(explainability, "3.c", b)[1]["score"] == "2"
+
+
+def test_ro_crate_style_types_win_over_prov_activity(tmp_path):
+    from aireadiness_evidence.crate import canonical_type
+    assert canonical_type({"@type": ["prov:Activity", "https://w3id.org/EVI#Experiment"]}) \
+        == "Experiment"
+
+
+def test_derived_from_sources_are_not_deposit_files(tmp_path):
+    b = load(tmp_path, **{"prov:wasDerivedFrom": [
+        {"@type": "sc:Dataset", "@id": "https://example.org/src", "name": "src"}]})
+    assert b.stats.dataset_total == 2            # repo + csvs only
+    assert run(provenance, "1.a", b)[1]["score"] == "1"
+
+
+def test_croissant_statistics_annotations(tmp_path):
+    field = {"@type": "cr:Field", "@id": "rs/sev", "name": "sev", "dataType": "sc:Integer",
+             "annotation": [{"@type": "cr:Field", "@id": "rs/sev/max", "value": 3,
+                             "equivalentProperty": "sc:maxValue"},
+                            {"@id": "rs/sev/mean", "value": 2.2, "dataType": "ddi-stats:7975ed0"}]}
+    rs = [{"@type": "cr:RecordSet", "@id": "rs", "name": "rs", "field": [field],
+           "annotation": [{"@type": "cr:Field", "@id": "rs/count", "value": 10,
+                           "dataType": "wd:Q4049983"}]}]
+    b = load(tmp_path, recordSet=rs, **{"rai:dataCollectionMissingData": "NULL only."})
+    assert b.stats.summary_stats_total == 3
+    assert b.stats.field_total == 1 and not b.stats.field_bindings  # stats aren't bindings
+    assert run(characterization, "2.b", b)[1]["score"] == "2"
+
+
+def test_hl7_label_through_dct_access_rights(tmp_path):
+    term = {"@id": "http://terminology.hl7.org/CodeSystem/v3-Confidentiality#M",
+            "@type": "sc:DefinedTerm", "termCode": "M"}
+    facts, est = run(ethics, "4.d", load(tmp_path, **{"dct:accessRights": term}))
+    assert facts["hl7_code"] == "M" and est["score"] == "2"
+    _, est = run(ethics, "4.d", load(tmp_path, **{"dct:accessRights": "Open access"}))
+    assert est["score"] == "1"
+
+
+def test_subjectof_datasheet_link(tmp_path):
+    b = load(tmp_path, subjectOf=[
+        {"@type": "sc:CreativeWork", "name": "Dataset README (datasheet)",
+         "url": "https://zenodo.org/records/1/files/README.md"},
+        {"@type": "sc:ScholarlyArticle", "name": "Paper", "url": "https://arxiv.org/abs/1"}])
+    assert b.datasheets == ["https://zenodo.org/records/1/files/README.md"]

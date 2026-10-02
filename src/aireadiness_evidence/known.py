@@ -269,10 +269,17 @@ HL7_CONFIDENTIALITY = {
 
 
 def hl7_confidentiality_code(value):
-    """Match a value against HL7 v3-Confidentiality codes or display names."""
+    """Match a value against HL7 v3-Confidentiality codes or display names,
+    given bare ("R"), as a code-system IRI (".../v3-Confidentiality#R" or
+    ".../v3-Confidentiality/R"), or as a DefinedTerm / {"@id"} object."""
+    if isinstance(value, dict):
+        value = value.get("termCode") or value.get("@id") or value.get("name")
+    if isinstance(value, list):
+        return next((c for c in map(hl7_confidentiality_code, value) if c), None)
     if not isinstance(value, str):
         return None
-    v = value.strip().lower()
+    m = re.search(r"v3-Confidentiality[#/](\w+)\s*$", value, re.I)
+    v = (m.group(1) if m else value).strip().lower()
     for code, display in HL7_CONFIDENTIALITY.items():
         if v == code.lower() or v == display:
             return code

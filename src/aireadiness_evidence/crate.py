@@ -34,7 +34,29 @@ ACTIVITY_INPUT_FIELDS = [
     "usedDataset", "usedSample", "usedInstrument", "inputs",
     "https://w3id.org/EVI#inputs", "prov:used",
 ]
-ACTIVITY_OUTPUT_FIELDS = ["generated", "outputs", "https://w3id.org/EVI#outputs"]
+ACTIVITY_OUTPUT_FIELDS = ["generated", "prov:generated", "outputs",
+                          "https://w3id.org/EVI#outputs"]
+
+# Properties that tie a PROV activity (or schema.org Action) to the agents and
+# tools that carried it out; a software agent among them is the step's software.
+ACTIVITY_AGENT_FIELDS = ["usedSoftware", "prov:wasAssociatedWith",
+                         "wasAssociatedWith", "prov:used", "instrument"]
+
+# Properties whose nested objects describe things outside the deposit (the
+# sources it was derived from, the inputs an activity read, works citing it).
+# Datasets nested under them are not collected as deposit entities (a source
+# typed sc:Dataset is not one of this dataset's files); other nested things,
+# such as an instrument an activity prov:used, still are.
+EXTERNAL_REF_FIELDS = {"prov:wasDerivedFrom", "wasDerivedFrom", "isBasedOn",
+                       "sdSource", "prov:hadPrimarySource", "prov:used",
+                       "citation"}
+
+# Croissant 1.1 descriptive statistics are annotations on a RecordSet or Field
+# carrying a `value`, typed with a DDI-CDI SummaryStatisticType term, Wikidata
+# cardinality (Q4049983), or mapped to sc:minValue / sc:maxValue and the like.
+STAT_TERM_RE = re.compile(
+    r"ddialliance\.org|ddi-stats:|Q4049983|(?:^|[:/#])(minValue|maxValue|"
+    r"median|mean|standardDeviation|variance|count)\b", re.I)
 
 HASH_FIELDS = ["md5", "MD5", "sha256", "sha-256", "sha512", "checksum"]
 
@@ -58,6 +80,8 @@ _TYPE_TOKENS = {
     # Croissant's data dictionary: a RecordSet of typed Fields is a schema
     "RecordSet": "Schema", "Field": "Field",
     "SoftwareSourceCode": "Software", "SoftwareApplication": "Software",
+    # PROV-O (recommended by Croissant 1.1 for provenance)
+    "SoftwareAgent": "Software",  # prov:Activity is resolved in canonical_type
 }
 
 # Croissant Field.source links a RecordSet back to the file(s) it describes.
@@ -113,16 +137,18 @@ def flatten_document(doc):
         return None, graph
     nodes = []
 
-    def walk(value):
+    def walk(value, external=False):
         if isinstance(value, dict):
+            if external and canonical_type(value) == "Dataset":
+                return  # a source dataset, not one of the deposit's files
             if "@type" in value:
                 nodes.append(value)
             for key, child in value.items():
                 if not key.startswith("@"):
-                    walk(child)
+                    walk(child, external or key in EXTERNAL_REF_FIELDS)
         elif isinstance(value, list):
             for child in value:
-                walk(child)
+                walk(child, external)
 
     walk(doc)
     return doc, nodes
@@ -140,6 +166,26 @@ def normalize_root(root):
         term = _RAI_BY_LOWER.get(m.group(1).lower()) if m else None
         if term and not root.get(f"rai:{term}"):
             root[f"rai:{term}"] = root[key]
+    # Dublin Core accessRights ("who can access the resource or an indication
+    # of its security status") is the standard home for a security label
+    if not root.get("confidentialityLevel"):
+        for key in ("dct:accessRights", "dcterms:accessRights", "accessRights"):
+            if root.get(key):
+                root["confidentialityLevel"] = root[key]
+                break
+    # Croissant 1.1 states usage conditions as DefinedTerms in sc:usageInfo;
+    # an HL7 v3-Confidentiality term there is the security label
+    if not root.get("confidentialityLevel"):
+        for v in as_list(root.get("usageInfo")) + as_list(root.get("conditionsOfAccess")):
+            if "v3-Confidentiality" in json.dumps(v):
+                root["confidentialityLevel"] = v
+                break
+    # schema.org contactPoint (or a creator's email) is the dataset contact
+    if not root.get("contactEmail"):
+        emails = [c.get("email") for c in as_list(root.get("contactPoint"))
+                  if isinstance(c, dict) and c.get("email")]
+        if emails:
+            root["contactEmail"] = emails[0]
     if not root.get("citeAs") and root.get("cr:citeAs"):
         root["citeAs"] = root["cr:citeAs"]
     pub = root.get("publisher")
@@ -162,10 +208,22 @@ def canonical_type(entity):
     types = [str(t) for t in as_list(entity.get("@type"))]
     if any("ROCrate" in t for t in types):
         return "ROCrate"
-    for t in types:
-        token = re.split(r"[#/:]", t)[-1]
+    tokens = [re.split(r"[#/:]", t)[-1] for t in types]
+    for token in tokens:
         if token in _TYPE_TOKENS:
             return _TYPE_TOKENS[token]
+    for token in tokens:
+        if token == "Activity":
+            # a PROV activity carried out by software is a computation;
+            # one carried out by people (collection, curation) is an
+            # experiment-like step
+            agents = [a for f in ACTIVITY_AGENT_FIELDS
+                      for a in as_list(entity.get(f)) if isinstance(a, dict)]
+            if agents and not any(_TYPE_TOKENS.get(re.split(
+                    r"[#/:]", str(t2))[-1]) == "Software"
+                    for a in agents for t2 in as_list(a.get("@type"))):
+                return "Experiment"
+            return "Computation"
     extra = entity.get("additionalType")
     if isinstance(extra, str) and extra in _TYPE_TOKENS:
         return _TYPE_TOKENS[extra]
@@ -258,6 +316,29 @@ def subject_terms(root, graph):
     return terms
 
 
+DATASHEET_LINK_RE = re.compile(
+    r"datasheet|data[- ]?card|dataset[- ]card|data sheet|readme", re.I)
+
+
+def linked_datasheets(root):
+    """URLs of datasheet-style documents linked from the root through
+    schema.org ``subjectOf`` (a CreativeWork about the dataset): a Datasheet
+    for Datasets, a data card, or a dataset README/card page."""
+    out = []
+    for v in as_list(root.get("subjectOf")):
+        if isinstance(v, dict):
+            url = next(iter(ids_of(v.get("url")) + ids_of(v.get("@id"))), None)
+            blob = " ".join(str(v.get(k) or "") for k in
+                            ("name", "description", "additionalType", "url",
+                             "@id", "encodingFormat"))
+        else:
+            url, blob = v, str(v)
+        if isinstance(url, str) and url.startswith("http") \
+                and DATASHEET_LINK_RE.search(blob):
+            out.append(url)
+    return out
+
+
 def has_any(entity, fields):
     return any(entity.get(f) for f in fields)
 
@@ -325,6 +406,7 @@ class CrateStats:
 
         self.software_total = 0
         self.software_with_hash = 0
+        self.software_agent_only = 0           # prov:SoftwareAgent, no file
         self.software_entities = []            # trimmed, bounded
 
         self.activity_total = 0                # Computation + Experiment
@@ -401,6 +483,9 @@ class CrateBundle:
         self.datasheets = []            # crate-relative html paths (root first)
         self.stats = CrateStats()
         self._seen_ids = set()
+        self._stat_annotations = set()   # id() of Croissant statistic annotations
+        self._generated = set()          # activities some entity wasGeneratedBy
+        self._by_id = {}
 
     # -- loading ------------------------------------------------------------
 
@@ -462,6 +547,7 @@ class CrateBundle:
             say(f"  {sub.rel_dir}: {sub.entity_count} entities")
 
         bundle._discover_html()
+        bundle.datasheets += linked_datasheets(bundle.root)
         return bundle
 
     def _discover_subcrates(self, graph):
@@ -517,6 +603,19 @@ class CrateBundle:
         schema_covered = set()
         by_id = {e["@id"]: e for e in graph
                  if isinstance(e.get("@id"), str)}
+        # PROV states an activity's outputs from the output's side
+        # (entity prov:wasGeneratedBy activity), nested or by reference
+        generated = set()
+        for e in graph:
+            for v in as_list(e.get("prov:wasGeneratedBy")
+                             or e.get("wasGeneratedBy")):
+                if isinstance(v, dict):
+                    generated.add(id(v))
+                    generated.update(ids_of(v))
+                elif isinstance(v, str):
+                    generated.add(v)
+        self._generated = generated
+        self._by_id = by_id
         for e in graph:
             if canonical_type(e) == "Schema":
                 for f in as_list(e.get("field")):
@@ -578,6 +677,11 @@ class CrateBundle:
                 self._absorb_activity(e, ctype)
             elif ctype == "Software":
                 stats.software_total += 1
+                # a PROV software agent named in the provenance is not a file
+                # in the deposit unless it says where to get it
+                if any("SoftwareAgent" in str(t) for t in as_list(e.get("@type"))) \
+                        and not e.get("contentUrl"):
+                    stats.software_agent_only += 1
                 if has_any(e, HASH_FIELDS):
                     stats.software_with_hash += 1
                     stats.add_sample("hashed_entity", e)
@@ -585,8 +689,11 @@ class CrateBundle:
                     stats.software_entities.append(trim_entity(e))
             elif ctype == "EmptyRecordSet":
                 stats.empty_recordsets += 1
+            elif ctype == "Field" and id(e) in self._stat_annotations:
+                pass  # a statistic about another field, not a data element
             elif ctype == "Field":
                 stats.field_total += 1
+                self._absorb_annotations(e)
                 bound = {_datatype_binding(t) for t in as_list(e.get("dataType"))}
                 for v in as_list(e.get("equivalentProperty")):
                     iri = v.get("@id") if isinstance(v, dict) else v
@@ -599,6 +706,7 @@ class CrateBundle:
             elif ctype == "Schema":
                 stats.schema_total += 1
                 stats.add_sample("schema", e)
+                self._absorb_annotations(e)
                 # a Croissant RecordSet typed cr:Split enumerates the splits;
                 # any other RecordSet with inline records (cr:data) or
                 # cr:examples carries example data in the exact record shape
@@ -673,20 +781,55 @@ class CrateBundle:
         if EXAMPLE_NAME_RE.search(name):
             stats.add_sample("example_dataset", e)
 
+    def _absorb_annotations(self, e):
+        """Croissant 1.1 statistics: annotations with a value and a statistic
+        type, on a RecordSet (record counts) or a Field (per-variable)."""
+        stats = self.stats
+        for a in as_list(e.get("annotation") or e.get("cr:annotation")):
+            if not isinstance(a, dict) or "value" not in a:
+                continue
+            terms = " ".join(
+                str(t.get("@id") or t.get("termCode") or "") if isinstance(t, dict)
+                else str(t)
+                for t in as_list(a.get("dataType"))
+                + as_list(a.get("equivalentProperty")))
+            if not STAT_TERM_RE.search(terms):
+                continue
+            self._stat_annotations.add(id(a))
+            stats.summary_stats_total += 1
+            stats.add_sample("summary_stats", a)
+            if len(stats.summary_stats_entities) < 25:
+                stats.summary_stats_entities.append({
+                    "@id": a.get("@id"), "name": a.get("name") or a.get("@id"),
+                    "type": "Statistic", "target": e.get("@id")})
+
+    def _links_software(self, e):
+        for f in ACTIVITY_AGENT_FIELDS:
+            for v in as_list(e.get(f)):
+                target = v if isinstance(v, dict) and "@type" in v else \
+                    self._by_id.get(v.get("@id") if isinstance(v, dict) else v)
+                if f == "usedSoftware" or (
+                        isinstance(target, dict)
+                        and canonical_type(target) == "Software"):
+                    return True
+        return False
+
     def _absorb_activity(self, e, ctype):
         stats = self.stats
         stats.activity_total += 1
         if ctype == "Computation":
             stats.computation_total += 1
             stats.add_sample("computation", e)
-            if e.get("usedSoftware"):
+            if self._links_software(e):
                 stats.computation_with_software += 1
         else:
             stats.experiment_total += 1
             stats.add_sample("experiment", e)
         if e.get("usedContainer"):
             stats.activity_with_container += 1
-        if has_any(e, ACTIVITY_INPUT_FIELDS) and has_any(e, ACTIVITY_OUTPUT_FIELDS):
+        has_output = has_any(e, ACTIVITY_OUTPUT_FIELDS) or id(e) in self._generated \
+            or e.get("@id") in self._generated
+        if has_any(e, ACTIVITY_INPUT_FIELDS) and has_output:
             stats.activity_with_io += 1
 
     # -- convenience --------------------------------------------------------

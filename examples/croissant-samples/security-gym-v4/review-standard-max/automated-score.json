@@ -1,15 +1,13 @@
 {
   "model": "fairscape-evidence automated estimates (no LLM)",
-  "total_score": 21,
-  "max_score": 34,
-  "percentage": 61.8,
-  "overall_score": 63.7,
+  "total_score": 34,
+  "max_score": 38,
+  "percentage": 89.5,
+  "overall_score": 92.9,
   "gating": {
-    "pass": false,
-    "label": "Gating FAIL",
-    "failures": [
-      "1.c scored 0 (gate requires above 0)"
-    ],
+    "pass": null,
+    "label": "gates not fully scored",
+    "failures": [],
     "unscored": [
       "4.a",
       "4.b",
@@ -32,9 +30,9 @@
     }
   },
   "counts": {
-    "substantive": 5,
-    "partial": 11,
-    "absent": 1,
+    "substantive": 15,
+    "partial": 4,
+    "absent": 0,
     "na": 0,
     "error": 0
   },
@@ -42,9 +40,9 @@
     {
       "id": "0",
       "name": "FAIRness",
-      "score": 6,
+      "score": 8,
       "max": 8,
-      "percentage": 75.0,
+      "percentage": 100.0,
       "rubrics": [
         {
           "id": "0.a",
@@ -55,14 +53,14 @@
         {
           "id": "0.b",
           "name": "Accessible",
-          "score": 1,
-          "rationale": "metadata fetchable via PID lookup but no standard-vocabulary references found"
+          "score": 2,
+          "rationale": "metadata fetchable via PID lookup; standard vocabularies referenced: MeSH"
         },
         {
           "id": "0.c",
           "name": "Interoperable",
-          "score": 1,
-          "rationale": "metadata is JSON-LD but references no standard vocabulary; 1 machine-readable schema entities"
+          "score": 2,
+          "rationale": "metadata is JSON-LD; standard vocabularies referenced: MeSH"
         },
         {
           "id": "0.d",
@@ -77,15 +75,15 @@
     {
       "id": "1",
       "name": "Provenance",
-      "score": 3,
+      "score": 4,
       "max": 8,
-      "percentage": 37.5,
+      "percentage": 50.0,
       "rubrics": [
         {
           "id": "1.a",
           "name": "Transparent",
           "score": 1,
-          "rationale": "source data linked from the root in a structured field (isBasedOn / prov:wasDerivedFrom); no per-file provenance or ground-truth entities \u2014 consider 2 if the link names the exact source artifact"
+          "rationale": "6 datasets carry provenance links; ground-truth elements missing: samples, instruments"
         },
         {
           "id": "1.b",
@@ -98,37 +96,43 @@
         {
           "id": "1.c",
           "name": "Interpretable",
-          "score": 0,
-          "rationale": "software entities exist but none has a download or repository link"
+          "score": 1,
+          "rationale": "1 of 5 archived with a PID; 4 on mutable code hosting only"
         },
         {
           "id": "1.d",
           "name": "Key actors identified",
           "score": 1,
-          "rationale": "0 of 2 authors carry a PID; 2 named in free text only"
+          "rationale": "1 of 2 authors carry a PID; 1 named in free text only"
         }
       ],
       "gating": true,
-      "gate_failed": true
+      "gate_failed": false
     },
     {
       "id": "2",
       "name": "Characterization",
-      "score": 2,
-      "max": 4,
-      "percentage": 50.0,
+      "score": 6,
+      "max": 6,
+      "percentage": 100.0,
       "rubrics": [
         {
           "id": "2.a",
           "name": "Semantics",
-          "score": 1,
-          "rationale": "abstract and keywords present, no controlled-vocabulary terms"
+          "score": 2,
+          "rationale": "abstract present (695 chars \u2014 length-checked only, not read for substance); 12 keywords; 4 controlled-vocabulary terms"
+        },
+        {
+          "id": "2.b",
+          "name": "Statistics",
+          "score": 2,
+          "rationale": "6 entities carry a summary-statistics link; missing-data statement present (its consistency and domain-appropriateness are asserted, not verified against the files)"
         },
         {
           "id": "2.c",
           "name": "Standards",
-          "score": 1,
-          "rationale": "1 schema entities but no standard-vocabulary binding found"
+          "score": 2,
+          "rationale": "1 schema entities; standard vocabulary bindings populated: Croissant, Wikidata"
         }
       ],
       "gating": true,
@@ -137,15 +141,15 @@
     {
       "id": "3",
       "name": "Pre-model Explainability",
-      "score": 5,
+      "score": 6,
       "max": 6,
-      "percentage": 83.3,
+      "percentage": 100.0,
       "rubrics": [
         {
           "id": "3.a",
           "name": "Data documentation template",
-          "score": 1,
-          "rationale": "no human-readable datasheet; 8 of 9 machine-readable sections populated"
+          "score": 2,
+          "rationale": "human-readable datasheet linked; 8 of 9 machine-readable sections populated (presence-checked only \u2014 whether coverage is substantive is a human read)"
         },
         {
           "id": "3.b",
@@ -164,15 +168,15 @@
     {
       "id": "4",
       "name": "Ethics",
-      "score": 1,
+      "score": 2,
       "max": 2,
-      "percentage": 50.0,
+      "percentage": 100.0,
       "rubrics": [
         {
           "id": "4.d",
           "name": "Secure",
-          "score": 1,
-          "rationale": "sensitivity stated in prose (rai:personalSensitiveInformation), not a standard security label; score 0 if the statement does not say whether protection is required"
+          "score": 2,
+          "rationale": "confidentiality level is an HL7 v3-Confidentiality code ('M'); whether the declared level is actually ENFORCED (the 0-rule) is not verified \u2014 score 0 if controlled data is retrievable without authorization or authorized users are blocked"
         }
       ],
       "gating": true,
@@ -181,8 +185,8 @@
     {
       "id": "5",
       "name": "Sustainability",
-      "score": 2,
-      "max": 2,
+      "score": 4,
+      "max": 4,
       "percentage": 100.0,
       "rubrics": [
         {
@@ -190,34 +194,39 @@
           "name": "Persistent",
           "score": 2,
           "rationale": "PID present (scheme: DOI); recognized archive(s): Zenodo; an explicit retention commitment is assumed for recognized repositories, not verified; note the criterion covers RAW/unprocessed data \u2014 confirm the raw data itself is what's archived"
+        },
+        {
+          "id": "5.d",
+          "name": "Associated",
+          "score": 2,
+          "rationale": "components associated machine-readably in the archived metadata record (hasPart / distribution + provenance links); accessibility of every component not verified \u2014 downgrade if pieces are missing"
         }
       ]
     },
     {
       "id": "6",
       "name": "Computability",
-      "score": 2,
+      "score": 4,
       "max": 4,
-      "percentage": 50.0,
+      "percentage": 100.0,
       "rubrics": [
         {
           "id": "6.a",
           "name": "Standardized",
-          "score": 1,
-          "rationale": "formal schema/standard declared, so structural validation is possible; no populated standard-vocabulary bindings \u2014 semantic conformance cannot be deterministically validated (the 1-rule)"
+          "score": 2,
+          "rationale": "declared standards: Croissant, Dublin Core, W3C PROV-O, schema.org; deterministic validator known: Croissant \u2014 mlcroissant validator; JSON Schema \u2014 any JSON Schema validator (e.g. python-jsonschema); PROV-O \u2014 PROV-CONSTRAINTS validation (ProvToolbox `provconvert -validate`); populated vocabulary bindings present (final score is capped at 2.c's score \u2014 rule 6.a \u2264 2.c)"
         },
         {
           "id": "6.d",
           "name": "Contextualized",
-          "score": 1,
-          "rationale": "some context present but incomplete (example data or withheld-information description missing)"
+          "score": 2,
+          "rationale": "machine-readable example dataset provided; withheld/preprocessing information described; splits N/A unless the dataset should define them \u2014 reviewer to confirm"
         }
       ]
     }
   ],
   "note": "Only criteria with an automated estimate are counted; the rest need human or model judgment and are listed in unestimated_criteria.",
   "unestimated_criteria": [
-    "2.b Statistics",
     "2.d Potential Sources of Bias",
     "2.e Data quality",
     "4.a Ethically acquired",
@@ -225,7 +234,6 @@
     "4.c Ethically Disseminated",
     "5.b Domain-appropriate",
     "5.c Well-governed",
-    "5.d Associated",
     "6.b Computationally accessible",
     "6.c Portable"
   ]

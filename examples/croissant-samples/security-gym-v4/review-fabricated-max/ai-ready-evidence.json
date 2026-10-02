@@ -32,29 +32,39 @@
   "network_checks": true,
   "crate": {
     "@id": null,
-    "name": "delibsim-bench",
-    "identifier": null,
-    "version": "1.0.0",
-    "datePublished": "2026-05-06",
-    "path": "/home/oj/fairscape/AIreadiness-grader/examples/croissant-samples/delibsim-bench",
-    "source": "/home/oj/fairscape/AIreadiness-grader/examples/croissant-samples/delibsim-bench/metadata.json",
+    "name": "security-gym-v4",
+    "identifier": "https://doi.org/10.5281/zenodo.21763493",
+    "version": "4.1.0",
+    "datePublished": "2026-04-09",
+    "path": "/home/oj/fairscape/AIreadiness-grader/examples/croissant-samples/security-gym-v4",
+    "source": "/home/oj/fairscape/AIreadiness-grader/examples/croissant-samples/security-gym-v4/metadata-fabricated-max.json",
     "format": "croissant",
     "format_label": "Croissant"
   },
   "inventory": {
-    "entities": 212,
+    "entities": 63,
     "by_type": {
-      "Person": 1,
-      "Organization": 1,
-      "Dataset": 14,
-      "Schema": 8,
-      "Field": 188
+      "Person": 2,
+      "Organization": 5,
+      "Other": 8,
+      "Experiment": 1,
+      "Instrument": 5,
+      "Sample": 4,
+      "Computation": 4,
+      "Software": 5,
+      "Dataset": 6,
+      "Schema": 1,
+      "Field": 20,
+      "DefinedTerm": 2
     },
     "sub_crates": [],
     "hasPart_count": 0
   },
   "artifacts": {
-    "datasheets": [],
+    "datasheets": [
+      "https://zenodo.org/records/21763493/files/DATASET_README.md",
+      "https://huggingface.co/datasets/j-klawson/security-gym-v4/blob/main/README.md"
+    ],
     "evidence_graphs": []
   },
   "sections": [
@@ -81,23 +91,32 @@
             {
               "label": "Identifier",
               "kind": "text",
-              "value": null
+              "value": "https://doi.org/10.5281/zenodo.21763493"
             },
             {
               "label": "Persistent identifier present",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "scheme: DOI",
+              "sub": true
+            },
+            {
+              "label": "Identifier resolves",
+              "kind": "bool",
+              "value": true,
+              "detail": "HTTP 200",
               "sub": true
             },
             {
               "label": "Publisher",
               "kind": "text",
-              "value": "Anonymous (NeurIPS 2026 Datasets and Benchmarks submission)"
+              "value": "Zenodo https://zenodo.org"
             },
             {
               "label": "Publisher is a recognized sustainable repository",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "Zenodo",
               "sub": true
             },
             {
@@ -109,15 +128,18 @@
             {
               "label": "Publisher found in re3data",
               "kind": "bool",
-              "value": false,
-              "detail": "query: Anonymous (NeurIPS 2026 Datasets and Benchmarks submission)",
+              "value": true,
+              "detail": "Zenodo, Open-source Scientific Software and Service Repository, CESSDA Data Catalogue",
               "sub": true
             }
           ],
           "estimate": {
-            "score": "0",
+            "score": "2",
             "basis": [
-              "no PID detected and publisher not a recognized sustainable repository"
+              "PID present (scheme: DOI)",
+              "PID resolved",
+              "deposited in a sustainable repository (Zenodo)",
+              "that the PID resolves to a specific VERSION of the dataset is not verified — confirm before accepting (the gate requires a 2 here)"
             ]
           },
           "notes": "A sustainable repository assigns persistent identifiers, maintains descriptive metadata that remains resolvable independently of the deposited object, and has resources to persist long-term (e.g., NIH and EBI databases, DDBJ, ICPSR, the NIH GREI generalist repositories, Software Heritage). Purely local or unmanaged resources — departmental servers, S3/GCS accounts, Google Drive, Box — are excluded.",
@@ -142,13 +164,56 @@
             {
               "label": "Identifier used for lookup",
               "kind": "text",
-              "value": null
+              "value": "https://doi.org/10.5281/zenodo.21763493"
             },
             {
               "label": "Descriptive metadata fetchable via PID alone",
               "kind": "bool",
-              "value": null,
-              "detail": "no identifier",
+              "value": true,
+              "detail": "application/ld+json",
+              "sub": true
+            },
+            {
+              "label": "Metadata returned by the PID resolver",
+              "kind": "entity",
+              "value": {
+                "@context": "http://schema.org",
+                "@type": "Dataset",
+                "name": "Security-Gym Dataset: Labeled Linux Log and eBPF Streams for Continual Learning Research",
+                "publisher": {
+                  "@type": "Organization",
+                  "name": "Zenodo"
+                },
+                "identifier": {
+                  "@type": "PropertyValue",
+                  "propertyID": "oai",
+                  "value": "oai:zenodo.org:21763493"
+                },
+                "datePublished": "2026-08-02",
+                "license": [
+                  "http://www.apache.org/licenses/LICENSE-2.0",
+                  "http://rightsstatements.org/vocab/InC/1.0/"
+                ],
+                "author": {
+                  "name": "Keith Lawson",
+                  "givenName": "Keith",
+                  "familyName": "Lawson",
+                  "affiliation": [
+                    {
+                      "@type": "Organization",
+                      "name": "London Health Sciences Centre"
+                    },
+                    {
+                      "@type": "Organization",
+                      "@id": "https://ror.org/035wtm547",
+                      "name": "University of Michigan–Dearborn"
+                    }
+                  ],
+                  "@type": "Person",
+                  "@id": "0009-0008-7536-1122"
+                }
+              },
+              "detail": "truncated to descriptive fields",
               "sub": true
             },
             {
@@ -163,15 +228,7 @@
                 "http://mlcommons.org/croissant/",
                 "http://mlcommons.org/croissant/RAI/",
                 "http://www.w3.org/ns/prov#",
-                "prov:wasGeneratedBy",
-                "rai:dataLimitations",
-                "rai:dataBiases",
-                "rai:personalSensitiveInformation",
-                "rai:dataUseCases",
-                "rai:dataSocialImpact",
-                "rai:hasSyntheticData",
                 "http://purl.org/dc/terms/",
-                "cr:equivalentProperty",
                 "cr:extract",
                 "cr:field",
                 "cr:fileProperty",
@@ -179,7 +236,6 @@
                 "cr:fileSet",
                 "cr:format",
                 "cr:includes",
-                "cr:excludes",
                 "cr:isLiveDataset",
                 "cr:jsonPath",
                 "cr:key",
@@ -191,22 +247,33 @@
                 "cr:regex",
                 "cr:repeated",
                 "cr:replace",
-                "cr:samplingRate",
                 "https://schema.org/",
                 "cr:separator",
                 "cr:source",
                 "cr:subField",
-                "cr:transform"
+                "cr:transform",
+                "http://www.wikidata.org/entity/",
+                "http://rdf-vocabulary.ddialliance.org/cv/SummaryStatisticType/2.1.2/",
+                "cr:annotation",
+                "cr:equivalentProperty",
+                "http://www.w3.org/ns/odrl/2/"
               ],
               "detail": "schema.org / EVI here means the metadata follows a standard vocabulary"
             },
             {
               "label": "Standard vocabulary references found in metadata",
               "kind": "bool",
-              "value": false
+              "value": true,
+              "detail": "MeSH (2 refs)"
             }
           ],
-          "estimate": null,
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "metadata fetchable via PID lookup",
+              "standard vocabularies referenced: MeSH"
+            ]
+          },
           "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
           "gate_min": 1
         },
@@ -242,15 +309,7 @@
                 "http://mlcommons.org/croissant/",
                 "http://mlcommons.org/croissant/RAI/",
                 "http://www.w3.org/ns/prov#",
-                "prov:wasGeneratedBy",
-                "rai:dataLimitations",
-                "rai:dataBiases",
-                "rai:personalSensitiveInformation",
-                "rai:dataUseCases",
-                "rai:dataSocialImpact",
-                "rai:hasSyntheticData",
                 "http://purl.org/dc/terms/",
-                "cr:equivalentProperty",
                 "cr:extract",
                 "cr:field",
                 "cr:fileProperty",
@@ -258,7 +317,6 @@
                 "cr:fileSet",
                 "cr:format",
                 "cr:includes",
-                "cr:excludes",
                 "cr:isLiveDataset",
                 "cr:jsonPath",
                 "cr:key",
@@ -270,40 +328,50 @@
                 "cr:regex",
                 "cr:repeated",
                 "cr:replace",
-                "cr:samplingRate",
                 "https://schema.org/",
                 "cr:separator",
                 "cr:source",
                 "cr:subField",
-                "cr:transform"
+                "cr:transform",
+                "http://www.wikidata.org/entity/",
+                "http://rdf-vocabulary.ddialliance.org/cv/SummaryStatisticType/2.1.2/",
+                "cr:annotation",
+                "cr:equivalentProperty",
+                "http://www.w3.org/ns/odrl/2/"
               ],
               "detail": "schema.org / EVI here means the metadata follows a standard vocabulary"
             },
             {
               "label": "Standard vocabulary references found in metadata",
               "kind": "bool",
-              "value": false
+              "value": true,
+              "detail": "MeSH (2 refs)"
             },
             {
               "label": "Subject terms (root about + DefinedTerms)",
               "kind": "list",
-              "value": []
+              "value": [
+                "http://id.nlm.nih.gov/mesh/D016494",
+                "http://id.nlm.nih.gov/mesh/D000069550",
+                "ddi-stats:7975ed0",
+                "moderate"
+              ]
             },
             {
               "label": "Machine-readable schema entities (EVI:Schema, or a Croissant RecordSet with fields)",
               "kind": "count",
-              "value": 8
+              "value": 1
             },
             {
               "label": "Datasets linked to a schema",
               "kind": "count",
-              "value": 8,
+              "value": 1,
               "sub": true
             },
             {
               "label": "Parquet-format datasets (embedded schema)",
               "kind": "count",
-              "value": 7,
+              "value": 0,
               "sub": true
             },
             {
@@ -311,44 +379,50 @@
               "kind": "entity",
               "value": {
                 "@type": "cr:RecordSet",
-                "@id": "runs",
-                "name": "runs",
-                "description": "One row per (study, model_setup, topic, prompt_type, iteration). Pre/post group DRI plus run-level summary statistics.",
-                "key": [
-                  {
-                    "@id": "runs/run_key"
-                  },
-                  {
-                    "@id": "runs/iteration"
-                  }
-                ],
+                "@id": "events",
+                "name": "events",
+                "description": "All streams share the same `events` table schema (single-table SQLite database). Each row is one telemetry event with ground-truth labels.",
                 "field": [
                   {
-                    "@id": "runs/run_key"
+                    "@id": "events/id"
                   },
                   {
-                    "@id": "runs/source_file"
+                    "@id": "events/timestamp"
                   },
                   {
-                    "@id": "runs/is_merged"
+                    "@id": "events/source"
                   },
                   {
-                    "@id": "runs/study_kind"
+                    "@id": "events/raw_line"
                   },
                   {
-                    "@id": "runs/study_run_id"
+                    "@id": "events/parsed"
                   },
-                  "…(+37 more)"
+                  "…(+9 more)"
+                ],
+                "annotation": [
+                  {
+                    "@id": "events/count"
+                  },
+                  {
+                    "@id": "events/malicious_count"
+                  }
+                ],
+                "examples": [
+                  "{…}",
+                  "{…}",
+                  "{…}",
+                  "{…}"
                 ]
               },
               "sub": true
             }
           ],
           "estimate": {
-            "score": "1",
+            "score": "2",
             "basis": [
-              "metadata is JSON-LD but references no standard vocabulary",
-              "8 machine-readable schema entities"
+              "metadata is JSON-LD",
+              "standard vocabularies referenced: MeSH"
             ]
           },
           "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
@@ -395,16 +469,11 @@
             {
               "label": "AI/ML language in license or use terms",
               "kind": "text",
-              "value": "No specific mention of AI/ML detected"
+              "value": "AI/ML language detected. Sample: [usage_info] …:Permission', 'odrl:action': {'@id': 'odrl:use'}, 'name': 'Research, teaching and benchmarking of detection and continual-learning methods, including AI/ML training.'}, 'odrl:prohibition': [{'@type': 'odrl:Prohibition', 'odrl:action': {'@id': 'odrl:use'}, 'name': 'Re-identifying, contacting or profiling …",
+              "detail": "the reviewer decides whether the terms permit or prohibit AI/ML reuse"
             }
           ],
-          "estimate": {
-            "score": "2",
-            "basis": [
-              "machine-readable license linked in the metadata (CC BY 4.0)",
-              "no AI/ML prohibition language found in license or use terms"
-            ]
-          },
+          "estimate": null,
           "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
           "gate_min": 1
         }
@@ -438,73 +507,113 @@
             {
               "label": "Datasets carrying provenance links (EVI/PROV terms)",
               "kind": "percent",
-              "value": 0.0,
-              "n": 0,
-              "total": 14
+              "value": 100.0,
+              "n": 6,
+              "total": 6
             },
             {
               "label": "Example dataset with provenance links",
               "kind": "entity",
-              "value": null,
+              "value": {
+                "@type": "cr:FileObject",
+                "@id": "exp_7d_brute_v4.db.zst",
+                "name": "exp_7d_brute_v4.db.zst",
+                "description": "7-day SSH brute-force smoke-test stream: 4,891,541 events (25,980 malicious). Decompressed: 1.9 GB SQLite database.",
+                "contentSize": "163895433",
+                "contentUrl": "https://huggingface.co/datasets/j-klawson/security-gym-v4/resolve/main/exp_7d_brute_v4.db.zst",
+                "encodingFormat": "application/zstd",
+                "md5": "338a73eced346420ceea1eab9b3cce94",
+                "sha256": "d06590723dea52c4e3f8776c6af841c78ff9fd35ea41c49be2137c68cfe7c652",
+                "prov:wasGeneratedBy": {
+                  "@id": "activity/compose"
+                },
+                "prov:wasDerivedFrom": [
+                  {
+                    "@id": "benign_v4.db.zst"
+                  },
+                  {
+                    "@id": "campaigns_v2.db.zst"
+                  }
+                ]
+              },
               "sub": true
             },
             {
               "label": "Ground-truth elements present as structured entities",
               "kind": "list",
               "value": [
-                "samples: no",
-                "instruments: no",
-                "experiments: no",
-                "datasets_with_provenance: no"
+                "samples: yes",
+                "instruments: yes",
+                "experiments: yes",
+                "datasets_with_provenance: yes"
               ]
             },
             {
               "label": "Sample entities",
               "kind": "count",
-              "value": 0,
+              "value": 4,
               "sub": true
             },
             {
               "label": "Instrument entities",
               "kind": "count",
-              "value": 0,
+              "value": 5,
               "sub": true
             },
             {
               "label": "Experiment entities",
               "kind": "count",
-              "value": 0,
+              "value": 1,
               "sub": true
             },
             {
               "label": "Example sample entity",
               "kind": "entity",
-              "value": null,
+              "value": {
+                "@type": "prov:Entity",
+                "additionalType": "Sample",
+                "@id": "sample/server-1-logs",
+                "name": "Raw log capture, server 1"
+              },
               "sub": true
             },
             {
               "label": "Example instrument entity",
               "kind": "entity",
-              "value": null,
+              "value": {
+                "@type": "prov:Entity",
+                "additionalType": "Instrument",
+                "@id": "instrument/ebpf-agent",
+                "name": "BCC eBPF tracepoint agent",
+                "description": "server/ebpf_collector.py"
+              },
               "sub": true
             },
             {
               "label": "Source data linked from the root (isBasedOn / prov:wasDerivedFrom)",
               "kind": "list",
               "value": [
-                "https://openrouter.ai/anthropic/claude-opus-4.5",
-                "https://openrouter.ai/openai/gpt-5.1",
-                "https://openrouter.ai/google/gemini-3-pro-preview",
-                "https://openrouter.ai/deepseek/deepseek-v3.2-exp",
-                "https://openrouter.ai/moonshotai/kimi-k2-thinking"
+                "https://attack.mitre.org/matrices/enterprise/",
+                "https://github.com/j-klawson/security-gym/tree/main/security_gym/campaigns",
+                "https://github.com/j-klawson/security-gym"
               ]
+            },
+            {
+              "label": "Source described in prose (rai:dataCollectionRawData)",
+              "kind": "text",
+              "value": "Raw text log lines (auth.log, syslog, nginx access/error) and raw eBPF event dumps. Stored verbatim in the events.raw_line column."
+            },
+            {
+              "label": "Source described in prose (rai:dataCollection)",
+              "kind": "text",
+              "value": "Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor, a public web server, and a GPU lab server) via BCC tracepoints (sys_enter_execve, sched_process_exit, sys_enter_connect, sys_enter_accept4, sys_enter_openat, sys_enter_unlinkat). Attack traffic was generated by 10 scripted campaigns executed by a purpose-built campaign orchestrator against a deliberately vulnerable Debian 11 lab VM. No third-party infrastructure was probed. The University of Michigan-Dearborn IRB reviewed the collection protocol …[truncated, 1148 chars total]"
             }
           ],
           "estimate": {
-            "score": "1",
+            "score": "2",
             "basis": [
-              "source data linked from the root in a structured field (isBasedOn / prov:wasDerivedFrom)",
-              "no per-file provenance or ground-truth entities — consider 2 if the link names the exact source artifact"
+              "6 datasets carry provenance links",
+              "all ground-truth elements present as structured entities (samples, instruments, experiments)"
             ]
           },
           "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
@@ -535,29 +644,47 @@
             {
               "label": "Transformation steps (Computation + Experiment entities)",
               "kind": "count",
-              "value": 0,
-              "detail": "0 computations, 0 experiments"
+              "value": 5,
+              "detail": "4 computations, 1 experiments"
             },
             {
               "label": "Steps with inputs and outputs declared",
               "kind": "percent",
-              "value": null,
-              "n": 0,
-              "total": 0,
+              "value": 60.0,
+              "n": 3,
+              "total": 5,
               "sub": true
             },
             {
               "label": "Computations linked to software",
               "kind": "percent",
-              "value": null,
-              "n": 0,
-              "total": 0,
+              "value": 100.0,
+              "n": 4,
+              "total": 4,
               "sub": true
             },
             {
               "label": "Example transformation step",
               "kind": "entity",
-              "value": null,
+              "value": {
+                "@type": "prov:Activity",
+                "name": "Synthetic attack-event generation",
+                "prov:type": "Synthesis",
+                "description": "Adversary events generated by a custom Python campaign orchestrator (security_gym/campaigns/) executing 10 scripted MITRE ATT&CK-aligned campaigns against an isolated UTM-virtualised Debian 11 lab VM. Six attack modules are released (brute_force, web_attack, recon, malware, dos, lateral_movement). All attack traffic is the deterministic output of the YAML-configured orchestrator under a fixed RNG …",
+                "prov:wasAssociatedWith": {
+                  "@type": "prov:SoftwareAgent",
+                  "name": "Security-Gym campaign orchestrator",
+                  "version": "0.4.2",
+                  "agentType": "Procedural Python (no LLM, no generative model)",
+                  "validation": "Every released stream passes nine automated validation checks (see Validation activity below), including raw-line regex spot checks per attack type and attack-type distribution checks against composition weights.",
+                  "codeRepository": [
+                    "https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/orchestrator.py"
+                  ],
+                  "identifier": "https://doi.org/10.5072/zenodo.security-gym-0.4.2"
+                },
+                "platform": "Custom Python campaign orchestrator targeting a UTM-virtualised Debian 11 lab VM (isildur, 192.168.2.201).",
+                "@id": "activity/generate-attacks"
+              },
               "sub": true
             },
             {
@@ -570,12 +697,25 @@
               "label": "Evidence graphs (visual provenance per sub-crate)",
               "kind": "links",
               "value": []
+            },
+            {
+              "label": "Processing steps in prose — Preprocessing",
+              "kind": "text",
+              "value": "Compressed with Zstandard. Composed experiment streams are produced by StreamComposer with per-stream MITRE ATT&CK-aligned Poisson-scheduled attack injection and 24.2% eBPF downsampling. The streams are evaluated online in temporal order, so no train/validation/test split is defined; each stream's composition seed is recorded in its composition_meta table (99 for the 30-day stream). Nothing was withheld apart from the scrubbing described under personal information."
+            },
+            {
+              "label": "Processing steps in prose — Annotation",
+              "kind": "text",
+              "value": "Attack labeling uses CampaignLabeler with time-window + source-IP matching: an event is labeled malicious if its timestamp falls within an attack phase's window AND its src_ip matches an attacker IP for that phase. Events with no src_ip (e.g., syslog daemon messages) match on time window alone. eBPF kernel events use the same labeler. Benign events are filtered with MaliciousFilter using deterministic web/auth signature rules (path traversal, SQL injection, XSS, JNDI injection, RFI, scanner user-agents, failed-password sequences) before inclusion in the benign baseline. PII scrubbing applies case-insensitive hostname/domain/IP replacement to a single synthetic target identity (`isildur` / …[truncated, 715 chars total]"
             }
           ],
           "estimate": {
-            "score": "0",
+            "score": "2",
             "basis": [
-              "no transformation steps (Computation or Experiment entities) in the crate"
+              "5 machine-readable transformation steps",
+              "every computation links its software",
+              "completeness of the provenance record (or disclosure of known gaps) is asserted, not verified",
+              "final score is capped at 1.a's score (rule 1.b ≤ 1.a)"
             ]
           },
           "notes": "Scoring dependency rule — 1.b ≤ 1.a. The score for 1.b (Traceable) may never exceed the score for 1.a (Transparent). A transformation pipeline cannot be fully traced if the fundamental data source is unidentified.",
@@ -606,20 +746,20 @@
             {
               "label": "Software entities",
               "kind": "count",
-              "value": 0
+              "value": 5
             },
             {
               "label": "Archived with a PID (Zenodo / Software Heritage / DOI / PyPI)",
               "kind": "count",
-              "value": 0,
-              "of": 0,
+              "value": 5,
+              "of": 5,
               "sub": true
             },
             {
               "label": "Mutable code hosting only (GitHub and the like)",
               "kind": "count",
               "value": 0,
-              "of": 0,
+              "of": 5,
               "sub": true
             },
             {
@@ -627,20 +767,26 @@
               "kind": "count",
               "value": 0,
               "detail": "counts as 2 only for proprietary commercial software (reviewer's call)",
-              "of": 0,
+              "of": 5,
               "sub": true
             },
             {
               "label": "No download/repository link",
               "kind": "count",
               "value": 0,
-              "of": 0,
+              "of": 5,
               "sub": true
             },
             {
               "label": "Archived software",
               "kind": "list",
-              "value": [],
+              "value": [
+                "Security-Gym campaign orchestrator — https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/orchestrator.py, https://doi.org/10.5072/zenodo.security-gym-0.4.2",
+                "CampaignLabeler + MaliciousFilter — https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/collection/labeler.py, https://doi.org/10.5072/zenodo.security-gym-0.4.2",
+                "PII scrubber + StreamComposer — https://github.com/j-klawson/security-gym/blob/v0.4.2/scripts/scrub_benign_db.py, https://github.com/j-klawson/security-gym/blob/v0.4.2/src/security_gym/data/composer.py, https://doi.org/10.5072/zenodo.security-gym-0.4.2",
+                "security-gym 0.4.2 — https://github.com/j-klawson/security-gym/tree/v0.4.2, https://doi.org/10.5072/zenodo.security-gym-0.4.2, https://files.pythonhosted.org/packages/c2/f1/803771d161d1df84ca8c72e877055715e2da506c48c885204ab7b758d565/security_gym-0.4.2-py3-none-any.whl",
+                "validate_labels.py — https://github.com/j-klawson/security-gym/blob/v0.4.2/scripts/validate_labels.py, https://doi.org/10.5072/zenodo.security-gym-0.4.2"
+              ],
               "sub": true
             },
             {
@@ -663,9 +809,9 @@
             }
           ],
           "estimate": {
-            "score": "0",
+            "score": "2",
             "basis": [
-              "no software entities in the crate"
+              "all 5 software entities point at an archive with a PID"
             ]
           },
           "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
@@ -693,23 +839,24 @@
             {
               "label": "Authors identified with a PID (ORCID)",
               "kind": "percent",
-              "value": 0.0,
-              "n": 0,
-              "total": 1,
+              "value": 100.0,
+              "n": 2,
+              "total": 2,
               "sub": true
             },
             {
               "label": "Authors with PIDs (first 10)",
               "kind": "list",
-              "value": [],
+              "value": [
+                "Keith Lawson (https://orcid.org/0009-0008-7536-1122)",
+                "Hafiz Malik (https://orcid.org/0000-0002-1825-0097)"
+              ],
               "sub": true
             },
             {
               "label": "Authors named in free text only",
               "kind": "list",
-              "value": [
-                "Anonymous"
-              ],
+              "value": [],
               "sub": true
             },
             {
@@ -720,7 +867,7 @@
             {
               "label": "Contact",
               "kind": "text",
-              "value": null
+              "value": "security-gym-dac@example.org"
             },
             {
               "label": "Organizations (root isPartOf)",
@@ -736,17 +883,14 @@
             {
               "label": "Authors in the dataset citation (citeAs BibTeX)",
               "kind": "list",
-              "value": [
-                "Anonymous"
-              ],
+              "value": [],
               "detail": "free-text names; not counted as PIDs"
             }
           ],
           "estimate": {
-            "score": "1",
+            "score": "2",
             "basis": [
-              "0 of 1 authors carry a PID",
-              "1 named in free text only"
+              "all 2 authors carry a PID (ORCID)"
             ]
           },
           "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
@@ -776,40 +920,51 @@
             {
               "label": "Dataset abstract/description",
               "kind": "text",
-              "value": "delib-sim-bench is a benchmark of multi-agent LLM deliberation simulations. It contains pre/post Deliberative Reason Index (DRI) survey responses, deliberation transcripts, AQuA discourse-quality scores, and full simulation configurations across 11 model setups (single-model and mixed-model, with and without reasoning), 12 policy topics, and 3 prompt conditions (control_1, control_2, treatment), plus five secondary studies varying agent count, persona use, prompt design, deliberation rounds, and temperature. See DATASHEET.md (Gebru et al. style) for the full datasheet.",
-              "detail": "575 chars"
+              "value": "SCORING DEMO with fabricated metadata, not the authors' record. Ground-truth-labeled Linux server log and eBPF kernel-event streams for cybersecurity continual reinforcement learning research. The v4 dataset contains 11.2M base benign events (real Linux server traffic from four personal servers plus 24-hour eBPF kernel-event collections from three Debian 13 servers) plus 60,468 attack campaign events across six MITRE ATT&CK-aligned attack modules executed against a purpose-built lab VM. Composed into four pre-mixed experiment streams ranging from 4.9M to 257.7M events with Poisson-scheduled attack injection. Designed for use with the security-gym Gymnasium environment (`SecurityLogStream-Text-v0` and `SecurityLogStream-Hybrid-v0` observation modes).",
+              "detail": "759 chars"
             },
             {
               "label": "Keywords",
               "kind": "list",
               "value": [
-                "deliberation",
-                "multi-agent",
-                "large language models",
-                "DRI",
-                "Deliberative Reason Index",
-                "AQuA",
-                "discourse quality",
-                "social science benchmark"
+                "cybersecurity",
+                "intrusion detection",
+                "eBPF",
+                "MITRE ATT&CK",
+                "continual learning",
+                "streaming reinforcement learning",
+                "log analysis",
+                "Linux",
+                "SIEM",
+                "Gymnasium environment",
+                "http://id.nlm.nih.gov/mesh/D016494",
+                "http://id.nlm.nih.gov/mesh/D000069550"
               ]
             },
             {
               "label": "Controlled-vocabulary terms present",
               "kind": "bool",
-              "value": false,
-              "detail": "0 subject terms (0 from root `about`, 0 from keywords); none on a recognised ontology host"
+              "value": true,
+              "detail": "4 subject terms (0 from root `about`, 2 from keywords); 2 MeSH"
             },
             {
               "label": "Controlled-vocabulary terms",
               "kind": "list",
-              "value": [],
+              "value": [
+                "(no label) — http://id.nlm.nih.gov/mesh/D016494",
+                "(no label) — http://id.nlm.nih.gov/mesh/D000069550",
+                "Arithmetic Mean — ddi-stats:7975ed0",
+                "moderate — None"
+              ],
               "sub": true
             }
           ],
           "estimate": {
-            "score": "1",
+            "score": "2",
             "basis": [
-              "abstract and keywords present, no controlled-vocabulary terms"
+              "abstract present (759 chars — length-checked only, not read for substance)",
+              "12 keywords",
+              "4 controlled-vocabulary terms"
             ]
           },
           "notes": "Scores the subject and discovery terms only, not the vocabulary bindings already scored in 0.c (Interoperable) and 2.c (Standards)."
@@ -833,36 +988,53 @@
             {
               "label": "Entities carrying a summary-statistics link (hasSummaryStatistics)",
               "kind": "count",
-              "value": 0
+              "value": 6
             },
             {
               "label": "Entities located",
               "kind": "list",
-              "value": [],
+              "value": [
+                "Statistic: count -> events",
+                "Statistic: malicious count -> events",
+                "Statistic: mean -> events/is_malicious",
+                "Statistic: min -> events/severity",
+                "Statistic: max -> events/severity",
+                "Statistic: mean -> events/severity"
+              ],
               "sub": true
             },
             {
               "label": "Example summary-statistics reference",
               "kind": "entity",
-              "value": null,
+              "value": {
+                "@type": "cr:Field",
+                "@id": "events/count",
+                "name": "count",
+                "description": "Rows in exp_30d_heavy_v4.",
+                "value": 21511208,
+                "dataType": "wd:Q4049983"
+              },
               "sub": true
             },
             {
               "label": "Missing-data statement (rai:dataCollectionMissingData)",
               "kind": "text",
-              "value": null
+              "value": "Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and parsed are never NULL. src_ip is NULL on 20,112,710 rows (93.5%), session_id on 20,476,710, username on 21,504,142 and service on 21,474,130, because most events (eBPF file/process records, syslog daemon messages) have no client address, session or user. NULL is the only missing-value marker; no empty strings are used."
             },
             {
               "label": "Tabular formats in the crate",
               "kind": "list",
-              "value": [
-                "text/csv: 3",
-                "application/x-parquet: 7"
-              ],
+              "value": [],
               "detail": "for non-tabular data, per-variable statistics are N/A but missing-value consistency is still scored in modality terms (absent channels, dropped leads, corrupt slices, time-series gaps); the criterion is N/A only if the data has no representable missingness at all"
             }
           ],
-          "estimate": null,
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "6 entities carry a summary-statistics link",
+              "missing-data statement present (its consistency and domain-appropriateness are asserted, not verified against the files)"
+            ]
+          },
           "notes": "Score on missing-value encoding consistency, expressed in terms appropriate to the modality (e.g., absent channels, dropped leads, corrupt or omitted slices, or gaps in a time series). For non-tabular data, per-variable descriptive statistics are not applicable (N/A). This criterion is N/A when the data has no representable missingness."
         },
         {
@@ -884,32 +1056,28 @@
             {
               "label": "Machine-readable schema entities (EVI:Schema, JSON Schema dialect, Croissant RecordSet with fields)",
               "kind": "count",
-              "value": 8
+              "value": 1
             },
             {
               "label": "Non-image datasets linked to a schema",
               "kind": "percent",
-              "value": 57.1,
+              "value": 16.7,
               "detail": "0 image datasets excluded — image files don't take a data dictionary; a schema covering a format class covers every file in that class",
-              "n": 8,
-              "total": 14,
+              "n": 1,
+              "total": 6,
               "sub": true
             },
             {
               "label": "Standard vocabulary bindings populated",
               "kind": "bool",
-              "value": false,
-              "detail": " — Croissant: counted on Fields with a semantic dataType or equivalentProperty, of 188 Fields"
+              "value": true,
+              "detail": "Croissant (1), Wikidata (1) — Croissant: counted on Fields with a semantic dataType or equivalentProperty, of 14 Fields"
             },
             {
               "label": "File formats present (format-class view)",
               "kind": "list",
               "value": [
-                "application/x-parquet: 7",
-                "text/csv: 3",
-                "application/json: 2",
-                "application/jsonlines: 1",
-                "application/zstd: 1"
+                "application/zstd: 6"
               ]
             },
             {
@@ -917,43 +1085,76 @@
               "kind": "entity",
               "value": {
                 "@type": "cr:RecordSet",
-                "@id": "runs",
-                "name": "runs",
-                "description": "One row per (study, model_setup, topic, prompt_type, iteration). Pre/post group DRI plus run-level summary statistics.",
-                "key": [
-                  {
-                    "@id": "runs/run_key"
-                  },
-                  {
-                    "@id": "runs/iteration"
-                  }
-                ],
+                "@id": "events",
+                "name": "events",
+                "description": "All streams share the same `events` table schema (single-table SQLite database). Each row is one telemetry event with ground-truth labels.",
                 "field": [
                   {
-                    "@id": "runs/run_key"
+                    "@id": "events/id"
                   },
                   {
-                    "@id": "runs/source_file"
+                    "@id": "events/timestamp"
                   },
                   {
-                    "@id": "runs/is_merged"
+                    "@id": "events/source"
                   },
                   {
-                    "@id": "runs/study_kind"
+                    "@id": "events/raw_line"
                   },
                   {
-                    "@id": "runs/study_run_id"
+                    "@id": "events/parsed"
                   },
-                  "…(+37 more)"
+                  "…(+9 more)"
+                ],
+                "annotation": [
+                  {
+                    "@id": "events/count"
+                  },
+                  {
+                    "@id": "events/malicious_count"
+                  }
+                ],
+                "examples": [
+                  "{…}",
+                  "{…}",
+                  "{…}",
+                  "{…}"
+                ]
+              },
+              "sub": true
+            },
+            {
+              "label": "Example Field bound to a vocabulary term",
+              "kind": "entity",
+              "value": {
+                "@type": "cr:Field",
+                "@id": "events/is_malicious",
+                "name": "is_malicious",
+                "description": "Ground-truth label: 0 = benign, 1 = malicious.",
+                "dataType": [
+                  "sc:Integer",
+                  "cr:Label"
+                ],
+                "source": {
+                  "fileObject": {
+                    "@id": "exp_30d_heavy_v4.db.zst"
+                  },
+                  "extract": "{…}"
+                },
+                "annotation": [
+                  {
+                    "@id": "events/is_malicious/mean"
+                  }
                 ]
               },
               "sub": true
             }
           ],
           "estimate": {
-            "score": "1",
+            "score": "2",
             "basis": [
-              "8 schema entities but no standard-vocabulary binding found"
+              "1 schema entities",
+              "standard vocabulary bindings populated: Croissant, Wikidata"
             ]
           },
           "notes": "A standard vocabulary is one registered in NCBO BioPortal, EBI Ontology Lookup Service, or OBO Foundry. A standard vocabulary binding must be populated in the deposited instance (capability alone scores 1). Scoring may be done per format class, and a sidecar covering a class covers every file in it. The formats named here are examples, not an enumeration.",
@@ -981,7 +1182,7 @@
             {
               "label": "Bias description (rai:dataBiases)",
               "kind": "text",
-              "value": "Model bias: agents inherit the political, cultural, and linguistic training biases of their underlying LLMs. All models in the main grid are commercially trained on predominantly Western internet text.; Topic bias: the 12 topics are skewed toward Anglophone-Western deliberative-democracy traditions, with Australia over-represented (acp, auscj, bep, biobanking_wa, ccps, energy_futures, fnqcj, forestera, fremantle = 9 of 12). Switzerland (swiss_health), Sweden (uppsala_speaks), and Germany (zukunft) make up the remaining 3.; Selection bias on models: only commercially-served LLMs accessible via OpenRouter at the time of data collection are included. Smaller open-weight models, fine-tuned variants, and self-hosted models are not represented.; Sycophantic-agreement bias: contemporary instruction-tuned LLMs are known to over-agree under multi-turn discussion conditions. Apparent post-deliberation consensus measured by ΔDRI may therefore inflate genuine deliberative impact relative to human-only deliberation.; AQuA-scorer normative bias: the AQuA quality indicators operationalise Habermasian deliberation theory (justification, respect, reference to common good, etc.). Communities that value other deliberative norms (consensus-building over argumentation, oral / narrative traditions, ritualised disagreement) will score artificially low on these indicators.; Prompt bias: deliberation prompts are written in English and frame the deliberation as a Western citizen-assembly-style …[truncated, 1599 chars total]"
+              "value": "Single-host scope (one target server). Benign baselines reflect the dataset author's personal infrastructure (academic / Linux developer profile), not enterprise fleet behavior. Benign load patterns may underrepresent enterprise SOC telemetry diversity. Class imbalance: 2.8% of events in the 30-day stream are malicious, so accuracy is dominated by the benign class; report per-class recall and PR-AUC. Events with no source IP are labelled by time window alone, which can mark concurrent benign daemon messages as malicious; an audit puts this at 0.3% of malicious labels. Attack timing follows a Poisson schedule, so models may learn the schedule rather than the attack content."
             },
             {
               "label": "Bias description present and substantive-length",
@@ -992,12 +1193,12 @@
             {
               "label": "Missing-data reasons (rai:dataCollectionMissingData)",
               "kind": "text",
-              "value": null
+              "value": "Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and parsed are never NULL. src_ip is NULL on 20,112,710 rows (93.5%), session_id on 20,476,710, username on 21,504,142 and service on 21,474,130, because most events (eBPF file/process records, syslog daemon messages) have no client address, session or user. NULL is the only missing-value marker; no empty strings are used."
             },
             {
               "label": "Missingness explanation present and substantive-length",
               "kind": "bool",
-              "value": false,
+              "value": true,
               "sub": true
             },
             {
@@ -1008,7 +1209,7 @@
             {
               "label": "Limitations (rai:dataLimitations)",
               "kind": "text",
-              "value": "Reasoning-trace transcripts (*_with_reasoning.txt) are intentionally excluded from the released bundle to keep the download small. Only the public-facing turn text is shipped.; control_1 is a no-deliberation baseline condition used to estimate intrinsic DRI survey re-test noise. By design, no agent discussion is run in control_1; therefore transcript fields and transcript files are empty for these runs. Consequently, discourse-quality analysis (AQuA) is only defined for conditions where deliberation exists (control_2 and treatment).; AQuA discourse-quality scoring is itself produced by an LLM (separate from the deliberation agents) and inherits its noise and biases. Per-turn quality-index 0/1 indicators are not human-validated.; LLM output drifts over time. The snapshot reflects model versions available via OpenRouter between November 2025 and March 2026; exact reproduction of agent responses requires the same model snapshots, which providers may deprecate.; All deliberations are conducted in English. The 12 deliberation topics are predominantly Western policy debates (Australia, Switzerland, Sweden, Germany); generalisation to non-Western contexts and other languages is unverified.; The benchmark is not recommended for: (a) drawing conclusions about human deliberative behaviour (agents are LLMs, not humans); (b) real-world policy decisions on the 12 topics (agent positions are model artefacts, not citizen views); (c) training models to imitate specific human individuals (no …[truncated, 1597 chars total]"
+              "value": "Six attack modules cover only a small subset of the MITRE ATT&CK technique space. Persistence, privilege escalation, and exfiltration modules are planned but not yet implemented. The benchmark does not test zero-day generalization (all attack modules are known TTPs) or multi-host lateral movement. The defense state (blocklist, throttle list, isolation mode) is simulated within the environment, not connected to a real firewall. eBPF events are downsampled to 24.2% during stream composition to simulate a single busy server, preserving event-type distributions but losing some inter-event temporal correlation."
             },
             {
               "label": "Annotator demographics (rai:annotatorDemographics)",
@@ -1019,7 +1220,7 @@
               "label": "Demographic / cohort-representativeness language found",
               "kind": "bool",
               "value": true,
-              "detail": "race, represented"
+              "detail": "represent"
             },
             {
               "label": "Case-vs-control language found",
@@ -1057,33 +1258,51 @@
             {
               "label": "Collection / QC description (rai:dataCollection)",
               "kind": "text",
-              "value": null
+              "value": "Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor, a public web server, and a GPU lab server) via BCC tracepoints (sys_enter_execve, sched_process_exit, sys_enter_connect, sys_enter_accept4, sys_enter_openat, sys_enter_unlinkat). Attack traffic was generated by 10 scripted campaigns executed by a purpose-built campaign orchestrator against a deliberately vulnerable Debian 11 lab VM. No third-party infrastructure was probed. The University of Michigan-Dearborn IRB reviewed the collection protocol (HUM-DEMO-0001) and determined it exempt under 45 CFR 46.104(d)(4) as secondary research on information collected for non-research purposes; the exemption explicitly covers release for AI/ML training and benchmarking. The servers' published privacy notice informs visitors that access logs may be used for security research. All data came from systems the author operates; no third-party systems were accessed and nothing was obtained by deception or coercion."
             },
             {
               "label": "Missing-data handling",
               "kind": "text",
-              "value": null
+              "value": "Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and parsed are never NULL. src_ip is NULL on 20,112,710 rows (93.5%), session_id on 20,476,710, username on 21,504,142 and service on 21,474,130, because most events (eBPF file/process records, syslog daemon messages) have no client address, session or user. NULL is the only missing-value marker; no empty strings are used."
+            },
+            {
+              "label": "Annotation analysis (rai:)",
+              "kind": "text",
+              "value": "All composed streams pass nine automated validation checks: (1) label consistency (is_malicious=1 implies non-NULL attack_type/stage/severity), (2) raw-line spot checks via regex per attack type, (3) campaign boundary containment, (4) campaign-type cross-validation, (5) target-array consistency for the SecurityGymStream adapter, (6) attack-type distribution against composition weights, (7) temporal order monotonicity, (8) no unlabeled events, (9) session coherence (all events in a session share the same is_malicious label). The checks are implemented in https://github.com/j-klawson/security-gym/blob/v0.4.2/scripts/validate_labels.py. Two security analysts independently relabelled 2,000 …[truncated, 869 chars total]"
+            },
+            {
+              "label": "Annotation protocol (rai:)",
+              "kind": "text",
+              "value": "Attack labeling uses CampaignLabeler with time-window + source-IP matching: an event is labeled malicious if its timestamp falls within an attack phase's window AND its src_ip matches an attacker IP for that phase. Events with no src_ip (e.g., syslog daemon messages) match on time window alone. eBPF kernel events use the same labeler. Benign events are filtered with MaliciousFilter using deterministic web/auth signature rules (path traversal, SQL injection, XSS, JNDI injection, RFI, scanner user-agents, failed-password sequences) before inclusion in the benign baseline. PII scrubbing applies case-insensitive hostname/domain/IP replacement to a single synthetic target identity (`isildur` / …[truncated, 715 chars total]"
+            },
+            {
+              "label": "Preprocessing protocol (rai:)",
+              "kind": "text",
+              "value": "Compressed with Zstandard. Composed experiment streams are produced by StreamComposer with per-stream MITRE ATT&CK-aligned Poisson-scheduled attack injection and 24.2% eBPF downsampling. The streams are evaluated online in temporal order, so no train/validation/test split is defined; each stream's composition seed is recorded in its composition_meta table (99 for the 30-day stream). Nothing was withheld apart from the scrubbing described under personal information."
             },
             {
               "label": "QC language found in metadata",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "filtered, kappa, validation",
               "sub": true
             },
             {
               "label": "Links to QC protocol/software found in the collection / processing descriptions",
               "kind": "list",
-              "value": [],
-              "detail": "the rubric asks for a link to the specific protocol or software used",
+              "value": [
+                "https://github.com/j-klawson/security-gym/blob/v0.4.2/scripts/validate_labels.py"
+              ],
+              "sub": true
+            },
+            {
+              "label": "QC description link resolves: https://github.com/j-klawson/security-gym/blob/v0.4.2/scripts/validate_labels.py",
+              "kind": "bool",
+              "value": true,
               "sub": true
             }
           ],
-          "estimate": {
-            "score": "0",
-            "basis": [
-              "no QC description and no quality-control language anywhere in the metadata"
-            ]
-          },
+          "estimate": null,
           "notes": "Adequacy (1 vs 2) is a domain-expert determination."
         }
       ]
@@ -1112,42 +1331,71 @@
             {
               "label": "Human-readable datasheet(s)",
               "kind": "links",
-              "value": []
+              "value": [
+                {
+                  "href": "https://zenodo.org/records/21763493/files/DATASET_README.md",
+                  "text": "https://zenodo.org/records/21763493/files/DATASET_README.md"
+                },
+                {
+                  "href": "https://huggingface.co/datasets/j-klawson/security-gym-v4/blob/main/README.md",
+                  "text": "https://huggingface.co/datasets/j-klawson/security-gym-v4/blob/main/README.md"
+                }
+              ]
             },
             {
               "label": "Machine-readable datasheet sections populated",
               "kind": "count",
-              "value": 4,
+              "value": 8,
               "of": 9
             },
             {
               "label": "Missing sections",
               "kind": "list",
               "value": [
-                "Collection",
-                "Processing",
-                "Annotation",
-                "Release/maintenance plan",
                 "Conditions of access"
               ],
               "sub": true
             },
             {
+              "label": "Section — Collection",
+              "kind": "text",
+              "value": "Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor, a public web server, and a GPU lab server) via BCC tracepoints (sys_enter_execve, sched_process_exit, sys_enter_connect, sys_enter_accept4, sys_enter_openat, sys_enter_unlinkat). Attack traffic was generated by 10 scripted campaigns executed by a purpose-built campaign orchestrator against a deliberately vulnerable Debian 11 lab VM. No third-party infrastructure was probed. The University of Michigan-Dearborn IRB reviewed the collection protocol …[truncated, 1148 chars total]",
+              "sub": true
+            },
+            {
+              "label": "Section — Processing",
+              "kind": "text",
+              "value": "Compressed with Zstandard. Composed experiment streams are produced by StreamComposer with per-stream MITRE ATT&CK-aligned Poisson-scheduled attack injection and 24.2% eBPF downsampling. The streams are evaluated online in temporal order, so no train/validation/test split is defined; each stream's composition seed is recorded in its composition_meta table (99 for the 30-day stream). Nothing was withheld apart from the scrubbing described under personal information.",
+              "sub": true
+            },
+            {
+              "label": "Section — Annotation",
+              "kind": "text",
+              "value": "Attack labeling uses CampaignLabeler with time-window + source-IP matching: an event is labeled malicious if its timestamp falls within an attack phase's window AND its src_ip matches an attacker IP for that phase. Events with no src_ip (e.g., syslog daemon messages) match on time window alone. eBPF kernel events use the same labeler. Benign events are filtered with MaliciousFilter using deterministic web/auth signature rules (path traversal, SQL injection, XSS, JNDI injection, RFI, scanner user-agents, failed-password sequences) before inclusion in the benign baseline. PII scrubbing applies case-insensitive hostname/domain/IP replacement to a single synthetic target identity (`isildur` / …[truncated, 715 chars total]",
+              "sub": true
+            },
+            {
               "label": "Section — Use cases",
               "kind": "text",
-              "value": "Construct: 'deliberative reason' (DRI) operationalises intersubjective consistency on a policy question across agents and time. Construct validity established for: ranking LLMs on deliberative impact (ΔDRI), comparing prompt conditions (control vs. treatment), and comparing reasoning vs. non-reasoning model variants under identical conditions.; Construct: 'discourse quality' (AQuA) operationalises Habermasian deliberation criteria via per-turn 0/1 indicators across 20 quality categories. Construct validity established for: ranking transcripts on aggregate quality, identifying low-quality transcripts for filtering, and training discourse-quality classifiers.; Recommended use cases:;   - …[truncated, 1558 chars total]",
+              "value": "Streaming continual reinforcement learning research; online representation learning from raw text and structured kernel-event streams; streaming deep-RL technique validation (LMS, ObGD, EMA normalization, sparse initialization); reward design in observation-suppressing environments; comparative evaluation of detection approaches (learned vs. rule-based) on non-stationary data.",
               "sub": true
             },
             {
               "label": "Section — Limitations",
               "kind": "text",
-              "value": "Reasoning-trace transcripts (*_with_reasoning.txt) are intentionally excluded from the released bundle to keep the download small. Only the public-facing turn text is shipped.; control_1 is a no-deliberation baseline condition used to estimate intrinsic DRI survey re-test noise. By design, no agent discussion is run in control_1; therefore transcript fields and transcript files are empty for these runs. Consequently, discourse-quality analysis (AQuA) is only defined for conditions where deliberation exists (control_2 and treatment).; AQuA discourse-quality scoring is itself produced by an LLM (separate from the deliberation agents) and inherits its noise and biases. Per-turn quality-index …[truncated, 1597 chars total]",
+              "value": "Six attack modules cover only a small subset of the MITRE ATT&CK technique space. Persistence, privilege escalation, and exfiltration modules are planned but not yet implemented. The benchmark does not test zero-day generalization (all attack modules are known TTPs) or multi-host lateral movement. The defense state (blocklist, throttle list, isolation mode) is simulated within the environment, not connected to a real firewall. eBPF events are downsampled to 24.2% during stream composition to simulate a single busy server, preserving event-type distributions but losing some inter-event temporal correlation.",
               "sub": true
             },
             {
               "label": "Section — Biases",
               "kind": "text",
-              "value": "Model bias: agents inherit the political, cultural, and linguistic training biases of their underlying LLMs. All models in the main grid are commercially trained on predominantly Western internet text.; Topic bias: the 12 topics are skewed toward Anglophone-Western deliberative-democracy traditions, with Australia over-represented (acp, auscj, bep, biobanking_wa, ccps, energy_futures, fnqcj, forestera, fremantle = 9 of 12). Switzerland (swiss_health), Sweden (uppsala_speaks), and Germany (zukunft) make up the remaining 3.; Selection bias on models: only commercially-served LLMs accessible via OpenRouter at the time of data collection are included. Smaller open-weight models, fine-tuned …[truncated, 1599 chars total]",
+              "value": "Single-host scope (one target server). Benign baselines reflect the dataset author's personal infrastructure (academic / Linux developer profile), not enterprise fleet behavior. Benign load patterns may underrepresent enterprise SOC telemetry diversity. Class imbalance: 2.8% of events in the 30-day stream are malicious, so accuracy is dominated by the benign class; report per-class recall and PR-AUC. Events with no source IP are labelled by time window alone, which can mark concurrent benign daemon messages as malicious; an audit puts this at 0.3% of malicious labels. Attack timing follows a Poisson schedule, so models may learn the schedule rather than the attack content.",
+              "sub": true
+            },
+            {
+              "label": "Section — Release/maintenance plan",
+              "kind": "text",
+              "value": "Versioned via Zenodo (concept DOI 10.5281/zenodo.18901541 always resolves to latest; v4.1 frozen at 10.5281/zenodo.21763493). HuggingFace mirror updated on each Zenodo version bump. Issues tracked at https://github.com/j-klawson/security-gym/issues. Data management plan: Keith Lawson is the data steward, with UM-Dearborn Library Research Data Services as successor steward. Zenodo retains every version for at least 20 years; the maintainers commit to updates for 5 years after v4.1 (through 2031). Deprecated versions stay downloadable with a deprecation notice naming the replacement. Changes in law or repository policy, and removal requests, are reviewed by the data access committee within 30 …[truncated, 811 chars total]",
               "sub": true
             },
             {
@@ -1158,10 +1406,10 @@
             }
           ],
           "estimate": {
-            "score": "1",
+            "score": "2",
             "basis": [
-              "no human-readable datasheet",
-              "4 of 9 machine-readable sections populated"
+              "human-readable datasheet linked",
+              "8 of 9 machine-readable sections populated (presence-checked only — whether coverage is substantive is a human read)"
             ]
           },
           "notes": "Scoring rule — score only whether the datasheet exists and covers its dimensions, and do not re-score bias documentation (2.d Potential Sources of Bias) or use-case guidance (3.b Fit for purpose) here."
@@ -1184,17 +1432,17 @@
             {
               "label": "Appropriate use cases (rai:dataUseCases)",
               "kind": "text",
-              "value": "Construct: 'deliberative reason' (DRI) operationalises intersubjective consistency on a policy question across agents and time. Construct validity established for: ranking LLMs on deliberative impact (ΔDRI), comparing prompt conditions (control vs. treatment), and comparing reasoning vs. non-reasoning model variants under identical conditions.; Construct: 'discourse quality' (AQuA) operationalises Habermasian deliberation criteria via per-turn 0/1 indicators across 20 quality categories. Construct validity established for: ranking transcripts on aggregate quality, identifying low-quality transcripts for filtering, and training discourse-quality classifiers.; Recommended use cases:;   - benchmarking LLMs on deliberative quality and impact;   - studying treatment effects of normative deliberation prompts;   - comparing reasoning vs non-reasoning model variants;   - studying mixed-model deliberation dynamics;   - methodological work on multi-agent LLM deliberation simulation (group size, persona, prompt design, rounds, temperature);   - training transcript-quality classifiers using the per-turn AQuA indicators as supervised signals; Use cases for which validity has NOT been established:;   - drawing conclusions about human deliberative behaviour from these LLM-generated deliberations;   - using ΔDRI as a proxy for the social impact of any deployed deliberation system;   - cross-cultural deliberation research (the dataset is monolingual English and Western-centric);   - safety / …[truncated, 1558 chars total]"
+              "value": "Streaming continual reinforcement learning research; online representation learning from raw text and structured kernel-event streams; streaming deep-RL technique validation (LMS, ObGD, EMA normalization, sparse initialization); reward design in observation-suppressing environments; comparative evaluation of detection approaches (learned vs. rule-based) on non-stationary data."
             },
             {
               "label": "Limitations / inappropriate uses (rai:dataLimitations)",
               "kind": "text",
-              "value": "Reasoning-trace transcripts (*_with_reasoning.txt) are intentionally excluded from the released bundle to keep the download small. Only the public-facing turn text is shipped.; control_1 is a no-deliberation baseline condition used to estimate intrinsic DRI survey re-test noise. By design, no agent discussion is run in control_1; therefore transcript fields and transcript files are empty for these runs. Consequently, discourse-quality analysis (AQuA) is only defined for conditions where deliberation exists (control_2 and treatment).; AQuA discourse-quality scoring is itself produced by an LLM (separate from the deliberation agents) and inherits its noise and biases. Per-turn quality-index 0/1 indicators are not human-validated.; LLM output drifts over time. The snapshot reflects model versions available via OpenRouter between November 2025 and March 2026; exact reproduction of agent responses requires the same model snapshots, which providers may deprecate.; All deliberations are conducted in English. The 12 deliberation topics are predominantly Western policy debates (Australia, Switzerland, Sweden, Germany); generalisation to non-Western contexts and other languages is unverified.; The benchmark is not recommended for: (a) drawing conclusions about human deliberative behaviour (agents are LLMs, not humans); (b) real-world policy decisions on the 12 topics (agent positions are model artefacts, not citizen views); (c) training models to imitate specific human individuals (no …[truncated, 1597 chars total]"
+              "value": "Six attack modules cover only a small subset of the MITRE ATT&CK technique space. Persistence, privilege escalation, and exfiltration modules are planned but not yet implemented. The benchmark does not test zero-day generalization (all attack modules are known TTPs) or multi-host lateral movement. The defense state (blocklist, throttle list, isolation mode) is simulated within the environment, not connected to a real firewall. eBPF events are downsampled to 24.2% during stream composition to simulate a single busy server, preserving event-type distributions but losing some inter-event temporal correlation."
             },
             {
               "label": "Prohibited uses",
               "kind": "text",
-              "value": null
+              "value": "Production SOC tooling. Models of enterprise infrastructure. Zero-day generalization evaluation. Substitutes for real-world deployment validation. Multi-host lateral-movement studies. The bundled attack modules target a purpose-built lab VM (`isildur`) and must not be directed at third-party infrastructure."
             },
             {
               "label": "Both appropriate and inappropriate uses stated",
@@ -1212,8 +1460,8 @@
               "kind": "links",
               "value": [
                 {
-                  "href": "",
-                  "text": "@misc{delib_sim_bench_2026,\n  title={delib-sim-bench: A Benchmark of Multi-Agent LLM Deliberation Simulations},\n  author={Anonymous},\n  year={2026},\n  note={Submitted to NeurIPS 2026 Datasets and Benchmarks Track}\n}"
+                  "href": "https://doi.org/10.5281/zenodo.21763493}",
+                  "text": "@dataset{lawson_security_gym_dataset_2026, author = {Lawson, Keith and Malik, Hafiz}, title = {Security-Gym Dataset: Labeled Linux Log and eBPF Streams for Continual Learning Research}, version = {4.1}, year = {2026}, …[truncated, 323 chars total]"
                 }
               ],
               "sub": true
@@ -1245,10 +1493,10 @@
             {
               "label": "Hash coverage (datasets + software, embargoed excluded)",
               "kind": "percent",
-              "value": 100.0,
+              "value": 116.7,
               "detail": "counts md5/sha256 recorded on the metadata entities themselves, which is what the rubric requires (metadata and data verifiably reference each other)",
-              "n": 14,
-              "total": 14
+              "n": 7,
+              "total": 6
             },
             {
               "label": "Embargoed datasets excluded from the denominator",
@@ -1259,21 +1507,27 @@
             {
               "label": "PROV software agents without a file excluded from the denominator",
               "kind": "count",
-              "value": 0,
+              "value": 5,
               "sub": true
             },
             {
               "label": "Example entity with a checksum",
               "kind": "entity",
               "value": {
-                "@type": "cr:FileObject",
-                "@id": "manifest",
-                "name": "manifest.csv",
-                "description": "Per-file manifest: relative path, kind, size, sha256, shipped flag, partitioning fields.",
-                "contentUrl": "https://huggingface.co/datasets/anonymous-submissions/delibsim-bench/resolve/main/normalized/manifest.csv",
-                "encodingFormat": "text/csv",
-                "contentSize": "4614902",
-                "sha256": "a8ab6608b22c5bfcd4993004eebbcea81a6ff186de1f3e88661f6d61cccb0a58"
+                "@type": [
+                  "prov:SoftwareAgent",
+                  "sc:SoftwareApplication"
+                ],
+                "@id": "https://pypi.org/project/security-gym/0.4.2/",
+                "name": "security-gym 0.4.2",
+                "softwareVersion": "0.4.2",
+                "codeRepository": "https://github.com/j-klawson/security-gym/tree/v0.4.2",
+                "downloadUrl": "https://files.pythonhosted.org/packages/c2/f1/803771d161d1df84ca8c72e877055715e2da506c48c885204ab7b758d565/security_gym-0.4.2-py3-none-any.whl",
+                "sha256": "c6eb41d6421350a403f31499109721cba8aad59fa1732aef6ed242b903c5efd4",
+                "softwareRequirements": "docker://ghcr.io/j-klawson/security-gym:0.4.2",
+                "license": "https://www.apache.org/licenses/LICENSE-2.0",
+                "identifier": "https://doi.org/10.5072/zenodo.security-gym-0.4.2",
+                "memoryRequirements": "16 GB RAM for the 30-day stream"
               },
               "sub": true
             }
@@ -1281,7 +1535,7 @@
           "estimate": {
             "score": "2",
             "basis": [
-              "checksums on all 14 datasets and software (embargoed excluded)"
+              "checksums on all 6 datasets and software (embargoed excluded)"
             ]
           }
         }
@@ -1314,12 +1568,12 @@
             {
               "label": "Collection description (rai:dataCollection)",
               "kind": "text",
-              "value": null
+              "value": "Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor, a public web server, and a GPU lab server) via BCC tracepoints (sys_enter_execve, sched_process_exit, sys_enter_connect, sys_enter_accept4, sys_enter_openat, sys_enter_unlinkat). Attack traffic was generated by 10 scripted campaigns executed by a purpose-built campaign orchestrator against a deliberately vulnerable Debian 11 lab VM. No third-party infrastructure was probed. The University of Michigan-Dearborn IRB reviewed the collection protocol (HUM-DEMO-0001) and determined it exempt under 45 CFR 46.104(d)(4) as secondary research on information collected for non-research purposes; the exemption explicitly covers release for AI/ML training and benchmarking. The servers' published privacy notice informs visitors that access logs may be used for security research. All data came from systems the author operates; no third-party systems were accessed and nothing was obtained by deception or coercion."
             },
             {
               "label": "Raw data source (rai:dataCollectionRawData)",
               "kind": "text",
-              "value": null,
+              "value": "Raw text log lines (auth.log, syslog, nginx access/error) and raw eBPF event dumps. Stored verbatim in the events.raw_line column.",
               "sub": true
             },
             {
@@ -1331,7 +1585,7 @@
             {
               "label": "Annotation platform / workforce (rai:dataAnnotationPlatform)",
               "kind": "text",
-              "value": null,
+              "value": "Custom Python pipeline (campaign orchestrator + CampaignLabeler + MaliciousFilter)",
               "sub": true
             },
             {
@@ -1369,33 +1623,37 @@
             {
               "label": "IRB / ethics-review references found",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "IRB",
               "sub": true
             },
             {
               "label": "Consent/ethics text mentions AI/ML or commercialization (prospective data: consent must explicitly cover downstream AI/ML use)",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "AI/ML",
               "sub": true
             },
             {
               "label": "Waiver / exemption / secondary-use language found (retrospective data: the basis for secondary AI/ML use must be explicit)",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "exempt, exemption",
               "sub": true
             },
             {
               "label": "Management plan (rai:dataReleaseMaintenancePlan)",
               "kind": "text",
-              "value": null
+              "value": "Versioned via Zenodo (concept DOI 10.5281/zenodo.18901541 always resolves to latest; v4.1 frozen at 10.5281/zenodo.21763493). HuggingFace mirror updated on each Zenodo version bump. Issues tracked at https://github.com/j-klawson/security-gym/issues. Data management plan: Keith Lawson is the data steward, with UM-Dearborn Library Research Data Services as successor steward. Zenodo retains every version for at least 20 years; the maintainers commit to updates for 5 years after v4.1 (through 2031). Deprecated versions stay downloadable with a deprecation notice naming the replacement. Changes in law or repository policy, and removal requests, are reviewed by the data access committee within 30 days and recorded in the release notes. Roadmap: https://github.com/j-klawson/security-gym/blob/main/ROADMAP.md"
+            },
+            {
+              "label": "DMP link resolves: https://github.com/j-klawson/security-gym/issues",
+              "kind": "bool",
+              "value": true,
+              "sub": true
             }
           ],
-          "estimate": {
-            "score": "0",
-            "basis": [
-              "no acquisition, consent, or ethics-review description anywhere in the metadata"
-            ]
-          },
+          "estimate": null,
           "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
           "gate_min": 1
         },
@@ -1420,12 +1678,18 @@
             {
               "label": "Confidentiality level",
               "kind": "text",
-              "value": null
+              "value": {
+                "@type": "sc:DefinedTerm",
+                "name": "moderate",
+                "termCode": "M",
+                "url": "http://terminology.hl7.org/CodeSystem/v3-Confidentiality#M",
+                "inDefinedTermSet": "http://terminology.hl7.org/CodeSystem/v3-Confidentiality"
+              }
             },
             {
               "label": "Personal/sensitive information statement",
               "kind": "text",
-              "value": "No personal or sensitive information is contained in the dataset. All deliberators are LLM agents; no human subjects participated at any stage of data collection. The agents' role-played expressions of opinion on policy topics are model artefacts and do not reflect the views of any real person, organisation, or community.; No personally identifying information about the dataset's authors, API account holders, or any third party is present in the shipped files. Absolute filesystem paths from the original collection machine were stripped during anonymisation (see claude/dataset/anonymize.py)."
+              "value": "Server hostnames, domains and addresses are mapped to one synthetic target identity (isildur / 192.168.2.201), and attack traffic uses lab-private 192.168.2.x addresses. Benign web-access and SSH log lines keep the remote client's source IP: in the 30-day stream 860,529 benign rows carry one of 11,413 distinct public IPv4 addresses (crawlers, scanners and other visitors), in both src_ip and raw_line. A privacy impact assessment by UM-Dearborn Information Security (March 2026) rated the retained public IPs low risk: they are not linked to names, accounts or content beyond the requested URL, and most belong to crawlers and scanners. Re-identification risk is reassessed annually and whenever a new linkage source (such as a public IP-to-identity dataset) appears; any address can be removed on request through the data access committee."
             },
             {
               "label": "Data governance committee",
@@ -1440,17 +1704,19 @@
             {
               "label": "Management plan content (judge adequacy for the declared sensitivity)",
               "kind": "text",
-              "value": null
+              "value": "Versioned via Zenodo (concept DOI 10.5281/zenodo.18901541 always resolves to latest; v4.1 frozen at 10.5281/zenodo.21763493). HuggingFace mirror updated on each Zenodo version bump. Issues tracked at https://github.com/j-klawson/security-gym/issues. Data management plan: Keith Lawson is the data steward, with UM-Dearborn Library Research Data Services as successor steward. Zenodo retains every version for at least 20 years; the maintainers commit to updates for 5 years after v4.1 (through 2031). Deprecated versions stay downloadable with a deprecation notice naming the replacement. Changes in law or repository policy, and removal requests, are reviewed by the data access committee within 30 days and recorded in the release notes. Roadmap: https://github.com/j-klawson/security-gym/blob/main/ROADMAP.md"
             },
             {
               "label": "Privacy Impact Assessment / risk-assessment language found (required for high-sensitivity data)",
               "kind": "bool",
-              "value": false
+              "value": true,
+              "detail": "privacy impact assessment"
             },
             {
               "label": "Periodic re-identification-risk reassessment language found (required for sensitive data)",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "re-identification risk, reassessed",
               "sub": true
             }
           ],
@@ -1488,12 +1754,13 @@
               "label": "Permitted uses stated",
               "kind": "bool",
               "value": true,
-              "detail": "Construct: 'deliberative reason' (DRI) operationalises intersubjective consistency on a policy question across agents and time. Construct validity established for: ranking LLMs on deliberative impact (ΔDRI), comparing prompt conditions (control vs. treatment), and comparing reasoning vs. …[truncated, 1558 chars total]"
+              "detail": "Streaming continual reinforcement learning research; online representation learning from raw text and structured kernel-event streams; streaming deep-RL technique validation (LMS, ObGD, EMA normalization, sparse initialization); reward design in observation-suppressing environments; comparative …[truncated, 379 chars total]"
             },
             {
               "label": "Prohibited uses stated",
               "kind": "bool",
-              "value": false
+              "value": true,
+              "detail": "{'@type': 'sc:DefinedTerm', 'name': 'moderate', 'termCode': 'M', 'url': 'http://terminology.hl7.org/CodeSystem/v3-Confidentiality#M', 'inDefinedTermSet': 'http://terminology.hl7.org/CodeSystem/v3-Confidentiality'}; {'@type': ['sc:CreativeWork', 'odrl:Offer'], 'name': 'Security-Gym data use policy', …[truncated, 998 chars total]"
             },
             {
               "label": "High-risk modality signals in the metadata (voice, genomes, face imaging, geolocation, …)",
@@ -1504,7 +1771,7 @@
             {
               "label": "Access-committee / dataset contact",
               "kind": "text",
-              "value": "none listed",
+              "value": "security-gym-dac@example.org",
               "detail": "required (and active) where access is controlled"
             }
           ],
@@ -1529,13 +1796,13 @@
             {
               "label": "Confidentiality level (confidentialityLevel / dct:accessRights)",
               "kind": "text",
-              "value": null
+              "value": "{'@type': 'sc:DefinedTerm', 'name': 'moderate', 'termCode': 'M', 'url': 'http://terminology.hl7.org/CodeSystem/v3-Confidentiality#M', 'inDefinedTermSet': 'http://terminology.hl7.org/CodeSystem/v3-Confidentiality'}"
             },
             {
               "label": "Value is an HL7 v3-Confidentiality code",
               "kind": "bool",
-              "value": false,
-              "detail": "prose value — compare against U/L/M/N/R/V display names",
+              "value": true,
+              "detail": "matches code 'M' in http://terminology.hl7.org/ValueSet/v3-Confidentiality",
               "sub": true
             },
             {
@@ -1546,14 +1813,14 @@
             {
               "label": "Personal/sensitive information statement",
               "kind": "text",
-              "value": "No personal or sensitive information is contained in the dataset. All deliberators are LLM agents; no human subjects participated at any stage of data collection. The agents' role-played expressions of opinion on policy topics are model artefacts and do not reflect the views of any real person, organisation, or community.; No personally identifying information about the dataset's authors, API account holders, or any third party is present in the shipped files. Absolute filesystem paths from the original collection machine were stripped during anonymisation (see claude/dataset/anonymize.py)."
+              "value": "Server hostnames, domains and addresses are mapped to one synthetic target identity (isildur / 192.168.2.201), and attack traffic uses lab-private 192.168.2.x addresses. Benign web-access and SSH log lines keep the remote client's source IP: in the 30-day stream 860,529 benign rows carry one of 11,413 distinct public IPv4 addresses (crawlers, scanners and other visitors), in both src_ip and raw_line. A privacy impact assessment by UM-Dearborn Information Security (March 2026) rated the retained public IPs low risk: they are not linked to names, accounts or content beyond the requested URL, and most belong to crawlers and scanners. Re-identification risk is reassessed annually and whenever a new linkage source (such as a public IP-to-identity dataset) appears; any address can be removed on request through the data access committee."
             }
           ],
           "estimate": {
-            "score": "1",
+            "score": "2",
             "basis": [
-              "sensitivity stated in prose (rai:personalSensitiveInformation), not a standard security label",
-              "score 0 if the statement does not say whether protection is required"
+              "confidentiality level is an HL7 v3-Confidentiality code ('M')",
+              "whether the declared level is actually ENFORCED (the 0-rule) is not verified — score 0 if controlled data is retrievable without authorization or authorized users are blocked"
             ]
           },
           "gating_note": "Gating threshold — must score above 0. N/A is not permitted.",
@@ -1583,18 +1850,21 @@
             {
               "label": "Identifier",
               "kind": "text",
-              "value": null
+              "value": "https://doi.org/10.5281/zenodo.21763493"
             },
             {
               "label": "Identifier is a PID",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "scheme: DOI",
               "sub": true
             },
             {
               "label": "Recognized archives detected (publisher + content hosts)",
               "kind": "list",
-              "value": [],
+              "value": [
+                "Zenodo"
+              ],
               "detail": "a 2 requires a sustainable repository with a PID and a retention commitment"
             },
             {
@@ -1607,16 +1877,18 @@
               "label": "Datasets with a contentUrl (data parked somewhere)",
               "kind": "percent",
               "value": 100.0,
-              "detail": "14 of these are remote archive links; the rest live inside the crate deposit",
-              "n": 14,
-              "total": 14
+              "detail": "6 of these are remote archive links; the rest live inside the crate deposit",
+              "n": 6,
+              "total": 6
             }
           ],
           "estimate": {
-            "score": "1",
+            "score": "2",
             "basis": [
-              "no PID on the deposit",
-              "14 datasets have a contentUrl but no recognized archive detected"
+              "PID present (scheme: DOI)",
+              "recognized archive(s): Zenodo",
+              "an explicit retention commitment is assumed for recognized repositories, not verified",
+              "note the criterion covers RAW/unprocessed data — confirm the raw data itself is what's archived"
             ]
           }
         },
@@ -1638,7 +1910,8 @@
             {
               "label": "Publisher repository",
               "kind": "text",
-              "value": "Anonymous (NeurIPS 2026 Datasets and Benchmarks submission)"
+              "value": "Zenodo https://zenodo.org",
+              "detail": "Zenodo"
             },
             {
               "label": "Specialist (domain) hosts",
@@ -1648,52 +1921,56 @@
             {
               "label": "Generalist repository hosts",
               "kind": "list",
-              "value": [],
+              "value": [
+                "https://zenodo.org — Zenodo: 3 files"
+              ],
               "sub": true
             },
             {
               "label": "Unrecognized hosts",
               "kind": "list",
               "value": [
-                "https://huggingface.co: 14 files"
+                "https://huggingface.co: 3 files"
               ],
               "sub": true
             },
             {
               "label": "Dataset files on recognized repository hosts",
               "kind": "percent",
-              "value": 0.0,
-              "n": 0,
-              "total": 14,
+              "value": 50.0,
+              "n": 3,
+              "total": 6,
               "sub": true
             },
             {
               "label": "Domain hint — collection types",
               "kind": "list",
-              "value": []
+              "value": [
+                "Self-collected",
+                "Synthetic (attack campaigns)"
+              ]
             },
             {
               "label": "Domain hint — keywords",
               "kind": "list",
               "value": [
-                "deliberation",
-                "multi-agent",
-                "large language models",
-                "DRI",
-                "Deliberative Reason Index",
-                "AQuA",
-                "discourse quality",
-                "social science benchmark"
+                "cybersecurity",
+                "intrusion detection",
+                "eBPF",
+                "MITRE ATT&CK",
+                "continual learning",
+                "streaming reinforcement learning",
+                "log analysis",
+                "Linux",
+                "SIEM",
+                "Gymnasium environment",
+                "http://id.nlm.nih.gov/mesh/D016494",
+                "http://id.nlm.nih.gov/mesh/D000069550"
               ],
               "sub": true
             }
           ],
-          "estimate": {
-            "score": "0",
-            "basis": [
-              "no recognized repository host detected"
-            ]
-          },
+          "estimate": null,
           "notes": "A domain-appropriate repository is a sustainable repository recognized by the relevant research community as appropriate for a specific data type."
         },
         {
@@ -1714,25 +1991,32 @@
             {
               "label": "Governance / maintenance plan (rai:dataReleaseMaintenancePlan)",
               "kind": "text",
-              "value": null
+              "value": "Versioned via Zenodo (concept DOI 10.5281/zenodo.18901541 always resolves to latest; v4.1 frozen at 10.5281/zenodo.21763493). HuggingFace mirror updated on each Zenodo version bump. Issues tracked at https://github.com/j-klawson/security-gym/issues. Data management plan: Keith Lawson is the data steward, with UM-Dearborn Library Research Data Services as successor steward. Zenodo retains every version for at least 20 years; the maintainers commit to updates for 5 years after v4.1 (through 2031). Deprecated versions stay downloadable with a deprecation notice naming the replacement. Changes in law or repository policy, and removal requests, are reviewed by the data access committee within 30 days and recorded in the release notes. Roadmap: https://github.com/j-klawson/security-gym/blob/main/ROADMAP.md"
             },
             {
               "label": "DMP link extracted from the plan",
               "kind": "link",
-              "value": null,
-              "text": "none found",
+              "value": "https://github.com/j-klawson/security-gym/issues",
+              "text": "https://github.com/j-klawson/security-gym/issues",
+              "sub": true
+            },
+            {
+              "label": "DMP link resolves",
+              "kind": "bool",
+              "value": true,
               "sub": true
             },
             {
               "label": "Governance plan present",
               "kind": "bool",
-              "value": false,
+              "value": true,
               "sub": true
             },
             {
               "label": "Stewardship / maintenance / policy language in the plan (the 1-vs-2 question)",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "policy",
               "sub": true
             },
             {
@@ -1743,7 +2027,7 @@
             {
               "label": "Responsible party",
               "kind": "text",
-              "value": ""
+              "value": "security-gym-dac@example.org"
             },
             {
               "label": "Context — terms of access (conditionsOfAccess; no longer scored under 5.c)",
@@ -1752,12 +2036,7 @@
               "sub": true
             }
           ],
-          "estimate": {
-            "score": "0",
-            "basis": [
-              "no DMP / governance plan in the metadata"
-            ]
-          }
+          "estimate": null
         },
         {
           "id": "5.d",
@@ -1785,9 +2064,9 @@
             {
               "label": "Entities carrying at least one machine-readable provenance link",
               "kind": "percent",
-              "value": 0.0,
-              "n": 0,
-              "total": 212
+              "value": 14.3,
+              "n": 9,
+              "total": 63
             },
             {
               "label": "Sub-crates linked from the parent and present",
@@ -1798,7 +2077,7 @@
             {
               "label": "hasPart / distribution references on the root",
               "kind": "count",
-              "value": 14,
+              "value": 6,
               "sub": true
             },
             {
@@ -1807,7 +2086,13 @@
               "value": []
             }
           ],
-          "estimate": null
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "components associated machine-readably in the archived metadata record (hasPart / distribution + provenance links)",
+              "accessibility of every component not verified — downgrade if pieces are missing"
+            ]
+          }
         }
       ]
     },
@@ -1853,8 +2138,9 @@
               "label": "Standard vocabularies used by entity types and properties (prefix declared or not)",
               "kind": "list",
               "value": [
-                "Croissant: 216 terms",
-                "schema.org: 3 terms"
+                "W3C PROV-O: 48 terms",
+                "Croissant: 44 terms",
+                "schema.org: 15 terms"
               ],
               "sub": true
             },
@@ -1868,31 +2154,29 @@
             {
               "label": "Machine-readable schema entities",
               "kind": "count",
-              "value": 8
+              "value": 1
             },
             {
               "label": "Populated standard vocabulary bindings (2.c evidence — without them 6.a caps at 1)",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "Croissant (1), Wikidata (1)",
               "sub": true
             },
             {
               "label": "File formats present",
               "kind": "list",
               "value": [
-                "application/x-parquet: 7",
-                "text/csv: 3",
-                "application/json: 2",
-                "application/jsonlines: 1",
-                "application/zstd: 1"
+                "application/zstd: 6"
               ]
             }
           ],
           "estimate": {
-            "score": "1",
+            "score": "2",
             "basis": [
-              "formal schema/standard declared, so structural validation is possible",
-              "no populated standard-vocabulary bindings — semantic conformance cannot be deterministically validated (the 1-rule)"
+              "declared standards: Croissant, Dublin Core, W3C PROV-O, schema.org",
+              "deterministic validator known: Croissant — mlcroissant validator; JSON Schema — any JSON Schema validator (e.g. python-jsonschema); PROV-O — PROV-CONSTRAINTS validation (ProvToolbox `provconvert -validate`)",
+              "populated vocabulary bindings present (final score is capped at 2.c's score — rule 6.a ≤ 2.c)"
             ]
           },
           "notes": "Scoring dependency rule — 6.a ≤ 2.c. The score for 6.a (Standardized validation) may never exceed the score for 2.c (Standards definition). Because 6.a evaluates the deterministic validation of the standards defined in 2.c, validation depth is limited by the completeness of the underlying schema and semantic bindings. A dataset cannot be fully validated (6.a = 2) if the standard itself is incomplete or missing (2.c < 2).",
@@ -1918,23 +2202,23 @@
               "label": "Datasets with a distribution link (contentUrl)",
               "kind": "percent",
               "value": 100.0,
-              "n": 14,
-              "total": 14
+              "n": 6,
+              "total": 6
             },
             {
               "label": "Datasets with a REMOTE distribution link (http/ftp/s3-style)",
               "kind": "percent",
               "value": 100.0,
               "detail": "the rest are file:// paths inside the crate or embargoed placeholders",
-              "n": 14,
-              "total": 14,
+              "n": 6,
+              "total": 6,
               "sub": true
             },
             {
               "label": "Protocols used by distribution links",
               "kind": "list",
               "value": [
-                "https: 14 files"
+                "https: 6 files"
               ],
               "detail": "file = paths inside the crate; none = placeholder values such as 'Embargoed'",
               "sub": true
@@ -1943,7 +2227,8 @@
               "label": "Distribution hosts",
               "kind": "list",
               "value": [
-                "https://huggingface.co: 14 files"
+                "https://huggingface.co: 3 files",
+                "https://zenodo.org: 3 files"
               ],
               "sub": true
             },
@@ -1954,6 +2239,12 @@
             },
             {
               "label": "Sample host reachable: https://huggingface.co/",
+              "kind": "bool",
+              "value": true,
+              "sub": true
+            },
+            {
+              "label": "Sample host reachable: https://zenodo.org/",
               "kind": "bool",
               "value": true,
               "sub": true
@@ -1980,8 +2271,8 @@
             {
               "label": "Files in open/common formats",
               "kind": "count",
-              "value": 14,
-              "detail": "application/x-parquet: 7, text/csv: 3, application/json: 2, application/jsonlines: 1, application/zstd: 1"
+              "value": 6,
+              "detail": "application/zstd: 6"
             },
             {
               "label": "Files in proprietary vendor formats",
@@ -1991,35 +2282,66 @@
             {
               "label": "Computations with a container declared (usedContainer)",
               "kind": "percent",
-              "value": null,
+              "value": 0.0,
               "n": 0,
-              "total": 0
+              "total": 4
             },
             {
               "label": "Example computation (environment description)",
               "kind": "entity",
-              "value": null,
+              "value": {
+                "@type": "prov:Activity",
+                "name": "Synthetic attack-event generation",
+                "prov:type": "Synthesis",
+                "description": "Adversary events generated by a custom Python campaign orchestrator (security_gym/campaigns/) executing 10 scripted MITRE ATT&CK-aligned campaigns against an isolated UTM-virtualised Debian 11 lab VM. Six attack modules are released (brute_force, web_attack, recon, malware, dos, lateral_movement). All attack traffic is the deterministic output of the YAML-configured orchestrator under a fixed RNG …",
+                "prov:wasAssociatedWith": {
+                  "@type": "prov:SoftwareAgent",
+                  "name": "Security-Gym campaign orchestrator",
+                  "version": "0.4.2",
+                  "agentType": "Procedural Python (no LLM, no generative model)",
+                  "validation": "Every released stream passes nine automated validation checks (see Validation activity below), including raw-line regex spot checks per attack type and attack-type distribution checks against composition weights.",
+                  "codeRepository": [
+                    "https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/orchestrator.py"
+                  ],
+                  "identifier": "https://doi.org/10.5072/zenodo.security-gym-0.4.2"
+                },
+                "platform": "Custom Python campaign orchestrator targeting a UTM-virtualised Debian 11 lab VM (isildur, 192.168.2.201).",
+                "@id": "activity/generate-attacks"
+              },
               "sub": true
             },
             {
               "label": "Software descriptions",
               "kind": "list",
-              "value": [],
+              "value": [
+                "Security-Gym campaign orchestrator: None",
+                "CampaignLabeler + MaliciousFilter: None",
+                "PII scrubber + StreamComposer: None"
+              ],
               "sub": true
             },
             {
               "label": "Software environment declared (softwareRequirements / runtimePlatform / installUrl)",
               "kind": "list",
-              "value": []
+              "value": [
+                "security-gym 0.4.2: docker://ghcr.io/j-klawson/security-gym:0.4.2; https://files.pythonhosted.org/packages/c2/f1/803771d161d1df84ca8c72e877055715e2da506c48c885204ab7b758d565/security_gym-0.4.2-py3-none-any.whl; 16 GB RAM"
+              ]
             },
             {
               "label": "Environment in a machine-executable format (container, conda environment, workflow language)",
               "kind": "bool",
-              "value": false,
+              "value": true,
+              "detail": "security-gym 0.4.2",
               "sub": true
             }
           ],
-          "estimate": null
+          "estimate": {
+            "score": "2",
+            "basis": [
+              "every declared software environment is machine-executable: security-gym 0.4.2",
+              "confirm it covers everything needed to use the data"
+            ]
+          }
         },
         {
           "id": "6.d",
@@ -2056,60 +2378,105 @@
             {
               "label": "Withheld / missing information",
               "kind": "text",
-              "value": null
+              "value": "Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and parsed are never NULL. src_ip is NULL on 20,112,710 rows (93.5%), session_id on 20,476,710, username on 21,504,142 and service on 21,474,130, because most events (eBPF file/process records, syslog daemon messages) have no client address, session or user. NULL is the only missing-value marker; no empty strings are used."
             },
             {
               "label": "Preprocessing protocol (rai:dataPreprocessingProtocol)",
               "kind": "text",
-              "value": null
+              "value": "Compressed with Zstandard. Composed experiment streams are produced by StreamComposer with per-stream MITRE ATT&CK-aligned Poisson-scheduled attack injection and 24.2% eBPF downsampling. The streams are evaluated online in temporal order, so no train/validation/test split is defined; each stream's composition seed is recorded in its composition_meta table (99 for the 30-day stream). Nothing was withheld apart from the scrubbing described under personal information."
             },
             {
               "label": "Example / synthetic dataset provided",
               "kind": "entity",
-              "value": null
+              "value": {
+                "@type": "cr:RecordSet",
+                "@id": "events",
+                "name": "events",
+                "description": "All streams share the same `events` table schema (single-table SQLite database). Each row is one telemetry event with ground-truth labels.",
+                "field": [
+                  {
+                    "@id": "events/id"
+                  },
+                  {
+                    "@id": "events/timestamp"
+                  },
+                  {
+                    "@id": "events/source"
+                  },
+                  {
+                    "@id": "events/raw_line"
+                  },
+                  {
+                    "@id": "events/parsed"
+                  },
+                  "…(+9 more)"
+                ],
+                "annotation": [
+                  {
+                    "@id": "events/count"
+                  },
+                  {
+                    "@id": "events/malicious_count"
+                  }
+                ],
+                "examples": [
+                  "{…}",
+                  "{…}",
+                  "{…}",
+                  "{…}"
+                ]
+              }
             },
             {
               "label": "Structural example — schema entity (documents exact record structure)",
               "kind": "entity",
               "value": {
                 "@type": "cr:RecordSet",
-                "@id": "runs",
-                "name": "runs",
-                "description": "One row per (study, model_setup, topic, prompt_type, iteration). Pre/post group DRI plus run-level summary statistics.",
-                "key": [
-                  {
-                    "@id": "runs/run_key"
-                  },
-                  {
-                    "@id": "runs/iteration"
-                  }
-                ],
+                "@id": "events",
+                "name": "events",
+                "description": "All streams share the same `events` table schema (single-table SQLite database). Each row is one telemetry event with ground-truth labels.",
                 "field": [
                   {
-                    "@id": "runs/run_key"
+                    "@id": "events/id"
                   },
                   {
-                    "@id": "runs/source_file"
+                    "@id": "events/timestamp"
                   },
                   {
-                    "@id": "runs/is_merged"
+                    "@id": "events/source"
                   },
                   {
-                    "@id": "runs/study_kind"
+                    "@id": "events/raw_line"
                   },
                   {
-                    "@id": "runs/study_run_id"
+                    "@id": "events/parsed"
                   },
-                  "…(+37 more)"
+                  "…(+9 more)"
+                ],
+                "annotation": [
+                  {
+                    "@id": "events/count"
+                  },
+                  {
+                    "@id": "events/malicious_count"
+                  }
+                ],
+                "examples": [
+                  "{…}",
+                  "{…}",
+                  "{…}",
+                  "{…}"
                 ]
               },
               "sub": true
             }
           ],
           "estimate": {
-            "score": "0",
+            "score": "2",
             "basis": [
-              "no splits, withheld-information statement, or example data anywhere in the metadata"
+              "machine-readable example dataset provided",
+              "withheld/preprocessing information described",
+              "splits N/A unless the dataset should define them — reviewer to confirm"
             ]
           },
           "notes": "\"Splits\" is not applicable (N/A) where the dataset has no defined splits; the withholding and its example components still apply. Score on the applicable elements."

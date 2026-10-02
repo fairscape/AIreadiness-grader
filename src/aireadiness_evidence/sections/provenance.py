@@ -219,7 +219,9 @@ def transform_1c(ctx, raw):
     archived, code_hosted, provider_site, unhosted = [], [], [], []
     for sw in raw["software"]:
         urls = ids_of(sw.get("contentUrl")) + ids_of(sw.get("codeRepository")) \
-            + ids_of(sw.get("additionalDocumentation"))
+            + ids_of(sw.get("additionalDocumentation")) \
+            + [u for k in ("identifier", "sameAs", "url", "downloadUrl", "@id")
+               for u in ids_of(sw.get(k)) if re.match(r"https?://|doi:|10\.", u)]
         url_blob = " ".join(urls)
         entry = {"name": sw.get("name"), "@id": sw.get("@id"),
                  "urls": urls[:3]}

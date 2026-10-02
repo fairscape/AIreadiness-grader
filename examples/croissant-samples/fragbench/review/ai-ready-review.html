@@ -236,7 +236,7 @@
   <div class="wrap">
     <h1>AI-Readiness Human Review</h1>
     <div class="meta">
-      Rubric for Review of AI-readiness Evaluation Criteria, v1.8 (2026-09-10) · generated 2026-10-02 13:17 UTC
+      Rubric for Review of AI-readiness Evaluation Criteria, v1.8 (2026-09-10) · generated 2026-10-02 15:53 UTC
     </div>
     <div style="margin-top:6px">
       <strong>fragbench</strong>
@@ -389,8 +389,8 @@
   </nav>
 
   <div class="inventory">
-    <strong>Crate inventory</strong> — 48 entities
-    (Field: 31, Dataset: 7, Other: 5, Schema: 4, Organization: 1)
+    <strong>Crate inventory</strong> — 46 entities
+    (Field: 31, Dataset: 5, Schema: 4, Computation: 4, Other: 1, Organization: 1)
     <table>
       <tr>
         <th>Sub-crate</th>
@@ -776,7 +776,7 @@
         </div>
         
         <div class="item">
-          <div class="label">Datasets carrying provenance links (EVI/PROV terms)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 7)</span></div>
+          <div class="label">Datasets carrying provenance links (EVI/PROV terms)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 5)</span></div>
         </div>
         
         <div class="item sub">
@@ -879,19 +879,24 @@
         </div>
         
         <div class="item">
-          <div class="label">Transformation steps (Computation + Experiment entities)</div><div class="value"><strong>0</strong> <span class="detail">0 computations, 0 experiments</span></div>
+          <div class="label">Transformation steps (Computation + Experiment entities)</div><div class="value"><strong>4</strong> <span class="detail">4 computations, 0 experiments</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Steps with inputs and outputs declared</div><div class="value"><span class="na">— no denominator</span></div>
+          <div class="label">Steps with inputs and outputs declared</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 4)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Computations linked to software</div><div class="value"><span class="na">— no denominator</span></div>
+          <div class="label">Computations linked to software</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 4)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Example transformation step</div><div class="value"><span class="na">none found</span></div>
+          <div class="label">Example transformation step</div><div class="value"><details class="entity"><summary>Campaign Seed Authoring</summary><pre>{
+  &#34;@type&#34;: &#34;prov:Activity&#34;,
+  &#34;@id&#34;: &#34;activity-seed-authoring&#34;,
+  &#34;name&#34;: &#34;Campaign Seed Authoring&#34;,
+  &#34;description&#34;: &#34;Kill-chain seed files authored by domain experts from 24 publicly reported cyber-incident campaigns, with inter-author quality review against source threat-intelligence reports.&#34;
+}</pre></details></div>
         </div>
         
         <div class="item">
@@ -930,7 +935,7 @@
                 data-score="1">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
         <span class="n">1</span>
-        <ul><li>processing steps described in prose only (Preprocessing, Manipulation, Annotation)</li><li>no machine-readable transformation steps — score 0 if the prose is too thin to trace a sequence of steps</li></ul>
+        <ul><li>4 machine-readable transformation steps</li><li>software linked on 0 of 4 computations — consider 2 if the gap is negligible</li><li>final score is capped at 1.a&#39;s score (rule 1.b ≤ 1.a)</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
@@ -1325,7 +1330,7 @@
         </div>
         
         <div class="item sub">
-          <div class="label">Non-image datasets linked to a schema</div><div class="value"><span class="pct-bar"><span style="width:28.6%"></span></span> <strong>28.6%</strong> <span class="meta">(2 of 7)</span> <span class="detail">0 image datasets excluded — image files don&#39;t take a data dictionary; a schema covering a format class covers every file in that class</span></div>
+          <div class="label">Non-image datasets linked to a schema</div><div class="value"><span class="pct-bar"><span style="width:40.0%"></span></span> <strong>40.0%</strong> <span class="meta">(2 of 5)</span> <span class="detail">0 image datasets excluded — image files don&#39;t take a data dictionary; a schema covering a format class covers every file in that class</span></div>
         </div>
         
         <div class="item">
@@ -1777,11 +1782,15 @@
         
         
         <div class="item">
-          <div class="label">Hash coverage (datasets + software, embargoed excluded)</div><div class="value"><span class="pct-bar"><span style="width:42.9%"></span></span> <strong>42.9%</strong> <span class="meta">(3 of 7)</span> <span class="detail">counts md5/sha256 recorded on the metadata entities themselves, which is what the rubric requires (metadata and data verifiably reference each other)</span></div>
+          <div class="label">Hash coverage (datasets + software, embargoed excluded)</div><div class="value"><span class="pct-bar"><span style="width:60.0%"></span></span> <strong>60.0%</strong> <span class="meta">(3 of 5)</span> <span class="detail">counts md5/sha256 recorded on the metadata entities themselves, which is what the rubric requires (metadata and data verifiably reference each other)</span></div>
         </div>
         
         <div class="item sub">
           <div class="label">Embargoed datasets excluded from the denominator</div><div class="value"><strong>0</strong></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">PROV software agents without a file excluded from the denominator</div><div class="value"><strong>0</strong></div>
         </div>
         
         <div class="item sub">
@@ -1804,7 +1813,7 @@
                 data-score="1">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
         <span class="n">1</span>
-        <ul><li>checksums on 3 of 7 entities</li></ul>
+        <ul><li>checksums on 3 of 5 entities</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
@@ -2122,7 +2131,7 @@
         
         
         <div class="item">
-          <div class="label">Confidentiality level</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Confidentiality level (confidentialityLevel / dct:accessRights)</div><div class="value"><span class="na">not provided</span></div>
         </div>
         
         <div class="item sub">
@@ -2223,7 +2232,7 @@
         </div>
         
         <div class="item">
-          <div class="label">Datasets with a contentUrl (data parked somewhere)</div><div class="value"><span class="pct-bar"><span style="width:71.4%"></span></span> <strong>71.4%</strong> <span class="meta">(5 of 7)</span> <span class="detail">5 of these are remote archive links; the rest live inside the crate deposit</span></div>
+          <div class="label">Datasets with a contentUrl (data parked somewhere)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(5 of 5)</span> <span class="detail">5 of these are remote archive links; the rest live inside the crate deposit</span></div>
         </div>
         
       </div>
@@ -2449,7 +2458,7 @@
         </div>
         
         <div class="item">
-          <div class="label">Entities carrying at least one machine-readable provenance link</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 48)</span></div>
+          <div class="label">Entities carrying at least one machine-readable provenance link</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 46)</span></div>
         </div>
         
         <div class="item">
@@ -2457,7 +2466,7 @@
         </div>
         
         <div class="item sub">
-          <div class="label">hasPart references on the root</div><div class="value"><strong>0</strong></div>
+          <div class="label">hasPart / distribution references on the root</div><div class="value"><strong>5</strong></div>
         </div>
         
         <div class="item">
@@ -2535,7 +2544,7 @@
         </div>
         
         <div class="item sub">
-          <div class="label">Standard vocabularies used by entity types and properties (prefix declared or not)</div><div class="value"><ul class="plain"><li>Croissant: 61 terms</li><li>W3C PROV-O: 6 terms</li><li>schema.org: 4 terms</li></ul></div>
+          <div class="label">Standard vocabularies used by entity types and properties (prefix declared or not)</div><div class="value"><ul class="plain"><li>Croissant: 61 terms</li><li>W3C PROV-O: 6 terms</li><li>schema.org: 2 terms</li></ul></div>
         </div>
         
         <div class="item sub">
@@ -2614,11 +2623,11 @@
         
         
         <div class="item">
-          <div class="label">Datasets with a distribution link (contentUrl)</div><div class="value"><span class="pct-bar"><span style="width:71.4%"></span></span> <strong>71.4%</strong> <span class="meta">(5 of 7)</span></div>
+          <div class="label">Datasets with a distribution link (contentUrl)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(5 of 5)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Datasets with a REMOTE distribution link (http/ftp/s3-style)</div><div class="value"><span class="pct-bar"><span style="width:71.4%"></span></span> <strong>71.4%</strong> <span class="meta">(5 of 7)</span> <span class="detail">the rest are file:// paths inside the crate or embargoed placeholders</span></div>
+          <div class="label">Datasets with a REMOTE distribution link (http/ftp/s3-style)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(5 of 5)</span> <span class="detail">the rest are file:// paths inside the crate or embargoed placeholders</span></div>
         </div>
         
         <div class="item sub">
@@ -2694,15 +2703,28 @@
         </div>
         
         <div class="item">
-          <div class="label">Computations with a container declared (usedContainer)</div><div class="value"><span class="na">— no denominator</span></div>
+          <div class="label">Computations with a container declared (usedContainer)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 4)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Example computation (environment description)</div><div class="value"><span class="na">none found</span></div>
+          <div class="label">Example computation (environment description)</div><div class="value"><details class="entity"><summary>Campaign Seed Authoring</summary><pre>{
+  &#34;@type&#34;: &#34;prov:Activity&#34;,
+  &#34;@id&#34;: &#34;activity-seed-authoring&#34;,
+  &#34;name&#34;: &#34;Campaign Seed Authoring&#34;,
+  &#34;description&#34;: &#34;Kill-chain seed files authored by domain experts from 24 publicly reported cyber-incident campaigns, with inter-author quality review against source threat-intelligence reports.&#34;
+}</pre></details></div>
         </div>
         
         <div class="item sub">
           <div class="label">Software descriptions</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Software environment declared (softwareRequirements / runtimePlatform / installUrl)</div><div class="value"><span class="na">none</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Environment in a machine-executable format (container, conda environment, workflow language)</div><div class="value"><span class="no">✗ No</span></div>
         </div>
         
       </div>

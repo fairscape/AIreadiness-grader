@@ -158,6 +158,7 @@ def extract_3c(ctx):
         "software_total": stats.software_total,
         "dataset_with_hash": stats.dataset_with_hash,
         "software_with_hash": stats.software_with_hash,
+        "software_agent_only": stats.software_agent_only,
         "embargoed": stats.dataset_embargoed,
         "example": stats.sample("hashed_entity"),
     }
@@ -166,7 +167,7 @@ def extract_3c(ctx):
 def transform_3c(ctx, raw):
     hashed = raw["dataset_with_hash"] + raw["software_with_hash"]
     denominator = max(0, raw["dataset_total"] + raw["software_total"]
-                      - raw["embargoed"])
+                      - raw["software_agent_only"] - raw["embargoed"])
     return {**raw, "hashed": hashed, "denominator": denominator}
 
 
@@ -180,6 +181,8 @@ def present_3c(facts):
                           "other)"),
         ev.sub(ev.count("Embargoed datasets excluded from the denominator",
                         facts["embargoed"])),
+        ev.sub(ev.count("PROV software agents without a file excluded from the "
+                        "denominator", facts["software_agent_only"])),
         ev.sub(ev.entity("Example entity with a checksum", facts["example"])),
     ]
 

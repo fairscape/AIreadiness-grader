@@ -235,7 +235,10 @@ def extract_5d(ctx):
     return {
         "entity_total": stats.entity_total,
         "entity_with_prov": stats.entity_with_prov_link,
-        "haspart_count": len(as_list(ctx.bundle.root.get("hasPart"))),
+        # Croissant lists the deposit's files under `distribution`, which
+        # plays the role of hasPart
+        "haspart_count": len(as_list(ctx.bundle.root.get("hasPart")))
+        + len(as_list(ctx.bundle.root.get("distribution"))),
         "subcrates_found": len(ctx.bundle.subcrates),
         "subcrates_referenced": ctx.bundle.subcrates_referenced,
         "graphs": ctx.bundle.evidence_graph_links(),
@@ -253,7 +256,7 @@ def present_5d(facts):
                    facts["entity_total"]),
         ev.count("Sub-crates linked from the parent and present",
                  facts["subcrates_found"], of=facts["subcrates_referenced"]),
-        ev.sub(ev.count("hasPart references on the root",
+        ev.sub(ev.count("hasPart / distribution references on the root",
                         facts["haspart_count"])),
         ev.links("Evidence graphs (machine-derived association views)",
                  facts["graphs"]),
@@ -270,7 +273,8 @@ def estimate_5d(facts):
                                       or facts["haspart_count"]):
         return ev.estimate("2",
                            "components associated machine-readably in the "
-                           "archived RO-Crate (hasPart + provenance links)",
+                           "archived metadata record (hasPart / distribution + "
+                           "provenance links)",
                            "accessibility of every component not verified — "
                            "downgrade if pieces are missing")
     return None

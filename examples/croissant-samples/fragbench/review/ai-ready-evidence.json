@@ -28,7 +28,7 @@
     "adjudication": "Assessing conformance adequacy on criteria 2.c, 2.d, 2.e, 3.a, 4.a, 4.c, and 5.c requires domain-expert determinations. If these modalities fall outside the primary evaluator's competence, they should reach out to a pre-identified, qualified collaborator. Evaluators must log these determinations, explicitly recording the adjudicator's name and area of expertise.\n",
     "worksheet": "The rubric's appendix is a Scoring Calculation Worksheet: record the dataset name/PID, the evaluation date, the primary evaluator's name and ORCID (or ROR), and any expert adjudicators consulted (name and expertise); record each criterion score (0, 1, 2, or N/A) and check the gating requirements; compute each domain score as points earned divided by the maximum possible points excluding N/A (default maxima — FAIRness 8, Provenance 8, Characterization 10, Pre-model Explainability 6, Ethics 8, Sustainability 8, Computability 8); the overall AI-readiness score is the sum of the seven domain percentages divided by 7. If any domain triggered a \"Gating FAIL\", the overall status is \"Gating FAIL\" regardless of the final percentage.\n"
   },
-  "generated": "2026-10-02 13:17 UTC",
+  "generated": "2026-10-02 15:53 UTC",
   "network_checks": true,
   "crate": {
     "@id": null,
@@ -42,11 +42,12 @@
     "format_label": "Croissant"
   },
   "inventory": {
-    "entities": 48,
+    "entities": 46,
     "by_type": {
       "Organization": 1,
-      "Dataset": 7,
-      "Other": 5,
+      "Computation": 4,
+      "Other": 1,
+      "Dataset": 5,
       "Schema": 4,
       "Field": 31
     },
@@ -410,7 +411,7 @@
               "kind": "percent",
               "value": 0.0,
               "n": 0,
-              "total": 7
+              "total": 5
             },
             {
               "label": "Example dataset with provenance links",
@@ -513,29 +514,34 @@
             {
               "label": "Transformation steps (Computation + Experiment entities)",
               "kind": "count",
-              "value": 0,
-              "detail": "0 computations, 0 experiments"
+              "value": 4,
+              "detail": "4 computations, 0 experiments"
             },
             {
               "label": "Steps with inputs and outputs declared",
               "kind": "percent",
-              "value": null,
+              "value": 0.0,
               "n": 0,
-              "total": 0,
+              "total": 4,
               "sub": true
             },
             {
               "label": "Computations linked to software",
               "kind": "percent",
-              "value": null,
+              "value": 0.0,
               "n": 0,
-              "total": 0,
+              "total": 4,
               "sub": true
             },
             {
               "label": "Example transformation step",
               "kind": "entity",
-              "value": null,
+              "value": {
+                "@type": "prov:Activity",
+                "@id": "activity-seed-authoring",
+                "name": "Campaign Seed Authoring",
+                "description": "Kill-chain seed files authored by domain experts from 24 publicly reported cyber-incident campaigns, with inter-author quality review against source threat-intelligence reports."
+              },
               "sub": true
             },
             {
@@ -578,8 +584,9 @@
           "estimate": {
             "score": "1",
             "basis": [
-              "processing steps described in prose only (Preprocessing, Manipulation, Annotation)",
-              "no machine-readable transformation steps — score 0 if the prose is too thin to trace a sequence of steps"
+              "4 machine-readable transformation steps",
+              "software linked on 0 of 4 computations — consider 2 if the gap is negligible",
+              "final score is capped at 1.a's score (rule 1.b ≤ 1.a)"
             ]
           },
           "notes": "Scoring dependency rule — 1.b ≤ 1.a. The score for 1.b (Traceable) may never exceed the score for 1.a (Transparent). A transformation pipeline cannot be fully traced if the fundamental data source is unidentified.",
@@ -892,10 +899,10 @@
             {
               "label": "Non-image datasets linked to a schema",
               "kind": "percent",
-              "value": 28.6,
+              "value": 40.0,
               "detail": "0 image datasets excluded — image files don't take a data dictionary; a schema covering a format class covers every file in that class",
               "n": 2,
-              "total": 7,
+              "total": 5,
               "sub": true
             },
             {
@@ -1274,13 +1281,19 @@
             {
               "label": "Hash coverage (datasets + software, embargoed excluded)",
               "kind": "percent",
-              "value": 42.9,
+              "value": 60.0,
               "detail": "counts md5/sha256 recorded on the metadata entities themselves, which is what the rubric requires (metadata and data verifiably reference each other)",
               "n": 3,
-              "total": 7
+              "total": 5
             },
             {
               "label": "Embargoed datasets excluded from the denominator",
+              "kind": "count",
+              "value": 0,
+              "sub": true
+            },
+            {
+              "label": "PROV software agents without a file excluded from the denominator",
               "kind": "count",
               "value": 0,
               "sub": true
@@ -1303,7 +1316,7 @@
           "estimate": {
             "score": "1",
             "basis": [
-              "checksums on 3 of 7 entities"
+              "checksums on 3 of 5 entities"
             ]
           }
         }
@@ -1551,7 +1564,7 @@
           },
           "evidence": [
             {
-              "label": "Confidentiality level",
+              "label": "Confidentiality level (confidentialityLevel / dct:accessRights)",
               "kind": "text",
               "value": null
             },
@@ -1630,10 +1643,10 @@
             {
               "label": "Datasets with a contentUrl (data parked somewhere)",
               "kind": "percent",
-              "value": 71.4,
+              "value": 100.0,
               "detail": "5 of these are remote archive links; the rest live inside the crate deposit",
               "n": 5,
-              "total": 7
+              "total": 5
             }
           ],
           "estimate": {
@@ -1817,7 +1830,7 @@
               "kind": "percent",
               "value": 0.0,
               "n": 0,
-              "total": 48
+              "total": 46
             },
             {
               "label": "Sub-crates linked from the parent and present",
@@ -1826,9 +1839,9 @@
               "of": 0
             },
             {
-              "label": "hasPart references on the root",
+              "label": "hasPart / distribution references on the root",
               "kind": "count",
-              "value": 0,
+              "value": 5,
               "sub": true
             },
             {
@@ -1885,7 +1898,7 @@
               "value": [
                 "Croissant: 61 terms",
                 "W3C PROV-O: 6 terms",
-                "schema.org: 4 terms"
+                "schema.org: 2 terms"
               ],
               "sub": true
             },
@@ -1947,17 +1960,17 @@
             {
               "label": "Datasets with a distribution link (contentUrl)",
               "kind": "percent",
-              "value": 71.4,
+              "value": 100.0,
               "n": 5,
-              "total": 7
+              "total": 5
             },
             {
               "label": "Datasets with a REMOTE distribution link (http/ftp/s3-style)",
               "kind": "percent",
-              "value": 71.4,
+              "value": 100.0,
               "detail": "the rest are file:// paths inside the crate or embargoed placeholders",
               "n": 5,
-              "total": 7,
+              "total": 5,
               "sub": true
             },
             {
@@ -2021,20 +2034,36 @@
             {
               "label": "Computations with a container declared (usedContainer)",
               "kind": "percent",
-              "value": null,
+              "value": 0.0,
               "n": 0,
-              "total": 0
+              "total": 4
             },
             {
               "label": "Example computation (environment description)",
               "kind": "entity",
-              "value": null,
+              "value": {
+                "@type": "prov:Activity",
+                "@id": "activity-seed-authoring",
+                "name": "Campaign Seed Authoring",
+                "description": "Kill-chain seed files authored by domain experts from 24 publicly reported cyber-incident campaigns, with inter-author quality review against source threat-intelligence reports."
+              },
               "sub": true
             },
             {
               "label": "Software descriptions",
               "kind": "list",
               "value": [],
+              "sub": true
+            },
+            {
+              "label": "Software environment declared (softwareRequirements / runtimePlatform / installUrl)",
+              "kind": "list",
+              "value": []
+            },
+            {
+              "label": "Environment in a machine-executable format (container, conda environment, workflow language)",
+              "kind": "bool",
+              "value": false,
               "sub": true
             }
           ],

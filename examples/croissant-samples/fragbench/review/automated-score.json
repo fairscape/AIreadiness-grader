@@ -87,7 +87,7 @@
           "id": "1.b",
           "name": "Traceable",
           "score": 1,
-          "rationale": "processing steps described in prose only (Preprocessing, Manipulation, Annotation); no machine-readable transformation steps \u2014 score 0 if the prose is too thin to trace a sequence of steps"
+          "rationale": "4 machine-readable transformation steps; software linked on 0 of 4 computations \u2014 consider 2 if the gap is negligible; final score is capped at 1.a's score (rule 1.b \u2264 1.a)"
         },
         {
           "id": "1.c",
@@ -151,7 +151,7 @@
           "id": "3.c",
           "name": "Verifiable",
           "score": 1,
-          "rationale": "checksums on 3 of 7 entities"
+          "rationale": "checksums on 3 of 5 entities"
         }
       ]
     },

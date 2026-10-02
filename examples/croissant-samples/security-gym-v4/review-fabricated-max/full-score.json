@@ -1,0 +1,276 @@
+{
+  "model": "automated estimates + isolated LLM judgment",
+  "total_score": 56,
+  "max_score": 56,
+  "percentage": 100.0,
+  "overall_score": 100.0,
+  "gating": {
+    "pass": true,
+    "label": "gates passed",
+    "failures": [],
+    "unscored": [],
+    "thresholds": {
+      "0.a": 2,
+      "0.b": 1,
+      "0.c": 1,
+      "0.d": 1,
+      "1.a": 1,
+      "1.b": 1,
+      "1.c": 1,
+      "1.d": 1,
+      "2.c": 1,
+      "4.a": 1,
+      "4.b": 1,
+      "4.c": 1,
+      "4.d": 1
+    }
+  },
+  "counts": {
+    "substantive": 28,
+    "partial": 0,
+    "absent": 0,
+    "na": 0,
+    "error": 0
+  },
+  "criteria": [
+    {
+      "id": "0",
+      "name": "FAIRness",
+      "score": 8,
+      "max": 8,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "0.a",
+          "name": "Findable",
+          "score": 2,
+          "rationale": "estimate: PID present (scheme: DOI); PID resolved; deposited in a sustainable repository (Zenodo); that the PID resolves to a specific VERSION of the dataset is not verified \u2014 confirm before accepting (the gate requires a 2 here)"
+        },
+        {
+          "id": "0.b",
+          "name": "Accessible",
+          "score": 2,
+          "rationale": "estimate: metadata fetchable via PID lookup; standard vocabularies referenced: MeSH"
+        },
+        {
+          "id": "0.c",
+          "name": "Interoperable",
+          "score": 2,
+          "rationale": "estimate: metadata is JSON-LD; standard vocabularies referenced: MeSH"
+        },
+        {
+          "id": "0.d",
+          "name": "Reusable",
+          "score": 2,
+          "rationale": "judged: CC BY 4.0 is linked as a resolving IRI (machine-readable). An ODRL data use policy explicitly permits use 'including AI/ML training'; the only prohibitions shown (re-identifying, contacting, profiling) do not bar AI/ML reuse."
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "1",
+      "name": "Provenance",
+      "score": 8,
+      "max": 8,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "1.a",
+          "name": "Transparent",
+          "score": 2,
+          "rationale": "estimate: 6 datasets carry provenance links; all ground-truth elements present as structured entities (samples, instruments, experiments)"
+        },
+        {
+          "id": "1.b",
+          "name": "Traceable",
+          "score": 2,
+          "rationale": "estimate: 5 machine-readable transformation steps; every computation links its software; completeness of the provenance record (or disclosure of known gaps) is asserted, not verified; final score is capped at 1.a's score (rule 1.b \u2264 1.a)"
+        },
+        {
+          "id": "1.c",
+          "name": "Interpretable",
+          "score": 2,
+          "rationale": "estimate: all 5 software entities point at an archive with a PID"
+        },
+        {
+          "id": "1.d",
+          "name": "Key actors identified",
+          "score": 2,
+          "rationale": "estimate: all 2 authors carry a PID (ORCID)"
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "2",
+      "name": "Characterization",
+      "score": 10,
+      "max": 10,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "2.a",
+          "name": "Semantics",
+          "score": 2,
+          "rationale": "estimate: abstract present (759 chars \u2014 length-checked only, not read for substance); 12 keywords; 4 controlled-vocabulary terms"
+        },
+        {
+          "id": "2.b",
+          "name": "Statistics",
+          "score": 2,
+          "rationale": "estimate: 6 entities carry a summary-statistics link; missing-data statement present (its consistency and domain-appropriateness are asserted, not verified against the files)"
+        },
+        {
+          "id": "2.c",
+          "name": "Standards",
+          "score": 2,
+          "rationale": "estimate: 1 schema entities; standard vocabulary bindings populated: Croissant, Wikidata"
+        },
+        {
+          "id": "2.d",
+          "name": "Potential Sources of Bias",
+          "score": 2,
+          "rationale": "judged: rai:dataBiases names concrete, data-specific biases: single-host scope, author's personal infrastructure as the benign baseline, 2.8% malicious class imbalance with metric guidance, a 0.3% time-window-only mislabel rate, and Poisson attack timing that models could learn. Missingness is quantified per column with causes, and the malicious/benign (state-vs-control) balance is stated; demographic and clinical questions do not apply to server telemetry."
+        },
+        {
+          "id": "2.e",
+          "name": "Data quality",
+          "score": 2,
+          "rationale": "judged: Domain-appropriate QC is documented: nine automated label-validation checks (label consistency, regex spot checks per attack type, campaign containment, temporal monotonicity, session coherence, etc.) implemented in a linked, resolving script pinned to v0.4.2, plus independent relabelling of 2,000 events by two analysts with agreement statistics and signature-based filtering of the benign baseline."
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "3",
+      "name": "Pre-model Explainability",
+      "score": 6,
+      "max": 6,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "3.a",
+          "name": "Data documentation template",
+          "score": 2,
+          "rationale": "estimate: human-readable datasheet linked; 8 of 9 machine-readable sections populated (presence-checked only \u2014 whether coverage is substantive is a human read)"
+        },
+        {
+          "id": "3.b",
+          "name": "Fit for purpose",
+          "score": 2,
+          "rationale": "estimate: appropriate and inappropriate uses both stated; 1 prior publications linked"
+        },
+        {
+          "id": "3.c",
+          "name": "Verifiable",
+          "score": 2,
+          "rationale": "estimate: checksums on all 6 datasets and software (embargoed excluded)"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Ethics",
+      "score": 8,
+      "max": 8,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "4.a",
+          "name": "Ethically acquired",
+          "score": 2,
+          "rationale": "judged: Acquisition names the sources (author-operated servers, isolated lab VM), gives a specific exemption basis for retrospective data (UM-Dearborn IRB protocol HUM-DEMO-0001, exempt under 45 CFR 46.104(d)(4), explicitly covering AI/ML training release), and confirms legitimacy (no third-party systems, no deception or coercion). A management plan is supplied via rai:dataReleaseMaintenancePlan with named steward and successor."
+        },
+        {
+          "id": "4.b",
+          "name": "Ethically managed",
+          "score": 2,
+          "rationale": "judged: Sensitivity is declared (HL7 confidentiality M) and matched to a specific disclosure risk: 860,529 benign rows retain 11,413 public client IPs. A named privacy impact assessment (UM-Dearborn Information Security, March 2026) rated this low risk with reasons, host identities are scrubbed to a synthetic identity, and re-identification risk is reassessed annually and on new linkage sources with a removal-on-request path."
+        },
+        {
+          "id": "4.c",
+          "name": "Ethically Disseminated",
+          "score": 2,
+          "rationale": "judged: The data is openly released under CC BY 4.0 with an ODRL policy that states permitted uses (research, benchmarking, AI/ML training) and ethical prohibitions (re-identifying, contacting or profiling individuals), which suits retained IP addresses. No high-risk modality (voice, genome, face, geolocation) is present, so modality-specific prohibitions are not required, and a DAC contact is given."
+        },
+        {
+          "id": "4.d",
+          "name": "Secure",
+          "score": 2,
+          "rationale": "estimate: confidentiality level is an HL7 v3-Confidentiality code ('M'); whether the declared level is actually ENFORCED (the 0-rule) is not verified \u2014 score 0 if controlled data is retrievable without authorization or authorized users are blocked"
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "5",
+      "name": "Sustainability",
+      "score": 8,
+      "max": 8,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "5.a",
+          "name": "Persistent",
+          "score": 2,
+          "rationale": "estimate: PID present (scheme: DOI); recognized archive(s): Zenodo; an explicit retention commitment is assumed for recognized repositories, not verified; note the criterion covers RAW/unprocessed data \u2014 confirm the raw data itself is what's archived"
+        },
+        {
+          "id": "5.b",
+          "name": "Domain-appropriate",
+          "score": 2,
+          "rationale": "judged: Data is deposited in Zenodo, a recognized generalist repository with DOIs (concept and version), and mirrored on Hugging Face. No community-standard specialist repository exists for host/security log streams of this kind, so a generalist deposit meets the 2 condition."
+        },
+        {
+          "id": "5.c",
+          "name": "Well-governed",
+          "score": 2,
+          "rationale": "judged: The maintenance plan names a data steward and a successor steward (UM-Dearborn Library Research Data Services), gives a 20-year retention period and a 5-year update commitment through 2031, states the deprecation policy, and sends changes in law or repository policy and removal requests to the DAC within 30 days, which covers stewardship, maintenance and policy handling."
+        },
+        {
+          "id": "5.d",
+          "name": "Associated",
+          "score": 2,
+          "rationale": "estimate: components associated machine-readably in the archived metadata record (hasPart / distribution + provenance links); accessibility of every component not verified \u2014 downgrade if pieces are missing"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Computability",
+      "score": 8,
+      "max": 8,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "6.a",
+          "name": "Standardized",
+          "score": 2,
+          "rationale": "estimate: declared standards: Croissant, Dublin Core, W3C PROV-O, schema.org; deterministic validator known: Croissant \u2014 mlcroissant validator; JSON Schema \u2014 any JSON Schema validator (e.g. python-jsonschema); PROV-O \u2014 PROV-CONSTRAINTS validation (ProvToolbox `provconvert -validate`); populated vocabulary bindings present (final score is capped at 2.c's score \u2014 rule 6.a \u2264 2.c)"
+        },
+        {
+          "id": "6.b",
+          "name": "Computationally accessible",
+          "score": 2,
+          "rationale": "judged: All 6 distributions have remote https contentUrls on Zenodo and Hugging Face, both reachable and both with publicly documented REST/Hub APIs that allow scripted bulk download without authentication. The data is open, so no access procedure is needed."
+        },
+        {
+          "id": "6.c",
+          "name": "Portable",
+          "score": 2,
+          "rationale": "judged: Files are an open format (zstd), and the software environment is declared in machine-executable form: a pinned container image ghcr.io/j-klawson/security-gym:0.4.2 and a pinned PyPI wheel, with a 16 GB RAM hardware requirement. No proprietary or local-only compute is required."
+        },
+        {
+          "id": "6.d",
+          "name": "Contextualized",
+          "score": 2,
+          "rationale": "estimate: machine-readable example dataset provided; withheld/preprocessing information described; splits N/A unless the dataset should define them \u2014 reviewer to confirm"
+        }
+      ]
+    }
+  ]
+}

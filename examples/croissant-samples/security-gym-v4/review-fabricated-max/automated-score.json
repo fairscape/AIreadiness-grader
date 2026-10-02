@@ -1,0 +1,239 @@
+{
+  "model": "fairscape-evidence automated estimates (no LLM)",
+  "total_score": 38,
+  "max_score": 38,
+  "percentage": 100.0,
+  "overall_score": 100.0,
+  "gating": {
+    "pass": null,
+    "label": "gates not fully scored",
+    "failures": [],
+    "unscored": [
+      "0.d",
+      "4.a",
+      "4.b",
+      "4.c"
+    ],
+    "thresholds": {
+      "0.a": 2,
+      "0.b": 1,
+      "0.c": 1,
+      "0.d": 1,
+      "1.a": 1,
+      "1.b": 1,
+      "1.c": 1,
+      "1.d": 1,
+      "2.c": 1,
+      "4.a": 1,
+      "4.b": 1,
+      "4.c": 1,
+      "4.d": 1
+    }
+  },
+  "counts": {
+    "substantive": 19,
+    "partial": 0,
+    "absent": 0,
+    "na": 0,
+    "error": 0
+  },
+  "criteria": [
+    {
+      "id": "0",
+      "name": "FAIRness",
+      "score": 6,
+      "max": 6,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "0.a",
+          "name": "Findable",
+          "score": 2,
+          "rationale": "PID present (scheme: DOI); PID resolved; deposited in a sustainable repository (Zenodo); that the PID resolves to a specific VERSION of the dataset is not verified \u2014 confirm before accepting (the gate requires a 2 here)"
+        },
+        {
+          "id": "0.b",
+          "name": "Accessible",
+          "score": 2,
+          "rationale": "metadata fetchable via PID lookup; standard vocabularies referenced: MeSH"
+        },
+        {
+          "id": "0.c",
+          "name": "Interoperable",
+          "score": 2,
+          "rationale": "metadata is JSON-LD; standard vocabularies referenced: MeSH"
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "1",
+      "name": "Provenance",
+      "score": 8,
+      "max": 8,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "1.a",
+          "name": "Transparent",
+          "score": 2,
+          "rationale": "6 datasets carry provenance links; all ground-truth elements present as structured entities (samples, instruments, experiments)"
+        },
+        {
+          "id": "1.b",
+          "name": "Traceable",
+          "score": 2,
+          "rationale": "5 machine-readable transformation steps; every computation links its software; completeness of the provenance record (or disclosure of known gaps) is asserted, not verified; final score is capped at 1.a's score (rule 1.b \u2264 1.a)"
+        },
+        {
+          "id": "1.c",
+          "name": "Interpretable",
+          "score": 2,
+          "rationale": "all 5 software entities point at an archive with a PID"
+        },
+        {
+          "id": "1.d",
+          "name": "Key actors identified",
+          "score": 2,
+          "rationale": "all 2 authors carry a PID (ORCID)"
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "2",
+      "name": "Characterization",
+      "score": 6,
+      "max": 6,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "2.a",
+          "name": "Semantics",
+          "score": 2,
+          "rationale": "abstract present (759 chars \u2014 length-checked only, not read for substance); 12 keywords; 4 controlled-vocabulary terms"
+        },
+        {
+          "id": "2.b",
+          "name": "Statistics",
+          "score": 2,
+          "rationale": "6 entities carry a summary-statistics link; missing-data statement present (its consistency and domain-appropriateness are asserted, not verified against the files)"
+        },
+        {
+          "id": "2.c",
+          "name": "Standards",
+          "score": 2,
+          "rationale": "1 schema entities; standard vocabulary bindings populated: Croissant, Wikidata"
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "3",
+      "name": "Pre-model Explainability",
+      "score": 6,
+      "max": 6,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "3.a",
+          "name": "Data documentation template",
+          "score": 2,
+          "rationale": "human-readable datasheet linked; 8 of 9 machine-readable sections populated (presence-checked only \u2014 whether coverage is substantive is a human read)"
+        },
+        {
+          "id": "3.b",
+          "name": "Fit for purpose",
+          "score": 2,
+          "rationale": "appropriate and inappropriate uses both stated; 1 prior publications linked"
+        },
+        {
+          "id": "3.c",
+          "name": "Verifiable",
+          "score": 2,
+          "rationale": "checksums on all 6 datasets and software (embargoed excluded)"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Ethics",
+      "score": 2,
+      "max": 2,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "4.d",
+          "name": "Secure",
+          "score": 2,
+          "rationale": "confidentiality level is an HL7 v3-Confidentiality code ('M'); whether the declared level is actually ENFORCED (the 0-rule) is not verified \u2014 score 0 if controlled data is retrievable without authorization or authorized users are blocked"
+        }
+      ],
+      "gating": true,
+      "gate_failed": false
+    },
+    {
+      "id": "5",
+      "name": "Sustainability",
+      "score": 4,
+      "max": 4,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "5.a",
+          "name": "Persistent",
+          "score": 2,
+          "rationale": "PID present (scheme: DOI); recognized archive(s): Zenodo; an explicit retention commitment is assumed for recognized repositories, not verified; note the criterion covers RAW/unprocessed data \u2014 confirm the raw data itself is what's archived"
+        },
+        {
+          "id": "5.d",
+          "name": "Associated",
+          "score": 2,
+          "rationale": "components associated machine-readably in the archived metadata record (hasPart / distribution + provenance links); accessibility of every component not verified \u2014 downgrade if pieces are missing"
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "name": "Computability",
+      "score": 6,
+      "max": 6,
+      "percentage": 100.0,
+      "rubrics": [
+        {
+          "id": "6.a",
+          "name": "Standardized",
+          "score": 2,
+          "rationale": "declared standards: Croissant, Dublin Core, W3C PROV-O, schema.org; deterministic validator known: Croissant \u2014 mlcroissant validator; JSON Schema \u2014 any JSON Schema validator (e.g. python-jsonschema); PROV-O \u2014 PROV-CONSTRAINTS validation (ProvToolbox `provconvert -validate`); populated vocabulary bindings present (final score is capped at 2.c's score \u2014 rule 6.a \u2264 2.c)"
+        },
+        {
+          "id": "6.c",
+          "name": "Portable",
+          "score": 2,
+          "rationale": "every declared software environment is machine-executable: security-gym 0.4.2; confirm it covers everything needed to use the data"
+        },
+        {
+          "id": "6.d",
+          "name": "Contextualized",
+          "score": 2,
+          "rationale": "machine-readable example dataset provided; withheld/preprocessing information described; splits N/A unless the dataset should define them \u2014 reviewer to confirm"
+        }
+      ]
+    }
+  ],
+  "note": "Only criteria with an automated estimate are counted; the rest need human or model judgment and are listed in unestimated_criteria.",
+  "unestimated_criteria": [
+    "0.d Reusable",
+    "2.d Potential Sources of Bias",
+    "2.e Data quality",
+    "4.a Ethically acquired",
+    "4.b Ethically managed",
+    "4.c Ethically Disseminated",
+    "5.b Domain-appropriate",
+    "5.c Well-governed",
+    "6.b Computationally accessible"
+  ]
+}

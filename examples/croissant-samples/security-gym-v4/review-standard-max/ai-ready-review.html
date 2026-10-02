@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI-Readiness Review — Weather Dataset</title>
+<title>AI-Readiness Review — security-gym-v4</title>
 <style>
   :root {
     --ink: #1a1a1a; --muted: #6b6b6b; --line: #d9d9d9; --bg: #fafaf8;
@@ -236,14 +236,18 @@
   <div class="wrap">
     <h1>AI-Readiness Human Review</h1>
     <div class="meta">
-      Rubric for Review of AI-readiness Evaluation Criteria, v1.8 (2026-09-10) · generated 2026-10-02 15:54 UTC
+      Rubric for Review of AI-readiness Evaluation Criteria, v1.8 (2026-09-10) · generated 2026-10-02 15:53 UTC
     </div>
     <div style="margin-top:6px">
-      <strong>Weather Dataset</strong>
+      <strong>security-gym-v4</strong>
       <span class="mono">None</span>
-      <span class="meta"> · None · published 2023</span> · <span class="meta">Croissant (single document, no provenance graph)</span>
+      <span class="meta"> · https://doi.org/10.5281/zenodo.21763493 · published 2026-04-09</span> · <span class="meta">Croissant (single document, no provenance graph)</span>
     </div>
     <div class="toplinks">
+      
+        <a href="https://zenodo.org/records/21763493/files/DATASET_README.md">Datasheet — https://zenodo.org/records/21763493/files/DATASET_README.md</a>
+      
+        <a href="https://huggingface.co/datasets/j-klawson/security-gym-v4/blob/main/README.md">Datasheet — https://huggingface.co/datasets/j-klawson/security-gym-v4/blob/main/README.md</a>
       
     </div>
   </div>
@@ -389,8 +393,8 @@
   </nav>
 
   <div class="inventory">
-    <strong>Crate inventory</strong> — 40 entities
-    (Field: 18, Dataset: 18, Schema: 3, Organization: 1)
+    <strong>Crate inventory</strong> — 49 entities
+    (Field: 20, Dataset: 6, Software: 5, Organization: 5, Computation: 4, Other: 3, DefinedTerm: 2, Person: 2, Schema: 1, Experiment: 1)
     <table>
       <tr>
         <th>Sub-crate</th>
@@ -436,19 +440,23 @@
         
         
         <div class="item">
-          <div class="label">Identifier</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Identifier</div><div class="value"><span class="pre"><a href="https://doi.org/10.5281/zenodo.21763493">https://doi.org/10.5281/zenodo.21763493</a></span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Persistent identifier present</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Persistent identifier present</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">scheme: DOI</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Identifier resolves</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">HTTP 200</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Publisher</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Publisher</div><div class="value"><span class="pre">Zenodo <a href="https://zenodo.org">https://zenodo.org</a></span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Publisher is a recognized sustainable repository</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Publisher is a recognized sustainable repository</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Zenodo</span></div>
         </div>
         
         <div class="item sub">
@@ -456,7 +464,7 @@
         </div>
         
         <div class="item sub">
-          <div class="label">Publisher found in re3data</div><div class="value"><span class="na">— not checked</span> <span class="detail">query: None</span></div>
+          <div class="label">Publisher found in re3data</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Zenodo, Open-source Scientific Software and Service Repository, CESSDA Data Catalogue</span></div>
         </div>
         
       </div>
@@ -464,16 +472,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="0.a"
-                data-score="0">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">0</span>
-        <ul><li>no PID detected and publisher not a recognized sustainable repository</li></ul>
+        <span class="n">2</span>
+        <ul><li>PID present (scheme: DOI)</li><li>PID resolved</li><li>deposited in a sustainable repository (Zenodo)</li><li>that the PID resolves to a specific VERSION of the dataset is not verified — confirm before accepting (the gate requires a 2 here)</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="0.a" data-estimate="0" data-gate-min="2">
+      <div class="grade" data-criterion="0.a" data-estimate="2" data-gate-min="2">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-0.a" value="2"> 2</label>
@@ -515,29 +523,76 @@
         
         
         <div class="item">
-          <div class="label">Identifier used for lookup</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Identifier used for lookup</div><div class="value"><span class="pre"><a href="https://doi.org/10.5281/zenodo.21763493">https://doi.org/10.5281/zenodo.21763493</a></span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Descriptive metadata fetchable via PID alone</div><div class="value"><span class="na">— not checked</span> <span class="detail">no identifier</span></div>
+          <div class="label">Descriptive metadata fetchable via PID alone</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">application/ld+json</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Metadata returned by the PID resolver</div><div class="value"><details class="entity"><summary>Security-Gym Dataset: Labeled Linux Log and eBPF Streams for Continual Learning Research</summary><pre>{
+  &#34;@context&#34;: &#34;<a href="http://schema.org">http://schema.org</a>&#34;,
+  &#34;@type&#34;: &#34;Dataset&#34;,
+  &#34;name&#34;: &#34;Security-Gym Dataset: Labeled Linux Log and eBPF Streams for Continual Learning Research&#34;,
+  &#34;publisher&#34;: {
+    &#34;@type&#34;: &#34;Organization&#34;,
+    &#34;name&#34;: &#34;Zenodo&#34;
+  },
+  &#34;identifier&#34;: {
+    &#34;@type&#34;: &#34;PropertyValue&#34;,
+    &#34;propertyID&#34;: &#34;oai&#34;,
+    &#34;value&#34;: &#34;oai:zenodo.org:21763493&#34;
+  },
+  &#34;datePublished&#34;: &#34;2026-08-02&#34;,
+  &#34;license&#34;: [
+    &#34;<a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a>&#34;,
+    &#34;<a href="http://rightsstatements.org/vocab/InC/1.0/">http://rightsstatements.org/vocab/InC/1.0/</a>&#34;
+  ],
+  &#34;author&#34;: {
+    &#34;name&#34;: &#34;Keith Lawson&#34;,
+    &#34;givenName&#34;: &#34;Keith&#34;,
+    &#34;familyName&#34;: &#34;Lawson&#34;,
+    &#34;affiliation&#34;: [
+      {
+        &#34;@type&#34;: &#34;Organization&#34;,
+        &#34;name&#34;: &#34;London Health Sciences Centre&#34;
+      },
+      {
+        &#34;@type&#34;: &#34;Organization&#34;,
+        &#34;@id&#34;: &#34;<a href="https://ror.org/035wtm547">https://ror.org/035wtm547</a>&#34;,
+        &#34;name&#34;: &#34;University of Michigan–Dearborn&#34;
+      }
+    ],
+    &#34;@type&#34;: &#34;Person&#34;,
+    &#34;@id&#34;: &#34;0009-0008-7536-1122&#34;
+  }
+}</pre></details> <span class="detail">truncated to descriptive fields</span></div>
         </div>
         
         <div class="item">
-          <div class="label">@context vocabularies of the crate metadata</div><div class="value"><ul class="plain"><li>en</li><li><a href="https://schema.org/">https://schema.org/</a></li><li><a href="https://schema.org/">https://schema.org/</a></li><li><a href="http://mlcommons.org/croissant/">http://mlcommons.org/croissant/</a></li><li><a href="http://mlcommons.org/croissant/RAI/">http://mlcommons.org/croissant/RAI/</a></li><li><a href="http://purl.org/dc/terms/">http://purl.org/dc/terms/</a></li><li>cr:citeAs</li><li>cr:column</li><li>dct:conformsTo</li><li>cr:extract</li><li>cr:field</li><li>cr:fileProperty</li><li>cr:fileObject</li><li>cr:fileSet</li><li>cr:format</li><li>cr:includes</li><li>cr:isLiveDataset</li><li>cr:jsonPath</li><li>cr:key</li><li>cr:md5</li><li>cr:parentField</li><li>cr:path</li><li>cr:recordSet</li><li>cr:references</li><li>cr:regex</li><li>cr:repeated</li><li>cr:replace</li><li>cr:separator</li><li>cr:source</li><li>cr:subField</li><li>cr:transform</li></ul> <span class="detail">schema.org / EVI here means the metadata follows a standard vocabulary</span></div>
+          <div class="label">@context vocabularies of the crate metadata</div><div class="value"><ul class="plain"><li>en</li><li><a href="https://schema.org/">https://schema.org/</a></li><li>cr:citeAs</li><li>cr:column</li><li>dct:conformsTo</li><li><a href="http://mlcommons.org/croissant/">http://mlcommons.org/croissant/</a></li><li><a href="http://mlcommons.org/croissant/RAI/">http://mlcommons.org/croissant/RAI/</a></li><li><a href="http://www.w3.org/ns/prov#">http://www.w3.org/ns/prov#</a></li><li><a href="http://purl.org/dc/terms/">http://purl.org/dc/terms/</a></li><li>cr:extract</li><li>cr:field</li><li>cr:fileProperty</li><li>cr:fileObject</li><li>cr:fileSet</li><li>cr:format</li><li>cr:includes</li><li>cr:isLiveDataset</li><li>cr:jsonPath</li><li>cr:key</li><li>cr:md5</li><li>cr:parentField</li><li>cr:path</li><li>cr:recordSet</li><li>cr:references</li><li>cr:regex</li><li>cr:repeated</li><li>cr:replace</li><li><a href="https://schema.org/">https://schema.org/</a></li><li>cr:separator</li><li>cr:source</li><li>cr:subField</li><li>cr:transform</li><li><a href="http://www.wikidata.org/entity/">http://www.wikidata.org/entity/</a></li><li><a href="http://rdf-vocabulary.ddialliance.org/cv/SummaryStatisticType/2.1.2/">http://rdf-vocabulary.ddialliance.org/cv/SummaryStatisticType/2.1.2/</a></li><li>cr:annotation</li><li>cr:equivalentProperty</li></ul> <span class="detail">schema.org / EVI here means the metadata follows a standard vocabulary</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Standard vocabulary references found in metadata</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Standard vocabulary references found in metadata</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">MeSH (2 refs)</span></div>
         </div>
         
       </div>
 
       
-      <div class="estimate none">No automated estimate — this criterion needs
-        human judgment.</div>
+      <div class="estimate">
+        <button class="use-est" data-criterion="0.b"
+                data-score="2">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">2</span>
+        <ul><li>metadata fetchable via PID lookup</li><li>standard vocabularies referenced: MeSH</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
       
 
-      <div class="grade" data-criterion="0.b" data-gate-min="1">
+      <div class="grade" data-criterion="0.b" data-estimate="2" data-gate-min="1">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-0.b" value="2"> 2</label>
@@ -583,19 +638,19 @@
         </div>
         
         <div class="item">
-          <div class="label">@context vocabularies of the crate metadata</div><div class="value"><ul class="plain"><li>en</li><li><a href="https://schema.org/">https://schema.org/</a></li><li><a href="https://schema.org/">https://schema.org/</a></li><li><a href="http://mlcommons.org/croissant/">http://mlcommons.org/croissant/</a></li><li><a href="http://mlcommons.org/croissant/RAI/">http://mlcommons.org/croissant/RAI/</a></li><li><a href="http://purl.org/dc/terms/">http://purl.org/dc/terms/</a></li><li>cr:citeAs</li><li>cr:column</li><li>dct:conformsTo</li><li>cr:extract</li><li>cr:field</li><li>cr:fileProperty</li><li>cr:fileObject</li><li>cr:fileSet</li><li>cr:format</li><li>cr:includes</li><li>cr:isLiveDataset</li><li>cr:jsonPath</li><li>cr:key</li><li>cr:md5</li><li>cr:parentField</li><li>cr:path</li><li>cr:recordSet</li><li>cr:references</li><li>cr:regex</li><li>cr:repeated</li><li>cr:replace</li><li>cr:separator</li><li>cr:source</li><li>cr:subField</li><li>cr:transform</li></ul> <span class="detail">schema.org / EVI here means the metadata follows a standard vocabulary</span></div>
+          <div class="label">@context vocabularies of the crate metadata</div><div class="value"><ul class="plain"><li>en</li><li><a href="https://schema.org/">https://schema.org/</a></li><li>cr:citeAs</li><li>cr:column</li><li>dct:conformsTo</li><li><a href="http://mlcommons.org/croissant/">http://mlcommons.org/croissant/</a></li><li><a href="http://mlcommons.org/croissant/RAI/">http://mlcommons.org/croissant/RAI/</a></li><li><a href="http://www.w3.org/ns/prov#">http://www.w3.org/ns/prov#</a></li><li><a href="http://purl.org/dc/terms/">http://purl.org/dc/terms/</a></li><li>cr:extract</li><li>cr:field</li><li>cr:fileProperty</li><li>cr:fileObject</li><li>cr:fileSet</li><li>cr:format</li><li>cr:includes</li><li>cr:isLiveDataset</li><li>cr:jsonPath</li><li>cr:key</li><li>cr:md5</li><li>cr:parentField</li><li>cr:path</li><li>cr:recordSet</li><li>cr:references</li><li>cr:regex</li><li>cr:repeated</li><li>cr:replace</li><li><a href="https://schema.org/">https://schema.org/</a></li><li>cr:separator</li><li>cr:source</li><li>cr:subField</li><li>cr:transform</li><li><a href="http://www.wikidata.org/entity/">http://www.wikidata.org/entity/</a></li><li><a href="http://rdf-vocabulary.ddialliance.org/cv/SummaryStatisticType/2.1.2/">http://rdf-vocabulary.ddialliance.org/cv/SummaryStatisticType/2.1.2/</a></li><li>cr:annotation</li><li>cr:equivalentProperty</li></ul> <span class="detail">schema.org / EVI here means the metadata follows a standard vocabulary</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Standard vocabulary references found in metadata</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Standard vocabulary references found in metadata</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">MeSH (2 refs)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Subject terms (root about + DefinedTerms)</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Subject terms (root about + DefinedTerms)</div><div class="value"><ul class="plain"><li><a href="http://id.nlm.nih.gov/mesh/D016494">http://id.nlm.nih.gov/mesh/D016494</a></li><li><a href="http://id.nlm.nih.gov/mesh/D000069550">http://id.nlm.nih.gov/mesh/D000069550</a></li><li>ddi-stats:7975ed0</li><li>moderate</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Machine-readable schema entities (EVI:Schema, or a Croissant RecordSet with fields)</div><div class="value"><strong>3</strong></div>
+          <div class="label">Machine-readable schema entities (EVI:Schema, or a Croissant RecordSet with fields)</div><div class="value"><strong>1</strong></div>
         </div>
         
         <div class="item sub">
@@ -607,30 +662,41 @@
         </div>
         
         <div class="item sub">
-          <div class="label">Example schema entity</div><div class="value"><details class="entity"><summary>Weather Measurements</summary><pre>{
+          <div class="label">Example schema entity</div><div class="value"><details class="entity"><summary>events</summary><pre>{
   &#34;@type&#34;: &#34;cr:RecordSet&#34;,
-  &#34;@id&#34;: &#34;weather_data&#34;,
-  &#34;name&#34;: &#34;Weather Measurements&#34;,
-  &#34;description&#34;: &#34;Time-series weather measurements for various global regions&#34;,
+  &#34;@id&#34;: &#34;events&#34;,
+  &#34;name&#34;: &#34;events&#34;,
+  &#34;description&#34;: &#34;All streams share the same `events` table schema (single-table SQLite database). Each row is one telemetry event with ground-truth labels.&#34;,
   &#34;field&#34;: [
     {
-      &#34;@id&#34;: &#34;weather_data/time&#34;
+      &#34;@id&#34;: &#34;events/id&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/temperature_2m&#34;
+      &#34;@id&#34;: &#34;events/timestamp&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/relative_humidity_2m&#34;
+      &#34;@id&#34;: &#34;events/source&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/cloudcover&#34;
+      &#34;@id&#34;: &#34;events/raw_line&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/windspeed_10m&#34;
+      &#34;@id&#34;: &#34;events/parsed&#34;
     },
-    &#34;…(+8 more)&#34;
+    &#34;…(+9 more)&#34;
+  ],
+  &#34;annotation&#34;: [
+    {
+      &#34;@id&#34;: &#34;events/count&#34;
+    },
+    {
+      &#34;@id&#34;: &#34;events/malicious_count&#34;
+    }
   ],
   &#34;examples&#34;: [
+    &#34;{…}&#34;,
+    &#34;{…}&#34;,
+    &#34;{…}&#34;,
     &#34;{…}&#34;
   ]
 }</pre></details></div>
@@ -641,16 +707,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="0.c"
-                data-score="1">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">1</span>
-        <ul><li>metadata is JSON-LD but references no standard vocabulary</li><li>3 machine-readable schema entities</li></ul>
+        <span class="n">2</span>
+        <ul><li>metadata is JSON-LD</li><li>standard vocabularies referenced: MeSH</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="0.c" data-estimate="1" data-gate-min="1">
+      <div class="grade" data-criterion="0.c" data-estimate="2" data-gate-min="1">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-0.c" value="2"> 2</label>
@@ -692,7 +758,7 @@
         
         
         <div class="item">
-          <div class="label">License</div><div class="value"><a href="https://opensource.org/licenses/MIT">MIT</a></div>
+          <div class="label">License</div><div class="value"><a href="https://www.apache.org/licenses/LICENSE-2.0">Apache-2.0</a></div>
         </div>
         
         <div class="item sub">
@@ -719,7 +785,7 @@
                 data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
         <span class="n">2</span>
-        <ul><li>machine-readable license linked in the metadata (MIT)</li><li>no AI/ML prohibition language found in license or use terms</li></ul>
+        <ul><li>machine-readable license linked in the metadata (Apache-2.0)</li><li>no AI/ML prohibition language found in license or use terms</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
@@ -785,15 +851,36 @@
         </div>
         
         <div class="item">
-          <div class="label">Datasets carrying provenance links (EVI/PROV terms)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 18)</span></div>
+          <div class="label">Datasets carrying provenance links (EVI/PROV terms)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(6 of 6)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Example dataset with provenance links</div><div class="value"><span class="na">none found</span></div>
+          <div class="label">Example dataset with provenance links</div><div class="value"><details class="entity"><summary>exp_7d_brute_v4.db.zst</summary><pre>{
+  &#34;@type&#34;: &#34;cr:FileObject&#34;,
+  &#34;@id&#34;: &#34;exp_7d_brute_v4.db.zst&#34;,
+  &#34;name&#34;: &#34;exp_7d_brute_v4.db.zst&#34;,
+  &#34;description&#34;: &#34;7-day SSH brute-force smoke-test stream: 4,891,541 events (25,980 malicious). Decompressed: 1.9 GB SQLite database.&#34;,
+  &#34;contentSize&#34;: &#34;163895433&#34;,
+  &#34;contentUrl&#34;: &#34;<a href="https://huggingface.co/datasets/j-klawson/security-gym-v4/resolve/main/exp_7d_brute_v4.db.zst">https://huggingface.co/datasets/j-klawson/security-gym-v4/resolve/main/exp_7d_brute_v4.db.zst</a>&#34;,
+  &#34;encodingFormat&#34;: &#34;application/zstd&#34;,
+  &#34;md5&#34;: &#34;338a73eced346420ceea1eab9b3cce94&#34;,
+  &#34;sha256&#34;: &#34;d06590723dea52c4e3f8776c6af841c78ff9fd35ea41c49be2137c68cfe7c652&#34;,
+  &#34;prov:wasGeneratedBy&#34;: {
+    &#34;@id&#34;: &#34;activity/compose&#34;
+  },
+  &#34;prov:wasDerivedFrom&#34;: [
+    {
+      &#34;@id&#34;: &#34;benign_v4.db.zst&#34;
+    },
+    {
+      &#34;@id&#34;: &#34;campaigns_v2.db.zst&#34;
+    }
+  ]
+}</pre></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Ground-truth elements present as structured entities</div><div class="value"><ul class="plain"><li>samples: no</li><li>instruments: no</li><li>experiments: no</li><li>datasets_with_provenance: no</li></ul></div>
+          <div class="label">Ground-truth elements present as structured entities</div><div class="value"><ul class="plain"><li>samples: no</li><li>instruments: no</li><li>experiments: yes</li><li>datasets_with_provenance: yes</li></ul></div>
         </div>
         
         <div class="item sub">
@@ -805,7 +892,7 @@
         </div>
         
         <div class="item sub">
-          <div class="label">Experiment entities</div><div class="value"><strong>0</strong></div>
+          <div class="label">Experiment entities</div><div class="value"><strong>1</strong></div>
         </div>
         
         <div class="item sub">
@@ -817,11 +904,15 @@
         </div>
         
         <div class="item">
-          <div class="label">Source data linked from the root (isBasedOn / prov:wasDerivedFrom)</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Source data linked from the root (isBasedOn / prov:wasDerivedFrom)</div><div class="value"><ul class="plain"><li><a href="https://attack.mitre.org/matrices/enterprise/">https://attack.mitre.org/matrices/enterprise/</a></li><li><a href="https://github.com/j-klawson/security-gym/tree/main/security_gym/campaigns">https://github.com/j-klawson/security-gym/tree/main/security_gym/campaigns</a></li><li><a href="https://github.com/j-klawson/security-gym">https://github.com/j-klawson/security-gym</a></li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Source described in prose (rai:dataCollection)</div><div class="value"><span class="pre">The weather data is collected from meteorological services and historical weather APIs. The data includes hourly measurements of temperature, humidity, cloud cover, and wind speed for various global regions.</span></div>
+          <div class="label">Source described in prose (rai:dataCollectionRawData)</div><div class="value"><span class="pre">Raw text log lines (auth.log, syslog, nginx access/error) and raw eBPF event dumps. Stored verbatim in the events.raw_line column.</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Source described in prose (rai:dataCollection)</div><div class="value"><details class="longtext"><summary><span class="head">Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor,…</span> <span class="more">[614 chars — expand]</span></summary><span class="pre">Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor, a public web server, and a GPU lab server) via BCC tracepoints (sys_enter_execve, sched_process_exit, sys_enter_connect, sys_enter_accept4, sys_enter_openat, sys_enter_unlinkat). Attack traffic was generated by 10 scripted campaigns executed by a purpose-built campaign orchestrator against a deliberately vulnerable Debian 11 lab VM. No third-party infrastructure was probed.</span></details></div>
         </div>
         
       </div>
@@ -832,7 +923,7 @@
                 data-score="1">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
         <span class="n">1</span>
-        <ul><li>source described in prose only (rai:dataCollection)</li><li>score 0 if the text does not actually name a source</li></ul>
+        <ul><li>6 datasets carry provenance links</li><li>ground-truth elements missing: samples, instruments</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
@@ -884,19 +975,36 @@
         </div>
         
         <div class="item">
-          <div class="label">Transformation steps (Computation + Experiment entities)</div><div class="value"><strong>0</strong> <span class="detail">0 computations, 0 experiments</span></div>
+          <div class="label">Transformation steps (Computation + Experiment entities)</div><div class="value"><strong>5</strong> <span class="detail">4 computations, 1 experiments</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Steps with inputs and outputs declared</div><div class="value"><span class="na">— no denominator</span></div>
+          <div class="label">Steps with inputs and outputs declared</div><div class="value"><span class="pct-bar"><span style="width:40.0%"></span></span> <strong>40.0%</strong> <span class="meta">(2 of 5)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Computations linked to software</div><div class="value"><span class="na">— no denominator</span></div>
+          <div class="label">Computations linked to software</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(4 of 4)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Example transformation step</div><div class="value"><span class="na">none found</span></div>
+          <div class="label">Example transformation step</div><div class="value"><details class="entity"><summary>Synthetic attack-event generation</summary><pre>{
+  &#34;@type&#34;: &#34;prov:Activity&#34;,
+  &#34;name&#34;: &#34;Synthetic attack-event generation&#34;,
+  &#34;prov:type&#34;: &#34;Synthesis&#34;,
+  &#34;description&#34;: &#34;Adversary events generated by a custom Python campaign orchestrator (security_gym/campaigns/) executing 10 scripted MITRE ATT&amp;CK-aligned campaigns against an isolated UTM-virtualised Debian 11 lab VM. Six attack modules are released (brute_force, web_attack, recon, malware, dos, lateral_movement). All attack traffic is the deterministic output of the YAML-configured orchestrator under a fixed RNG …&#34;,
+  &#34;prov:wasAssociatedWith&#34;: {
+    &#34;@type&#34;: &#34;prov:SoftwareAgent&#34;,
+    &#34;name&#34;: &#34;Security-Gym campaign orchestrator&#34;,
+    &#34;version&#34;: &#34;0.4.2&#34;,
+    &#34;agentType&#34;: &#34;Procedural Python (no LLM, no generative model)&#34;,
+    &#34;validation&#34;: &#34;Every released stream passes nine automated validation checks (see Validation activity below), including raw-line regex spot checks per attack type and attack-type distribution checks against composition weights.&#34;,
+    &#34;codeRepository&#34;: [
+      &#34;<a href="https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/orchestrator.py">https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/orchestrator.py</a>&#34;
+    ]
+  },
+  &#34;platform&#34;: &#34;Custom Python campaign orchestrator targeting a UTM-virtualised Debian 11 lab VM (isildur, 192.168.2.201).&#34;,
+  &#34;@id&#34;: &#34;activity/generate-attacks&#34;
+}</pre></details></div>
         </div>
         
         <div class="item">
@@ -907,21 +1015,29 @@
           <div class="label">Evidence graphs (visual provenance per sub-crate)</div><div class="value"><span class="na">none</span></div>
         </div>
         
+        <div class="item">
+          <div class="label">Processing steps in prose — Preprocessing</div><div class="value"><span class="pre">Compressed with Zstandard. Composed experiment streams are produced by StreamComposer with per-stream MITRE ATT&amp;CK-aligned Poisson-scheduled attack injection and 24.2% eBPF downsampling.</span></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Processing steps in prose — Annotation</div><div class="value"><details class="longtext"><summary><span class="head">Attack labeling uses CampaignLabeler with time-window + source-IP matching: an event is labeled malicious if its timestamp falls within an attack phase&#39;s window AND its src_ip matches an attacker IP for that phase. Events with no src_ip…</span> <span class="more">[727 chars — expand]</span></summary><span class="pre">Attack labeling uses CampaignLabeler with time-window + source-IP matching: an event is labeled malicious if its timestamp falls within an attack phase&#39;s window AND its src_ip matches an attacker IP for that phase. Events with no src_ip (e.g., syslog daemon messages) match on time window alone. eBPF kernel events use the same labeler. Benign events are filtered with MaliciousFilter using deterministic web/auth signature rules (path traversal, SQL injection, XSS, JNDI injection, RFI, scanner user-agents, failed-password sequences) before inclusion in the benign baseline. PII scrubbing applies case-insensitive hostname/domain/IP replacement to a single synthetic target identity (`isildur` / …[truncated, 715 chars total]</span></details></div>
+        </div>
+        
       </div>
 
       
       <div class="estimate">
         <button class="use-est" data-criterion="1.b"
-                data-score="0">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">0</span>
-        <ul><li>no transformation steps (Computation or Experiment entities) in the crate</li></ul>
+        <span class="n">2</span>
+        <ul><li>5 machine-readable transformation steps</li><li>every computation links its software</li><li>completeness of the provenance record (or disclosure of known gaps) is asserted, not verified</li><li>final score is capped at 1.a&#39;s score (rule 1.b ≤ 1.a)</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="1.b" data-estimate="0" data-gate-min="1" data-depends-on="1.a">
+      <div class="grade" data-criterion="1.b" data-estimate="2" data-gate-min="1" data-depends-on="1.a">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-1.b" value="2"> 2</label>
@@ -971,31 +1087,31 @@
         </div>
         
         <div class="item">
-          <div class="label">Software entities</div><div class="value"><strong>0</strong></div>
+          <div class="label">Software entities</div><div class="value"><strong>5</strong></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Archived with a PID (Zenodo / Software Heritage / DOI / PyPI)</div><div class="value"><strong>0</strong> of 0</div>
+          <div class="label">Archived with a PID (Zenodo / Software Heritage / DOI / PyPI)</div><div class="value"><strong>1</strong> of 5</div>
         </div>
         
         <div class="item sub">
-          <div class="label">Mutable code hosting only (GitHub and the like)</div><div class="value"><strong>0</strong> of 0</div>
+          <div class="label">Mutable code hosting only (GitHub and the like)</div><div class="value"><strong>4</strong> of 5</div>
         </div>
         
         <div class="item sub">
-          <div class="label">Provider/vendor website URI only</div><div class="value"><strong>0</strong> of 0 <span class="detail">counts as 2 only for proprietary commercial software (reviewer&#39;s call)</span></div>
+          <div class="label">Provider/vendor website URI only</div><div class="value"><strong>0</strong> of 5 <span class="detail">counts as 2 only for proprietary commercial software (reviewer&#39;s call)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">No download/repository link</div><div class="value"><strong>0</strong> of 0</div>
+          <div class="label">No download/repository link</div><div class="value"><strong>0</strong> of 5</div>
         </div>
         
         <div class="item sub">
-          <div class="label">Archived software</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Archived software</div><div class="value">security-gym 0.4.2 — <a href="https://github.com/j-klawson/security-gym/tree/v0.4.2">https://github.com/j-klawson/security-gym/tree/v0.4.2</a>, <a href="https://files.pythonhosted.org/packages/c2/f1/803771d161d1df84ca8c72e877055715e2da506c48c885204ab7b758d565/security_gym-0.4.2-py3-none-any.whl">https://files.pythonhosted.org/packages/c2/f1/803771d161d1df84ca8c72e877055715e2da506c48c885204ab7b758d565/security_gym-0.4.2-py3-none-any.whl</a>, <a href="https://pypi.org/project/security-gym/0.4.2/">https://pypi.org/project/security-gym/0.4.2/</a></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Code-hosted software</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Code-hosted software</div><div class="value"><ul class="plain"><li>Security-Gym campaign orchestrator — <a href="https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/orchestrator.py">https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/orchestrator.py</a></li><li>CampaignLabeler + MaliciousFilter — <a href="https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/collection/labeler.py">https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/collection/labeler.py</a></li><li>PII scrubber + StreamComposer — <a href="https://github.com/j-klawson/security-gym/blob/v0.4.2/scripts/scrub_benign_db.py">https://github.com/j-klawson/security-gym/blob/v0.4.2/scripts/scrub_benign_db.py</a>, <a href="https://github.com/j-klawson/security-gym/blob/v0.4.2/src/security_gym/data/composer.py">https://github.com/j-klawson/security-gym/blob/v0.4.2/src/security_gym/data/composer.py</a></li><li>validate_labels.py — <a href="https://github.com/j-klawson/security-gym/blob/v0.4.2/scripts/validate_labels.py">https://github.com/j-klawson/security-gym/blob/v0.4.2/scripts/validate_labels.py</a></li></ul></div>
         </div>
         
         <div class="item sub">
@@ -1011,16 +1127,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="1.c"
-                data-score="0">use as starting point</button>
+                data-score="1">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">0</span>
-        <ul><li>no software entities in the crate</li></ul>
+        <span class="n">1</span>
+        <ul><li>1 of 5 archived with a PID</li><li>4 on mutable code hosting only</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="1.c" data-estimate="0" data-gate-min="1">
+      <div class="grade" data-criterion="1.c" data-estimate="1" data-gate-min="1">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-1.c" value="2"> 2</label>
@@ -1066,15 +1182,15 @@
         </div>
         
         <div class="item sub">
-          <div class="label">Authors identified with a PID (ORCID)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 1)</span></div>
+          <div class="label">Authors identified with a PID (ORCID)</div><div class="value"><span class="pct-bar"><span style="width:50.0%"></span></span> <strong>50.0%</strong> <span class="meta">(1 of 2)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Authors with PIDs (first 10)</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Authors with PIDs (first 10)</div><div class="value">Keith Lawson (<a href="https://orcid.org/0009-0008-7536-1122">https://orcid.org/0009-0008-7536-1122</a>)</div>
         </div>
         
         <div class="item sub">
-          <div class="label">Authors named in free text only</div><div class="value">Hewlett Packard Enterprise</div>
+          <div class="label">Authors named in free text only</div><div class="value">Hafiz Malik</div>
         </div>
         
         <div class="item">
@@ -1105,7 +1221,7 @@
                 data-score="1">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
         <span class="n">1</span>
-        <ul><li>0 of 1 authors carry a PID</li><li>1 named in free text only</li></ul>
+        <ul><li>1 of 2 authors carry a PID</li><li>1 named in free text only</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
@@ -1167,19 +1283,19 @@
         
         
         <div class="item">
-          <div class="label">Dataset abstract/description</div><div class="value"><span class="pre">A dataset containing historical weather data for various global regions. The dataset includes temperature, humidity, cloud cover, wind speed and other meteorological measurements.</span> <span class="detail">179 chars</span></div>
+          <div class="label">Dataset abstract/description</div><div class="value"><details class="longtext"><summary><span class="head">Ground-truth-labeled Linux server log and eBPF kernel-event streams for cybersecurity continual reinforcement learning research. The v4 dataset contains 11.2M base benign events (real Linux server traffic from four personal servers plus…</span> <span class="more">[695 chars — expand]</span></summary><span class="pre">Ground-truth-labeled Linux server log and eBPF kernel-event streams for cybersecurity continual reinforcement learning research. The v4 dataset contains 11.2M base benign events (real Linux server traffic from four personal servers plus 24-hour eBPF kernel-event collections from three Debian 13 servers) plus 60,468 attack campaign events across six MITRE ATT&amp;CK-aligned attack modules executed against a purpose-built lab VM. Composed into four pre-mixed experiment streams ranging from 4.9M to 257.7M events with Poisson-scheduled attack injection. Designed for use with the security-gym Gymnasium environment (`SecurityLogStream-Text-v0` and `SecurityLogStream-Hybrid-v0` observation modes).</span></details> <span class="detail">695 chars</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Keywords</div><div class="value"><ul class="plain"><li>weather data</li><li>temperature</li><li>humidity</li><li>cloud cover</li><li>wind speed</li><li>meteorology</li><li>climate data</li></ul></div>
+          <div class="label">Keywords</div><div class="value"><ul class="plain"><li>cybersecurity</li><li>intrusion detection</li><li>eBPF</li><li>MITRE ATT&amp;CK</li><li>continual learning</li><li>streaming reinforcement learning</li><li>log analysis</li><li>Linux</li><li>SIEM</li><li>Gymnasium environment</li><li><a href="http://id.nlm.nih.gov/mesh/D016494">http://id.nlm.nih.gov/mesh/D016494</a></li><li><a href="http://id.nlm.nih.gov/mesh/D000069550">http://id.nlm.nih.gov/mesh/D000069550</a></li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Controlled-vocabulary terms present</div><div class="value"><span class="no">✗ No</span> <span class="detail">0 subject terms (0 from root `about`, 0 from keywords); none on a recognised ontology host</span></div>
+          <div class="label">Controlled-vocabulary terms present</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">4 subject terms (0 from root `about`, 2 from keywords); 2 MeSH</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Controlled-vocabulary terms</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Controlled-vocabulary terms</div><div class="value"><ul class="plain"><li>(no label) — <a href="http://id.nlm.nih.gov/mesh/D016494">http://id.nlm.nih.gov/mesh/D016494</a></li><li>(no label) — <a href="http://id.nlm.nih.gov/mesh/D000069550">http://id.nlm.nih.gov/mesh/D000069550</a></li><li>Arithmetic Mean — ddi-stats:7975ed0</li><li>moderate — None</li></ul></div>
         </div>
         
       </div>
@@ -1187,16 +1303,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="2.a"
-                data-score="1">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">1</span>
-        <ul><li>abstract and keywords present, no controlled-vocabulary terms</li></ul>
+        <span class="n">2</span>
+        <ul><li>abstract present (695 chars — length-checked only, not read for substance)</li><li>12 keywords</li><li>4 controlled-vocabulary terms</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="2.a" data-estimate="1">
+      <div class="grade" data-criterion="2.a" data-estimate="2">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-2.a" value="2"> 2</label>
@@ -1238,19 +1354,26 @@
         
         
         <div class="item">
-          <div class="label">Entities carrying a summary-statistics link (hasSummaryStatistics)</div><div class="value"><strong>0</strong></div>
+          <div class="label">Entities carrying a summary-statistics link (hasSummaryStatistics)</div><div class="value"><strong>6</strong></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Entities located</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Entities located</div><div class="value"><ul class="plain"><li>Statistic: count -&gt; events</li><li>Statistic: malicious count -&gt; events</li><li>Statistic: mean -&gt; events/is_malicious</li><li>Statistic: min -&gt; events/severity</li><li>Statistic: max -&gt; events/severity</li><li>Statistic: mean -&gt; events/severity</li></ul></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Example summary-statistics reference</div><div class="value"><span class="na">none found</span></div>
+          <div class="label">Example summary-statistics reference</div><div class="value"><details class="entity"><summary>count</summary><pre>{
+  &#34;@type&#34;: &#34;cr:Field&#34;,
+  &#34;@id&#34;: &#34;events/count&#34;,
+  &#34;name&#34;: &#34;count&#34;,
+  &#34;description&#34;: &#34;Rows in exp_30d_heavy_v4.&#34;,
+  &#34;value&#34;: 21511208,
+  &#34;dataType&#34;: &#34;wd:Q4049983&#34;
+}</pre></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Missing-data statement (rai:dataCollectionMissingData)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Missing-data statement (rai:dataCollectionMissingData)</div><div class="value"><details class="longtext"><summary><span class="head">Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and…</span> <span class="more">[559 chars — expand]</span></summary><span class="pre">Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and parsed are never NULL. src_ip is NULL on 20,112,710 rows (93.5%), session_id on 20,476,710, username on 21,504,142 and service on 21,474,130, because most events (eBPF file/process records, syslog daemon messages) have no client address, session or user. NULL is the only missing-value marker; no empty strings are used.</span></details></div>
         </div>
         
         <div class="item">
@@ -1260,11 +1383,18 @@
       </div>
 
       
-      <div class="estimate none">No automated estimate — this criterion needs
-        human judgment.</div>
+      <div class="estimate">
+        <button class="use-est" data-criterion="2.b"
+                data-score="2">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">2</span>
+        <ul><li>6 entities carry a summary-statistics link</li><li>missing-data statement present (its consistency and domain-appropriateness are asserted, not verified against the files)</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
       
 
-      <div class="grade" data-criterion="2.b">
+      <div class="grade" data-criterion="2.b" data-estimate="2">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-2.b" value="2"> 2</label>
@@ -1306,47 +1436,82 @@
         
         
         <div class="item">
-          <div class="label">Machine-readable schema entities (EVI:Schema, JSON Schema dialect, Croissant RecordSet with fields)</div><div class="value"><strong>3</strong></div>
+          <div class="label">Machine-readable schema entities (EVI:Schema, JSON Schema dialect, Croissant RecordSet with fields)</div><div class="value"><strong>1</strong></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Non-image datasets linked to a schema</div><div class="value"><span class="pct-bar"><span style="width:5.6%"></span></span> <strong>5.6%</strong> <span class="meta">(1 of 18)</span> <span class="detail">0 image datasets excluded — image files don&#39;t take a data dictionary; a schema covering a format class covers every file in that class</span></div>
+          <div class="label">Non-image datasets linked to a schema</div><div class="value"><span class="pct-bar"><span style="width:16.7%"></span></span> <strong>16.7%</strong> <span class="meta">(1 of 6)</span> <span class="detail">0 image datasets excluded — image files don&#39;t take a data dictionary; a schema covering a format class covers every file in that class</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Standard vocabulary bindings populated</div><div class="value"><span class="no">✗ No</span> <span class="detail"> — Croissant: counted on Fields with a semantic dataType or equivalentProperty, of 18 Fields</span></div>
+          <div class="label">Standard vocabulary bindings populated</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Croissant (1), Wikidata (1) — Croissant: counted on Fields with a semantic dataType or equivalentProperty, of 14 Fields</span></div>
         </div>
         
         <div class="item">
-          <div class="label">File formats present (format-class view)</div><div class="value">application/json: 18</div>
+          <div class="label">File formats present (format-class view)</div><div class="value">application/zstd: 6</div>
         </div>
         
         <div class="item sub">
-          <div class="label">Example schema entity</div><div class="value"><details class="entity"><summary>Weather Measurements</summary><pre>{
+          <div class="label">Example schema entity</div><div class="value"><details class="entity"><summary>events</summary><pre>{
   &#34;@type&#34;: &#34;cr:RecordSet&#34;,
-  &#34;@id&#34;: &#34;weather_data&#34;,
-  &#34;name&#34;: &#34;Weather Measurements&#34;,
-  &#34;description&#34;: &#34;Time-series weather measurements for various global regions&#34;,
+  &#34;@id&#34;: &#34;events&#34;,
+  &#34;name&#34;: &#34;events&#34;,
+  &#34;description&#34;: &#34;All streams share the same `events` table schema (single-table SQLite database). Each row is one telemetry event with ground-truth labels.&#34;,
   &#34;field&#34;: [
     {
-      &#34;@id&#34;: &#34;weather_data/time&#34;
+      &#34;@id&#34;: &#34;events/id&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/temperature_2m&#34;
+      &#34;@id&#34;: &#34;events/timestamp&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/relative_humidity_2m&#34;
+      &#34;@id&#34;: &#34;events/source&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/cloudcover&#34;
+      &#34;@id&#34;: &#34;events/raw_line&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/windspeed_10m&#34;
+      &#34;@id&#34;: &#34;events/parsed&#34;
     },
-    &#34;…(+8 more)&#34;
+    &#34;…(+9 more)&#34;
+  ],
+  &#34;annotation&#34;: [
+    {
+      &#34;@id&#34;: &#34;events/count&#34;
+    },
+    {
+      &#34;@id&#34;: &#34;events/malicious_count&#34;
+    }
   ],
   &#34;examples&#34;: [
+    &#34;{…}&#34;,
+    &#34;{…}&#34;,
+    &#34;{…}&#34;,
     &#34;{…}&#34;
+  ]
+}</pre></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Example Field bound to a vocabulary term</div><div class="value"><details class="entity"><summary>is_malicious</summary><pre>{
+  &#34;@type&#34;: &#34;cr:Field&#34;,
+  &#34;@id&#34;: &#34;events/is_malicious&#34;,
+  &#34;name&#34;: &#34;is_malicious&#34;,
+  &#34;description&#34;: &#34;Ground-truth label: 0 = benign, 1 = malicious.&#34;,
+  &#34;dataType&#34;: [
+    &#34;sc:Integer&#34;,
+    &#34;cr:Label&#34;
+  ],
+  &#34;source&#34;: {
+    &#34;fileObject&#34;: {
+      &#34;@id&#34;: &#34;exp_30d_heavy_v4.db.zst&#34;
+    },
+    &#34;extract&#34;: &#34;{…}&#34;
+  },
+  &#34;annotation&#34;: [
+    {
+      &#34;@id&#34;: &#34;events/is_malicious/mean&#34;
+    }
   ]
 }</pre></details></div>
         </div>
@@ -1356,16 +1521,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="2.c"
-                data-score="1">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">1</span>
-        <ul><li>3 schema entities but no standard-vocabulary binding found</li></ul>
+        <span class="n">2</span>
+        <ul><li>1 schema entities</li><li>standard vocabulary bindings populated: Croissant, Wikidata</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="2.c" data-estimate="1" data-gate-min="1">
+      <div class="grade" data-criterion="2.c" data-estimate="2" data-gate-min="1">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-2.c" value="2"> 2</label>
@@ -1407,19 +1572,19 @@
         
         
         <div class="item">
-          <div class="label">Bias description (rai:dataBiases)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Bias description (rai:dataBiases)</div><div class="value"><span class="pre">Single-host scope (one target server). Benign baselines reflect the dataset author&#39;s personal infrastructure (academic / Linux developer profile), not enterprise fleet behavior. Benign load patterns may underrepresent enterprise SOC telemetry diversity.</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Bias description present and substantive-length</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Bias description present and substantive-length</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Missing-data reasons (rai:dataCollectionMissingData)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Missing-data reasons (rai:dataCollectionMissingData)</div><div class="value"><details class="longtext"><summary><span class="head">Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and…</span> <span class="more">[559 chars — expand]</span></summary><span class="pre">Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and parsed are never NULL. src_ip is NULL on 20,112,710 rows (93.5%), session_id on 20,476,710, username on 21,504,142 and service on 21,474,130, because most events (eBPF file/process records, syslog daemon messages) have no client address, session or user. NULL is the only missing-value marker; no empty strings are used.</span></details></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Missingness explanation present and substantive-length</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Missingness explanation present and substantive-length</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
@@ -1427,7 +1592,7 @@
         </div>
         
         <div class="item">
-          <div class="label">Limitations (rai:dataLimitations)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Limitations (rai:dataLimitations)</div><div class="value"><details class="longtext"><summary><span class="head">Six attack modules cover only a small subset of the MITRE ATT&amp;CK technique space. Persistence, privilege escalation, and exfiltration modules are planned but not yet implemented. The benchmark does not test zero-day generalization (all…</span> <span class="more">[613 chars — expand]</span></summary><span class="pre">Six attack modules cover only a small subset of the MITRE ATT&amp;CK technique space. Persistence, privilege escalation, and exfiltration modules are planned but not yet implemented. The benchmark does not test zero-day generalization (all attack modules are known TTPs) or multi-host lateral movement. The defense state (blocklist, throttle list, isolation mode) is simulated within the environment, not connected to a real firewall. eBPF events are downsampled to 24.2% during stream composition to simulate a single busy server, preserving event-type distributions but losing some inter-event temporal correlation.</span></details></div>
         </div>
         
         <div class="item">
@@ -1435,7 +1600,7 @@
         </div>
         
         <div class="item">
-          <div class="label">Demographic / cohort-representativeness language found</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Demographic / cohort-representativeness language found</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">represent</span></div>
         </div>
         
         <div class="item sub">
@@ -1449,18 +1614,11 @@
       </div>
 
       
-      <div class="estimate">
-        <button class="use-est" data-criterion="2.d"
-                data-score="0">use as starting point</button>
-        <span class="est-badge">Automated estimate</span>
-        <span class="n">0</span>
-        <ul><li>no bias, missingness, limitations, or completeness description anywhere in the metadata</li></ul>
-        <div class="est-warn">⚠ Estimated from the extracted evidence only —
-          it may be wrong. Review the evidence above before accepting.</div>
-      </div>
+      <div class="estimate none">No automated estimate — this criterion needs
+        human judgment.</div>
       
 
-      <div class="grade" data-criterion="2.d" data-estimate="0">
+      <div class="grade" data-criterion="2.d">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-2.d" value="2"> 2</label>
@@ -1502,15 +1660,27 @@
         
         
         <div class="item">
-          <div class="label">Collection / QC description (rai:dataCollection)</div><div class="value"><span class="pre">The weather data is collected from meteorological services and historical weather APIs. The data includes hourly measurements of temperature, humidity, cloud cover, and wind speed for various global regions.</span></div>
+          <div class="label">Collection / QC description (rai:dataCollection)</div><div class="value"><details class="longtext"><summary><span class="head">Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor,…</span> <span class="more">[614 chars — expand]</span></summary><span class="pre">Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor, a public web server, and a GPU lab server) via BCC tracepoints (sys_enter_execve, sched_process_exit, sys_enter_connect, sys_enter_accept4, sys_enter_openat, sys_enter_unlinkat). Attack traffic was generated by 10 scripted campaigns executed by a purpose-built campaign orchestrator against a deliberately vulnerable Debian 11 lab VM. No third-party infrastructure was probed.</span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Missing-data handling</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Missing-data handling</div><div class="value"><details class="longtext"><summary><span class="head">Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and…</span> <span class="more">[559 chars — expand]</span></summary><span class="pre">Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and parsed are never NULL. src_ip is NULL on 20,112,710 rows (93.5%), session_id on 20,476,710, username on 21,504,142 and service on 21,474,130, because most events (eBPF file/process records, syslog daemon messages) have no client address, session or user. NULL is the only missing-value marker; no empty strings are used.</span></details></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Annotation analysis (rai:)</div><div class="value"><details class="longtext"><summary><span class="head">All composed streams pass nine automated validation checks: (1) label consistency (is_malicious=1 implies non-NULL attack_type/stage/severity), (2) raw-line spot checks via regex per attack type, (3) campaign boundary containment, (4)…</span> <span class="more">[529 chars — expand]</span></summary><span class="pre">All composed streams pass nine automated validation checks: (1) label consistency (is_malicious=1 implies non-NULL attack_type/stage/severity), (2) raw-line spot checks via regex per attack type, (3) campaign boundary containment, (4) campaign-type cross-validation, (5) target-array consistency for the SecurityGymStream adapter, (6) attack-type distribution against composition weights, (7) temporal order monotonicity, (8) no unlabeled events, (9) session coherence (all events in a session share the same is_malicious label).</span></details></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Annotation protocol (rai:)</div><div class="value"><details class="longtext"><summary><span class="head">Attack labeling uses CampaignLabeler with time-window + source-IP matching: an event is labeled malicious if its timestamp falls within an attack phase&#39;s window AND its src_ip matches an attacker IP for that phase. Events with no src_ip…</span> <span class="more">[727 chars — expand]</span></summary><span class="pre">Attack labeling uses CampaignLabeler with time-window + source-IP matching: an event is labeled malicious if its timestamp falls within an attack phase&#39;s window AND its src_ip matches an attacker IP for that phase. Events with no src_ip (e.g., syslog daemon messages) match on time window alone. eBPF kernel events use the same labeler. Benign events are filtered with MaliciousFilter using deterministic web/auth signature rules (path traversal, SQL injection, XSS, JNDI injection, RFI, scanner user-agents, failed-password sequences) before inclusion in the benign baseline. PII scrubbing applies case-insensitive hostname/domain/IP replacement to a single synthetic target identity (`isildur` / …[truncated, 715 chars total]</span></details></div>
+        </div>
+        
+        <div class="item">
+          <div class="label">Preprocessing protocol (rai:)</div><div class="value"><span class="pre">Compressed with Zstandard. Composed experiment streams are produced by StreamComposer with per-stream MITRE ATT&amp;CK-aligned Poisson-scheduled attack injection and 24.2% eBPF downsampling.</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">QC language found in metadata</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">QC language found in metadata</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">filtered, validation</span></div>
         </div>
         
         <div class="item sub">
@@ -1580,27 +1750,47 @@
         
         
         <div class="item">
-          <div class="label">Human-readable datasheet(s)</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Human-readable datasheet(s)</div><div class="value"><ul class="plain"><li><a href="https://zenodo.org/records/21763493/files/DATASET_README.md">https://zenodo.org/records/21763493/files/DATASET_README.md</a></li><li><a href="https://huggingface.co/datasets/j-klawson/security-gym-v4/blob/main/README.md">https://huggingface.co/datasets/j-klawson/security-gym-v4/blob/main/README.md</a></li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Machine-readable datasheet sections populated</div><div class="value"><strong>3</strong> of 9</div>
+          <div class="label">Machine-readable datasheet sections populated</div><div class="value"><strong>8</strong> of 9</div>
         </div>
         
         <div class="item sub">
-          <div class="label">Missing sections</div><div class="value"><ul class="plain"><li>Processing</li><li>Annotation</li><li>Limitations</li><li>Biases</li><li>Release/maintenance plan</li><li>Conditions of access</li></ul></div>
+          <div class="label">Missing sections</div><div class="value">Conditions of access</div>
         </div>
         
         <div class="item sub">
-          <div class="label">Section — Collection</div><div class="value"><span class="pre">The weather data is collected from meteorological services and historical weather APIs. The data includes hourly measurements of temperature, humidity, cloud cover, and wind speed for various global regions.</span></div>
+          <div class="label">Section — Collection</div><div class="value"><details class="longtext"><summary><span class="head">Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor,…</span> <span class="more">[614 chars — expand]</span></summary><span class="pre">Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor, a public web server, and a GPU lab server) via BCC tracepoints (sys_enter_execve, sched_process_exit, sys_enter_connect, sys_enter_accept4, sys_enter_openat, sys_enter_unlinkat). Attack traffic was generated by 10 scripted campaigns executed by a purpose-built campaign orchestrator against a deliberately vulnerable Debian 11 lab VM. No third-party infrastructure was probed.</span></details></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Section — Use cases</div><div class="value"><span class="pre">This dataset can be used for climate research, weather pattern analysis, energy consumption modeling, carbon footprint calculations in relation to weather conditions, and environmental impact studies.</span></div>
+          <div class="label">Section — Processing</div><div class="value"><span class="pre">Compressed with Zstandard. Composed experiment streams are produced by StreamComposer with per-stream MITRE ATT&amp;CK-aligned Poisson-scheduled attack injection and 24.2% eBPF downsampling.</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Section — License</div><div class="value"><span class="pre"><a href="https://opensource.org/licenses/MIT">https://opensource.org/licenses/MIT</a></span></div>
+          <div class="label">Section — Annotation</div><div class="value"><details class="longtext"><summary><span class="head">Attack labeling uses CampaignLabeler with time-window + source-IP matching: an event is labeled malicious if its timestamp falls within an attack phase&#39;s window AND its src_ip matches an attacker IP for that phase. Events with no src_ip…</span> <span class="more">[727 chars — expand]</span></summary><span class="pre">Attack labeling uses CampaignLabeler with time-window + source-IP matching: an event is labeled malicious if its timestamp falls within an attack phase&#39;s window AND its src_ip matches an attacker IP for that phase. Events with no src_ip (e.g., syslog daemon messages) match on time window alone. eBPF kernel events use the same labeler. Benign events are filtered with MaliciousFilter using deterministic web/auth signature rules (path traversal, SQL injection, XSS, JNDI injection, RFI, scanner user-agents, failed-password sequences) before inclusion in the benign baseline. PII scrubbing applies case-insensitive hostname/domain/IP replacement to a single synthetic target identity (`isildur` / …[truncated, 715 chars total]</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — Use cases</div><div class="value"><details class="longtext"><summary><span class="head">Streaming continual reinforcement learning research; online representation learning from raw text and structured kernel-event streams; streaming deep-RL technique validation (LMS, ObGD, EMA normalization, sparse initialization); reward…</span> <span class="more">[379 chars — expand]</span></summary><span class="pre">Streaming continual reinforcement learning research; online representation learning from raw text and structured kernel-event streams; streaming deep-RL technique validation (LMS, ObGD, EMA normalization, sparse initialization); reward design in observation-suppressing environments; comparative evaluation of detection approaches (learned vs. rule-based) on non-stationary data.</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — Limitations</div><div class="value"><details class="longtext"><summary><span class="head">Six attack modules cover only a small subset of the MITRE ATT&amp;CK technique space. Persistence, privilege escalation, and exfiltration modules are planned but not yet implemented. The benchmark does not test zero-day generalization (all…</span> <span class="more">[613 chars — expand]</span></summary><span class="pre">Six attack modules cover only a small subset of the MITRE ATT&amp;CK technique space. Persistence, privilege escalation, and exfiltration modules are planned but not yet implemented. The benchmark does not test zero-day generalization (all attack modules are known TTPs) or multi-host lateral movement. The defense state (blocklist, throttle list, isolation mode) is simulated within the environment, not connected to a real firewall. eBPF events are downsampled to 24.2% during stream composition to simulate a single busy server, preserving event-type distributions but losing some inter-event temporal correlation.</span></details></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — Biases</div><div class="value"><span class="pre">Single-host scope (one target server). Benign baselines reflect the dataset author&#39;s personal infrastructure (academic / Linux developer profile), not enterprise fleet behavior. Benign load patterns may underrepresent enterprise SOC telemetry diversity.</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — Release/maintenance plan</div><div class="value"><span class="pre">Versioned via Zenodo (concept DOI <a href="https://doi.org/10.5281/zenodo.18901541">10.5281/zenodo.18901541</a> always resolves to latest; v4.1 frozen at <a href="https://doi.org/10.5281/zenodo.21763493">10.5281/zenodo.21763493</a>). HuggingFace mirror updated on each Zenodo version bump. Issues tracked at <a href="https://github.com/j-klawson/security-gym/issues">https://github.com/j-klawson/security-gym/issues</a>.</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Section — License</div><div class="value"><span class="pre"><a href="https://www.apache.org/licenses/LICENSE-2.0">https://www.apache.org/licenses/LICENSE-2.0</a></span></div>
         </div>
         
       </div>
@@ -1608,16 +1798,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="3.a"
-                data-score="1">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">1</span>
-        <ul><li>no human-readable datasheet</li><li>3 of 9 machine-readable sections populated</li></ul>
+        <span class="n">2</span>
+        <ul><li>human-readable datasheet linked</li><li>8 of 9 machine-readable sections populated (presence-checked only — whether coverage is substantive is a human read)</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="3.a" data-estimate="1">
+      <div class="grade" data-criterion="3.a" data-estimate="2">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-3.a" value="2"> 2</label>
@@ -1659,19 +1849,19 @@
         
         
         <div class="item">
-          <div class="label">Appropriate use cases (rai:dataUseCases)</div><div class="value"><span class="pre">This dataset can be used for climate research, weather pattern analysis, energy consumption modeling, carbon footprint calculations in relation to weather conditions, and environmental impact studies.</span></div>
+          <div class="label">Appropriate use cases (rai:dataUseCases)</div><div class="value"><details class="longtext"><summary><span class="head">Streaming continual reinforcement learning research; online representation learning from raw text and structured kernel-event streams; streaming deep-RL technique validation (LMS, ObGD, EMA normalization, sparse initialization); reward…</span> <span class="more">[379 chars — expand]</span></summary><span class="pre">Streaming continual reinforcement learning research; online representation learning from raw text and structured kernel-event streams; streaming deep-RL technique validation (LMS, ObGD, EMA normalization, sparse initialization); reward design in observation-suppressing environments; comparative evaluation of detection approaches (learned vs. rule-based) on non-stationary data.</span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Limitations / inappropriate uses (rai:dataLimitations)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Limitations / inappropriate uses (rai:dataLimitations)</div><div class="value"><details class="longtext"><summary><span class="head">Six attack modules cover only a small subset of the MITRE ATT&amp;CK technique space. Persistence, privilege escalation, and exfiltration modules are planned but not yet implemented. The benchmark does not test zero-day generalization (all…</span> <span class="more">[613 chars — expand]</span></summary><span class="pre">Six attack modules cover only a small subset of the MITRE ATT&amp;CK technique space. Persistence, privilege escalation, and exfiltration modules are planned but not yet implemented. The benchmark does not test zero-day generalization (all attack modules are known TTPs) or multi-host lateral movement. The defense state (blocklist, throttle list, isolation mode) is simulated within the environment, not connected to a real firewall. eBPF events are downsampled to 24.2% during stream composition to simulate a single busy server, preserving event-type distributions but losing some inter-event temporal correlation.</span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Prohibited uses</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Prohibited uses</div><div class="value"><details class="longtext"><summary><span class="head">Production SOC tooling. Models of enterprise infrastructure. Zero-day generalization evaluation. Substitutes for real-world deployment validation. Multi-host lateral-movement studies. The bundled attack modules target a purpose-built lab…</span> <span class="more">[308 chars — expand]</span></summary><span class="pre">Production SOC tooling. Models of enterprise infrastructure. Zero-day generalization evaluation. Substitutes for real-world deployment validation. Multi-host lateral-movement studies. The bundled attack modules target a purpose-built lab VM (`isildur`) and must not be directed at third-party infrastructure.</span></details></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Both appropriate and inappropriate uses stated</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Both appropriate and inappropriate uses stated</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item">
@@ -1679,7 +1869,7 @@
         </div>
         
         <div class="item sub">
-          <div class="label">Prior publications</div><div class="value"><ul class="plain"><li><a href="https://github.com/HewlettPackard/sustain-cluster/tree/main">Hewlett Packard Enterprise (2023). Weather Dataset. GitHub. https://github.com/HewlettPackard/sustain-cluster/tree/main</a></li></ul></div>
+          <div class="label">Prior publications</div><div class="value"><ul class="plain"><li><a href="https://doi.org/10.5281/zenodo.21763493}">@dataset{lawson_security_gym_dataset_2026, author = {Lawson, Keith and Malik, Hafiz}, title = {Security-Gym Dataset: Labeled Linux Log and eBPF Streams for Continual Learning Research}, version = {4.1}, year = {2026}, …[truncated, 323 chars total]</a></li></ul></div>
         </div>
         
       </div>
@@ -1687,16 +1877,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="3.b"
-                data-score="1">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">1</span>
-        <ul><li>use cases stated only partially (appropriate or inappropriate, not both)</li></ul>
+        <span class="n">2</span>
+        <ul><li>appropriate and inappropriate uses both stated</li><li>1 prior publications linked</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="3.b" data-estimate="1">
+      <div class="grade" data-criterion="3.b" data-estimate="2">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-3.b" value="2"> 2</label>
@@ -1738,7 +1928,7 @@
         
         
         <div class="item">
-          <div class="label">Hash coverage (datasets + software, embargoed excluded)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 18)</span> <span class="detail">counts md5/sha256 recorded on the metadata entities themselves, which is what the rubric requires (metadata and data verifiably reference each other)</span></div>
+          <div class="label">Hash coverage (datasets + software, embargoed excluded)</div><div class="value"><span class="pct-bar"><span style="width:100%"></span></span> <strong>116.7%</strong> <span class="meta">(7 of 6)</span> <span class="detail">counts md5/sha256 recorded on the metadata entities themselves, which is what the rubric requires (metadata and data verifiably reference each other)</span></div>
         </div>
         
         <div class="item sub">
@@ -1746,11 +1936,24 @@
         </div>
         
         <div class="item sub">
-          <div class="label">PROV software agents without a file excluded from the denominator</div><div class="value"><strong>0</strong></div>
+          <div class="label">PROV software agents without a file excluded from the denominator</div><div class="value"><strong>5</strong></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Example entity with a checksum</div><div class="value"><span class="na">none found</span></div>
+          <div class="label">Example entity with a checksum</div><div class="value"><details class="entity"><summary>security-gym 0.4.2</summary><pre>{
+  &#34;@type&#34;: [
+    &#34;prov:SoftwareAgent&#34;,
+    &#34;sc:SoftwareApplication&#34;
+  ],
+  &#34;@id&#34;: &#34;<a href="https://pypi.org/project/security-gym/0.4.2/">https://pypi.org/project/security-gym/0.4.2/</a>&#34;,
+  &#34;name&#34;: &#34;security-gym 0.4.2&#34;,
+  &#34;softwareVersion&#34;: &#34;0.4.2&#34;,
+  &#34;codeRepository&#34;: &#34;<a href="https://github.com/j-klawson/security-gym/tree/v0.4.2">https://github.com/j-klawson/security-gym/tree/v0.4.2</a>&#34;,
+  &#34;downloadUrl&#34;: &#34;<a href="https://files.pythonhosted.org/packages/c2/f1/803771d161d1df84ca8c72e877055715e2da506c48c885204ab7b758d565/security_gym-0.4.2-py3-none-any.whl">https://files.pythonhosted.org/packages/c2/f1/803771d161d1df84ca8c72e877055715e2da506c48c885204ab7b758d565/security_gym-0.4.2-py3-none-any.whl</a>&#34;,
+  &#34;sha256&#34;: &#34;c6eb41d6421350a403f31499109721cba8aad59fa1732aef6ed242b903c5efd4&#34;,
+  &#34;softwareRequirements&#34;: &#34;<a href="https://github.com/j-klawson/security-gym/blob/v0.4.2/pyproject.toml">https://github.com/j-klawson/security-gym/blob/v0.4.2/pyproject.toml</a>&#34;,
+  &#34;license&#34;: &#34;<a href="https://www.apache.org/licenses/LICENSE-2.0">https://www.apache.org/licenses/LICENSE-2.0</a>&#34;
+}</pre></details></div>
         </div>
         
       </div>
@@ -1758,16 +1961,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="3.c"
-                data-score="0">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">0</span>
-        <ul><li>no checksums found</li></ul>
+        <span class="n">2</span>
+        <ul><li>checksums on all 6 datasets and software (embargoed excluded)</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="3.c" data-estimate="0">
+      <div class="grade" data-criterion="3.c" data-estimate="2">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-3.c" value="2"> 2</label>
@@ -1823,19 +2026,19 @@
         
         
         <div class="item">
-          <div class="label">Collection description (rai:dataCollection)</div><div class="value"><span class="pre">The weather data is collected from meteorological services and historical weather APIs. The data includes hourly measurements of temperature, humidity, cloud cover, and wind speed for various global regions.</span></div>
+          <div class="label">Collection description (rai:dataCollection)</div><div class="value"><details class="longtext"><summary><span class="head">Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor,…</span> <span class="more">[614 chars — expand]</span></summary><span class="pre">Benign traffic was collected from four personal Linux servers running standard services (SSH, nginx, syslog) operated by the dataset author. eBPF kernel events were collected over 24-hour windows on three Debian 13 servers (a hypervisor, a public web server, and a GPU lab server) via BCC tracepoints (sys_enter_execve, sched_process_exit, sys_enter_connect, sys_enter_accept4, sys_enter_openat, sys_enter_unlinkat). Attack traffic was generated by 10 scripted campaigns executed by a purpose-built campaign orchestrator against a deliberately vulnerable Debian 11 lab VM. No third-party infrastructure was probed.</span></details></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Raw data source (rai:dataCollectionRawData)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Raw data source (rai:dataCollectionRawData)</div><div class="value"><span class="pre">Raw text log lines (auth.log, syslog, nginx access/error) and raw eBPF event dumps. Stored verbatim in the events.raw_line column.</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Collection timeframe (rai:dataCollectionTimeframe)</div><div class="value"><span class="pre">Data collection started in 2020 and is ongoing, with hourly measurements for each region.</span></div>
+          <div class="label">Collection timeframe (rai:dataCollectionTimeframe)</div><div class="value"><span class="na">not provided</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Annotation platform / workforce (rai:dataAnnotationPlatform)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Annotation platform / workforce (rai:dataAnnotationPlatform)</div><div class="value"><span class="pre">Custom Python pipeline (campaign orchestrator + CampaignLabeler + MaliciousFilter)</span></div>
         </div>
         
         <div class="item sub">
@@ -1875,7 +2078,11 @@
         </div>
         
         <div class="item">
-          <div class="label">Management plan (rai:dataReleaseMaintenancePlan)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Management plan (rai:dataReleaseMaintenancePlan)</div><div class="value"><span class="pre">Versioned via Zenodo (concept DOI <a href="https://doi.org/10.5281/zenodo.18901541">10.5281/zenodo.18901541</a> always resolves to latest; v4.1 frozen at <a href="https://doi.org/10.5281/zenodo.21763493">10.5281/zenodo.21763493</a>). HuggingFace mirror updated on each Zenodo version bump. Issues tracked at <a href="https://github.com/j-klawson/security-gym/issues">https://github.com/j-klawson/security-gym/issues</a>.</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">DMP link resolves: https://github.com/j-klawson/security-gym/issues</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
       </div>
@@ -1927,11 +2134,11 @@
         
         
         <div class="item">
-          <div class="label">Confidentiality level</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Confidentiality level</div><div class="value"><span class="pre">{&#39;@type&#39;: &#39;sc:DefinedTerm&#39;, &#39;name&#39;: &#39;moderate&#39;, &#39;termCode&#39;: &#39;M&#39;, &#39;url&#39;: &#39;<a href="http://terminology.hl7.org/CodeSystem/v3-Confidentiality#M&#39;">http://terminology.hl7.org/CodeSystem/v3-Confidentiality#M&#39;</a>, &#39;inDefinedTermSet&#39;: &#39;<a href="http://terminology.hl7.org/CodeSystem/v3-Confidentiality&#39;}">http://terminology.hl7.org/CodeSystem/v3-Confidentiality&#39;}</a></span></div>
         </div>
         
         <div class="item">
-          <div class="label">Personal/sensitive information statement</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Personal/sensitive information statement</div><div class="value"><details class="longtext"><summary><span class="head">Server hostnames, domains and addresses are mapped to one synthetic target identity (isildur / 192.168.2.201), and attack traffic uses lab-private 192.168.2.x addresses. Benign web-access and SSH log lines keep the remote client&#39;s source…</span> <span class="more">[403 chars — expand]</span></summary><span class="pre">Server hostnames, domains and addresses are mapped to one synthetic target identity (isildur / 192.168.2.201), and attack traffic uses lab-private 192.168.2.x addresses. Benign web-access and SSH log lines keep the remote client&#39;s source IP: in the 30-day stream 860,529 benign rows carry one of 11,413 distinct public IPv4 addresses (crawlers, scanners and other visitors), in both src_ip and raw_line.</span></details></div>
         </div>
         
         <div class="item">
@@ -1943,7 +2150,7 @@
         </div>
         
         <div class="item">
-          <div class="label">Management plan content (judge adequacy for the declared sensitivity)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Management plan content (judge adequacy for the declared sensitivity)</div><div class="value"><span class="pre">Versioned via Zenodo (concept DOI <a href="https://doi.org/10.5281/zenodo.18901541">10.5281/zenodo.18901541</a> always resolves to latest; v4.1 frozen at <a href="https://doi.org/10.5281/zenodo.21763493">10.5281/zenodo.21763493</a>). HuggingFace mirror updated on each Zenodo version bump. Issues tracked at <a href="https://github.com/j-klawson/security-gym/issues">https://github.com/j-klawson/security-gym/issues</a>.</span></div>
         </div>
         
         <div class="item">
@@ -1957,18 +2164,11 @@
       </div>
 
       
-      <div class="estimate">
-        <button class="use-est" data-criterion="4.b"
-                data-score="0">use as starting point</button>
-        <span class="est-badge">Automated estimate</span>
-        <span class="n">0</span>
-        <ul><li>no sensitivity classification, sensitivity statement, or management description</li></ul>
-        <div class="est-warn">⚠ Estimated from the extracted evidence only —
-          it may be wrong. Review the evidence above before accepting.</div>
-      </div>
+      <div class="estimate none">No automated estimate — this criterion needs
+        human judgment.</div>
       
 
-      <div class="grade" data-criterion="4.b" data-estimate="0" data-gate-min="1">
+      <div class="grade" data-criterion="4.b" data-gate-min="1">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-4.b" value="2"> 2</label>
@@ -2010,7 +2210,7 @@
         
         
         <div class="item">
-          <div class="label">License</div><div class="value"><span class="pre"><a href="https://opensource.org/licenses/MIT">https://opensource.org/licenses/MIT</a></span></div>
+          <div class="label">License</div><div class="value"><span class="pre"><a href="https://www.apache.org/licenses/LICENSE-2.0">https://www.apache.org/licenses/LICENSE-2.0</a></span></div>
         </div>
         
         <div class="item">
@@ -2018,11 +2218,11 @@
         </div>
         
         <div class="item">
-          <div class="label">Permitted uses stated</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">This dataset can be used for climate research, weather pattern analysis, energy consumption modeling, carbon footprint calculations in relation to weather conditions, and environmental impact studies.</span></div>
+          <div class="label">Permitted uses stated</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Streaming continual reinforcement learning research; online representation learning from raw text and structured kernel-event streams; streaming deep-RL technique validation (LMS, ObGD, EMA normalization, sparse initialization); reward design in observation-suppressing environments; comparative …[truncated, 379 chars total]</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Prohibited uses stated</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Prohibited uses stated</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">{&#39;@type&#39;: &#39;sc:DefinedTerm&#39;, &#39;name&#39;: &#39;moderate&#39;, &#39;termCode&#39;: &#39;M&#39;, &#39;url&#39;: &#39;<a href="http://terminology.hl7.org/CodeSystem/v3-Confidentiality#M&#39;">http://terminology.hl7.org/CodeSystem/v3-Confidentiality#M&#39;</a>, &#39;inDefinedTermSet&#39;: &#39;<a href="http://terminology.hl7.org/CodeSystem/v3-Confidentiality&#39;}">http://terminology.hl7.org/CodeSystem/v3-Confidentiality&#39;}</a></span></div>
         </div>
         
         <div class="item">
@@ -2082,11 +2282,11 @@
         
         
         <div class="item">
-          <div class="label">Confidentiality level (confidentialityLevel / dct:accessRights)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Confidentiality level (confidentialityLevel / dct:accessRights)</div><div class="value"><span class="pre">{&#39;@type&#39;: &#39;sc:DefinedTerm&#39;, &#39;name&#39;: &#39;moderate&#39;, &#39;termCode&#39;: &#39;M&#39;, &#39;url&#39;: &#39;<a href="http://terminology.hl7.org/CodeSystem/v3-Confidentiality#M&#39;">http://terminology.hl7.org/CodeSystem/v3-Confidentiality#M&#39;</a>, &#39;inDefinedTermSet&#39;: &#39;<a href="http://terminology.hl7.org/CodeSystem/v3-Confidentiality&#39;}">http://terminology.hl7.org/CodeSystem/v3-Confidentiality&#39;}</a></span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Value is an HL7 v3-Confidentiality code</div><div class="value"><span class="no">✗ No</span> <span class="detail">prose value — compare against U/L/M/N/R/V display names</span></div>
+          <div class="label">Value is an HL7 v3-Confidentiality code</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">matches code &#39;M&#39; in <a href="http://terminology.hl7.org/ValueSet/v3-Confidentiality">http://terminology.hl7.org/ValueSet/v3-Confidentiality</a></span></div>
         </div>
         
         <div class="item">
@@ -2094,7 +2294,7 @@
         </div>
         
         <div class="item">
-          <div class="label">Personal/sensitive information statement</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Personal/sensitive information statement</div><div class="value"><details class="longtext"><summary><span class="head">Server hostnames, domains and addresses are mapped to one synthetic target identity (isildur / 192.168.2.201), and attack traffic uses lab-private 192.168.2.x addresses. Benign web-access and SSH log lines keep the remote client&#39;s source…</span> <span class="more">[403 chars — expand]</span></summary><span class="pre">Server hostnames, domains and addresses are mapped to one synthetic target identity (isildur / 192.168.2.201), and attack traffic uses lab-private 192.168.2.x addresses. Benign web-access and SSH log lines keep the remote client&#39;s source IP: in the 30-day stream 860,529 benign rows carry one of 11,413 distinct public IPv4 addresses (crawlers, scanners and other visitors), in both src_ip and raw_line.</span></details></div>
         </div>
         
       </div>
@@ -2102,16 +2302,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="4.d"
-                data-score="0">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">0</span>
-        <ul><li>no security-level metadata</li></ul>
+        <span class="n">2</span>
+        <ul><li>confidentiality level is an HL7 v3-Confidentiality code (&#39;M&#39;)</li><li>whether the declared level is actually ENFORCED (the 0-rule) is not verified — score 0 if controlled data is retrievable without authorization or authorized users are blocked</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="4.d" data-estimate="0" data-gate-min="1">
+      <div class="grade" data-criterion="4.d" data-estimate="2" data-gate-min="1">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-4.d" value="2"> 2</label>
@@ -2167,15 +2367,15 @@
         
         
         <div class="item">
-          <div class="label">Identifier</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Identifier</div><div class="value"><span class="pre"><a href="https://doi.org/10.5281/zenodo.21763493">https://doi.org/10.5281/zenodo.21763493</a></span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Identifier is a PID</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Identifier is a PID</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">scheme: DOI</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Recognized archives detected (publisher + content hosts)</div><div class="value"><span class="na">none</span> <span class="detail">a 2 requires a sustainable repository with a PID and a retention commitment</span></div>
+          <div class="label">Recognized archives detected (publisher + content hosts)</div><div class="value">Zenodo <span class="detail">a 2 requires a sustainable repository with a PID and a retention commitment</span></div>
         </div>
         
         <div class="item sub">
@@ -2183,7 +2383,7 @@
         </div>
         
         <div class="item">
-          <div class="label">Datasets with a contentUrl (data parked somewhere)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(18 of 18)</span> <span class="detail">18 of these are remote archive links; the rest live inside the crate deposit</span></div>
+          <div class="label">Datasets with a contentUrl (data parked somewhere)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(6 of 6)</span> <span class="detail">6 of these are remote archive links; the rest live inside the crate deposit</span></div>
         </div>
         
       </div>
@@ -2191,16 +2391,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="5.a"
-                data-score="1">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">1</span>
-        <ul><li>no PID on the deposit</li><li>18 datasets have a contentUrl but no recognized archive detected</li></ul>
+        <span class="n">2</span>
+        <ul><li>PID present (scheme: DOI)</li><li>recognized archive(s): Zenodo</li><li>an explicit retention commitment is assumed for recognized repositories, not verified</li><li>note the criterion covers RAW/unprocessed data — confirm the raw data itself is what&#39;s archived</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="5.a" data-estimate="1">
+      <div class="grade" data-criterion="5.a" data-estimate="2">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-5.a" value="2"> 2</label>
@@ -2242,7 +2442,7 @@
         
         
         <div class="item">
-          <div class="label">Publisher repository</div><div class="value"><span class="pre">None</span></div>
+          <div class="label">Publisher repository</div><div class="value"><span class="pre">Zenodo <a href="https://zenodo.org">https://zenodo.org</a></span> <span class="detail">Zenodo</span></div>
         </div>
         
         <div class="item">
@@ -2250,40 +2450,33 @@
         </div>
         
         <div class="item sub">
-          <div class="label">Generalist repository hosts</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Generalist repository hosts</div><div class="value"><a href="https://zenodo.org">https://zenodo.org</a> — Zenodo: 3 files</div>
         </div>
         
         <div class="item sub">
-          <div class="label">Unrecognized hosts</div><div class="value"><a href="https://github.com">https://github.com</a>: 18 files</div>
+          <div class="label">Unrecognized hosts</div><div class="value"><a href="https://huggingface.co">https://huggingface.co</a>: 3 files</div>
         </div>
         
         <div class="item sub">
-          <div class="label">Dataset files on recognized repository hosts</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 18)</span></div>
+          <div class="label">Dataset files on recognized repository hosts</div><div class="value"><span class="pct-bar"><span style="width:50.0%"></span></span> <strong>50.0%</strong> <span class="meta">(3 of 6)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Domain hint — collection types</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Domain hint — collection types</div><div class="value"><ul class="plain"><li>Self-collected</li><li>Synthetic (attack campaigns)</li></ul></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Domain hint — keywords</div><div class="value"><ul class="plain"><li>weather data</li><li>temperature</li><li>humidity</li><li>cloud cover</li><li>wind speed</li><li>meteorology</li><li>climate data</li></ul></div>
+          <div class="label">Domain hint — keywords</div><div class="value"><ul class="plain"><li>cybersecurity</li><li>intrusion detection</li><li>eBPF</li><li>MITRE ATT&amp;CK</li><li>continual learning</li><li>streaming reinforcement learning</li><li>log analysis</li><li>Linux</li><li>SIEM</li><li>Gymnasium environment</li><li><a href="http://id.nlm.nih.gov/mesh/D016494">http://id.nlm.nih.gov/mesh/D016494</a></li><li><a href="http://id.nlm.nih.gov/mesh/D000069550">http://id.nlm.nih.gov/mesh/D000069550</a></li></ul></div>
         </div>
         
       </div>
 
       
-      <div class="estimate">
-        <button class="use-est" data-criterion="5.b"
-                data-score="0">use as starting point</button>
-        <span class="est-badge">Automated estimate</span>
-        <span class="n">0</span>
-        <ul><li>no recognized repository host detected</li></ul>
-        <div class="est-warn">⚠ Estimated from the extracted evidence only —
-          it may be wrong. Review the evidence above before accepting.</div>
-      </div>
+      <div class="estimate none">No automated estimate — this criterion needs
+        human judgment.</div>
       
 
-      <div class="grade" data-criterion="5.b" data-estimate="0">
+      <div class="grade" data-criterion="5.b">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-5.b" value="2"> 2</label>
@@ -2325,15 +2518,19 @@
         
         
         <div class="item">
-          <div class="label">Governance / maintenance plan (rai:dataReleaseMaintenancePlan)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Governance / maintenance plan (rai:dataReleaseMaintenancePlan)</div><div class="value"><span class="pre">Versioned via Zenodo (concept DOI <a href="https://doi.org/10.5281/zenodo.18901541">10.5281/zenodo.18901541</a> always resolves to latest; v4.1 frozen at <a href="https://doi.org/10.5281/zenodo.21763493">10.5281/zenodo.21763493</a>). HuggingFace mirror updated on each Zenodo version bump. Issues tracked at <a href="https://github.com/j-klawson/security-gym/issues">https://github.com/j-klawson/security-gym/issues</a>.</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">DMP link extracted from the plan</div><div class="value"><span class="na">none</span></div>
+          <div class="label">DMP link extracted from the plan</div><div class="value"><a href="https://github.com/j-klawson/security-gym/issues">https://github.com/j-klawson/security-gym/issues</a></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Governance plan present</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">DMP link resolves</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Governance plan present</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
         <div class="item sub">
@@ -2355,18 +2552,11 @@
       </div>
 
       
-      <div class="estimate">
-        <button class="use-est" data-criterion="5.c"
-                data-score="0">use as starting point</button>
-        <span class="est-badge">Automated estimate</span>
-        <span class="n">0</span>
-        <ul><li>no DMP / governance plan in the metadata</li></ul>
-        <div class="est-warn">⚠ Estimated from the extracted evidence only —
-          it may be wrong. Review the evidence above before accepting.</div>
-      </div>
+      <div class="estimate none">No automated estimate — this criterion needs
+        human judgment.</div>
       
 
-      <div class="grade" data-criterion="5.c" data-estimate="0">
+      <div class="grade" data-criterion="5.c">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-5.c" value="2"> 2</label>
@@ -2412,7 +2602,7 @@
         </div>
         
         <div class="item">
-          <div class="label">Entities carrying at least one machine-readable provenance link</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 40)</span></div>
+          <div class="label">Entities carrying at least one machine-readable provenance link</div><div class="value"><span class="pct-bar"><span style="width:16.3%"></span></span> <strong>16.3%</strong> <span class="meta">(8 of 49)</span></div>
         </div>
         
         <div class="item">
@@ -2420,7 +2610,7 @@
         </div>
         
         <div class="item sub">
-          <div class="label">hasPart / distribution references on the root</div><div class="value"><strong>18</strong></div>
+          <div class="label">hasPart / distribution references on the root</div><div class="value"><strong>6</strong></div>
         </div>
         
         <div class="item">
@@ -2430,11 +2620,18 @@
       </div>
 
       
-      <div class="estimate none">No automated estimate — this criterion needs
-        human judgment.</div>
+      <div class="estimate">
+        <button class="use-est" data-criterion="5.d"
+                data-score="2">use as starting point</button>
+        <span class="est-badge">Automated estimate</span>
+        <span class="n">2</span>
+        <ul><li>components associated machine-readably in the archived metadata record (hasPart / distribution + provenance links)</li><li>accessibility of every component not verified — downgrade if pieces are missing</li></ul>
+        <div class="est-warn">⚠ Estimated from the extracted evidence only —
+          it may be wrong. Review the evidence above before accepting.</div>
+      </div>
       
 
-      <div class="grade" data-criterion="5.d">
+      <div class="grade" data-criterion="5.d" data-estimate="2">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-5.d" value="2"> 2</label>
@@ -2490,31 +2687,31 @@
         
         
         <div class="item">
-          <div class="label">conformsTo declarations (metadata descriptor + root)</div><div class="value"><a href="http://mlcommons.org/croissant/1.0">http://mlcommons.org/croissant/1.0</a></div>
+          <div class="label">conformsTo declarations (metadata descriptor + root)</div><div class="value"><a href="http://mlcommons.org/croissant/1.1">http://mlcommons.org/croissant/1.1</a></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Recognized standards in @context / conformsTo / term prefixes</div><div class="value"><ul class="plain"><li>Croissant</li><li>Dublin Core</li><li>schema.org</li></ul></div>
+          <div class="label">Recognized standards in @context / conformsTo / term prefixes</div><div class="value"><ul class="plain"><li>Croissant</li><li>Dublin Core</li><li>W3C PROV-O</li><li>schema.org</li></ul></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Standard vocabularies used by entity types and properties (prefix declared or not)</div><div class="value"><ul class="plain"><li>Croissant: 42 terms</li><li>schema.org: 2 terms</li></ul></div>
+          <div class="label">Standard vocabularies used by entity types and properties (prefix declared or not)</div><div class="value"><ul class="plain"><li>Croissant: 44 terms</li><li>W3C PROV-O: 38 terms</li><li>schema.org: 13 terms</li></ul></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Deterministic validator known for the declared standards</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Croissant — mlcroissant validator; JSON Schema — any JSON Schema validator (e.g. python-jsonschema)</span></div>
+          <div class="label">Deterministic validator known for the declared standards</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Croissant — mlcroissant validator; JSON Schema — any JSON Schema validator (e.g. python-jsonschema); PROV-O — PROV-CONSTRAINTS validation (ProvToolbox `provconvert -validate`)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Machine-readable schema entities</div><div class="value"><strong>3</strong></div>
+          <div class="label">Machine-readable schema entities</div><div class="value"><strong>1</strong></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Populated standard vocabulary bindings (2.c evidence — without them 6.a caps at 1)</div><div class="value"><span class="no">✗ No</span></div>
+          <div class="label">Populated standard vocabulary bindings (2.c evidence — without them 6.a caps at 1)</div><div class="value"><span class="yes">✓ Yes</span> <span class="detail">Croissant (1), Wikidata (1)</span></div>
         </div>
         
         <div class="item">
-          <div class="label">File formats present</div><div class="value">application/json: 18</div>
+          <div class="label">File formats present</div><div class="value">application/zstd: 6</div>
         </div>
         
       </div>
@@ -2522,16 +2719,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="6.a"
-                data-score="1">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">1</span>
-        <ul><li>formal schema/standard declared, so structural validation is possible</li><li>no populated standard-vocabulary bindings — semantic conformance cannot be deterministically validated (the 1-rule)</li></ul>
+        <span class="n">2</span>
+        <ul><li>declared standards: Croissant, Dublin Core, W3C PROV-O, schema.org</li><li>deterministic validator known: Croissant — mlcroissant validator; JSON Schema — any JSON Schema validator (e.g. python-jsonschema); PROV-O — PROV-CONSTRAINTS validation (ProvToolbox `provconvert -validate`)</li><li>populated vocabulary bindings present (final score is capped at 2.c&#39;s score — rule 6.a ≤ 2.c)</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="6.a" data-estimate="1" data-depends-on="2.c">
+      <div class="grade" data-criterion="6.a" data-estimate="2" data-depends-on="2.c">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-6.a" value="2"> 2</label>
@@ -2577,19 +2774,19 @@
         
         
         <div class="item">
-          <div class="label">Datasets with a distribution link (contentUrl)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(18 of 18)</span></div>
+          <div class="label">Datasets with a distribution link (contentUrl)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(6 of 6)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Datasets with a REMOTE distribution link (http/ftp/s3-style)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(18 of 18)</span> <span class="detail">the rest are file:// paths inside the crate or embargoed placeholders</span></div>
+          <div class="label">Datasets with a REMOTE distribution link (http/ftp/s3-style)</div><div class="value"><span class="pct-bar"><span style="width:100.0%"></span></span> <strong>100.0%</strong> <span class="meta">(6 of 6)</span> <span class="detail">the rest are file:// paths inside the crate or embargoed placeholders</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Protocols used by distribution links</div><div class="value">https: 18 files <span class="detail">file = paths inside the crate; none = placeholder values such as &#39;Embargoed&#39;</span></div>
+          <div class="label">Protocols used by distribution links</div><div class="value">https: 6 files <span class="detail">file = paths inside the crate; none = placeholder values such as &#39;Embargoed&#39;</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Distribution hosts</div><div class="value"><a href="https://github.com">https://github.com</a>: 18 files</div>
+          <div class="label">Distribution hosts</div><div class="value"><ul class="plain"><li><a href="https://huggingface.co">https://huggingface.co</a>: 3 files</li><li><a href="https://zenodo.org">https://zenodo.org</a>: 3 files</li></ul></div>
         </div>
         
         <div class="item">
@@ -2597,7 +2794,11 @@
         </div>
         
         <div class="item sub">
-          <div class="label">Sample host reachable: https://github.com/</div><div class="value"><span class="yes">✓ Yes</span></div>
+          <div class="label">Sample host reachable: https://huggingface.co/</div><div class="value"><span class="yes">✓ Yes</span></div>
+        </div>
+        
+        <div class="item sub">
+          <div class="label">Sample host reachable: https://zenodo.org/</div><div class="value"><span class="yes">✓ Yes</span></div>
         </div>
         
       </div>
@@ -2649,7 +2850,7 @@
         
         
         <div class="item">
-          <div class="label">Files in open/common formats</div><div class="value"><strong>18</strong> <span class="detail">application/json: 18</span></div>
+          <div class="label">Files in open/common formats</div><div class="value"><strong>6</strong> <span class="detail">application/zstd: 6</span></div>
         </div>
         
         <div class="item">
@@ -2657,19 +2858,36 @@
         </div>
         
         <div class="item">
-          <div class="label">Computations with a container declared (usedContainer)</div><div class="value"><span class="na">— no denominator</span></div>
+          <div class="label">Computations with a container declared (usedContainer)</div><div class="value"><span class="pct-bar"><span style="width:0.0%"></span></span> <strong>0.0%</strong> <span class="meta">(0 of 4)</span></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Example computation (environment description)</div><div class="value"><span class="na">none found</span></div>
+          <div class="label">Example computation (environment description)</div><div class="value"><details class="entity"><summary>Synthetic attack-event generation</summary><pre>{
+  &#34;@type&#34;: &#34;prov:Activity&#34;,
+  &#34;name&#34;: &#34;Synthetic attack-event generation&#34;,
+  &#34;prov:type&#34;: &#34;Synthesis&#34;,
+  &#34;description&#34;: &#34;Adversary events generated by a custom Python campaign orchestrator (security_gym/campaigns/) executing 10 scripted MITRE ATT&amp;CK-aligned campaigns against an isolated UTM-virtualised Debian 11 lab VM. Six attack modules are released (brute_force, web_attack, recon, malware, dos, lateral_movement). All attack traffic is the deterministic output of the YAML-configured orchestrator under a fixed RNG …&#34;,
+  &#34;prov:wasAssociatedWith&#34;: {
+    &#34;@type&#34;: &#34;prov:SoftwareAgent&#34;,
+    &#34;name&#34;: &#34;Security-Gym campaign orchestrator&#34;,
+    &#34;version&#34;: &#34;0.4.2&#34;,
+    &#34;agentType&#34;: &#34;Procedural Python (no LLM, no generative model)&#34;,
+    &#34;validation&#34;: &#34;Every released stream passes nine automated validation checks (see Validation activity below), including raw-line regex spot checks per attack type and attack-type distribution checks against composition weights.&#34;,
+    &#34;codeRepository&#34;: [
+      &#34;<a href="https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/orchestrator.py">https://github.com/j-klawson/security-gym/blob/v0.4.2/attacks/orchestrator.py</a>&#34;
+    ]
+  },
+  &#34;platform&#34;: &#34;Custom Python campaign orchestrator targeting a UTM-virtualised Debian 11 lab VM (isildur, 192.168.2.201).&#34;,
+  &#34;@id&#34;: &#34;activity/generate-attacks&#34;
+}</pre></details></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Software descriptions</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Software descriptions</div><div class="value"><ul class="plain"><li>Security-Gym campaign orchestrator: None</li><li>CampaignLabeler + MaliciousFilter: None</li><li>PII scrubber + StreamComposer: None</li></ul></div>
         </div>
         
         <div class="item">
-          <div class="label">Software environment declared (softwareRequirements / runtimePlatform / installUrl)</div><div class="value"><span class="na">none</span></div>
+          <div class="label">Software environment declared (softwareRequirements / runtimePlatform / installUrl)</div><div class="value">security-gym 0.4.2: <a href="https://github.com/j-klawson/security-gym/blob/v0.4.2/pyproject.toml">https://github.com/j-klawson/security-gym/blob/v0.4.2/pyproject.toml</a>; <a href="https://files.pythonhosted.org/packages/c2/f1/803771d161d1df84ca8c72e877055715e2da506c48c885204ab7b758d565/security_gym-0.4.2-py3-">https://files.pythonhosted.org/packages/c2/f1/803771d161d1df84ca8c72e877055715e2da506c48c885204ab7b758d565/security_gym-0.4.2-py3-</a></div>
         </div>
         
         <div class="item sub">
@@ -2737,68 +2955,90 @@
         </div>
         
         <div class="item">
-          <div class="label">Withheld / missing information</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Withheld / missing information</div><div class="value"><details class="longtext"><summary><span class="head">Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and…</span> <span class="more">[559 chars — expand]</span></summary><span class="pre">Measured on the 30-day stream (21,511,208 rows): campaign_id, attack_type, attack_stage and severity are NULL on exactly the 20,901,688 benign rows and populated on all 609,520 malicious rows; is_malicious, timestamp, source, raw_line and parsed are never NULL. src_ip is NULL on 20,112,710 rows (93.5%), session_id on 20,476,710, username on 21,504,142 and service on 21,474,130, because most events (eBPF file/process records, syslog daemon messages) have no client address, session or user. NULL is the only missing-value marker; no empty strings are used.</span></details></div>
         </div>
         
         <div class="item">
-          <div class="label">Preprocessing protocol (rai:dataPreprocessingProtocol)</div><div class="value"><span class="na">not provided</span></div>
+          <div class="label">Preprocessing protocol (rai:dataPreprocessingProtocol)</div><div class="value"><span class="pre">Compressed with Zstandard. Composed experiment streams are produced by StreamComposer with per-stream MITRE ATT&amp;CK-aligned Poisson-scheduled attack injection and 24.2% eBPF downsampling.</span></div>
         </div>
         
         <div class="item">
-          <div class="label">Example / synthetic dataset provided</div><div class="value"><details class="entity"><summary>Weather Measurements</summary><pre>{
+          <div class="label">Example / synthetic dataset provided</div><div class="value"><details class="entity"><summary>events</summary><pre>{
   &#34;@type&#34;: &#34;cr:RecordSet&#34;,
-  &#34;@id&#34;: &#34;weather_data&#34;,
-  &#34;name&#34;: &#34;Weather Measurements&#34;,
-  &#34;description&#34;: &#34;Time-series weather measurements for various global regions&#34;,
+  &#34;@id&#34;: &#34;events&#34;,
+  &#34;name&#34;: &#34;events&#34;,
+  &#34;description&#34;: &#34;All streams share the same `events` table schema (single-table SQLite database). Each row is one telemetry event with ground-truth labels.&#34;,
   &#34;field&#34;: [
     {
-      &#34;@id&#34;: &#34;weather_data/time&#34;
+      &#34;@id&#34;: &#34;events/id&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/temperature_2m&#34;
+      &#34;@id&#34;: &#34;events/timestamp&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/relative_humidity_2m&#34;
+      &#34;@id&#34;: &#34;events/source&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/cloudcover&#34;
+      &#34;@id&#34;: &#34;events/raw_line&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/windspeed_10m&#34;
+      &#34;@id&#34;: &#34;events/parsed&#34;
     },
-    &#34;…(+8 more)&#34;
+    &#34;…(+9 more)&#34;
+  ],
+  &#34;annotation&#34;: [
+    {
+      &#34;@id&#34;: &#34;events/count&#34;
+    },
+    {
+      &#34;@id&#34;: &#34;events/malicious_count&#34;
+    }
   ],
   &#34;examples&#34;: [
+    &#34;{…}&#34;,
+    &#34;{…}&#34;,
+    &#34;{…}&#34;,
     &#34;{…}&#34;
   ]
 }</pre></details></div>
         </div>
         
         <div class="item sub">
-          <div class="label">Structural example — schema entity (documents exact record structure)</div><div class="value"><details class="entity"><summary>Weather Measurements</summary><pre>{
+          <div class="label">Structural example — schema entity (documents exact record structure)</div><div class="value"><details class="entity"><summary>events</summary><pre>{
   &#34;@type&#34;: &#34;cr:RecordSet&#34;,
-  &#34;@id&#34;: &#34;weather_data&#34;,
-  &#34;name&#34;: &#34;Weather Measurements&#34;,
-  &#34;description&#34;: &#34;Time-series weather measurements for various global regions&#34;,
+  &#34;@id&#34;: &#34;events&#34;,
+  &#34;name&#34;: &#34;events&#34;,
+  &#34;description&#34;: &#34;All streams share the same `events` table schema (single-table SQLite database). Each row is one telemetry event with ground-truth labels.&#34;,
   &#34;field&#34;: [
     {
-      &#34;@id&#34;: &#34;weather_data/time&#34;
+      &#34;@id&#34;: &#34;events/id&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/temperature_2m&#34;
+      &#34;@id&#34;: &#34;events/timestamp&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/relative_humidity_2m&#34;
+      &#34;@id&#34;: &#34;events/source&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/cloudcover&#34;
+      &#34;@id&#34;: &#34;events/raw_line&#34;
     },
     {
-      &#34;@id&#34;: &#34;weather_data/windspeed_10m&#34;
+      &#34;@id&#34;: &#34;events/parsed&#34;
     },
-    &#34;…(+8 more)&#34;
+    &#34;…(+9 more)&#34;
+  ],
+  &#34;annotation&#34;: [
+    {
+      &#34;@id&#34;: &#34;events/count&#34;
+    },
+    {
+      &#34;@id&#34;: &#34;events/malicious_count&#34;
+    }
   ],
   &#34;examples&#34;: [
+    &#34;{…}&#34;,
+    &#34;{…}&#34;,
+    &#34;{…}&#34;,
     &#34;{…}&#34;
   ]
 }</pre></details></div>
@@ -2809,16 +3049,16 @@
       
       <div class="estimate">
         <button class="use-est" data-criterion="6.d"
-                data-score="1">use as starting point</button>
+                data-score="2">use as starting point</button>
         <span class="est-badge">Automated estimate</span>
-        <span class="n">1</span>
-        <ul><li>some context present but incomplete (example data or withheld-information description missing)</li></ul>
+        <span class="n">2</span>
+        <ul><li>machine-readable example dataset provided</li><li>withheld/preprocessing information described</li><li>splits N/A unless the dataset should define them — reviewer to confirm</li></ul>
         <div class="est-warn">⚠ Estimated from the extracted evidence only —
           it may be wrong. Review the evidence above before accepting.</div>
       </div>
       
 
-      <div class="grade" data-criterion="6.d" data-estimate="1">
+      <div class="grade" data-criterion="6.d" data-estimate="2">
         <strong>Your score:</strong>
         
           <label><input type="radio" name="score-6.d" value="2"> 2</label>

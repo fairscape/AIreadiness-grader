@@ -269,7 +269,8 @@ def transform_4d(ctx, raw):
 
 def present_4d(facts):
     return [
-        ev.text("Confidentiality level", facts["confidentiality"]),
+        ev.text("Confidentiality level (confidentialityLevel / dct:accessRights)",
+                ev.clip(facts["confidentiality"])),
         ev.sub(ev.flag("Value is an HL7 v3-Confidentiality code",
                        bool(facts["hl7_code"]),
                        detail=(f"matches code '{facts['hl7_code']}' in "

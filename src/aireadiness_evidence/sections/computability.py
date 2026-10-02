@@ -1,5 +1,7 @@
 """Section 6 — Computability."""
 
+import re
+
 from .. import evidence as ev
 from ..crate import as_list, ids_of
 from .characterization import binding_vocabularies
@@ -180,9 +182,28 @@ def estimate_6b(facts):
 # --- 6.c Portable ----------------------------------------------------------
 
 
+# schema.org SoftwareApplication / SoftwareSourceCode properties that state
+# the runtime environment, and the values that make it machine-executable
+ENV_FIELDS = ["softwareRequirements", "runtimePlatform", "installUrl",
+              "downloadUrl", "memoryRequirements", "processorRequirements"]
+EXECUTABLE_ENV_RE = re.compile(
+    r"dockerfile|docker(://|\.io)|ghcr\.io|quay\.io|singularity|apptainer|"
+    r"\.sif\b|environment\.ya?ml|conda|\.cwl\b|\.wdl\b|nextflow|snakefile",
+    re.I)
+
+
 def extract_6c(ctx):
     stats = ctx.bundle.stats
+    software = stats.software_entities
+    env = {}
+    for sw in software:
+        values = [str(v.get("@id") or v.get("url") or v.get("name") or v)
+                  if isinstance(v, dict) else str(v)
+                  for f in ENV_FIELDS for v in as_list(sw.get(f))]
+        if values:
+            env[str(sw.get("name") or sw.get("@id"))] = values
     return {
+        "environments": env,
         "formats": dict(stats.formats),
         "activity_total": stats.activity_total,
         "computation_total": stats.computation_total,
@@ -200,7 +221,10 @@ def transform_6c(ctx, raw):
             proprietary[f"{fmt} — {label}"] = n
         else:
             common[fmt] = n
-    return {**raw, "common": common, "proprietary": proprietary}
+    executable = [k for k, v in raw["environments"].items()
+                  if EXECUTABLE_ENV_RE.search(" ".join(v))]
+    return {**raw, "common": common, "proprietary": proprietary,
+            "executable_env": executable}
 
 
 def present_6c(facts):
@@ -223,6 +247,14 @@ def present_6c(facts):
         ev.sub(ev.entity("Example computation (environment description)",
                          facts["computation"])),
         ev.sub(ev.listing("Software descriptions", sw_descriptions)),
+        ev.listing("Software environment declared (softwareRequirements / "
+                   "runtimePlatform / installUrl)",
+                   [f"{k}: {'; '.join(v)[:200]}"
+                    for k, v in facts["environments"].items()]),
+        ev.sub(ev.flag("Environment in a machine-executable format (container, "
+                       "conda environment, workflow language)",
+                       bool(facts["executable_env"]),
+                       detail=", ".join(facts["executable_env"]) or None)),
     ]
 
 
@@ -234,6 +266,12 @@ def estimate_6c(facts):
     if facts["with_container"]:
         return ev.estimate("1", f"containers on {facts['with_container']} of "
                                 f"{total} computations")
+    if facts["executable_env"] and \
+            len(facts["executable_env"]) == len(facts["environments"]):
+        return ev.estimate("2", "every declared software environment is "
+                                "machine-executable: "
+                           + ", ".join(facts["executable_env"]),
+                           "confirm it covers everything needed to use the data")
     return None  # data may need no specialized environment at all — human call
 
 
