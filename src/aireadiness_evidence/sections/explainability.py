@@ -5,15 +5,21 @@ import re
 from .. import evidence as ev
 from ..crate import as_list
 
-# The seven datasheet-style machine-readable sections counted for 3.a.
+# The datasheet-style machine-readable sections counted for 3.a: a section
+# is populated when any of its fields is. Processing and Annotation are the
+# Croissant RAI fields for the rubric's "processing" dimension.
 DATASHEET_FIELDS = [
-    ("rai:dataCollection", "Collection"),
-    ("rai:dataUseCases", "Use cases"),
-    ("rai:dataLimitations", "Limitations"),
-    ("rai:dataBiases", "Biases"),
-    ("rai:dataReleaseMaintenancePlan", "Release/maintenance plan"),
-    ("license", "License"),
-    ("conditionsOfAccess", "Conditions of access"),
+    (["rai:dataCollection"], "Collection"),
+    (["rai:dataPreprocessingProtocol", "rai:dataManipulationProtocol",
+      "rai:dataImputationProtocol"], "Processing"),
+    (["rai:dataAnnotationProtocol", "rai:dataAnnotationAnalysis",
+      "rai:annotatorDemographics", "rai:dataAnnotationPlatform"], "Annotation"),
+    (["rai:dataUseCases"], "Use cases"),
+    (["rai:dataLimitations"], "Limitations"),
+    (["rai:dataBiases"], "Biases"),
+    (["rai:dataReleaseMaintenancePlan"], "Release/maintenance plan"),
+    (["license"], "License"),
+    (["conditionsOfAccess"], "Conditions of access"),
 ]
 
 URL_RE = re.compile(r"https?://[^\s\"\')\]]+|\bdoi:\s?\S+|\b10\.\d{4,9}/\S+")
@@ -35,7 +41,8 @@ def extract_3a(ctx):
     root = ctx.bundle.root
     return {
         "datasheets": ctx.bundle.datasheets,
-        "fields": {label: root.get(field) for field, label in DATASHEET_FIELDS},
+        "fields": {label: next((root[f] for f in fields if root.get(f)), None)
+                   for fields, label in DATASHEET_FIELDS},
     }
 
 
@@ -88,9 +95,13 @@ def extract_3b(ctx):
     return {
         "use_cases": root.get("rai:dataUseCases"),
         "limitations": root.get("rai:dataLimitations"),
-        "prohibited": root.get("prohibitedUses"),
+        # rai:dataNotIntendedUseCases is not in the RAI 1.0 vocabulary but
+        # appears in submitted Croissant files for exactly this purpose
+        "prohibited": root.get("prohibitedUses")
+        or root.get("rai:dataNotIntendedUseCases"),
         "usage_info": root.get("usageInfo"),
-        "publications": as_list(root.get("associatedPublication")),
+        "publications": as_list(root.get("associatedPublication"))
+        + as_list(root.get("citeAs") or root.get("citation")),
     }
 
 
@@ -115,7 +126,8 @@ def present_3b(facts):
         ev.sub(ev.flag("Both appropriate and inappropriate uses stated",
                        bool(facts["use_cases"]) and bool(
                            facts["limitations"] or facts["prohibited"]))),
-        ev.count("Prior publications listed", len(facts["publications"])),
+        ev.count("Prior publications listed (associatedPublication, "
+                 "citeAs / citation)", len(facts["publications"])),
         ev.sub(ev.links("Prior publications", pubs)),
     ]
 

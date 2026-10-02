@@ -2,9 +2,9 @@
 
 from .. import evidence as ev
 from ..crate import as_list, ids_of
+from .characterization import binding_vocabularies
 from ..known import (
     KNOWN_VALIDATORS, STANDARD_NAMESPACES, classify_format, match_host,
-    summarize_vocab_hits,
 )
 
 # --- 6.a Standardized ------------------------------------------------------
@@ -19,6 +19,8 @@ def extract_6a(ctx):
         "schema_total": ctx.bundle.stats.schema_total,
         "vocab_hits": dict(ctx.bundle.stats.vocab_hits),
         "formats": dict(ctx.bundle.stats.formats),
+        "croissant": ctx.bundle.format == "croissant",
+        "field_bindings": dict(ctx.bundle.stats.field_bindings),
     }
 
 
@@ -54,7 +56,7 @@ def transform_6a(ctx, raw):
 
     return {**raw, "conforms": conforms, "standards": standards,
             "used_namespaces": used, "validators": validators,
-            "vocab_found": summarize_vocab_hits(raw["vocab_hits"])}
+            "vocab_found": binding_vocabularies(raw)}
 
 
 def present_6a(facts):

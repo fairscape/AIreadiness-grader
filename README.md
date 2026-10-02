@@ -47,13 +47,22 @@ The input is any of:
 | `hf:org/name` | the Croissant export from the Hugging Face Hub (a dataset page URL works too) |
 
 A worked example is in `examples/apms-paclitaxel/` (crate plus finished review).
+Croissant examples are in `examples/dices-350-croissant/` (original vs. an
+improved version) and `examples/croissant-samples/`.
 
 Croissant and plain JSON-LD are single documents, so the nested `distribution`,
 `recordSet` and `creator` objects are flattened into the same entity list an
 RO-Crate `@graph` gives. `FileObject`/`FileSet`/`DataDownload`/`File` count as
-datasets, a `RecordSet` of typed `Field`s counts as a schema, `creator` stands in
-for `author`, and the `rai:` Responsible-AI properties are read from the root
-exactly as they are from a crate. What these formats cannot express (samples,
+datasets, and a `FileSet` with no URL or checksum of its own takes them from the
+`containedIn` archive. A `RecordSet` of typed `Field`s counts as a schema (one
+with no fields does not), and a Field with a semantic `dataType` (Wikidata,
+`sc:GeoCoordinates`, an ontology IRI) or an `equivalentProperty` counts as a
+vocabulary binding for 2.c/6.a. `creator` stands in for `author`. A bare SPDX
+license id (`cc-by-4.0`, `MIT`) counts as a machine-readable license. Keywords
+that are MeSH or other ontology IRIs count as controlled-vocabulary terms. The
+`rai:` Responsible-AI properties are read from the root exactly as they are from
+a crate, including the annotation, processing and collection-timeframe fields,
+whatever their case or `cr:RAI/` spelling. What these formats cannot express (samples,
 instruments, computations, derivation links, software) is marked as such on the
 affected criteria rather than reported as missing.
 
@@ -72,6 +81,31 @@ Options:
 | --- | --- |
 | `ai-ready-review.html` | Review page for a human. Each criterion shows the rubric rules, the evidence found in the crate, an automated estimate where one is possible, and a score radio with notes. Scores roll up per domain with a radar chart. |
 | `ai-ready-evidence.json` | The same evidence, typed, for grading by a model. |
+
+### Viewing someone else's scores
+
+[`docs/ai-ready-review-viewer.html`](docs/ai-ready-review-viewer.html) is one
+static page that works for every crate. Open it in a browser and drop in:
+
+- a scores file: the JSON from the review page's **Copy scores as JSON**
+  (for example `current_scores.json`), or a review page saved with
+  **Save review as HTML**
+- optionally, the matching `ai-ready-evidence.json`, so the evidence shows
+  under each criterion
+
+The page shows each criterion's rubric text, score, notes and automated
+estimate, and recomputes the section totals, gates and overall score from the
+per-criterion scores. You can change scores there and download the JSON again,
+or use **Save as shareable HTML** to get one file with the scores and evidence
+inside it. Files are read in the browser and are not uploaded anywhere. If the
+page is hosted, `?scores=URL&evidence=URL` loads files by link.
+
+The rubric text is built into the page. Rebuild it after editing
+`rubric_defs.yaml` or `templates/viewer.html.j2`:
+
+```bash
+fairscape-review-viewer -o docs/ai-ready-review-viewer.html
+```
 
 
 ## Grading with a model

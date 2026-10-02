@@ -12,7 +12,7 @@ from .. import evidence as ev
 from ..crate import as_list
 from ..known import (
     GENERALIST_REPOS, LICENSE_NAMES, NON_SUSTAINABLE_HOSTS, SPECIALIST_REPOS,
-    detect_pid, match_host, summarize_vocab_hits,
+    detect_pid, match_host, spdx_license, summarize_vocab_hits,
 )
 
 
@@ -237,8 +237,8 @@ def present_0c(facts):
                 facts["jsonld"]),
         *_vocab_evidence(facts["vocabs"], facts["vocab_found"]),
         ev.listing("Subject terms (root about + DefinedTerms)", facts["about_ids"][:8]),
-        ev.count("Machine-readable schema entities (EVI:Schema)",
-                 facts["schema_total"]),
+        ev.count("Machine-readable schema entities (EVI:Schema, or a Croissant "
+                 "RecordSet with fields)", facts["schema_total"]),
         ev.sub(ev.count("Datasets linked to a schema",
                         facts["dataset_with_schema_ref"])),
         ev.sub(ev.count("Parquet-format datasets (embedded schema)",
@@ -302,12 +302,19 @@ def transform_0d(ctx, raw):
             vals.append(str(x))
     license_text = " ".join(vals) or None
     url, embedded = _license_url(vals)
+    # a bare SPDX id ("cc-by-sa-4.0", "MIT") names one license text and
+    # resolves at spdx.org — linked as surely as the license IRI
+    spdx = spdx_license(license_text) if not url else None
+    if spdx:
+        url = spdx[1]
     # the 0.d 2-vs-1 split: the license must be programmatically linked in the
     # metadata (a resolvable IRI under schema.org:license), not prose. A URL
     # inside a text value still links the license, so it counts — the reviewer
     # sees that it was pulled out of prose.
     machine_readable = bool(url)
     known = match_host(url or license_text, LICENSE_NAMES)
+    if spdx and not known:
+        known = (spdx[0], spdx[0])
     resolution = ctx.net.check_url(url) if url else None
 
     mentions = []
@@ -319,6 +326,7 @@ def transform_0d(ctx, raw):
         "license_url": url or license_text,
         "license_text": license_text,
         "license_url_embedded": embedded,
+        "license_spdx": spdx[0] if spdx else None,
         "license_machine_readable": machine_readable,
         "license_name": known[1] if known else None,
         "resolution": resolution,
@@ -334,13 +342,17 @@ def present_0d(facts):
                 display=facts["license_name"] or facts["license_url"],
                 detail=(f"URL pulled from the license text: "
                         f"{ev.clip(facts['license_text'], 200)}"
-                        if facts.get("license_url_embedded") else None)),
+                        if facts.get("license_url_embedded") else
+                        f"SPDX license id '{facts['license_text']}' "
+                        "resolved to its spdx.org page"
+                        if facts.get("license_spdx") else None)),
         ev.sub(ev.flag("License is machine-readable (an IRI linked in the "
                        "metadata, not prose)",
                        facts["license_machine_readable"],
                        detail="the IRI is embedded in a text value, not the "
                               "whole value" if facts.get("license_url_embedded")
-                       else None)),
+                       else "an SPDX license identifier"
+                       if facts.get("license_spdx") else None)),
     ]
     if res:
         items.append(ev.sub(ev.flag("License link resolves",
@@ -379,5 +391,5 @@ def estimate_0d(facts):
                            "no AI/ML prohibition language found in license or "
                            "use terms")
     return ev.estimate("1", "license/DUA present but not machine-readable "
-                            "(prose value with no IRI in it)",
+                            "(prose value with no IRI or SPDX id in it)",
                        "no AI/ML prohibition language found")

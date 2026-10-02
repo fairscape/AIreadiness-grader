@@ -13,7 +13,9 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .known import ONTOLOGY_HOSTS, STANDARD_NAMESPACES, TERM_PREFIXES, match_host
+from .known import (
+    ONTOLOGY_HOSTS, RAI_TERMS, STANDARD_NAMESPACES, TERM_PREFIXES, match_host,
+)
 from .source import resolve_source
 
 # Fields that link an entity into the provenance graph (EVI + PROV spellings).
@@ -60,6 +62,23 @@ _TYPE_TOKENS = {
 
 # Croissant Field.source links a RecordSet back to the file(s) it describes.
 CROISSANT_SOURCE_FIELDS = ["fileObject", "fileSet", "distribution"]
+
+# Croissant Field.dataType values that only give a storage type. Anything else
+# (a Wikidata item, sc:GeoCoordinates, cr:BoundingBox, an ontology IRI) says
+# what the values mean, i.e. binds the field to a vocabulary term.
+PRIMITIVE_DATATYPES = {
+    "text", "string", "float", "integer", "number", "boolean", "bool", "date",
+    "datetime", "time", "url", "imageobject", "videoobject", "audioobject",
+    "mediaobject", "recordset", "split", "enumeration", "int8", "int16",
+    "int32", "int64", "uint8", "uint16", "uint32", "uint64", "float16",
+    "float32", "float64", "bytes",
+}
+
+_RAI_BY_LOWER = {t.lower(): t for t in RAI_TERMS}
+_RAI_KEY_RE = re.compile(r"^(?:rai:|cr:RAI/|https?://mlcommons\.org/croissant/RAI/)(\w+)$")
+
+# the ontology label for compact MeSH ids written as keywords ("MeSH:D001185")
+_MESH_COMPACT_RE = re.compile(r"^\s*mesh:\s*([DCM]\d{6,9})\s*$", re.I)
 
 
 def as_list(value):
@@ -114,6 +133,15 @@ def normalize_root(root):
     Croissant synonyms. Only missing values are filled; nothing is removed."""
     if not root.get("author") and root.get("creator"):
         root["author"] = root["creator"]
+    # Croissant RAI properties written with another case or as a full /
+    # cr:-prefixed IRI are read under their spec spelling (rai:<term>)
+    for key in list(root):
+        m = _RAI_KEY_RE.match(key)
+        term = _RAI_BY_LOWER.get(m.group(1).lower()) if m else None
+        if term and not root.get(f"rai:{term}"):
+            root[f"rai:{term}"] = root[key]
+    if not root.get("citeAs") and root.get("cr:citeAs"):
+        root["citeAs"] = root["cr:citeAs"]
     pub = root.get("publisher")
     if isinstance(pub, dict):
         root["publisher"] = " ".join(
@@ -144,9 +172,51 @@ def canonical_type(entity):
     return "Other"
 
 
+def _datatype_binding(value):
+    """The vocabulary a Croissant Field.dataType value binds to, or None when
+    it is only a storage type (sc:Text, cr:Int64, ...)."""
+    iri = value.get("@id") if isinstance(value, dict) else value
+    if not isinstance(iri, str) or not iri.strip():
+        return None
+    local = re.split(r"[#/:]", iri)[-1].lower()
+    if local in PRIMITIVE_DATATYPES:
+        return None
+    hit = match_host(iri, ONTOLOGY_HOSTS)
+    if hit:
+        return ONTOLOGY_HOSTS[hit[0]]
+    if iri.startswith("wd:") or "wikidata.org" in iri:
+        return "Wikidata"
+    ns = term_namespace(iri)
+    return STANDARD_NAMESPACES[ns] if ns else iri.split(":", 1)[0]
+
+
+def _keyword_term(value):
+    """(IRI, label) when a keyword is a controlled-vocabulary term: a
+    DefinedTerm object, an IRI on an ontology host, or a compact MeSH id."""
+    if isinstance(value, dict):
+        iri = next((v for k in ("@id", "url", "identifier", "sameAs")
+                    for v in ids_of(value.get(k)) if "://" in v), None)
+        if canonical_type(value) == "DefinedTerm" or match_host(iri, ONTOLOGY_HOSTS):
+            return iri, value.get("name")
+        return None
+    if not isinstance(value, str):
+        return None
+    m = _MESH_COMPACT_RE.match(value)
+    if m:
+        return f"http://id.nlm.nih.gov/mesh/{m.group(1).upper()}", None
+    if re.match(r"^https?://\S+$", value.strip()) and match_host(value, ONTOLOGY_HOSTS):
+        return value.strip(), None
+    return None
+
+
 def subject_terms(root, graph):
-    """Subject terms for the dataset: the root's ``about`` entries plus every
-    DefinedTerm entity in the graph, de-duplicated by IRI.
+    """Subject terms for the dataset: the root's ``about`` entries, keywords
+    that are controlled-vocabulary terms, and every DefinedTerm entity in the
+    graph, de-duplicated by IRI.
+
+    Keywords count when they are DefinedTerm objects (schema.org allows
+    ``keywords`` to be DefinedTerm), ontology IRIs, or compact MeSH ids;
+    plain free-text keywords do not.
 
     An ``about`` entry counts when it is (or resolves to) a DefinedTerm, or
     when its IRI is on a recognised ontology host. That covers bare IRIs
@@ -178,6 +248,10 @@ def subject_terms(root, graph):
         iri = iri if isinstance(iri, str) else None
         if canonical_type(target) == "DefinedTerm" or match_host(iri, ONTOLOGY_HOSTS):
             add(iri, target.get("name"), "about")
+    for v in as_list(root.get("keywords")):
+        term = _keyword_term(v)
+        if term:
+            add(term[0], term[1], "keywords")
     for e in graph:
         if canonical_type(e) == "DefinedTerm":
             add(e.get("@id"), e.get("name"), "graph")
@@ -261,7 +335,12 @@ class CrateStats:
         self.experiment_total = 0
 
         self.dataset_with_remote_url = 0       # http/ftp/s3-style contentUrl
+        self.dataset_url_inherited = 0         # contentUrl / hash taken from the
+        self.dataset_hash_inherited = 0        # containedIn archive (Croissant)
         self.schema_total = 0
+        self.empty_recordsets = 0              # Croissant RecordSets with no fields
+        self.field_total = 0                   # Croissant Fields
+        self.field_bindings = Counter()        # vocabulary -> bound Fields
         self.formats = Counter()
         self.hosts = Counter()                 # contentUrl "scheme://host" buckets
         self.url_schemes = Counter()           # contentUrl scheme -> dataset count
@@ -436,6 +515,8 @@ class CrateBundle:
         # Croissant links data dictionaries to files from the RecordSet side
         # (Field.source.fileObject), the reverse of EVI's dataset -> Schema.
         schema_covered = set()
+        by_id = {e["@id"]: e for e in graph
+                 if isinstance(e.get("@id"), str)}
         for e in graph:
             if canonical_type(e) == "Schema":
                 for f in as_list(e.get("field")):
@@ -447,6 +528,11 @@ class CrateBundle:
         for e in graph:
             eid = e.get("@id")
             ctype = canonical_type(e)
+            # a RecordSet with no fields names a record set but documents no
+            # structure, so it is not a schema
+            if ctype == "Schema" and not e.get("field") and \
+                    any("RecordSet" in str(t) for t in as_list(e.get("@type"))):
+                ctype = "EmptyRecordSet"
 
             # Summary-statistics links are located on every entity type, root
             # ROCrate entities included. This runs before the duplicate-id
@@ -487,7 +573,7 @@ class CrateBundle:
                 stats.entity_with_prov_link += 1
 
             if ctype == "Dataset":
-                self._absorb_dataset(e, has_prov, schema_covered)
+                self._absorb_dataset(e, has_prov, schema_covered, by_id)
             elif ctype in ("Computation", "Experiment"):
                 self._absorb_activity(e, ctype)
             elif ctype == "Software":
@@ -497,11 +583,29 @@ class CrateBundle:
                     stats.add_sample("hashed_entity", e)
                 if len(stats.software_entities) < 15:
                     stats.software_entities.append(trim_entity(e))
+            elif ctype == "EmptyRecordSet":
+                stats.empty_recordsets += 1
+            elif ctype == "Field":
+                stats.field_total += 1
+                bound = {_datatype_binding(t) for t in as_list(e.get("dataType"))}
+                for v in as_list(e.get("equivalentProperty")):
+                    iri = v.get("@id") if isinstance(v, dict) else v
+                    ns = term_namespace(iri) if isinstance(iri, str) else None
+                    bound.add(STANDARD_NAMESPACES[ns] if ns else
+                              (iri.split(":", 1)[0] if isinstance(iri, str) else None))
+                for vocab in bound - {None}:
+                    stats.field_bindings[vocab] += 1
+                    stats.add_sample("bound_field", e)
             elif ctype == "Schema":
                 stats.schema_total += 1
                 stats.add_sample("schema", e)
-                # a Croissant RecordSet typed cr:Split enumerates the splits
-                if any("Split" in str(t) for t in as_list(e.get("dataType"))):
+                # a Croissant RecordSet typed cr:Split enumerates the splits;
+                # any other RecordSet with inline records (cr:data) or
+                # cr:examples carries example data in the exact record shape
+                is_split = any("Split" in str(t) for t in as_list(e.get("dataType")))
+                if not is_split and (e.get("data") or e.get("examples")):
+                    stats.add_sample("example_dataset", e)
+                if is_split:
                     stats.dataset_split_count += 1
                     if len(stats.dataset_split_names) < 8:
                         stats.dataset_split_names.append(str(e.get("name", eid)))
@@ -510,7 +614,7 @@ class CrateBundle:
             elif ctype == "Instrument":
                 stats.add_sample("instrument", e)
 
-    def _absorb_dataset(self, e, has_prov, schema_covered=()):
+    def _absorb_dataset(self, e, has_prov, schema_covered=(), by_id=None):
         stats = self.stats
         stats.dataset_total += 1
         if has_prov:
@@ -519,7 +623,17 @@ class CrateBundle:
         if e.get("usedByComputation"):
             stats.add_sample("input_dataset", e)
 
+        # A Croissant FileSet is often the files inside an archive or repo
+        # FileObject (containedIn). It is downloaded through the container's
+        # contentUrl and verified by the container's checksum.
+        containers = [by_id[i] for i in ids_of(e.get("containedIn"))
+                      if by_id and i in by_id]
         url = e.get("contentUrl")
+        if not url:
+            url = next((c["contentUrl"] for c in containers
+                        if c.get("contentUrl")), None)
+            if url:
+                stats.dataset_url_inherited += 1
         url_str = " ".join(ids_of(url)) if url else ""
         if url_str:
             stats.dataset_with_contenturl += 1
@@ -537,6 +651,9 @@ class CrateBundle:
         if has_any(e, HASH_FIELDS):
             stats.dataset_with_hash += 1
             stats.add_sample("hashed_entity", e)
+        elif any(has_any(c, HASH_FIELDS) for c in containers):
+            stats.dataset_with_hash += 1
+            stats.dataset_hash_inherited += 1
         if has_any(e, SCHEMA_REF_FIELDS) or (e.get("@id") in schema_covered):
             stats.dataset_with_schema_ref += 1
 

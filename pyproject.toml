@@ -44,6 +44,7 @@ all-providers = [
 fairscape-grade = "aireadiness_grader.grade:main"
 fairscape-evidence = "aireadiness_evidence.cli:main"
 fairscape-review-bundle = "aireadiness_evidence.bundle:main"
+fairscape-review-viewer = "aireadiness_evidence.viewer:main"
 fairscape-improve = "aireadiness_improve.cli:main"
 
 [tool.hatch.build.targets.wheel]

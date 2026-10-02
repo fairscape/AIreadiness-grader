@@ -200,6 +200,61 @@ LICENSE_NAMES = {
     "opensource.org/licenses/mit": "MIT",
 }
 
+# SPDX short identifiers (https://spdx.org/licenses/). Croissant files and the
+# Hugging Face / Kaggle exports write the license as a bare id ("cc-by-sa-4.0",
+# "mit", "CC BY 4.0") rather than an IRI. An SPDX id names exactly one license
+# text and resolves at spdx.org, so it is as machine-readable as the IRI.
+SPDX_LICENSES = [
+    "CC-BY-4.0", "CC-BY-SA-4.0", "CC-BY-NC-4.0", "CC-BY-NC-SA-4.0",
+    "CC-BY-NC-ND-4.0", "CC-BY-ND-4.0", "CC-BY-3.0", "CC-BY-SA-3.0",
+    "CC-BY-NC-3.0", "CC-BY-NC-SA-3.0", "CC-BY-2.0", "CC0-1.0", "PDDL-1.0",
+    "ODC-By-1.0", "ODbL-1.0", "CDLA-Permissive-1.0", "CDLA-Permissive-2.0",
+    "CDLA-Sharing-1.0", "MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause",
+    "GPL-2.0-only", "GPL-3.0-only", "LGPL-3.0-only", "AGPL-3.0-only",
+    "MPL-2.0", "AFL-3.0", "Unlicense", "Artistic-2.0", "EPL-2.0",
+]
+# Hugging Face license tags that drop the SPDX version or "-only" suffix.
+_SPDX_ALIASES = {
+    "odc-by": "ODC-By-1.0", "odbl": "ODbL-1.0", "pddl": "PDDL-1.0",
+    "gpl-2.0": "GPL-2.0-only", "gpl-3.0": "GPL-3.0-only",
+    "lgpl-3.0": "LGPL-3.0-only", "agpl-3.0": "AGPL-3.0-only",
+    "cc0": "CC0-1.0", "apache license 2.0": "Apache-2.0",
+}
+_SPDX_BY_KEY = {re.sub(r"[\s_]+", "-", i.lower()): i for i in SPDX_LICENSES}
+_SPDX_BY_KEY.update(_SPDX_ALIASES)
+
+
+def spdx_license(value):
+    """(SPDX id, spdx.org URL) when `value` is a bare SPDX license id, written
+    in any case and with spaces or underscores for hyphens; else None."""
+    if not isinstance(value, str):
+        return None
+    key = re.sub(r"[\s_]+", "-", value.strip().lower())
+    spdx = _SPDX_BY_KEY.get(key) or _SPDX_BY_KEY.get(key.removesuffix("-license"))
+    if not spdx:
+        return None
+    return spdx, f"https://spdx.org/licenses/{spdx}.html"
+
+
+# --- Croissant Responsible-AI vocabulary -----------------------------------
+# http://mlcommons.org/croissant/RAI/ — the property names as the RAI spec
+# spells them. Files in the wild vary the case (dataCollectionTimeFrame) or
+# write the full / cr:-prefixed IRI; crate.normalize_root folds those onto
+# these `rai:` keys.
+RAI_TERMS = [
+    "dataCollection", "dataCollectionType", "dataCollectionTypeOthers",
+    "dataCollectionMissingData", "dataCollectionRawData",
+    "dataCollectionTimeframe", "dataImputationProtocol",
+    "dataManipulationProtocol", "dataPreprocessingProtocol",
+    "dataAnnotationProtocol", "dataAnnotationPlatform",
+    "dataAnnotationAnalysis", "annotationsPerItem", "annotatorDemographics",
+    "machineAnnotationTools", "dataReleaseMaintenancePlan",
+    "personalSensitiveInformation", "dataSocialImpact", "dataBiases",
+    "dataLimitations", "dataUseCases", "hasSyntheticData",
+    "syntheticDataGeneration",
+]
+
+
 # --- HL7 v3 Confidentiality (rubric 4.d) -----------------------------------
 # Code system: http://terminology.hl7.org/CodeSystem/v3-Confidentiality
 

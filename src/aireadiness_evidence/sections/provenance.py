@@ -14,6 +14,24 @@ GAP_DISCLOSURE_RE = re.compile(
     r"original (collection|source) (records? )?(unavailable|unknown|lost)",
     re.I)
 
+# Root-level links to the data this dataset was built from (schema.org and
+# PROV spellings). Croissant and plain JSON-LD carry source links here
+# rather than on per-file provenance entities.
+ROOT_SOURCE_FIELDS = ["isBasedOn", "prov:wasDerivedFrom", "wasDerivedFrom",
+                      "sdSource"]
+
+# Croissant RAI prose naming where the raw data came from.
+SOURCE_PROSE_FIELDS = ["rai:dataCollectionRawData", "rai:dataCollection"]
+
+# Croissant RAI prose describing processing steps (1.b in prose form).
+STEP_PROSE_FIELDS = [
+    ("rai:dataPreprocessingProtocol", "Preprocessing"),
+    ("rai:dataManipulationProtocol", "Manipulation"),
+    ("rai:dataImputationProtocol", "Imputation"),
+    ("rai:dataAnnotationProtocol", "Annotation"),
+    ("rai:machineAnnotationTools", "Machine annotation tools"),
+]
+
 # --- 1.a Transparent -------------------------------------------------------
 
 
@@ -29,6 +47,10 @@ def extract_1a(ctx):
                           or stats.sample("dataset_with_prov")),
         "biosample": stats.sample("biosample"),
         "instrument": stats.sample("instrument"),
+        "root_sources": [v for f in ROOT_SOURCE_FIELDS
+                         for v in as_list(ctx.bundle.root.get(f))],
+        "source_prose": {f: ctx.bundle.root.get(f) for f in SOURCE_PROSE_FIELDS
+                         if ctx.bundle.root.get(f)},
     }
 
 
@@ -58,13 +80,32 @@ def present_1a(facts):
         ev.sub(ev.count("Experiment entities", facts["experiment_count"])),
         ev.sub(ev.entity("Example sample entity", facts["biosample"])),
         ev.sub(ev.entity("Example instrument entity", facts["instrument"])),
+        ev.listing("Source data linked from the root (isBasedOn / "
+                   "prov:wasDerivedFrom)",
+                   [ev.clip(v.get("@id") or v.get("url") or v.get("name")
+                            or str(v), 200) if isinstance(v, dict)
+                    else ev.clip(v, 200) for v in facts["root_sources"]]),
+        *[ev.text(f"Source described in prose ({f})", ev.clip(v, 700))
+          for f, v in facts["source_prose"].items()],
     ]
 
 
 def estimate_1a(facts):
     if facts["dataset_with_prov"] == 0:
+        if facts["root_sources"]:
+            return ev.estimate("1", "source data linked from the root in a "
+                                    "structured field (isBasedOn / "
+                                    "prov:wasDerivedFrom)",
+                               "no per-file provenance or ground-truth "
+                               "entities — consider 2 if the link names the "
+                               "exact source artifact")
+        if facts["source_prose"]:
+            return ev.estimate("1", "source described in prose only ("
+                               + ", ".join(facts["source_prose"]) + ")",
+                               "score 0 if the text does not actually name "
+                               "a source")
         return ev.estimate("0", "no dataset carries a machine-readable "
-                                "provenance link")
+                                "provenance link and no source is described")
     gt = facts["ground_truth_elements"]
     if all(gt.values()):
         return ev.estimate("2",
@@ -96,6 +137,8 @@ def extract_1b(ctx):
         "prose": " ".join(str(root.get(f) or "") for f in
                           ("description", "rai:dataCollection",
                            "rai:dataLimitations")),
+        "step_prose": {label: root.get(f) for f, label in STEP_PROSE_FIELDS
+                       if root.get(f)},
     }
 
 
@@ -127,11 +170,21 @@ def present_1b(facts):
                         "fine if the record is complete")),
         ev.links("Evidence graphs (visual provenance per sub-crate)",
                  facts["graphs"]),
+        *[ev.text(f"Processing steps in prose — {label}", ev.clip(v, 700))
+          for label, v in facts["step_prose"].items()],
     ]
 
 
 def estimate_1b(facts):
     if facts["activity_total"] == 0:
+        prose = [label for label, v in facts["step_prose"].items()
+                 if ev.substantive(v)]
+        if prose:
+            return ev.estimate("1", "processing steps described in prose "
+                                    "only (" + ", ".join(prose) + ")",
+                               "no machine-readable transformation steps — "
+                               "score 0 if the prose is too thin to trace a "
+                               "sequence of steps")
         return ev.estimate("0", "no transformation steps (Computation or "
                                 "Experiment entities) in the crate")
     n, total = facts["computation_with_software"], facts["computation_total"]
@@ -249,7 +302,28 @@ def extract_1d(ctx):
         "pi": root.get("principalInvestigator"),
         "contact": root.get("contactEmail"),
         "orgs": ids_of(root.get("isPartOf")),
+        "cite_authors": _bibtex_authors(root.get("citeAs")
+                                        or root.get("citation")),
     }
+
+
+BIBTEX_AUTHOR_RE = re.compile(r"author\s*=\s*[{\"](.+?)[}\"]\s*,?\s*\n", re.I | re.S)
+
+
+def _bibtex_authors(value):
+    """Author names from a BibTeX citeAs string ("Last, First and ...")."""
+    m = BIBTEX_AUTHOR_RE.search(str(value or ""))
+    if not m:
+        return []
+    names = []
+    for part in re.split(r"\s+and\s+", m.group(1)):
+        part = re.sub(r"[{}\\'`\"]", "", part).strip()
+        if "," in part:
+            last, first = (x.strip() for x in part.split(",", 1))
+            part = f"{first} {last}".strip()
+        if part:
+            names.append(part)
+    return names
 
 
 def transform_1d(ctx, raw):
@@ -260,7 +334,7 @@ def transform_1d(ctx, raw):
             aid = a["@id"]
             label = next((p.get("name", aid) for p in raw["persons"]
                           if p.get("@id") == aid), aid)
-            if "orcid.org" in aid or aid in person_ids:
+            if "orcid.org" in aid or "ror.org" in aid or aid in person_ids:
                 with_pid.append(f"{label} ({aid})" if label != aid else aid)
             else:
                 free_text.append(aid)
@@ -285,6 +359,7 @@ def transform_1d(ctx, raw):
         "contact": raw["contact"],
         "orgs": raw["orgs"],
         "ror_orgs": ror_orgs,
+        "cite_authors": raw["cite_authors"],
     }
 
 
@@ -302,11 +377,18 @@ def present_1d(facts):
         ev.sub(ev.flag("Organizations identified with ROR PIDs",
                        bool(facts["ror_orgs"]),
                        detail=", ".join(facts["ror_orgs"]) or None)),
+        ev.listing("Authors in the dataset citation (citeAs BibTeX)",
+                   facts["cite_authors"][:15],
+                   detail="free-text names; not counted as PIDs"),
     ]
 
 
 def estimate_1d(facts):
     if facts["total"] == 0:
+        if facts["cite_authors"]:
+            return ev.estimate("1", f"{len(facts['cite_authors'])} authors "
+                                    "named in the citation (citeAs) only, "
+                                    "without PIDs")
         return ev.estimate("0", "no authors on the root metadata")
     if not facts["free_text"]:
         return ev.estimate("2",

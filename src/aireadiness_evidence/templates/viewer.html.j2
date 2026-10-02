@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Readiness Review Viewer</title>
+{#- Built by `fairscape-review-viewer` (aireadiness_evidence.viewer). The
+    committed copy lives at docs/ai-ready-review-viewer.html — rebuild it
+    after editing this template or rubric_defs.yaml. -#}
+<style>
+  :root {
+    --ink: #1a1a1a; --muted: #6b6b6b; --line: #d9d9d9; --bg: #fafaf8;
+    --card: #ffffff; --accent: #b45309; --ok: #15803d; --bad: #b91c1c;
+    --unknown: #6b6b6b; --gate: #7c2d12;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 14px/1.45 "Source Sans 3", "Segoe UI", system-ui, sans-serif; }
+  .mono { font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+          font-size: 0.86em; }
+  a { color: var(--accent); }
+  header { border-bottom: 2px solid var(--ink); padding: 16px 0 12px;
+           background: var(--card); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  @media (max-width: 600px) { .wrap { padding: 0 16px; } }
+  h1 { font-size: 1.25rem; margin: 0 0 2px; }
+  h2 { font-size: 1.05rem; border-bottom: 1px solid var(--line);
+       padding-bottom: 4px; margin: 26px 0 10px;
+       display: flex; align-items: baseline; justify-content: space-between;
+       gap: 12px; flex-wrap: wrap; scroll-margin-top: 48px; }
+  .meta { color: var(--muted); font-size: 0.85rem; }
+  .badge { display: inline-block; border: 1px solid var(--gate);
+           color: var(--gate); border-radius: 2px; font-size: 0.68rem;
+           padding: 0 5px; margin-left: 8px; vertical-align: 2px;
+           text-transform: uppercase; letter-spacing: 0.05em; }
+  nav.toc { margin: 14px 0; font-size: 0.88rem; }
+  nav.toc { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  nav.toc a { white-space: nowrap; }
+
+  /* ---- loader ---- */
+  .loader { background: var(--card); border: 1px solid var(--line);
+            border-radius: 2px; padding: 12px 14px; margin: 16px 0; }
+  .drop { border: 2px dashed var(--line); border-radius: 2px; padding: 22px;
+          text-align: center; cursor: pointer; color: var(--muted); }
+  .drop.over { border-color: var(--accent); background: #fdf6ec;
+               color: var(--ink); }
+  .drop strong { color: var(--ink); }
+  .loaded { margin-top: 8px; font-size: 0.86rem; display: grid;
+            grid-template-columns: max-content 1fr; gap: 2px 12px; }
+  .loaded .k { color: var(--muted); }
+  .loaded .none { color: var(--muted); font-style: italic; }
+  .warn { color: var(--gate); font-size: 0.85rem; margin-top: 6px; }
+  .help { font-size: 0.82rem; color: var(--muted); margin-top: 8px; }
+  .help code { font-size: 0.8rem; }
+  .inline-btn { background: none; border: 1px solid var(--line);
+                border-radius: 2px; padding: 1px 8px; font: inherit;
+                font-size: 0.8rem; cursor: pointer; color: var(--ink);
+                margin-left: 6px; }
+  .inline-btn:hover { border-color: var(--bad); color: var(--bad); }
+
+  /* ---- criteria ---- */
+  .criterion { background: var(--card); border: 1px solid var(--line);
+               border-radius: 2px; padding: 10px 14px 8px; margin: 0 0 10px; }
+  .criterion h3 { margin: 0; font-size: 0.98rem; display: inline; }
+  .practice { color: var(--muted); font-style: italic; margin: 2px 0 6px;
+              font-size: 0.85rem; }
+  details.questions { margin: 0 0 6px; font-size: 0.85rem; }
+  details.questions summary { cursor: pointer; color: var(--muted); }
+  details.questions ul { margin: 4px 0 2px; padding-left: 20px; }
+  .scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+            margin: 6px 0 8px; }
+  @media (max-width: 700px) { .scores { grid-template-columns: 1fr; } }
+  .scores > div { border: 1px solid var(--line); border-radius: 2px;
+                  padding: 4px 8px; font-size: 0.8rem; line-height: 1.35;
+                  color: #333; background: #fcfcfa; }
+  .scores > div.picked { border-color: var(--accent); background: #fdf3e7;
+                         color: var(--ink); }
+  .scores .n { font-weight: 700; margin-right: 6px; font-size: 0.9rem; }
+  .rubric-note { color: var(--muted); font-size: 0.78rem; margin: -2px 0 6px; }
+
+  .evidence { border-top: 1px solid var(--line); padding-top: 4px; }
+  .evidence.missing { color: var(--muted); font-style: italic;
+                      font-size: 0.82rem; padding: 4px 0; }
+  .item { display: flex; gap: 12px; padding: 2px 0; font-size: 0.86rem;
+          border-top: 1px dotted #ececea; }
+  .item:first-child { border-top: 0; }
+  .item .label { flex: 0 0 290px; color: var(--ink); font-weight: 600; }
+  .item.sub .label { color: var(--muted); font-weight: 400;
+                     padding-left: 16px; }
+  .item .value { flex: 1; min-width: 0; overflow-wrap: break-word; }
+  @media (max-width: 700px) {
+    .item { flex-direction: column; gap: 0; }
+    .item .label { flex: none; }
+  }
+  .pre { white-space: pre-line; }
+  .detail { color: var(--muted); font-size: 0.8rem; display: inline;
+            margin-left: 6px; }
+  .detail::before { content: "— "; }
+  .yes { color: var(--ok); font-weight: 600; }
+  .no { color: var(--bad); font-weight: 600; }
+  .na { color: var(--unknown); }
+  .relpath { color: var(--muted); }
+  .pct-bar { display: inline-block; width: 90px; height: 7px;
+             background: #eee; border-radius: 2px; margin-right: 6px;
+             vertical-align: 1px; }
+  .pct-bar span { display: block; height: 100%; background: var(--accent);
+                  border-radius: 2px; }
+  details.entity { display: inline; }
+  details.entity pre { background: #f4f4f2; border: 1px solid var(--line);
+                       border-radius: 2px; padding: 8px; overflow-x: auto;
+                       font-size: 0.75rem; max-height: 320px; margin: 4px 0; }
+  details.entity summary { cursor: pointer; color: var(--accent); }
+  ul.plain { margin: 0; padding-left: 16px; }
+  ul.plain li { margin: 0; }
+  .longtext { display: inline; }
+  .longtext summary { cursor: pointer; display: inline; color: inherit; }
+  .longtext summary .more { color: var(--accent); font-size: 0.8rem; }
+  .longtext[open] summary .head { display: none; }
+
+  .estimate { margin-top: 6px; padding: 5px 8px; font-size: 0.82rem;
+              border: 1px dashed var(--line); border-radius: 2px;
+              background: #fdf6ec; }
+  .estimate.none { background: transparent; color: var(--muted);
+                   font-style: italic; }
+  .est-badge { display: inline-block; border: 1px solid var(--accent);
+               color: var(--accent); border-radius: 2px; font-size: 0.68rem;
+               padding: 0 5px; margin-right: 6px; text-transform: uppercase;
+               letter-spacing: 0.05em; }
+  .estimate .n { font-weight: 700; }
+  .estimate .differs { color: var(--gate); margin-left: 6px; }
+  .estimate ul { margin: 2px 0 0; padding-left: 18px; color: #555; }
+
+  .grade { margin-top: 6px; padding-top: 5px; border-top: 1px solid var(--line);
+           font-size: 0.85rem; display: flex; align-items: center; gap: 10px;
+           flex-wrap: wrap; }
+  .grade label { cursor: pointer; white-space: nowrap; }
+  .grade input[type="text"] { flex: 1; min-width: 200px;
+                              border: 1px solid var(--line); border-radius: 2px;
+                              padding: 3px 6px; font: inherit;
+                              font-size: 0.85rem; }
+  .grade.ungraded strong { color: var(--muted); }
+  .dep-warn { color: var(--bad); font-size: 0.8rem; margin-top: 4px; }
+  .gate-fail { color: var(--bad); font-weight: 700; }
+  .gate-pass { color: var(--ok); font-weight: 600; }
+
+  .section-note { margin: 2px 0 8px; }
+  .section-note label { display: block; font-size: 0.78rem; font-weight: 600;
+                        color: var(--muted); text-transform: uppercase;
+                        letter-spacing: 0.05em; margin-bottom: 2px; }
+  .section-note textarea { width: 100%; border: 1px solid var(--line);
+                           border-radius: 2px; padding: 5px 8px; font: inherit;
+                           font-size: 0.85rem; background: var(--card);
+                           resize: vertical; }
+
+  /* ---- summary ---- */
+  .summarybar { position: sticky; top: 0; z-index: 10; background: var(--card);
+                border-bottom: 1px solid var(--line); padding: 7px 0;
+                font-size: 0.88rem; }
+  .summarybar .wrap { display: flex; align-items: center; gap: 14px;
+                      flex-wrap: wrap; }
+  .summarybar .pct-bar { width: 160px; height: 9px; }
+  .summarybar .score { font-weight: 700; }
+  .axis-score { font-size: 0.75rem; font-weight: 400; color: var(--muted);
+                border: 1px solid var(--line); border-radius: 2px;
+                padding: 1px 8px; background: var(--card); white-space: nowrap; }
+  .axis-score .ax-pts { font-weight: 700; color: var(--ink); }
+  .chips { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+  .chip { display: inline-block; width: 22px; text-align: center;
+          border: 1px dashed var(--line); border-radius: 2px;
+          font-size: 0.72rem; line-height: 1.5; text-decoration: none;
+          color: var(--muted); font-family: "JetBrains Mono", Consolas,
+          monospace; }
+  .chip.s2 { border: 1px solid var(--ok); color: var(--ok);
+             background: #edf7ef; font-weight: 700; }
+  .chip.s1 { border: 1px solid var(--accent); color: var(--accent);
+             background: #fdf3e7; font-weight: 700; }
+  .chip.s0 { border: 1px solid var(--bad); color: var(--bad);
+             background: #fbeeee; font-weight: 700; }
+  .chip.sna { border: 1px solid var(--line); color: var(--muted);
+              background: #f1f1ef; text-decoration: line-through; }
+  .summary-grid { display: flex; gap: 28px; align-items: flex-start;
+                  flex-wrap: wrap; margin: 12px 0 4px; }
+  .summary-grid > div { min-width: 0; max-width: 100%; }
+  .table-scroll { max-width: 100%; overflow-x: auto; }
+  .sumtable { border-collapse: collapse; font-size: 0.86rem;
+              background: var(--card); border: 1px solid var(--line); }
+  .sumtable th { text-align: left; padding: 4px 12px; font-size: 0.72rem;
+                 text-transform: uppercase; letter-spacing: 0.05em;
+                 color: var(--muted); border-bottom: 1px solid var(--line); }
+  .sumtable td { padding: 3px 12px; border-bottom: 1px dotted #ececea;
+                 vertical-align: top; }
+  .sumtable th.num, .sumtable td.num { text-align: right; }
+  .sumtable tfoot td { border-top: 1px solid var(--ink); border-bottom: 0;
+                       font-weight: 700; }
+  .sumtable a { color: var(--ink); text-decoration: none; }
+  .sumtable a:hover { color: var(--accent); }
+  .sum-note { color: var(--muted); font-size: 0.8rem; margin-top: 6px;
+              max-width: min(460px, 100%); }
+  .radar-box svg { display: block; max-width: 100%; height: auto; }
+  .radar-legend { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  .radar-legend .swatch { display: inline-block; width: 18px; height: 0;
+                          border-top: 2px solid var(--accent);
+                          vertical-align: 3px; margin-right: 5px; }
+  .radar-legend .swatch.est { border-top-style: dashed;
+                              border-top-color: var(--unknown); }
+
+  .exportbar { position: sticky; bottom: 0; background: var(--card);
+               border-top: 1px solid var(--line); padding: 8px 0;
+               margin-top: 28px; }
+  .exportbar .wrap { display: flex; gap: 8px; align-items: center;
+                     flex-wrap: wrap; }
+  .exportbar button { background: var(--accent); color: #fff; border: 0;
+                      border-radius: 2px; padding: 6px 14px; font: inherit;
+                      cursor: pointer; }
+  .exportbar .status { color: var(--muted); font-size: 0.85rem; }
+  .error { color: var(--bad); }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>AI-Readiness Review Viewer</h1>
+    <div class="meta">{{ rubric_title }}</div>
+    <div id="crate-line" style="margin-top:6px" hidden></div>
+  </div>
+</header>
+
+<div class="summarybar" id="summarybar" hidden>
+  <div class="wrap">
+    <span id="sum-progress"></span>
+    <span class="pct-bar"><span id="sum-fill" style="width:0%"></span></span>
+    <span class="score" id="sum-score"></span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="loader">
+    <div class="drop" id="drop" tabindex="0" role="button"
+         aria-label="Choose review files">
+      <strong>Drop review files here</strong> or click to choose<br>
+      <span class="meta">scores JSON (<span class="mono">current_scores.json</span>,
+        from “Copy scores as JSON”) · evidence JSON
+        (<span class="mono">ai-ready-evidence.json</span>, from
+        <span class="mono">fairscape-evidence</span>) · or a saved review HTML</span>
+    </div>
+    <input type="file" id="file-input" multiple
+           accept=".json,.html,.htm,application/json,text/html" hidden>
+    <div class="loaded">
+      <span class="k">Scores</span><span id="loaded-scores" class="none">none loaded</span>
+      <span class="k">Evidence</span><span id="loaded-evidence" class="none">none loaded — the rubric text is shown without crate evidence</span>
+    </div>
+    <div class="warn" id="load-warn" hidden></div>
+    <div class="help">Files are read in your browser and never uploaded anywhere.
+      To open files by link, add <code>?scores=URL&amp;evidence=URL</code> to
+      this page's address (the URLs must allow cross-origin reads, e.g. raw
+      GitHub files).</div>
+  </div>
+
+  <div id="report" hidden>
+    <nav class="toc" id="toc"></nav>
+    <h2 id="summary"><span>Score summary</span></h2>
+    <div class="summary-grid">
+      <div>
+        <div class="table-scroll">
+          <table class="sumtable">
+            <thead>
+              <tr><th>Section</th><th>Criteria</th><th class="num">Points</th>
+                  <th class="num">%</th><th class="num">N/A</th><th>Gate</th></tr>
+            </thead>
+            <tbody id="sum-body"></tbody>
+            <tfoot id="sum-foot"></tfoot>
+          </table>
+        </div>
+        <div class="sum-note" id="overall-line" style="margin-top:8px"></div>
+        <div class="sum-note">Points and percentages cover graded criteria
+          only; N/A answers are excluded from the denominator. The overall
+          score is the unweighted average of the section percentages. Gate
+          thresholds and dependency rules (1.b ≤ 1.a, 6.a ≤ 2.c) follow the
+          rubric; totals are recomputed from the scores, not copied from the
+          file.</div>
+      </div>
+      <div class="radar-box">
+        <svg id="radar" width="320" height="320" viewBox="0 0 320 320"
+             role="img" aria-label="Per-section score radar chart"></svg>
+        <div class="radar-legend">
+          <span class="swatch"></span>reviewer scores &nbsp;
+          <span class="swatch est"></span>automated estimates
+        </div>
+      </div>
+    </div>
+    <div id="sections"></div>
+  </div>
+</div>
+
+<div class="exportbar" id="exportbar" hidden>
+  <div class="wrap">
+    <button id="download-json" type="button">Download scores JSON</button>
+    <button id="save-html" type="button"
+            title="Download this page with the scores and evidence written into it — one file that opens anywhere">Save as shareable HTML</button>
+    <span class="status" id="status"></span>
+  </div>
+</div>
+
+<script type="application/json" id="rubric-data">{{ rubric_json }}</script>
+{# scores + evidence embedded by "Save as shareable HTML"; empty when built #}
+<script type="application/json" id="viewer-data">{}</script>
+
+<script>
+(function () {
+'use strict';
+
+var RUBRIC = JSON.parse(document.getElementById('rubric-data').textContent);
+var dataEl = document.getElementById('viewer-data');
+
+// state.scores: {cid: {score, notes, estimate}} — score is "2"/"1"/"0"/"N/A"/null
+var state = { scores: null, evidence: null, sectionNotes: {},
+              scoresName: null, evidenceName: null, fileSummary: null };
+
+function $(id) { return document.getElementById(id); }
+
+function el(tag, attrs, children) {
+  var node = document.createElement(tag);
+  Object.keys(attrs || {}).forEach(function (k) {
+    if (k === 'text') node.textContent = attrs[k];
+    else if (k === 'class') node.className = attrs[k];
+    else if (k === 'hidden') node.hidden = attrs[k];
+    else node.setAttribute(k, attrs[k]);
+  });
+  (children || []).forEach(function (c) {
+    if (c === null || c === undefined) return;
+    node.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+  });
+  return node;
+}
+
+function fmt(n) { return (+n).toLocaleString('en-US'); }
+
+// ---- links ---------------------------------------------------------------
+// Evidence hrefs are absolute URLs or crate-relative paths. The crate is not
+// here, so relative paths are shown as text rather than as broken links.
+var LINK_RE = /https?:\/\/[^\s<>"\)\]]+|\bdoi:10\.\d{4,9}\/\S+|\b10\.\d{4,9}\/[^\s<>"\)\],;]+/g;
+
+function absHref(path) {
+  if (!path) return null;
+  if (/^https?:\/\//.test(path)) return path;
+  if (/^doi:10\./.test(path)) return 'https://doi.org/' + path.slice(4);
+  if (/^10\.\d{4,9}\//.test(path)) return 'https://doi.org/' + path;
+  return null;
+}
+
+function linkify(text) {
+  var frag = document.createDocumentFragment();
+  if (text === null || text === undefined) return frag;
+  text = String(text);
+  var last = 0, m;
+  LINK_RE.lastIndex = 0;
+  while ((m = LINK_RE.exec(text))) {
+    var token = m[0], stripped = token.replace(/[.,;:]+$/, '');
+    frag.appendChild(document.createTextNode(text.slice(last, m.index)));
+    frag.appendChild(el('a', { href: absHref(stripped), target: '_blank',
+                               rel: 'noopener', text: stripped }));
+    frag.appendChild(document.createTextNode(token.slice(stripped.length)));
+    last = m.index + token.length;
+  }
+  frag.appendChild(document.createTextNode(text.slice(last)));
+  return frag;
+}
+
+function hrefNode(href, display) {
+  var abs = absHref(href);
+  if (abs) return el('a', { href: abs, target: '_blank', rel: 'noopener',
+                            text: display || href });
+  return el('span', { class: 'relpath', title: 'crate-relative path: ' + href },
+            [display || href, ' ', el('span', { class: 'mono', text: '(' + href + ')' })]);
+}
+
+// ---- evidence items (mirrors review.html.j2) -------------------------------
+function renderValue(item) {
+  var v = item.value, box = el('div', { class: 'value' });
+  var na = function (t) { return el('span', { class: 'na', text: t }); };
+  if (item.kind === 'bool') {
+    box.appendChild(v === true ? el('span', { class: 'yes', text: '✓ Yes' })
+      : v === false ? el('span', { class: 'no', text: '✗ No' }) : na('— not checked'));
+  } else if (item.kind === 'count') {
+    box.appendChild(el('strong', { text: fmt(v) }));
+    if (item.of !== undefined && item.of !== null) box.appendChild(document.createTextNode(' of ' + fmt(item.of)));
+  } else if (item.kind === 'percent') {
+    if (v !== null && v !== undefined) {
+      var bar = el('span', { class: 'pct-bar' }, [el('span', { style: 'width:' + Math.min(v, 100) + '%' })]);
+      box.appendChild(bar);
+      box.appendChild(el('strong', { text: ' ' + v + '%' }));
+      box.appendChild(el('span', { class: 'meta', text: ' (' + fmt(item.n) + ' of ' + fmt(item.total) + ')' }));
+    } else box.appendChild(na('— no denominator'));
+  } else if (item.kind === 'link') {
+    box.appendChild(v ? hrefNode(v, item.text) : na('none'));
+  } else if (item.kind === 'links') {
+    if (v && v.length) {
+      var ul = el('ul', { class: 'plain' });
+      v.forEach(function (l) {
+        var li = el('li');
+        if (l.href) li.appendChild(hrefNode(l.href, l.text)); else li.appendChild(linkify(l.text));
+        ul.appendChild(li);
+      });
+      box.appendChild(ul);
+    } else box.appendChild(na('none'));
+  } else if (item.kind === 'list') {
+    if (v && v.length === 1) box.appendChild(linkify(v[0]));
+    else if (v && v.length) {
+      var ul2 = el('ul', { class: 'plain' });
+      v.forEach(function (x) { ul2.appendChild(el('li', {}, [linkify(x)])); });
+      box.appendChild(ul2);
+    } else box.appendChild(na('none'));
+  } else if (item.kind === 'entity') {
+    if (v) {
+      var pre = el('pre');
+      pre.appendChild(linkify(JSON.stringify(v, null, 2)));
+      box.appendChild(el('details', { class: 'entity' },
+        [el('summary', { text: v.name || v['@id'] || 'view entity' }), pre]));
+    } else box.appendChild(na('none found'));
+  } else {
+    if (v) {
+      var s = String(v);
+      if (s.length > 260) {
+        var head = el('span', { class: 'head' });
+        head.appendChild(linkify(s.slice(0, 240).replace(/\s+\S*$/, '') + '…'));
+        var body = el('span', { class: 'pre' });
+        body.appendChild(linkify(s));
+        box.appendChild(el('details', { class: 'longtext' }, [
+          el('summary', {}, [head, ' ', el('span', { class: 'more',
+            text: '[' + fmt(s.length) + ' chars — expand]' })]), body]));
+      } else {
+        var span = el('span', { class: 'pre' });
+        span.appendChild(linkify(s));
+        box.appendChild(span);
+      }
+    } else box.appendChild(na('not provided'));
+  }
+  if (item.detail) {
+    var d = el('span', { class: 'detail' });
+    d.appendChild(linkify(item.detail));
+    box.appendChild(document.createTextNode(' '));
+    box.appendChild(d);
+  }
+  return box;
+}
+
+// ---- model ------------------------------------------------------------------
+// Rubric text comes from the evidence file when one is loaded (it records the
+// rubric it was built against), else from the copy embedded in this page.
+function criteriaModel() {
+  var evidenceById = {};
+  if (state.evidence) {
+    state.evidence.sections.forEach(function (s) {
+      s.criteria.forEach(function (c) { evidenceById[c.id] = c; });
+    });
+  }
+  return RUBRIC.sections.map(function (sec) {
+    var prefix = String(sec.number) + '.';
+    var ids = Object.keys(RUBRIC.criteria).filter(function (id) {
+      return id.indexOf(prefix) === 0;
+    });
+    Object.keys(evidenceById).forEach(function (id) {
+      if (id.indexOf(prefix) === 0 && ids.indexOf(id) < 0) ids.push(id);
+    });
+    return {
+      number: String(sec.number), title: sec.title, gating: sec.gating,
+      criteria: ids.map(function (id) {
+        var base = RUBRIC.criteria[id] || {};
+        var ev = evidenceById[id];
+        var c = ev ? Object.assign({}, base, ev) : Object.assign({ id: id }, base);
+        c.hasEvidence = !!ev;
+        return c;
+      })
+    };
+  });
+}
+
+function scoreOf(id) {
+  var s = state.scores && state.scores[id];
+  return s && s.score !== null && s.score !== undefined && s.score !== '' ? String(s.score) : null;
+}
+
+// estimate as a string: evidence file {score, basis} first, else the scores file
+function estimateOf(c) {
+  if (c.estimate && typeof c.estimate === 'object') return c.estimate.score === null ? null : String(c.estimate.score);
+  var s = state.scores && state.scores[c.id];
+  return s && s.estimate !== null && s.estimate !== undefined ? String(s.estimate) : null;
+}
+
+// v1.8 aggregation — same rules as review.html.j2 updateSummary()
+function aggregate(model) {
+  var out = { sections: {}, graded: 0, total: 0, pts: 0, max: 0, na: 0,
+              gateFailures: [], gatePending: 0, depViolations: [] };
+  model.forEach(function (sec) {
+    var a = { graded: 0, total: 0, pts: 0, max: 0, na: 0, gateFail: [],
+              gatePending: 0, gatedTotal: 0, estPts: 0, estMax: 0 };
+    sec.criteria.forEach(function (c) {
+      a.total += 1; out.total += 1;
+      var s = scoreOf(c.id), min = c.gate_min;
+      var e = estimateOf(c);
+      if (e !== null && e !== 'N/A') { a.estPts += +e; a.estMax += 2; }
+      if (min) a.gatedTotal += 1;
+      if (s === null) { if (min) a.gatePending += 1; return; }
+      a.graded += 1; out.graded += 1;
+      if (min) {
+        if (s === 'N/A') a.gateFail.push(c.id + ' is N/A (not permitted on a gating criterion)');
+        else if (+s < +min) a.gateFail.push(c.id + ' scored ' + s + ' (needs ' + (+min === 2 ? '2' : '> 0') + ')');
+      }
+      if (s === 'N/A') { a.na += 1; out.na += 1; return; }
+      a.pts += +s; a.max += 2; out.pts += +s; out.max += 2;
+    });
+    out.sections[sec.number] = a;
+    out.gateFailures = out.gateFailures.concat(a.gateFail);
+    out.gatePending += a.gatePending;
+  });
+  model.forEach(function (sec) {
+    sec.criteria.forEach(function (c) {
+      if (!c.depends_on) return;
+      var s = scoreOf(c.id), p = scoreOf(c.depends_on);
+      if (s !== null && p !== null && s !== 'N/A' && p !== 'N/A' && +s > +p)
+        out.depViolations.push(c.id + ' > ' + c.depends_on);
+    });
+  });
+  var pcts = [];
+  Object.keys(out.sections).forEach(function (k) {
+    var a = out.sections[k];
+    if (a.max) pcts.push(100 * a.pts / a.max);
+  });
+  out.overall = pcts.length
+    ? Math.round(10 * pcts.reduce(function (x, y) { return x + y; }, 0) / pcts.length) / 10
+    : null;
+  return out;
+}
+
+// ---- render -----------------------------------------------------------------
+function renderCriterion(c) {
+  var anchor = 'c' + c.id.replace('.', '-');
+  var box = el('div', { class: 'criterion', id: anchor });
+  box.appendChild(el('h3', { text: c.id + ' ' + (c.name || '') }));
+  if (c.gate_min) box.appendChild(el('span', { class: 'badge',
+    text: 'Gate: must score ' + (+c.gate_min === 2 ? '2' : 'above 0') }));
+  else if (c.gating) box.appendChild(el('span', { class: 'badge', text: 'Gating' }));
+  if (c.depends_on) box.appendChild(el('span', { class: 'badge', text: '≤ ' + c.depends_on }));
+  if (c.practice) box.appendChild(el('div', { class: 'practice', text: String(c.practice).trim() }));
+  if (c.questions && c.questions.length) {
+    var ul = el('ul');
+    c.questions.forEach(function (q) { ul.appendChild(el('li', { text: String(q).trim() })); });
+    box.appendChild(el('details', { class: 'questions' },
+      [el('summary', { text: 'Questions (' + c.questions.length + ')' }), ul]));
+  }
+  var current = scoreOf(c.id);
+  if (c.scoring) {
+    var grid = el('div', { class: 'scores' });
+    ['2', '1', '0'].forEach(function (k) {
+      if (c.scoring[k] === undefined) return;
+      grid.appendChild(el('div', { class: current === k ? 'picked' : '', 'data-level': k },
+        [el('span', { class: 'n', text: k }), String(c.scoring[k]).trim()]));
+    });
+    box.appendChild(grid);
+  }
+  if (c.notes) box.appendChild(el('div', { class: 'rubric-note', text: String(c.notes).trim() }));
+  if (c.gating_note) box.appendChild(el('div', { class: 'rubric-note', text: String(c.gating_note).trim() }));
+
+  if (c.hasEvidence) {
+    var evBox = el('div', { class: 'evidence' });
+    if (c.error) evBox.appendChild(el('div', { class: 'error', text: 'extraction failed: ' + c.error }));
+    (c.evidence || []).forEach(function (item) {
+      evBox.appendChild(el('div', { class: 'item' + (item.sub ? ' sub' : '') },
+        [el('div', { class: 'label', text: item.label }), renderValue(item)]));
+    });
+    box.appendChild(evBox);
+  } else if (state.evidence) {
+    box.appendChild(el('div', { class: 'evidence missing', text: 'No evidence for this criterion in the loaded evidence file.' }));
+  }
+
+  var est = estimateOf(c);
+  if (est !== null) {
+    var estBox = el('div', { class: 'estimate' }, [
+      el('span', { class: 'est-badge', text: 'Automated estimate' }),
+      el('span', { class: 'n', text: est })]);
+    if (current !== null && current !== est)
+      estBox.appendChild(el('span', { class: 'differs', text: '— reviewer scored ' + current }));
+    if (c.estimate && c.estimate.basis && c.estimate.basis.length) {
+      var bl = el('ul');
+      c.estimate.basis.forEach(function (b) { bl.appendChild(el('li', {}, [linkify(b)])); });
+      estBox.appendChild(bl);
+    }
+    box.appendChild(estBox);
+  } else if (c.hasEvidence) {
+    box.appendChild(el('div', { class: 'estimate none',
+      text: 'No automated estimate — this criterion needs human judgment.' }));
+  }
+
+  var saved = (state.scores && state.scores[c.id]) || {};
+  var grade = el('div', { class: 'grade' + (current === null ? ' ungraded' : ''), 'data-criterion': c.id },
+    [el('strong', { text: current === null ? 'Not scored:' : 'Reviewer score:' })]);
+  ['2', '1', '0', 'N/A'].forEach(function (opt) {
+    var radio = el('input', { type: 'radio', name: 'score-' + c.id, value: opt });
+    if (current === opt) radio.checked = true;
+    grade.appendChild(el('label', {}, [radio, ' ' + opt]));
+  });
+  var notes = el('input', { type: 'text', placeholder: 'reviewer notes…' });
+  notes.value = saved.notes || '';
+  grade.appendChild(notes);
+  box.appendChild(grade);
+  if (c.depends_on) {
+    box.appendChild(el('div', { class: 'dep-warn', 'data-depwarn': c.id, hidden: true,
+      text: '⚠ Dependency rule ' + c.id + ' ≤ ' + c.depends_on + ': this score exceeds ' +
+            c.depends_on + "'s score, which the rubric does not allow." }));
+  }
+  return box;
+}
+
+var model = [];
+
+function renderAll() {
+  model = criteriaModel();
+  var ev = state.evidence;
+
+  // header
+  var crateId = (ev && ev.crate && ev.crate['@id']) || (state.scores && state.scoresCrate) || null;
+  var line = $('crate-line');
+  line.innerHTML = '';
+  if (ev || crateId) {
+    if (ev && ev.crate && ev.crate.name) line.appendChild(el('strong', { text: ev.crate.name + ' ' }));
+    if (crateId) line.appendChild(el('span', { class: 'mono', text: crateId }));
+    if (ev && ev.crate) {
+      var bits = [];
+      if (ev.crate.identifier && ev.crate.identifier !== crateId) bits.push(ev.crate.identifier);
+      if (ev.crate.datePublished) bits.push('published ' + ev.crate.datePublished);
+      if (ev.crate.format_label) bits.push(ev.crate.format_label);
+      if (ev.generated) bits.push('evidence generated ' + ev.generated);
+      if (bits.length) line.appendChild(el('span', { class: 'meta', text: ' · ' + bits.join(' · ') }));
+    }
+    line.hidden = false;
+  } else line.hidden = true;
+
+  // toc
+  var toc = $('toc');
+  toc.innerHTML = '';
+  toc.appendChild(el('a', { href: '#summary', text: 'Summary' }));
+  model.forEach(function (s) {
+    toc.appendChild(el('a', { href: '#sec' + s.number, text: s.number + '. ' + s.title + (s.gating ? ' *' : '') }));
+  });
+
+  // sections
+  var root = $('sections');
+  root.innerHTML = '';
+  model.forEach(function (s) {
+    root.appendChild(el('h2', { id: 'sec' + s.number }, [
+      el('span', {}, [s.number + '. ' + s.title, s.gating ? el('span', { class: 'badge', text: 'Gating' }) : null]),
+      el('span', { class: 'axis-score', 'data-section': s.number })]));
+    s.criteria.forEach(function (c) { root.appendChild(renderCriterion(c)); });
+    var ta = el('textarea', { id: 'secnote-' + s.number, 'data-secnote': s.number, rows: '2',
+      placeholder: 'Section comments…' });
+    ta.value = state.sectionNotes[s.number] || '';
+    root.appendChild(el('div', { class: 'section-note' }, [
+      el('label', { for: 'secnote-' + s.number, text: 'Section ' + s.number + ' comments' }), ta]));
+  });
+
+  $('report').hidden = false;
+  $('summarybar').hidden = false;
+  $('exportbar').hidden = false;
+  updateSummary();
+}
+
+function updateSummary() {
+  var agg = aggregate(model);
+  // summary bar
+  $('sum-progress').textContent = 'Scored ' + agg.graded + ' of ' + agg.total;
+  $('sum-fill').style.width = (agg.total ? 100 * agg.graded / agg.total : 0) + '%';
+  var sc = $('sum-score');
+  sc.innerHTML = '';
+  if (agg.max) sc.appendChild(document.createTextNode(agg.pts + ' / ' + agg.max + ' pts · overall ' + agg.overall + '%'));
+  if (agg.gateFailures.length) { sc.appendChild(document.createTextNode(' · ')); sc.appendChild(el('span', { class: 'gate-fail', text: 'Gating FAIL' })); }
+  if (agg.depViolations.length) { sc.appendChild(document.createTextNode(' · ')); sc.appendChild(el('span', { class: 'gate-fail', text: '⚠ ' + agg.depViolations.join(', ') })); }
+
+  // per-section badges + table
+  var body = $('sum-body');
+  body.innerHTML = '';
+  model.forEach(function (s) {
+    var a = agg.sections[s.number];
+    var badge = document.querySelector('.axis-score[data-section="' + s.number + '"]');
+    if (badge) {
+      badge.innerHTML = '';
+      badge.appendChild(document.createTextNode(a.graded + ' of ' + a.total + ' scored'));
+      if (a.max) badge.appendChild(el('span', { class: 'ax-pts', text: ' · ' + a.pts + ' / ' + a.max + ' pts (' + Math.round(100 * a.pts / a.max) + '%)' }));
+      if (a.na) badge.appendChild(document.createTextNode(' · ' + a.na + ' N/A'));
+    }
+    var chips = el('span', { class: 'chips' });
+    s.criteria.forEach(function (c) {
+      var v = scoreOf(c.id);
+      chips.appendChild(el('a', { class: 'chip' + (v === null ? '' : v === 'N/A' ? ' sna' : ' s' + v),
+        href: '#c' + c.id.replace('.', '-'),
+        title: c.id + ' ' + (c.name || '') + ' — ' + (v === null ? 'not scored' : 'scored ' + v),
+        text: c.id.split('.')[1] }));
+    });
+    body.appendChild(el('tr', {}, [
+      el('td', {}, [el('a', { href: '#sec' + s.number, text: s.number + '. ' + s.title }),
+        (s.gating || a.gatedTotal) ? el('span', { class: 'badge', text: 'Gating' }) : null]),
+      el('td', {}, [chips]),
+      el('td', { class: 'num', text: a.max ? a.pts + ' / ' + a.max : '—' }),
+      el('td', { class: 'num', text: a.max ? Math.round(100 * a.pts / a.max) + '%' : '—' }),
+      el('td', { class: 'num', text: a.na ? String(a.na) : '' }),
+      gateCell(a)]));
+  });
+  var foot = $('sum-foot');
+  foot.innerHTML = '';
+  foot.appendChild(el('tr', {}, [
+    el('td', { text: 'Total' }),
+    el('td', { text: agg.graded + ' / ' + agg.total + ' scored' }),
+    el('td', { class: 'num', text: agg.max ? agg.pts + ' / ' + agg.max : '—' }),
+    el('td', { class: 'num', text: agg.overall === null ? '—' : agg.overall + '%' }),
+    el('td', { class: 'num', text: agg.na ? String(agg.na) : '' }),
+    gateCell({ gatedTotal: 1, gateFail: agg.gateFailures.length ? ['see sections'] : [], gatePending: agg.gatePending })]));
+
+  // overall line
+  var ol = $('overall-line');
+  ol.innerHTML = '';
+  if (agg.overall !== null) {
+    ol.appendChild(el('strong', { text: 'Overall AI-readiness score: ' + agg.overall + '%' }));
+    ol.appendChild(document.createTextNode(' · '));
+    ol.appendChild(agg.gateFailures.length
+      ? el('span', { class: 'gate-fail', text: 'Gating FAIL — ' + agg.gateFailures.join('; ') })
+      : agg.gatePending ? document.createTextNode(agg.gatePending + ' gated criteria not yet scored')
+      : el('span', { class: 'gate-pass', text: 'all gates passed' }));
+    if (agg.depViolations.length) {
+      ol.appendChild(document.createTextNode(' · '));
+      ol.appendChild(el('span', { class: 'gate-fail', text: 'dependency rule violated: ' + agg.depViolations.join(', ') }));
+    }
+    var fs = state.fileSummary;
+    if (fs && fs.overall_score !== null && fs.overall_score !== undefined && !state.edited &&
+        Math.abs(fs.overall_score - agg.overall) > 0.05) {
+      ol.appendChild(el('div', { class: 'warn', text: 'Note: the scores file reports overall ' +
+        fs.overall_score + '%; recomputing from its per-criterion scores gives ' + agg.overall + '%.' }));
+    }
+  }
+
+  // dependency warnings
+  document.querySelectorAll('[data-depwarn]').forEach(function (w) {
+    w.hidden = !agg.depViolations.some(function (d) { return d.indexOf(w.dataset.depwarn + ' >') === 0; });
+  });
+
+  drawRadar(model, agg);
+  lastAgg = agg;
+}
+
+var lastAgg = null;
+
+function gateCell(a) {
+  if (!a.gatedTotal) return el('td', { text: '—' });
+  if (a.gateFail.length) return el('td', { class: 'gate-fail', text: 'FAIL' + (a.gateFail[0] === 'see sections' ? '' : ' (' + a.gateFail.join('; ') + ')') });
+  if (a.gatePending) return el('td', { text: a.gatePending + ' gated left' });
+  return el('td', { class: 'gate-pass', text: 'pass' });
+}
+
+// ---- radar ------------------------------------------------------------------
+function drawRadar(model, agg) {
+  var cx = 160, cy = 160, r = 108, n = model.length;
+  function pt(i, f) {
+    var ang = -Math.PI / 2 + (2 * Math.PI * i) / n;
+    return [(cx + r * f * Math.cos(ang)).toFixed(1), (cy + r * f * Math.sin(ang)).toFixed(1)];
+  }
+  function poly(fracs, attrs) {
+    return '<polygon points="' + fracs.map(function (f, i) { return pt(i, f).join(','); }).join(' ') + '" ' + attrs + '/>';
+  }
+  var svg = [];
+  [0.25, 0.5, 0.75, 1].forEach(function (ring) {
+    svg.push(poly(model.map(function () { return ring; }),
+      'fill="none" stroke="#d9d9d9" stroke-width="' + (ring === 1 ? 1.2 : 0.6) + '"'));
+  });
+  model.forEach(function (s, i) {
+    var p = pt(i, 1), q = pt(i, 1.13);
+    svg.push('<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0] + '" y2="' + p[1] + '" stroke="#ececea" stroke-width="0.6"/>');
+    svg.push('<text x="' + q[0] + '" y="' + q[1] + '" text-anchor="middle" dominant-baseline="middle" font-size="12" font-weight="600" fill="#6b6b6b">' + s.number + '</text>');
+  });
+  var est = model.map(function (s) { var a = agg.sections[s.number]; return a.estMax ? a.estPts / a.estMax : 0; });
+  if (est.some(function (f) { return f > 0; }))
+    svg.push(poly(est, 'fill="none" stroke="#6b6b6b" stroke-width="1.4" stroke-dasharray="5 4"'));
+  var human = model.map(function (s) { var a = agg.sections[s.number]; return a.max ? a.pts / a.max : 0; });
+  if (human.some(function (f) { return f > 0; })) {
+    svg.push(poly(human, 'fill="rgba(180,83,9,0.12)" stroke="#b45309" stroke-width="1.8"'));
+    human.forEach(function (f, i) {
+      if (!agg.sections[model[i].number].max) return;
+      var p = pt(i, f);
+      svg.push('<circle cx="' + p[0] + '" cy="' + p[1] + '" r="2.6" fill="#b45309"/>');
+    });
+  }
+  $('radar').innerHTML = svg.join('');
+}
+
+// ---- editing ----------------------------------------------------------------
+document.addEventListener('change', function (e) {
+  if (e.target.type !== 'radio' || !e.target.name.startsWith('score-')) return;
+  var id = e.target.name.slice(6);
+  ensureScores();
+  state.scores[id] = Object.assign({ notes: null, estimate: null }, state.scores[id] || {}, { score: e.target.value });
+  state.edited = true;
+  var crit = document.getElementById('c' + id.replace('.', '-'));
+  if (crit) {
+    crit.querySelectorAll('.scores > div').forEach(function (d) {
+      d.className = d.dataset.level === e.target.value ? 'picked' : '';
+    });
+    var g = crit.querySelector('.grade');
+    g.classList.remove('ungraded');
+    g.querySelector('strong').textContent = 'Reviewer score:';
+  }
+  updateSummary();
+  setStatus('edited — download to keep changes');
+});
+document.addEventListener('input', function (e) {
+  if (e.target.type === 'text' && e.target.closest('.grade')) {
+    var id = e.target.closest('.grade').dataset.criterion;
+    ensureScores();
+    state.scores[id] = Object.assign({ score: null, estimate: null }, state.scores[id] || {}, { notes: e.target.value || null });
+    state.edited = true;
+    setStatus('edited — download to keep changes');
+  } else if (e.target.dataset && e.target.dataset.secnote !== undefined) {
+    state.sectionNotes[e.target.dataset.secnote] = e.target.value;
+    state.edited = true;
+    setStatus('edited — download to keep changes');
+  }
+});
+
+function ensureScores() { if (!state.scores) state.scores = {}; }
+function setStatus(t) { $('status').textContent = t; }
+
+// ---- loading ----------------------------------------------------------------
+function classify(doc) {
+  if (!doc || typeof doc !== 'object') return null;
+  if (doc.scores && typeof doc.scores === 'object') return 'scores';
+  if (Array.isArray(doc.sections) && doc.sections.length && Array.isArray(doc.sections[0].criteria)) return 'evidence';
+  return null;
+}
+
+function applyScores(doc, name) {
+  state.scores = {};
+  Object.keys(doc.scores).forEach(function (id) {
+    var s = doc.scores[id] || {};
+    state.scores[id] = { score: s.score === undefined ? null : s.score,
+                         notes: s.notes || null,
+                         estimate: s.estimate === undefined ? null : s.estimate };
+  });
+  state.sectionNotes = {};
+  Object.keys(doc.section_notes || {}).forEach(function (k) {
+    if (doc.section_notes[k]) state.sectionNotes[k] = doc.section_notes[k];
+  });
+  state.scoresCrate = doc.crate || null;
+  state.scoresName = name;
+  state.fileSummary = { overall_score: doc.overall_score };
+  state.edited = false;
+  var n = Object.keys(state.scores).filter(function (k) { return scoreOf(k) !== null; }).length;
+  var lab = $('loaded-scores');
+  lab.className = '';
+  lab.textContent = name + ' — ' + n + ' scored criteria' + (doc.crate ? ' · ' + doc.crate : '');
+  lab.appendChild(clearBtn('scores'));
+}
+
+function applyEvidence(doc, name) {
+  state.evidence = doc;
+  state.evidenceName = name;
+  var lab = $('loaded-evidence');
+  lab.className = '';
+  lab.textContent = name + ' — ' + ((doc.crate && (doc.crate.name || doc.crate['@id'])) || 'evidence') +
+    (doc.rubric_version ? ' · rubric v' + doc.rubric_version : '');
+  lab.appendChild(clearBtn('evidence'));
+}
+
+function clearBtn(which) {
+  var b = el('button', { class: 'inline-btn', type: 'button', text: 'remove' });
+  b.addEventListener('click', function () {
+    if (which === 'scores') {
+      state.scores = null; state.sectionNotes = {}; state.scoresCrate = null; state.fileSummary = null;
+      $('loaded-scores').className = 'none'; $('loaded-scores').textContent = 'none loaded';
+    } else {
+      state.evidence = null;
+      $('loaded-evidence').className = 'none';
+      $('loaded-evidence').textContent = 'none loaded — the rubric text is shown without crate evidence';
+    }
+    afterLoad();
+  });
+  return b;
+}
+
+function warn(msgs) {
+  var w = $('load-warn');
+  w.textContent = msgs.join(' ');
+  w.hidden = !msgs.length;
+}
+
+function afterLoad() {
+  var msgs = [];
+  if (state.scores && state.evidence && state.scoresCrate && state.evidence.crate &&
+      state.evidence.crate['@id'] && state.scoresCrate !== state.evidence.crate['@id']) {
+    msgs.push('⚠ The scores are for ' + state.scoresCrate + ' but the evidence is for ' +
+              state.evidence.crate['@id'] + ' — check you loaded the matching pair.');
+  }
+  if (state.evidence && state.evidence.rubric_version && state.evidence.rubric_version !== RUBRIC.version) {
+    msgs.push('The evidence was built against rubric v' + state.evidence.rubric_version +
+              '; this page embeds v' + RUBRIC.version + '. Rubric text is taken from the evidence file.');
+  }
+  warn(msgs);
+  if (!state.scores && !state.evidence) {
+    $('report').hidden = true; $('summarybar').hidden = true; $('exportbar').hidden = true;
+    $('crate-line').hidden = true;
+    return;
+  }
+  renderAll();
+}
+
+function ingest(text, name) {
+  var doc = null;
+  if (/^\s*</.test(text)) {
+    // a saved review page — review.html.j2 (#review-state) or this viewer (#viewer-data)
+    var html = new DOMParser().parseFromString(text, 'text/html');
+    var viewer = html.getElementById('viewer-data');
+    if (viewer) {
+      var vd = JSON.parse(viewer.textContent || '{}');
+      if (vd.scores) applyScores(vd.scores, name);
+      if (vd.evidence) applyEvidence(vd.evidence, name);
+      if (vd.scores || vd.evidence) return true;
+    }
+    var rs = html.getElementById('review-state');
+    if (rs) {
+      doc = JSON.parse(rs.textContent || '{}');
+      if (!doc.scores || !Object.keys(doc.scores).length)
+        throw new Error('the review page has no saved scores in it (use “Save review as HTML” first)');
+      applyScores(doc, name);
+      return true;
+    }
+    throw new Error('not a saved review page');
+  }
+  doc = JSON.parse(text);
+  var kind = classify(doc);
+  if (kind === 'scores') applyScores(doc, name);
+  else if (kind === 'evidence') applyEvidence(doc, name);
+  else throw new Error('not a scores file (no "scores") or evidence file (no "sections[].criteria")');
+  return true;
+}
+
+function readFiles(files) {
+  var errors = [];
+  var jobs = Array.prototype.map.call(files, function (f) {
+    return f.text().then(function (t) {
+      try { ingest(t, f.name); } catch (err) { errors.push(f.name + ': ' + err.message); }
+    });
+  });
+  Promise.all(jobs).then(function () {
+    afterLoad();
+    if (errors.length) {
+      var w = $('load-warn');
+      w.hidden = false;
+      w.textContent = (w.textContent ? w.textContent + ' ' : '') + 'Could not read ' + errors.join('; ');
+    }
+  });
+}
+
+var drop = $('drop'), input = $('file-input');
+drop.addEventListener('click', function () { input.click(); });
+drop.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+});
+input.addEventListener('change', function () { readFiles(input.files); input.value = ''; });
+['dragenter', 'dragover'].forEach(function (t) {
+  document.addEventListener(t, function (e) { e.preventDefault(); drop.classList.add('over'); });
+});
+['dragleave', 'drop'].forEach(function (t) {
+  document.addEventListener(t, function (e) {
+    e.preventDefault();
+    if (t === 'dragleave' && e.relatedTarget) return;
+    drop.classList.remove('over');
+    if (t === 'drop' && e.dataTransfer && e.dataTransfer.files.length) readFiles(e.dataTransfer.files);
+  });
+});
+
+// ---- export -----------------------------------------------------------------
+// Same shape as review.html.j2 "Copy scores as JSON", so the output can be
+// loaded back here or handed to anything that reads current_scores.json.
+function exportScores() {
+  var agg = lastAgg || aggregate(model);
+  var out = { crate: state.scoresCrate || (state.evidence && state.evidence.crate && state.evidence.crate['@id']) || null,
+              scores: {}, section_notes: {}, sections: {} };
+  model.forEach(function (s) {
+    s.criteria.forEach(function (c) {
+      var saved = (state.scores && state.scores[c.id]) || {};
+      out.scores[c.id] = { score: scoreOf(c.id), notes: saved.notes || null, estimate: estimateOf(c) };
+    });
+    out.section_notes[s.number] = state.sectionNotes[s.number] || null;
+    var a = agg.sections[s.number];
+    out.sections[s.number] = { graded: a.graded, total: a.total, points: a.pts, max_points: a.max,
+      na: a.na, percentage: a.max ? Math.round(1000 * a.pts / a.max) / 10 : null,
+      gate_failures: a.gateFail };
+  });
+  out.overall_score = agg.overall;
+  out.gating = { failures: agg.gateFailures, pending: agg.gatePending,
+    label: agg.gateFailures.length ? 'Gating FAIL' : (agg.gatePending ? 'gates not fully scored' : 'gates passed') };
+  out.dependency_violations = agg.depViolations;
+  return out;
+}
+
+function download(name, text, type) {
+  var blob = new Blob([text], { type: type });
+  var url = URL.createObjectURL(blob);
+  var a = el('a', { href: url, download: name });
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+}
+
+$('download-json').addEventListener('click', function () {
+  var name = state.scoresName && /\.json$/i.test(state.scoresName) ? state.scoresName : 'current_scores.json';
+  download(name, JSON.stringify(exportScores(), null, 2) + '\n', 'application/json');
+  setStatus('downloaded ' + name);
+});
+
+// Writes the scores and evidence into #viewer-data and downloads the page, so a
+// single HTML file carries the whole review. The live DOM is reset to the empty
+// shell first so the saved file re-renders cleanly from its embedded data.
+$('save-html').addEventListener('click', function () {
+  var payload = { scores: exportScores(), evidence: state.evidence || null,
+                  saved_at: new Date().toISOString() };
+  var clone = document.documentElement.cloneNode(true);
+  clone.querySelector('#viewer-data').textContent = JSON.stringify(payload).replace(/</g, '\\u003c');
+  ['#sections', '#toc', '#sum-body', '#sum-foot', '#radar', '#overall-line', '#crate-line', '#status'].forEach(function (sel) {
+    var n = clone.querySelector(sel); if (n) n.innerHTML = '';
+  });
+  ['#report', '#summarybar', '#exportbar', '#crate-line', '#load-warn'].forEach(function (sel) {
+    var n = clone.querySelector(sel); if (n) n.setAttribute('hidden', '');
+  });
+  clone.querySelector('#loaded-scores').textContent = 'none loaded';
+  clone.querySelector('#loaded-evidence').textContent = 'none loaded';
+  var crate = (state.scoresCrate || (state.evidence && state.evidence.crate && state.evidence.crate['@id']) || 'review')
+    .replace(/^ark:\d+\//, '').replace(/[^A-Za-z0-9._-]+/g, '-').slice(0, 80);
+  var name = 'ai-ready-review-' + crate + '.html';
+  download(name, '<!DOCTYPE html>\n' + clone.outerHTML, 'text/html');
+  setStatus('saved ' + name + ' — one file with scores' + (state.evidence ? ' and evidence' : '') + '; send it to share');
+});
+
+// ---- startup ----------------------------------------------------------------
+function boot() {
+  var embedded = {};
+  try { embedded = JSON.parse(dataEl.textContent || '{}') || {}; } catch (err) { embedded = {}; }
+  if (embedded.scores) applyScores(embedded.scores, 'embedded in this page');
+  if (embedded.evidence) applyEvidence(embedded.evidence, 'embedded in this page');
+  var params = new URLSearchParams(location.search);
+  var urls = ['scores', 'evidence'].map(function (k) { return params.get(k); }).filter(Boolean);
+  if (!urls.length) { afterLoad(); return; }
+  var errors = [];
+  Promise.all(urls.map(function (u) {
+    return fetch(u).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    }).then(function (t) { ingest(t, u.split('/').pop() || u); })
+      .catch(function (err) { errors.push(u + ': ' + err.message); });
+  })).then(function () {
+    afterLoad();
+    if (errors.length) {
+      var w = $('load-warn');
+      w.hidden = false;
+      w.textContent = (w.textContent ? w.textContent + ' ' : '') + 'Could not load ' + errors.join('; ');
+    }
+  });
+}
+boot();
+})();
+</script>
+</body>
+</html>

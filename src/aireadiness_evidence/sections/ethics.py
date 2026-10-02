@@ -52,6 +52,11 @@ def extract_4a(ctx):
         "at_risk": _first(root, "atRiskPopulations", "d4d:atRiskPopulations"),
         "irb": _first(root, "irb", "irbProtocolId", "d4d:irb"),
         "maintenance_plan": root.get("rai:dataReleaseMaintenancePlan"),
+        # Croissant RAI: who supplied the raw data and who annotated it, how
+        "raw_data": root.get("rai:dataCollectionRawData"),
+        "annotation_platform": root.get("rai:dataAnnotationPlatform"),
+        "annotators": root.get("rai:annotatorDemographics"),
+        "timeframe": root.get("rai:dataCollectionTimeframe"),
     }
 
 
@@ -62,7 +67,8 @@ def transform_4a(ctx, raw):
     dmp_check = ctx.net.check_url(dmp_links[0].rstrip(".,;")) if dmp_links else None
     consent_blob = " ".join(str(raw[k] or "") for k in
                             ("consent", "collection", "exemption",
-                             "human_subjects", "ethical_review"))
+                             "human_subjects", "ethical_review", "raw_data",
+                             "annotation_platform"))
     return {**raw, "irb_signals": irb_signals, "dmp_check": dmp_check,
             "aiml_use_hits": sorted(
                 {m.group(0) for m in AI_ML_USE_RE.finditer(consent_blob)})[:6],
@@ -75,6 +81,15 @@ def present_4a(facts):
     items = [
         ev.text("Collection description (rai:dataCollection)",
                 ev.clip(facts["collection"])),
+        ev.sub(ev.text("Raw data source (rai:dataCollectionRawData)",
+                       ev.clip(facts["raw_data"]))),
+        ev.sub(ev.text("Collection timeframe (rai:dataCollectionTimeframe)",
+                       ev.clip(facts["timeframe"]))),
+        ev.sub(ev.text("Annotation platform / workforce "
+                       "(rai:dataAnnotationPlatform)",
+                       ev.clip(facts["annotation_platform"]))),
+        ev.sub(ev.text("Annotator demographics (rai:annotatorDemographics)",
+                       ev.clip(facts["annotators"]))),
         ev.text("Ethics reviewers (ethicalReview)", ev.clip(facts["ethical_review"])),
         ev.text("Human subjects research", ev.clip(facts["human_subjects"])),
         ev.sub(ev.text("Human subjects exemption", ev.clip(facts["exemption"]))),
@@ -107,7 +122,8 @@ def present_4a(facts):
 def estimate_4a(facts):
     described = any(facts[k] for k in
                     ("collection", "ethical_review", "human_subjects",
-                     "consent", "irb")) or facts["irb_signals"]
+                     "consent", "irb", "raw_data", "annotation_platform")) \
+        or facts["irb_signals"]
     if not described:
         return ev.estimate("0", "no acquisition, consent, or ethics-review "
                                 "description anywhere in the metadata")
@@ -277,4 +293,10 @@ def estimate_4d(facts):
     if facts["confidentiality"]:
         return ev.estimate("1", "confidentiality level stated in prose, not "
                                 "a standard vocabulary")
+    if ev.substantive(facts["sensitive"], min_chars=40):
+        return ev.estimate("1", "sensitivity stated in prose "
+                                "(rai:personalSensitiveInformation), not a "
+                                "standard security label",
+                           "score 0 if the statement does not say whether "
+                           "protection is required")
     return ev.estimate("0", "no security-level metadata")
