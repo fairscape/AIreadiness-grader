@@ -25,337 +25,682 @@
   {%- endif -%}
   {%- if it.detail %}<span class="detail">{{ it.detail | linkify }}</span>{% endif -%}
 {%- endmacro %}
-
+{% set ns = namespace(n=0, gaps=0, gates=0) %}
+{% for s in r.sections %}
+  {% for c in s.criteria %}
+    {% set ns.n = ns.n + 1 %}
+    {% if c.score == 0 or c.score == 1 %}{% set ns.gaps = ns.gaps + 1 %}{% endif %}
+    {% if c.gate_min %}{% set ns.gates = ns.gates + 1 %}{% endif %}
+  {% endfor %}
+{% endfor %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI-Readiness Agentic Review — {{ r.crate.name }}</title>
+<title>AI-readiness machine first pass — {{ r.crate.name }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1a1a1a; --muted: #6b6b6b; --line: #d9d9d9; --bg: #fafaf8;
-    --card: #ffffff; --accent: #b45309; --ok: #15803d; --bad: #b91c1c;
-    --mid: #a16207; --unknown: #6b6b6b; --gate: #7c2d12;
+    --ink: #1a1714; --muted: #6b6258; --line: #e4ddd3; --bg: #f3efe7;
+    --card: #fffcf7; --accent: #215c5c; --accent-soft: #e4f0ee;
+    --est: #b45309; --est-soft: #fdf4e7; --ok: #157a43; --ok-soft: #e7f6ee;
+    --bad: #b42318; --bad-soft: #fdeceb; --gate: #9a3412; --gate-soft: #fff4ed;
+    --na: #6b7280;
+    --shadow: 0 1px 2px rgba(28, 24, 20, 0.06), 0 8px 24px rgba(28, 24, 20, 0.04);
+    --appbar-h: 56px; --dock-h: 64px; --radius: 12px;
+    --font: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink);
-         font: 14px/1.45 "Source Sans 3", "Segoe UI", system-ui, sans-serif; }
-  .wrap { max-width: 1000px; margin: 0 auto; padding: 0 24px; }
-  .mono { font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
-          font-size: 0.86em; }
+  html, body { height: 100%; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 var(--font); }
   a { color: var(--accent); }
-  header { border-bottom: 2px solid var(--ink); background: var(--card);
-           padding: 16px 0 12px; }
-  h1 { font-size: 1.25rem; margin: 0 0 2px; }
-  h2 { font-size: 1.05rem; border-bottom: 1px solid var(--line);
-       padding-bottom: 4px; margin: 26px 0 10px; display: flex;
-       align-items: baseline; justify-content: space-between; gap: 12px; }
-  .meta { color: var(--muted); font-size: 0.85rem; }
-  .badge { display: inline-block; border: 1px solid var(--gate);
-           color: var(--gate); border-radius: 2px; font-size: 0.68rem;
-           padding: 0 5px; margin-left: 8px; vertical-align: 2px;
-           text-transform: uppercase; letter-spacing: 0.05em; }
+  .mono { font-family: var(--mono); font-size: 0.86em; }
+  .btn { border: 1px solid var(--line); background: var(--card); color: var(--ink);
+         border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 0.85rem; cursor: pointer; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn.primary:hover { filter: brightness(1.08); color: #fff; }
+  .kbd { font-family: var(--mono); font-size: 0.72rem; border: 1px solid var(--line);
+         border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; color: var(--ink); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+  @keyframes enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
-  .method { background: var(--card); border: 1px solid var(--line);
-            border-left: 3px solid var(--accent); border-radius: 2px;
-            padding: 9px 14px; margin: 14px 0; font-size: 0.85rem;
-            color: #333; }
-  .method p { margin: 0 0 5px; }
-  .method p:last-child { margin-bottom: 0; }
+  .appbar { position: sticky; top: 0; z-index: 30; background: rgba(255,252,247,0.92);
+            backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .appbar-row { display: flex; align-items: center; gap: 14px; padding: 8px 16px;
+                min-height: var(--appbar-h); }
+  .brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; flex: 1; }
+  .brand .kicker { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+                   color: var(--accent); font-weight: 700; white-space: nowrap; }
+  .brand h1 { font-size: 0.92rem; margin: 0; font-weight: 600; white-space: nowrap;
+              overflow: hidden; text-overflow: ellipsis; }
+  .stats { display: flex; gap: 14px; align-items: center; font-size: 0.8rem; color: var(--muted);
+           white-space: nowrap; }
+  .stats b { color: var(--ink); font-size: 0.92rem; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .seg button { border: 0; background: transparent; padding: 5px 10px; font: inherit;
+                font-size: 0.8rem; cursor: pointer; color: var(--muted); }
+  .seg button.on { background: var(--accent); color: #fff; }
+  .banner { padding: 6px 16px; font-size: 0.82rem; background: var(--gate-soft);
+            color: var(--gate); border-bottom: 1px solid #f0d0b8; display: none; }
+  .banner.show { display: block; }
+  .banner.ok { background: var(--ok-soft); color: var(--ok); border-bottom-color: #bfe4cc; }
 
-  .summary { display: flex; gap: 26px; align-items: flex-start;
-             flex-wrap: wrap; background: var(--card);
-             border: 1px solid var(--line); border-radius: 2px;
-             padding: 14px 16px; margin: 14px 0 4px; }
-  .total { font-size: 2.1rem; font-weight: 700; line-height: 1; }
-  .total small { font-size: 0.95rem; font-weight: 400; color: var(--muted); }
-  .totbox { flex: 0 0 auto; min-width: 150px; }
-  .totbox .counts { font-size: 0.82rem; color: var(--muted); margin-top: 8px;
-                    line-height: 1.7; }
-  .gatever { margin-top: 10px; font-size: 0.83rem; }
-  .sectable { flex: 1 1 300px; border-collapse: collapse; font-size: 0.86rem; }
-  .sectable th { text-align: left; font-size: 0.72rem; text-transform: uppercase;
-                 letter-spacing: 0.05em; color: var(--muted); font-weight: 600;
-                 border-bottom: 1px solid var(--line); padding: 2px 10px 3px 0; }
-  .sectable td { padding: 3px 10px 3px 0; border-bottom: 1px dotted #ececea; }
-  .sectable td.num { text-align: right; white-space: nowrap; }
-  .sectable tr:last-child td { border-bottom: 0; }
-  .radar-box { flex: 0 0 auto; }
-  .radar-box svg { display: block; }
-  .radar-cap { font-size: 0.78rem; color: var(--muted); text-align: center; }
+  .shell { display: grid; grid-template-columns: 248px 1fr; height: calc(100vh - var(--appbar-h)); }
+  body.view-focus { overflow: hidden; display: flex; flex-direction: column; }
+  body.view-focus .appbar { flex: 0 0 auto; }
+  body.view-focus .shell { flex: 1 1 auto; min-height: 0; height: auto; }
+  body.view-focus .dock { flex: 0 0 auto; }
+  body.view-focus footer { display: none; }
+  .sidenav { overflow: auto; padding: 12px 10px 24px 12px; border-right: 1px solid var(--line);
+             background: #efeae1; }
+  .stage { overflow: auto; min-width: 0; padding: 16px 20px 28px; }
+  @media (max-width: 980px) {
+    .shell { grid-template-columns: 1fr; height: auto; }
+    .sidenav { display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden;
+               border-right: 0; border-bottom: 1px solid var(--line); padding: 8px 12px; }
+    .nav-radar, .nav-legend { display: none; }
+    .nav-sec { min-width: 160px; }
+    body.view-focus .shell { height: auto; min-height: calc(100vh - var(--appbar-h) - var(--dock-h)); }
+  }
 
-  .chip { display: inline-block; min-width: 20px; text-align: center;
-          border: 1px solid var(--line); border-radius: 2px; font-weight: 700;
-          font-size: 0.8rem; padding: 0 6px; }
-  .chip.s2 { border-color: var(--ok); color: #fff; background: var(--ok); }
-  .chip.s1 { border-color: var(--mid); color: #fff; background: var(--mid); }
-  .chip.s0 { border-color: var(--bad); color: #fff; background: var(--bad); }
-  .chip.sna { border-color: var(--line); color: var(--muted);
-              background: #f1f1ef; font-weight: 400; }
+  .nav-sec { background: var(--card); border: 1px solid transparent; border-radius: 10px;
+             padding: 8px 9px; margin-bottom: 6px; }
+  .nav-sec.active { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+  a.nav-title { display: flex; justify-content: space-between; gap: 8px; color: var(--ink);
+                text-decoration: none; font-weight: 700; font-size: 0.84rem; }
+  .nav-gate { font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase;
+              color: var(--gate); border: 1px solid var(--gate); border-radius: 999px;
+              padding: 0 6px; font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0 2px; }
+  .chip { display: inline-block; min-width: 28px; text-align: center; border: 1px dashed var(--line);
+          border-radius: 5px; font-size: 0.68rem; line-height: 1.55; text-decoration: none;
+          color: var(--muted); font-family: var(--mono); padding: 0 4px; }
+  .chip.current { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .chip.s2 { border: 1px solid var(--ok); color: var(--ok); background: var(--ok-soft); font-weight: 700; }
+  .chip.s1 { border: 1px solid var(--est); color: var(--est); background: var(--est-soft); font-weight: 700; }
+  .chip.s0 { border: 1px solid var(--bad); color: var(--bad); background: var(--bad-soft); font-weight: 700; }
+  .chip.sna { border: 1px solid var(--line); color: var(--muted); background: #f1f3f5; text-decoration: line-through; }
   .chip.sx { color: var(--muted); }
+  .chip.gatechip:not(.s2):not(.s1):not(.s0):not(.sna) { border-style: solid; border-color: #e8c4a8; }
+  .sec-stat { font-size: 0.72rem; color: var(--muted); }
+  .nav-radar { margin-top: 10px; background: var(--card); border-radius: 10px; padding: 6px; }
+  .nav-radar svg { display: block; width: 100%; height: auto; }
+  .nav-legend { font-size: 0.7rem; color: var(--muted); padding: 0 4px 8px; }
 
-  .criterion { background: var(--card); border: 1px solid var(--line);
-               border-radius: 2px; padding: 10px 14px; margin: 0 0 10px; }
-  .criterion.s0 { border-left: 3px solid var(--bad); }
-  .criterion.s1 { border-left: 3px solid var(--mid); }
-  .criterion.s2 { border-left: 3px solid var(--ok); }
-  .criterion.sna { border-left: 3px solid var(--line); }
-  .chead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-  .chead h3 { margin: 0; font-size: 0.98rem; }
-  .chead .lab { font-size: 0.78rem; color: var(--muted);
-                text-transform: uppercase; letter-spacing: 0.05em; }
-  .practice { color: var(--muted); font-style: italic; margin: 3px 0 6px;
-              font-size: 0.84rem; }
-  .rule { font-size: 0.82rem; color: #333; background: #fcfcfa;
-          border: 1px solid var(--line); border-radius: 2px;
-          padding: 3px 8px; margin: 0 0 7px; }
-  .rule b { font-weight: 700; }
-  .rationale { margin: 0 0 7px; }
-  .sub { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em;
-         color: var(--muted); font-weight: 600; margin: 7px 0 2px; }
-  ul.cite { margin: 0; padding-left: 18px; font-size: 0.85rem; }
-  ul.cite li { margin: 1px 0; overflow-wrap: break-word; }
-  ul.cite.gaps li { color: #333; }
-  .disagree { font-size: 0.8rem; color: var(--gate); margin-top: 7px; }
+  body.view-focus .verdict,
+  body.view-focus .gaps-card,
+  body.view-focus .domain > h2,
+  body.view-focus .sec-blurb { display: none; }
+  body.view-focus .criterion { display: none; }
+  body.view-focus .criterion.is-current { display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    body.view-focus .criterion.is-current { animation: enter 0.22s ease; }
+  }
+  body.view-focus .stage { padding: 12px 16px 8px; }
+  body.view-list .dock { display: none; }
+  body.view-list .criterion.is-current { box-shadow: 0 0 0 2px var(--accent); }
 
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+          padding: 16px 18px; margin: 0 0 14px; box-shadow: var(--shadow); }
+  .verdict h2, .gaps-card h2 { margin: 0 0 8px; font-size: 1.1rem; }
+  .verdict-hero { display: flex; gap: 28px; align-items: flex-start; flex-wrap: wrap; }
+  .overall-num { font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+  .overall-num .unit { font-size: 1.1rem; font-weight: 600; color: var(--muted); }
+  .counts { font-size: 0.85rem; color: var(--muted); margin-top: 8px; line-height: 1.7; }
+  .gatever { margin-top: 8px; font-size: 0.85rem; }
+  .sectable { border-collapse: collapse; font-size: 0.86rem; width: 100%; }
+  .sectable th { text-align: left; padding: 6px 10px; font-size: 0.72rem; text-transform: uppercase;
+                 letter-spacing: 0.05em; color: var(--muted); border-bottom: 1px solid var(--line); }
+  .sectable td { padding: 6px 10px; border-bottom: 1px dotted #e4ddd3; }
+  .sectable th.num, .sectable td.num { text-align: right; }
+  .muted { color: var(--muted); font-size: 0.85rem; }
+  .method { font-size: 0.85rem; color: var(--muted); max-width: 62ch; }
+
+  .domain > h2 { font-size: 1.3rem; margin: 22px 0 6px; display: flex; align-items: baseline;
+                 justify-content: space-between; gap: 12px; flex-wrap: wrap; scroll-margin-top: 12px; }
+  .sec-kicker { display: block; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
+                color: var(--muted); font-weight: 700; }
+  .axis-score { font-size: 0.78rem; color: var(--muted); border: 1px solid var(--line);
+                border-radius: 999px; padding: 2px 10px; background: var(--card); }
+  .badge { display: inline-block; border: 1px solid var(--gate); color: var(--gate);
+           border-radius: 999px; font-size: 0.68rem; padding: 0 7px; margin-left: 6px;
+           text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+
+  .criterion { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+               padding: 18px 20px 16px; margin: 0 0 12px; box-shadow: var(--shadow);
+               scroll-margin-top: 12px; border-left: 4px solid var(--line); }
+  .criterion.s2 { border-left-color: var(--ok); }
+  .criterion.s1 { border-left-color: var(--est); }
+  .criterion.s0 { border-left-color: var(--bad); }
+  .criterion.sna { border-left-color: var(--na); }
+  body.view-focus .criterion.is-current { min-height: calc(100% - 8px); margin: 0; }
+  .crit-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .crit-id { font-family: var(--mono); font-size: 0.9rem; color: var(--accent); font-weight: 700; }
+  .crit-head h3 { margin: 0; font-size: 1.55rem; letter-spacing: -0.03em; font-weight: 600; }
+  .lab { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .practice { color: var(--muted); font-style: italic; margin: 4px 0 12px; font-size: 0.9rem; }
+
+  .crit-body { display: grid; grid-template-columns: 1fr minmax(300px, 400px); gap: 22px; }
+  @media (max-width: 859px) { .crit-body { grid-template-columns: 1fr; } }
+  .pane-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+              text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+  .score-hero { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; }
+  .score-n { width: 36px; height: 36px; border-radius: 10px; display: inline-flex; align-items: center;
+             justify-content: center; font-weight: 800; font-family: var(--mono); font-size: 1.1rem;
+             background: #efeae1; }
+  .criterion.s2 .score-n { background: var(--ok-soft); color: var(--ok); }
+  .criterion.s1 .score-n { background: var(--est-soft); color: var(--est); }
+  .criterion.s0 .score-n { background: var(--bad-soft); color: var(--bad); }
+  .score-name { font-weight: 700; font-size: 1.05rem; }
+  .rule { font-size: 0.82rem; color: #333; background: #fcfcfa; border: 1px solid var(--line);
+          border-radius: 8px; padding: 8px 10px; margin: 0 0 10px; }
+  .rationale { margin: 0 0 10px; font-size: 0.95rem; }
+  .gaps { background: var(--gate-soft); border-radius: 12px; padding: 12px 14px; margin: 0 0 12px; }
+  .gaps.none { background: var(--ok-soft); color: var(--ok); }
+  .gaps ul { margin: 4px 0 0; padding-left: 18px; }
+  .gaps li { margin: 3px 0; }
+  .cite { margin: 0; padding-left: 18px; font-size: 0.85rem; }
+  .cite li { margin: 1px 0; overflow-wrap: break-word; }
+  .disagree { font-size: 0.82rem; color: var(--gate); background: var(--est-soft);
+              border-radius: 8px; padding: 8px 10px; margin: 0 0 10px; }
+  .cap-note { font-size: 0.82rem; color: var(--gate); margin: 0 0 10px; }
   details.raw { margin-top: 8px; font-size: 0.85rem; }
-  details.raw > summary { cursor: pointer; color: var(--muted);
-                          font-size: 0.8rem; }
-  .item { display: flex; gap: 12px; padding: 2px 0; font-size: 0.84rem;
-          border-top: 1px dotted #ececea; }
-  .item .label { flex: 0 0 280px; font-weight: 600; }
-  .item.subitem .label { color: var(--muted); font-weight: 400;
-                         padding-left: 14px; }
+  details.raw > summary { cursor: pointer; color: var(--muted); font-size: 0.8rem; }
+  .item { display: flex; gap: 12px; padding: 4px 0; font-size: 0.84rem;
+          border-top: 1px dotted #e4ddd3; }
+  .item .label { flex: 0 0 42%; font-weight: 600; }
+  .item.subitem .label { color: var(--muted); font-weight: 400; padding-left: 14px; }
   .item .value { flex: 1; min-width: 0; overflow-wrap: break-word; }
   .pre { white-space: pre-line; }
   .detail, .detail-plain { color: var(--muted); font-size: 0.8rem; }
   .detail::before { content: " — "; }
-  .yes { color: var(--ok); font-weight: 600; }
-  .no { color: var(--bad); font-weight: 600; }
-  .na { color: var(--unknown); }
+  .yes { color: var(--ok); font-weight: 700; }
+  .no { color: var(--bad); font-weight: 700; }
+  .na { color: var(--na); }
   .pct-bar { display: inline-block; width: 80px; height: 7px; background: #eee;
              border-radius: 2px; margin-right: 6px; vertical-align: 1px; }
-  .pct-bar span { display: block; height: 100%; background: var(--accent);
-                  border-radius: 2px; }
+  .pct-bar span { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
   details.entity { display: inline; }
   details.entity summary { cursor: pointer; color: var(--accent); }
-  details.entity pre { background: #f4f4f2; border: 1px solid var(--line);
-                       border-radius: 2px; padding: 8px; overflow-x: auto;
+  details.entity pre { background: var(--bg); border: 1px solid var(--line);
+                       border-radius: 8px; padding: 8px; overflow-x: auto;
                        font-size: 0.75rem; max-height: 300px; margin: 4px 0; }
-  footer { margin: 30px 0 40px; font-size: 0.8rem; color: var(--muted); }
-  @media print { body { background: #fff; } .criterion { break-inside: avoid; } }
+
+  .dock { position: sticky; bottom: 0; z-index: 25; background: rgba(255,252,247,0.95);
+          backdrop-filter: blur(10px); border-top: 1px solid var(--line);
+          display: flex; align-items: center; gap: 10px; padding: 8px 16px; min-height: var(--dock-h); }
+  .dock > .btn { flex: 0 0 auto; }
+  .dock-pos { font-family: var(--mono); font-size: 0.8rem; color: var(--muted); min-width: 56px; }
+  .dock-id { font-weight: 700; min-width: 2.2em; }
+  .rail { display: flex; gap: 3px; flex: 1; align-items: center; justify-content: center;
+          max-width: 520px; margin: 0 8px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; border: 0; padding: 0; background: #d4cbbd;
+         cursor: pointer; flex: 0 0 auto; }
+  .dot.current { width: 11px; height: 11px; background: var(--accent); }
+  .dot.s2 { background: var(--ok); }
+  .dot.s1 { background: var(--est); }
+  .dot.s0 { background: var(--bad); }
+  .dot.sna { background: var(--na); }
+  .dot.gate:not(.s2):not(.s1):not(.s0) { box-shadow: 0 0 0 1.5px #e8c4a8; }
+  .dock-keys { margin-left: auto; display: flex; align-items: center; gap: 10px;
+               font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+  .key-pair { display: inline-flex; align-items: center; gap: 5px; }
+  .btn .kbd { margin-left: 6px; font-size: 0.68rem; }
+  @media (max-width: 1100px) { .dock-keys { display: none; } }
+  @media (max-width: 900px) { .rail { display: none; } .btn .kbd { display: none; } }
+
+  .overlay { position: fixed; inset: 0; background: rgba(26,23,20,0.45); z-index: 50;
+             display: none; align-items: center; justify-content: center; padding: 24px; }
+  .overlay.show { display: flex; }
+  .sheet { background: var(--card); border-radius: 16px; max-width: 640px; width: 100%;
+           padding: 24px; box-shadow: var(--shadow); max-height: 90vh; overflow: auto; }
+  .sheet h2 { margin: 0 0 8px; }
+  .sheet .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 14px 0; }
+  .sheet .step { background: var(--accent-soft); border-radius: 10px; padding: 10px; font-size: 0.82rem; }
+  .sheet .step .n { display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center;
+                    background: var(--accent); color: #fff; border-radius: 999px; font-size: 0.72rem; font-weight: 700; margin-right: 4px; }
+  .sheet .step p { margin: 4px 0 0; color: var(--muted); }
+  .sheet .keys { display: grid; grid-template-columns: minmax(88px, auto) 1fr; gap: 10px 16px;
+                 font-size: 0.92rem; margin: 14px 0 16px; align-items: center; }
+  @media (max-width: 720px) {
+    .sheet .steps { grid-template-columns: 1fr 1fr; }
+    .appbar-row { flex-wrap: wrap; }
+    .brand { flex: 1 1 auto; }
+    .stats { flex: 1 1 100%; justify-content: flex-start; }
+  }
+  footer { margin: 24px 0 12px; font-size: 0.8rem; color: var(--muted); }
+  @media print { body { background: #fff; } .dock, .overlay, .appbar .seg, #help-btn { display: none !important; }
+                 .criterion { break-inside: avoid; display: block !important; } }
 </style>
 </head>
-<body>
+<body class="view-focus">
 
-<header>
-  <div class="wrap">
-    <h1>AI-Readiness Review — agentic pre-scoring</h1>
-    <div class="meta">
-      {{ r.rubric }} · evidence generated {{ r.generated }}
-      {%- if not r.network_checks %} · <strong>network checks disabled</strong>{% endif %}
+<header class="appbar">
+  <div class="appbar-row">
+    <div class="brand">
+      <div class="kicker">AI-readiness</div>
+      <h1>Machine first pass</h1>
     </div>
-    <div style="margin-top:6px">
-      <strong>{{ r.crate.name }}</strong>
-      <span class="mono">{{ r.crate["@id"] }}</span>
-      <span class="meta"> · {{ r.crate.identifier }}{% if r.crate.version %} · v{{ r.crate.version }}{% endif %}</span>
+    <div class="stats" title="Unweighted average of the seven domain percentages">
+      <span>Overall <b>{{ r.total.overall_score }}%</b></span>
+      <span>{{ r.total.points }}/{{ r.total.max }} pts</span>
+      <span id="gate-line" class="{% if r.total.gate_pass == false %}no{% elif r.total.gate_pass %}yes{% endif %}">
+        {%- if r.total.gate_pass == false %}gates failing
+        {%- elif r.total.gate_pass %}gates pass
+        {%- else %}{{ r.total.gate_label }}{% endif %}</span>
     </div>
-    {% if r.artifacts.datasheets %}
-    <div style="margin-top:6px;font-size:0.88rem">
-      {% for d in r.artifacts.datasheets %}<a href="{{ d | href }}">Datasheet — {{ d }}</a> {% endfor %}
-    </div>
-    {% endif %}
+    <span class="seg" role="group" aria-label="View">
+      <button type="button" id="view-focus" class="on">One</button>
+      <button type="button" id="view-list">All</button>
+    </span>
+    <button class="btn" id="help-btn" type="button">Shortcuts</button>
+  </div>
+  <div class="banner{% if r.total.gate_pass == false %} show{% elif r.total.gate_pass %} show ok{% endif %}" id="gate-banner">
+    {%- if r.total.gate_pass == false -%}
+      Not AI-ready — {{ r.gate_failures | join('; ') }} · overall still {{ r.total.overall_score }}%
+    {%- elif r.total.gate_pass -%}
+      Estimated gates pass · overall {{ r.total.overall_score }}%
+    {%- endif -%}
   </div>
 </header>
 
-<div class="wrap">
-
-  <div class="method">
-    <p><strong>These scores were produced by a machine, not a reviewer.</strong>
-    Each of the {{ r.sections | map(attribute='criteria') | map('length') | sum }}
-    criteria was scored by a grading agent that saw only two things: the
-    criterion's rubric text (practice, questions, 0/1/2 rules) and the evidence
-    extracted from this crate for that criterion. It saw no other criterion's
-    verdict, no prior scores for this or any other dataset, and nothing about
-    the project beyond the crate's own metadata.</p>
-    <p>The evidence underneath every score is the same deterministic extraction
-    that fills the blank human-review page — the agent judged which rule
-    matched; it did not gather the facts. Treat this document as a first pass
-    to confirm or overturn: expand <em>Extracted evidence</em> on any criterion
-    to see exactly what the verdict was based on.
-    {%- if r.grader %} Scored by {{ r.grader }}.{% endif %}</p>
-    <p>Scoring follows the v1.8 methodology: the overall score is the
-    unweighted average of the section percentages (N/A criteria leave the
-    denominator); the dependency rules 1.b&nbsp;≤&nbsp;1.a and
-    6.a&nbsp;≤&nbsp;2.c are applied automatically; and the gates — FAIRness
-    (0.a&nbsp;=&nbsp;2, others&nbsp;&gt;&nbsp;0), Provenance
-    (all&nbsp;&gt;&nbsp;0), Standards (2.c&nbsp;&gt;&nbsp;0), Ethics
-    (all&nbsp;&gt;&nbsp;0) — are reported independently; a failure marks the
-    result "Gating FAIL" but the score is still computed.</p>
-  </div>
-
-  <div class="summary">
-    <div class="totbox">
-      <div class="total">{{ r.total.overall_score }}<small>%</small></div>
-      <div class="meta">overall AI-readiness score
-        (unweighted average of section percentages)
-        {%- if r.total.gate_label == "Gating FAIL" %} · <span class="no">Gating FAIL</span>
-        {%- elif r.total.gate_pass %} · <span class="yes">gates passed</span>
-        {%- else %} · <span class="na">{{ r.total.gate_label }}</span>{% endif %}</div>
-      <div class="meta">{{ r.total.points }} / {{ r.total.max }} points
-        ({{ r.total.percentage }}%{% if r.total.counts.na %};
-        {{ r.total.counts.na }} N/A excluded from the denominator{% endif %})</div>
-      <div class="counts">
-        <span class="chip s2">2</span> {{ r.total.counts.substantive }} substantive<br>
-        <span class="chip s1">1</span> {{ r.total.counts.partial }} partial<br>
-        <span class="chip s0">0</span> {{ r.total.counts.absent }} absent
-        {%- if r.total.counts.na %}<br><span class="chip sna">N/A</span> {{ r.total.counts.na }} not applicable{% endif %}
-        {%- if r.total.counts.unscored %}<br><span class="chip sx">–</span> {{ r.total.counts.unscored }} not scored{% endif %}
+<div class="shell">
+  <nav class="sidenav" aria-label="Criteria">
+    {% for s in r.sections %}
+    <div class="nav-sec" id="nav-sec{{ s.number }}">
+      <a class="nav-title" href="#sec{{ s.number }}">
+        <span>{{ s.number }}. {{ s.title }}</span>
+        {% if s.gating %}<span class="nav-gate">{% if s.gate_failed %}gate fail{% else %}gate{% endif %}</span>{% endif %}
+      </a>
+      <div class="chips">
+        {% for c in s.criteria %}
+        {% set cls = 'na' if c.score == 'N/A' else (c.score if c.score is not none else 'x') %}
+        <a class="chip s{{ cls }}{% if c.gate_min %} gatechip{% endif %}" data-chip="{{ c.id }}"
+           href="#c{{ c.id | replace('.', '-') }}" title="{{ c.id }} {{ c.name }}">{{ c.id.split('.')[1] }}</a>
+        {% endfor %}
       </div>
-      {% for g in r.gating %}
-      <div class="gatever">
-        <strong>Gate — {{ g.number }}. {{ g.title }}:</strong>
-        {% if g.passed %}<span class="yes">passed</span>{% else %}<span class="no">Gating FAIL</span>{% endif %}
-        <span class="meta">({{ g.points }}/{{ g.max }}{% if g.failures %} — {{ g.failures | join('; ') }}{% endif %})</span>
-      </div>
-      {% endfor %}
-      <div class="meta" style="margin-top:6px">Gate thresholds: 0.a must
-        score 2; every other FAIRness, Provenance, and Ethics criterion, and
-        2.c (Standards), must score above 0.</div>
+      <div class="sec-stat">{{ s.points }}/{{ s.max }} · {{ s.percentage }}%</div>
     </div>
-
-    <div class="radar-box">
+    {% endfor %}
+    <div class="nav-radar">
       <svg width="{{ r.radar.width }}" height="{{ r.radar.height }}"
            viewBox="0 0 {{ r.radar.width }} {{ r.radar.height }}"
            role="img" aria-label="Per-section score radar chart">
         {% for ring in r.radar.rings %}
-        <polygon points="{{ ring.points }}" fill="none" stroke="#e2e2df"
-                 stroke-width="1"></polygon>
+        <polygon points="{{ ring.points }}" fill="none" stroke="#e4ddd3" stroke-width="1"></polygon>
         {% endfor %}
         {% for pt in r.radar.spokes %}
         <line x1="{{ r.radar.cx }}" y1="{{ r.radar.cy }}"
               x2="{{ pt.split(',')[0] }}" y2="{{ pt.split(',')[1] }}"
-              stroke="#e2e2df" stroke-width="1"></line>
+              stroke="#efeae1" stroke-width="1"></line>
         {% endfor %}
-        <polygon points="{{ r.radar.polygon }}" fill="rgba(180,83,9,0.14)"
-                 stroke="#b45309" stroke-width="2"></polygon>
+        <polygon points="{{ r.radar.polygon }}" fill="rgba(33,92,92,0.14)"
+                 stroke="#215c5c" stroke-width="2"></polygon>
         {% for v in r.radar.vertices %}
-        <circle cx="{{ v.xy.split(',')[0] }}" cy="{{ v.xy.split(',')[1] }}"
-                r="3" fill="#b45309"></circle>
+        <circle cx="{{ v.xy.split(',')[0] }}" cy="{{ v.xy.split(',')[1] }}" r="3" fill="#215c5c"></circle>
         {% endfor %}
         {% for a in r.radar.axes %}
         <text x="{{ a.x }}" y="{{ a.y }}" text-anchor="{{ a.anchor }}"
-              font-size="10" fill="#1a1a1a"
-              font-family="Source Sans 3, Segoe UI, system-ui, sans-serif"
-          >{{ a.number }}. {{ a.title }}</text>
+              font-size="10" fill="#1a1714"
+              font-family="IBM Plex Sans, system-ui, sans-serif">{{ a.number }}. {{ a.title }}</text>
         <text x="{{ a.x }}" y="{{ a.y + 11 }}" text-anchor="{{ a.anchor }}"
-              font-size="9" fill="#6b6b6b"
-              font-family="Source Sans 3, Segoe UI, system-ui, sans-serif"
-          >{{ a.points }}/{{ a.max }}</text>
+              font-size="9" fill="#6b6258"
+              font-family="IBM Plex Sans, system-ui, sans-serif">{{ a.points }}/{{ a.max }}</text>
         {% endfor %}
       </svg>
-      <div class="radar-cap">Section score as % of that section's maximum</div>
+      <div class="nav-legend">Domain score as % of that domain's maximum</div>
     </div>
+  </nav>
 
-    <table class="sectable">
-      <tr><th>Section</th><th class="num">Points</th><th class="num">%</th><th>Criteria</th></tr>
-      {% for s in r.sections %}
-      <tr>
-        <td><a href="#sec{{ s.number }}">{{ s.number }}. {{ s.title }}</a>{% if s.gating %} *{% endif %}
-            {%- if s.gate_failed %} <span class="no" style="font-size:0.72rem">GATE FAIL</span>{% endif %}</td>
-        <td class="num">{{ s.points }} / {{ s.max }}</td>
-        <td class="num">{{ s.percentage }}%</td>
-        <td>{% for c in s.criteria %}{% set cls = 'na' if c.score == 'N/A' else (c.score if c.score is not none else 'x') %}<span class="chip s{{ cls }}"
-              title="{{ c.id }} {{ c.name }}">{{ c.score if c.score is not none else '–' }}</span> {% endfor %}</td>
-      </tr>
-      {% endfor %}
-      <tr><td colspan="4" class="meta">* carries a gate (FAIRness, Provenance,
-          Ethics; 2.c in Characterization). Overall score is the unweighted
-          average of the section percentages.</td></tr>
-    </table>
-  </div>
+  <div class="stage" id="stage">
 
-  {% if r.worst %}
-  <h2 id="gaps"><span>Where the points went</span></h2>
-  <table class="sectable" style="width:100%">
-    <tr><th>Criterion</th><th class="num">Score</th><th>First gap named by the grader</th></tr>
-    {% for c in r.worst %}
-    <tr>
-      <td><a href="#c{{ c.id | replace('.', '-') }}">{{ c.id }} {{ c.name }}</a></td>
-      <td class="num"><span class="chip s{{ c.score }}">{{ c.score }}</span></td>
-      <td>{{ c.gaps[0] if c.gaps else "—" }}</td>
-    </tr>
-    {% endfor %}
-  </table>
-  {% endif %}
-
-  {% for s in r.sections %}
-  <h2 id="sec{{ s.number }}">
-    <span>{{ s.number }}. {{ s.title }}{% if s.gating %}<span class="badge">Gating</span>{% endif %}
-      {%- if s.gate_failed %} <span class="no" style="font-size:0.8rem">Gating FAIL</span>{% endif %}</span>
-    <span class="meta">{{ s.points }} / {{ s.max }} · {{ s.percentage }}%</span>
-  </h2>
-
-    {% for c in s.criteria %}
-    {% set cls = 'na' if c.score == 'N/A' else (c.score if c.score is not none else 'x') %}
-    <div class="criterion s{{ cls }}"
-         id="c{{ c.id | replace('.', '-') }}">
-      <div class="chead">
-        <span class="chip s{{ cls }}"
-          >{{ c.score if c.score is not none else '–' }}</span>
-        <h3>{{ c.id }} {{ c.name }}</h3>
-        <span class="lab">{{ c.label }}</span>
-        {%- if c.gate_min %} <span class="badge">Gate: {{ "= 2" if c.gate_min == 2 else "> 0" }}</span>{% endif %}
-      </div>
-      <div class="practice">{{ c.practice }}</div>
-      {% if c.score is not none and c.scoring.get(c.score | string) %}
-      <div class="rule"><b>Rule for {{ c.score }}:</b> {{ c.scoring[c.score | string] }}</div>
-      {% endif %}
-      <p class="rationale">{{ c.rationale | linkify }}</p>
-
-      {% if c.cited %}
-      <div class="sub">Evidence cited</div>
-      <ul class="cite">{% for e in c.cited %}<li class="mono">{{ e | linkify }}</li>{% endfor %}</ul>
-      {% endif %}
-
-      {% if c.gaps %}
-      <div class="sub">What would raise the score</div>
-      <ul class="cite gaps">{% for g in c.gaps %}<li>{{ g | linkify }}</li>{% endfor %}</ul>
-      {% endif %}
-
-      {% if c.capped_by %}
-      <div class="disagree">Dependency cap applied — {{ c.capped_by }}. The
-        grading agent's own verdict was {{ c.uncapped_score }}; the rationale
-        below explains that verdict.</div>
-      {% endif %}
-
-      {% if c.estimate_differs %}
-      <div class="disagree">The rule-based estimate in the evidence pipeline
-        scored this {{ c.estimate_score }}; the grading agent scored it
-        {{ c.score }}. Worth a human look.</div>
-      {% endif %}
-
-      <details class="raw">
-        <summary>Extracted evidence ({{ c.evidence | length }} items)</summary>
-        {% for it in c.evidence %}
-        <div class="item{% if it.sub %} subitem{% endif %}">
-          <div class="label">{{ it.label }}</div>
-          <div class="value">{{ value(it) }}</div>
+    <section class="card verdict" id="verdict">
+      <h2>Machine verdict</h2>
+      <div class="verdict-hero">
+        <div>
+          <div class="overall-num">{{ r.total.overall_score }}<span class="unit">%</span></div>
+          <p class="muted" style="margin:6px 0 0">Unweighted average of the seven domains.
+            {{ r.total.points }} / {{ r.total.max }} points.</p>
+          <div class="counts">
+            <span class="chip s2">2</span> {{ r.total.counts.substantive }} substantive
+            · <span class="chip s1">1</span> {{ r.total.counts.partial }} partial
+            · <span class="chip s0">0</span> {{ r.total.counts.absent }} absent
+            {%- if r.total.counts.na %} · <span class="chip sna">N/A</span> {{ r.total.counts.na }}{% endif %}
+          </div>
+          {% for g in r.gating %}
+          <div class="gatever">
+            <strong>{{ g.number }}. {{ g.title }}</strong>
+            {% if g.passed %}<span class="yes">passed</span>{% else %}<span class="no">gate fail</span>{% endif %}
+            <span class="muted">({{ g.points }}/{{ g.max }}{% if g.failures %} — {{ g.failures | join('; ') }}{% endif %})</span>
+          </div>
+          {% endfor %}
         </div>
-        {% endfor %}
-      </details>
-    </div>
-    {% endfor %}
-  {% endfor %}
+        <table class="sectable" style="flex:1;min-width:280px">
+          <tr><th>Domain</th><th class="num">Points</th><th class="num">%</th></tr>
+          {% for s in r.sections %}
+          <tr>
+            <td><a href="#sec{{ s.number }}">{{ s.number }}. {{ s.title }}</a>
+                {%- if s.gate_failed %} <span class="no" style="font-size:0.72rem">GATE</span>{% endif %}</td>
+            <td class="num">{{ s.points }}/{{ s.max }}</td>
+            <td class="num">{{ s.percentage }}%</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+      <p class="method">These scores were produced by a machine, not a reviewer.
+        Each of the {{ ns.n }} criteria was scored from the rubric text and the evidence extracted for that criterion alone.
+        {%- if r.grader %} Scored by {{ r.grader }}.{% endif %}
+        Confirm or overturn each verdict. Fail a gate and the dataset is not AI-ready even if the percentage looks high.</p>
+    </section>
 
-  <footer>
-    {{ r.rubric }}. Crate: <span class="mono">{{ r.crate["@id"] }}</span>
-    ({{ "{:,}".format(r.inventory.entities) }} entities{% if r.inventory.sub_crates %},
-    {{ r.inventory.sub_crates | length }} sub-crates{% endif %}).
-    Evidence extracted {{ r.generated }}. Scores are machine-generated and
-    unconfirmed by a human reviewer.
-  </footer>
+    {% if r.worst %}
+    <section class="card gaps-card" id="gaps">
+      <h2>Where the points went</h2>
+      <p class="muted">{{ ns.gaps }} of {{ ns.n }} criteria scored below 2. Open one to read the rationale and the first named gap.</p>
+      <table class="sectable">
+        <tr><th>Criterion</th><th class="num">Score</th><th>First gap named by the grader</th></tr>
+        {% for c in r.worst %}
+        <tr>
+          <td><a href="#c{{ c.id | replace('.', '-') }}">{{ c.id }} {{ c.name }}</a></td>
+          <td class="num"><span class="chip s{{ c.score }}">{{ c.score }}</span></td>
+          <td>{{ c.gaps[0] if c.gaps else "—" }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </section>
+    {% endif %}
+
+    {% set idx = namespace(i=0) %}
+    {% for s in r.sections %}
+    <section class="domain" id="sec{{ s.number }}">
+      <h2>
+        <span><span class="sec-kicker">Domain {{ s.number }} of 7</span>{{ s.number }}. {{ s.title }}
+          {%- if s.gating %}<span class="badge">{% if s.gate_failed %}Gate fail{% else %}Gating{% endif %}</span>{% endif %}</span>
+        <span class="axis-score">{{ s.points }} / {{ s.max }} · {{ s.percentage }}%</span>
+      </h2>
+
+      {% for c in s.criteria %}
+      {% set cls = 'na' if c.score == 'N/A' else (c.score if c.score is not none else 'x') %}
+      <article class="criterion s{{ cls }}" id="c{{ c.id | replace('.', '-') }}"
+               data-idx="{{ idx.i }}"
+               data-id="{{ c.id }}"
+               data-score="{{ c.score if c.score is not none else '' }}"
+               data-gate-min="{{ c.gate_min or 0 }}">
+        <div class="crit-head">
+          <span class="crit-id">{{ c.id }}</span>
+          <h3>{{ c.name }}</h3>
+          <span class="lab">{{ c.label }}</span>
+          {%- if c.gate_min %} <span class="badge">Gate: {{ "must score 2" if c.gate_min == 2 else "must score above 0" }}</span>{% endif %}
+        </div>
+        <div class="practice">{{ c.practice }}</div>
+
+        <div class="crit-body">
+          <div>
+            {% if c.gaps %}
+            <div class="gaps">
+              <div class="pane-lbl">What would raise the score</div>
+              <ul>{% for g in c.gaps %}<li>{{ g | linkify }}</li>{% endfor %}</ul>
+            </div>
+            {% elif c.score == 2 %}
+            <div class="gaps none">The machine found a substantive match. Confirm the evidence if you are signing off.</div>
+            {% endif %}
+
+            {% if c.cited %}
+            <div class="pane-lbl">Evidence cited</div>
+            <ul class="cite">{% for e in c.cited %}<li class="mono">{{ e | linkify }}</li>{% endfor %}</ul>
+            {% endif %}
+
+            <details class="raw"{% if not c.gaps %} open{% endif %}>
+              <summary>Extracted evidence ({{ c.evidence | length }} items)</summary>
+              {% for it in c.evidence %}
+              <div class="item{% if it.sub %} subitem{% endif %}">
+                <div class="label">{{ it.label }}</div>
+                <div class="value">{{ value(it) }}</div>
+              </div>
+              {% endfor %}
+            </details>
+          </div>
+
+          <div>
+            <div class="pane-lbl">Machine verdict</div>
+            <div class="score-hero">
+              <span class="score-n">{{ c.score if c.score is not none else '–' }}</span>
+              <div>
+                <div class="score-name">{{ c.label }}</div>
+                <div class="muted">Read-only first pass</div>
+              </div>
+            </div>
+            {% if c.score is not none and c.scoring.get(c.score | string) %}
+            <div class="rule"><b>Rule for {{ c.score }}:</b> {{ c.scoring[c.score | string] }}</div>
+            {% endif %}
+            {% if c.rationale %}<p class="rationale">{{ c.rationale | linkify }}</p>{% endif %}
+            {% if c.capped_by %}
+            <div class="cap-note">Dependency cap applied — {{ c.capped_by }}. The agent's own verdict was {{ c.uncapped_score }}.</div>
+            {% endif %}
+            {% if c.estimate_differs %}
+            <div class="disagree">The mechanical estimate scored this {{ c.estimate_score }}; the grading agent scored it {{ c.score }}. Worth a human look.</div>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+      {% set idx.i = idx.i + 1 %}
+      {% endfor %}
+    </section>
+    {% endfor %}
+
+    <footer>
+      {{ r.rubric }}. Crate: <span class="mono">{{ r.crate["@id"] }}</span>
+      ({{ "{:,}".format(r.inventory.entities) }} entities).
+      Evidence extracted {{ r.generated }}{% if not r.network_checks %} · network checks disabled{% endif %}.
+      Scores are machine-generated and unconfirmed by a human reviewer.
+    </footer>
+  </div>
 </div>
+
+<div class="dock" id="dock">
+  <button class="btn" id="prev-btn" type="button" title="Go to the previous criterion. Keyboard shortcut: K">Previous <span class="kbd">K</span></button>
+  <span class="dock-pos" id="dock-pos">1 / {{ ns.n }}</span>
+  <span class="dock-id" id="dock-id">0.a</span>
+  <div class="rail" id="rail" aria-label="All {{ ns.n }} criteria">
+    {% for s in r.sections %}
+      {% for c in s.criteria %}
+      {% set cls = 'na' if c.score == 'N/A' else (c.score if c.score is not none else 'x') %}
+      <button type="button" class="dot s{{ cls }}{% if c.gate_min %} gate{% endif %}" data-dot="{{ c.id }}"
+              title="{{ c.id }} {{ c.name }} · {{ c.label }}"></button>
+      {% endfor %}
+    {% endfor %}
+  </div>
+  <button class="btn primary" id="next-gap" type="button"
+          title="Jump to the next criterion scored below 2. Keyboard shortcut: G">Next gap <span class="kbd">G</span></button>
+  <button class="btn" id="next-btn" type="button"
+          title="Go to the next criterion. Keyboard shortcut: J">Next <span class="kbd">J</span></button>
+  <span class="dock-keys" aria-hidden="true">
+    <span class="key-pair"><span class="kbd">G</span> next gap</span>
+    <span class="key-pair"><span class="kbd">?</span> shortcuts</span>
+  </span>
+</div>
+
+<div class="overlay" id="welcome" role="dialog" aria-labelledby="welcome-title">
+  <div class="sheet">
+    <h2 id="welcome-title">A machine already scored this crate</h2>
+    <p>Each criterion was graded from the rubric text and the evidence extracted for that criterion alone. Treat this as a first pass to <strong>confirm or overturn</strong>. {{ ns.gates }} criteria are gates — fail one and the dataset is not AI-ready, even if the overall percentage is high.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><strong>Read the verdict</strong><p>Score, matched rule, and rationale.</p></div>
+      <div class="step"><span class="n">2</span><strong>Check the gaps</strong><p>What would raise a 0 or 1.</p></div>
+      <div class="step"><span class="n">3</span><strong>Watch gates</strong><p>The banner says whether the dataset can pass.</p></div>
+      <div class="step"><span class="n">4</span><strong>Open All</strong><p>Full document, radar, and the points-lost table.</p></div>
+    </div>
+    <p class="muted">{{ ns.gaps }} of {{ ns.n }} scored below 2. Amber means Partial; red means Absent. <strong>G</strong> jumps to the next gap.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn primary" id="start-review" type="button">Start at the first gap</button>
+      <button class="btn" id="hide-welcome" type="button">Skip intro</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="help" role="dialog" aria-labelledby="help-title">
+  <div class="sheet">
+    <h2 id="help-title">Keyboard shortcuts</h2>
+    <p>Each key is labeled on the button it controls.</p>
+    <div class="keys">
+      <span class="kbd">J</span><span>Next criterion</span>
+      <span class="kbd">K</span><span>Previous criterion</span>
+      <span class="kbd">G</span><span>Jump to the next criterion scored below 2</span>
+      <span class="kbd">?</span><span>Open or close this list</span>
+      <span class="kbd">Esc</span><span>Close this panel</span>
+    </div>
+    <p class="muted"><strong>One</strong> shows a single criterion. <strong>All</strong> shows the verdict, the points-lost table, and every card.</p>
+    <button class="btn primary" id="help-close" type="button">Close</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  var criteriaEls = document.querySelectorAll('.criterion');
+  var currentIdx = 0;
+  var chips = {};
+  document.querySelectorAll('.chip[data-chip]').forEach(function (el) { chips[el.dataset.chip] = el; });
+  var dots = {};
+  document.querySelectorAll('.dot[data-dot]').forEach(function (el) { dots[el.dataset.dot] = el; });
+
+  function isGap(el) {
+    var s = el && el.dataset.score;
+    return s === '0' || s === '1';
+  }
+  function gateFails(el) {
+    var min = +(el.dataset.gateMin || 0);
+    if (!min) return false;
+    var s = el.dataset.score;
+    if (s === '' || s === 'N/A') return true;
+    return +s < min;
+  }
+  function firstTarget() {
+    var list = Array.prototype.slice.call(criteriaEls);
+    var g = list.findIndex(gateFails);
+    if (g >= 0) return g;
+    var gap = list.findIndex(isGap);
+    return gap >= 0 ? gap : 0;
+  }
+  function setView(mode) {
+    document.body.classList.toggle('view-focus', mode === 'focus');
+    document.body.classList.toggle('view-list', mode === 'list');
+    document.getElementById('view-focus').classList.toggle('on', mode === 'focus');
+    document.getElementById('view-list').classList.toggle('on', mode === 'list');
+    try { localStorage.setItem('agentic:view', mode); } catch (e) {}
+    if (mode === 'focus') show(currentIdx, true);
+  }
+  function show(i, scroll) {
+    if (!criteriaEls.length) return;
+    i = (i + criteriaEls.length) % criteriaEls.length;
+    currentIdx = i;
+    criteriaEls.forEach(function (el, n) { el.classList.toggle('is-current', n === i); });
+    var el = criteriaEls[i];
+    var id = el.dataset.id;
+    document.querySelectorAll('.chip.current').forEach(function (c) { c.classList.remove('current'); });
+    document.querySelectorAll('.dot.current').forEach(function (d) { d.classList.remove('current'); });
+    if (chips[id]) chips[id].classList.add('current');
+    if (dots[id]) dots[id].classList.add('current');
+    document.querySelectorAll('.nav-sec.active').forEach(function (n) { n.classList.remove('active'); });
+    var nav = document.getElementById('nav-sec' + id.split('.')[0]);
+    if (nav) nav.classList.add('active');
+    document.getElementById('dock-pos').textContent = (i + 1) + ' / ' + criteriaEls.length;
+    document.getElementById('dock-id').textContent = id;
+    if (scroll && document.body.classList.contains('view-focus')) {
+      el.scrollIntoView({ block: 'start' });
+    } else if (scroll) {
+      el.scrollIntoView({ block: 'center' });
+    }
+  }
+  function nextGap() {
+    var n = criteriaEls.length;
+    for (var k = 1; k <= n; k++) {
+      var el = criteriaEls[(currentIdx + k) % n];
+      if (isGap(el) || gateFails(el)) { show((currentIdx + k) % n, true); return; }
+    }
+  }
+  function showOverlay(id, on) {
+    var n = document.getElementById(id);
+    if (n) n.classList.toggle('show', on !== false);
+  }
+  function dismissWelcome() {
+    showOverlay('welcome', false);
+    try { localStorage.setItem('agentic:howto', 'hidden'); } catch (e) {}
+  }
+
+  document.getElementById('view-focus').addEventListener('click', function () { setView('focus'); });
+  document.getElementById('view-list').addEventListener('click', function () { setView('list'); });
+  document.getElementById('prev-btn').addEventListener('click', function () { show(currentIdx - 1, true); });
+  document.getElementById('next-btn').addEventListener('click', function () { show(currentIdx + 1, true); });
+  document.getElementById('next-gap').addEventListener('click', nextGap);
+  document.getElementById('help-btn').addEventListener('click', function () { showOverlay('help', true); });
+  document.getElementById('help-close').addEventListener('click', function () { showOverlay('help', false); });
+  document.getElementById('start-review').addEventListener('click', function () {
+    dismissWelcome();
+    show(firstTarget(), true);
+  });
+  document.getElementById('hide-welcome').addEventListener('click', dismissWelcome);
+
+  document.querySelectorAll('.chip[data-chip], .dot[data-dot]').forEach(function (el) {
+    el.addEventListener('click', function (ev) {
+      ev.preventDefault();
+      var id = el.dataset.chip || el.dataset.dot;
+      var i = Array.prototype.findIndex.call(criteriaEls, function (c) { return c.dataset.id === id; });
+      if (i >= 0) {
+        if (document.body.classList.contains('view-list')) setView('focus');
+        show(i, true);
+      }
+    });
+  });
+  document.querySelectorAll('a[href^="#c"]').forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      var id = a.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if (!target || !target.classList.contains('criterion')) return;
+      ev.preventDefault();
+      var i = +target.dataset.idx;
+      if (document.body.classList.contains('view-list')) {
+        /* stay in All so the table still makes sense; just highlight */
+        show(i, true);
+      } else {
+        show(i, true);
+      }
+    });
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    var typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
+    if (e.key === 'Escape') {
+      showOverlay('help', false);
+      showOverlay('welcome', false);
+      return;
+    }
+    if (typing) return;
+    if (e.key === '?' || e.key === '/') { e.preventDefault(); var h = document.getElementById('help'); showOverlay('help', !h.classList.contains('show')); }
+    if (e.key === 'j' || e.key === 'J' || e.key === 'ArrowRight' || e.key === 'n' || e.key === 'N') { e.preventDefault(); show(currentIdx + 1, true); }
+    if (e.key === 'k' || e.key === 'K' || e.key === 'ArrowLeft' || e.key === 'p' || e.key === 'P') { e.preventDefault(); show(currentIdx - 1, true); }
+    if (e.key === 'g' || e.key === 'G') { e.preventDefault(); nextGap(); }
+  });
+
+  currentIdx = firstTarget();
+  var savedView = 'focus';
+  try { savedView = localStorage.getItem('agentic:view') || 'focus'; } catch (e) {}
+  setView(savedView === 'list' ? 'list' : 'focus');
+  show(currentIdx, false);
+  try {
+    if (localStorage.getItem('agentic:howto') !== 'hidden') showOverlay('welcome', true);
+  } catch (err) { showOverlay('welcome', true); }
+})();
+</script>
 </body>
 </html>
