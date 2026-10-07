@@ -165,7 +165,7 @@ FIELDS = [
               "schema.org DefinedTerm objects under `about`. A recognised "
               "ontology IRI (OBO Foundry, MeSH, NCIt, Cellosaurus, UniProt, "
               "SNOMED, LOINC, identifiers.org) anywhere in the crate lifts 0.c, "
-              "2.c and 6.a; 2.a additionally wants DefinedTerm graph entities.",
+              "2.c and 6.a; any DefinedTerm under `about` counts toward 2.a.",
          options=VOCABS),
     dict(prop="contentSize", label="Total content size",
          type="text", criteria=["2.b"], win=False,

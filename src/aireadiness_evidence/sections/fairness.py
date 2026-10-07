@@ -208,7 +208,7 @@ def extract_0c(ctx):
     stats = ctx.bundle.stats
     return {
         "context": ctx.bundle.context,
-        "about_ids": [t.get("@id") for t in ctx.bundle.defined_terms],
+        "about_ids": [t["@id"] or t["name"] for t in ctx.bundle.subject_terms],
         "vocab_hits": dict(stats.vocab_hits),
         "schema_total": stats.schema_total,
         "dataset_with_schema_ref": stats.dataset_with_schema_ref,
@@ -236,7 +236,7 @@ def present_0c(facts):
         ev.flag("Metadata is JSON-LD (formal interoperable specification)",
                 facts["jsonld"]),
         *_vocab_evidence(facts["vocabs"], facts["vocab_found"]),
-        ev.listing("Subject terms on the root (about)", facts["about_ids"][:8]),
+        ev.listing("Subject terms (root about + DefinedTerms)", facts["about_ids"][:8]),
         ev.count("Machine-readable schema entities (EVI:Schema)",
                  facts["schema_total"]),
         ev.sub(ev.count("Datasets linked to a schema",

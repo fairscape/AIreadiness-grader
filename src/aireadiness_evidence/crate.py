@@ -13,7 +13,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .known import ONTOLOGY_HOSTS
+from .known import ONTOLOGY_HOSTS, match_host
 
 # Fields that link an entity into the provenance graph (EVI + PROV spellings).
 PROV_LINK_FIELDS = [
@@ -82,6 +82,46 @@ def canonical_type(entity):
     if isinstance(extra, str) and extra in _TYPE_TOKENS:
         return _TYPE_TOKENS[extra]
     return "Other"
+
+
+def subject_terms(root, graph):
+    """Subject terms for the dataset: the root's ``about`` entries plus every
+    DefinedTerm entity in the graph, de-duplicated by IRI.
+
+    An ``about`` entry counts when it is (or resolves to) a DefinedTerm, or
+    when its IRI is on a recognised ontology host. That covers bare IRIs
+    (``"about": "http://id.nlm.nih.gov/mesh/D002477"``), references to graph
+    entities, and inline DefinedTerm objects, which an RO-Crate's flat
+    ``@graph`` never lists as entities of their own. ``about`` references to
+    other local entities (a Dataset, a Person) are not subject terms.
+    """
+    by_id = {e.get("@id"): e for e in graph if isinstance(e, dict) and e.get("@id")}
+    terms, seen = [], set()
+
+    def add(iri, name, source):
+        key = iri or name
+        if not key or key in seen:
+            return
+        seen.add(key)
+        hit = match_host(iri, ONTOLOGY_HOSTS)
+        terms.append({"@id": iri, "name": name, "source": source,
+                      "ontology": ONTOLOGY_HOSTS[hit[0]] if hit else None})
+
+    for v in as_list(root.get("about")):
+        if isinstance(v, dict):
+            iri = v.get("@id") or v.get("identifier") or v.get("url")
+            target = {**by_id.get(iri, {}), **v}
+        elif isinstance(v, str):
+            iri, target = v, by_id.get(v, {})
+        else:
+            continue
+        iri = iri if isinstance(iri, str) else None
+        if canonical_type(target) == "DefinedTerm" or match_host(iri, ONTOLOGY_HOSTS):
+            add(iri, target.get("name"), "about")
+    for e in graph:
+        if canonical_type(e) == "DefinedTerm":
+            add(e.get("@id"), e.get("name"), "graph")
+    return terms
 
 
 def has_any(entity, fields):
@@ -193,6 +233,7 @@ class CrateBundle:
         self.context = {}
         self.persons = []        # Person entities from the root graph
         self.defined_terms = []  # DefinedTerm entities from the root graph
+        self.subject_terms = []  # root `about` + DefinedTerms (see subject_terms)
         self.subcrates = []
         self.subcrates_referenced = 0   # stubs in the root graph naming a metadata path
         self.datasheets = []            # crate-relative html paths (root first)
@@ -228,6 +269,7 @@ class CrateBundle:
                 bundle.persons.append(e)
             elif ctype == "DefinedTerm":
                 bundle.defined_terms.append(e)
+        bundle.subject_terms = subject_terms(bundle.root, graph)
 
         bundle._discover_subcrates(graph)
         say(f"root graph: {len(graph)} entities, "
