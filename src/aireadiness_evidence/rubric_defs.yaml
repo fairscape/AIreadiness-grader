@@ -845,7 +845,9 @@ criteria:
       documentation defining these resources.
     questions:
       - Can the data be processed or utilized without being locked into a
-        specific, proprietary, or localized compute environment?
+        specific, proprietary, or localized compute environment, or is the
+        data used within a designated trusted execution environment (TEE)
+        whose access procedure and compute setup are documented?
       - Are software dependencies (libraries, OS versions) and hardware
         requirements (GPUs, memory) explicitly documented?
       - Is this documentation provided in a machine-executable format (e.g.,
@@ -858,7 +860,11 @@ criteria:
         managers (e.g., Conda environment.yml), or standard workflow languages
         (e.g., CWL, WDL, Nextflow), which allow the execution environment to
         be programmatically spun up across various infrastructures (e.g.,
-        cloud, HPC, local).
+        cloud, HPC, local). Data that must be used inside a designated
+        trusted execution environment (TEE) because of its sensitivity (e.g.,
+        a secure enclave, data safe haven, or governed research workspace)
+        also earns full credit, provided the TEE is identified and the procedure
+        for gaining access is documented.
       "1": Hardware constraints and software dependencies are documented in
         plain text (e.g., a README.md listing required Python versions or RAM
         limits), but lack machine-executable formats. Consequently, a user
@@ -866,9 +872,10 @@ criteria:
         interact with the data.
       "0": Compute requirements and software dependencies are undocumented.
         Alternatively, the data is tightly coupled to a proprietary system, an
-        unshareable internal cluster, or hardcoded local file paths, making it
-        virtually impossible for external users to port to their own
-        environments.
+        undocumented internal cluster with no access procedure (as distinct
+        from a designated TEE with documented access), or hardcoded local
+        file paths, making it virtually impossible for external users to port
+        to their own environments.
 
   - id: "6.d"
     name: Contextualized
