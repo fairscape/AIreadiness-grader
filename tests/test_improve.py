@@ -61,7 +61,7 @@ def test_every_criterion_has_fields_or_a_note():
 
 def test_render_generic_and_embedded(tmp_path):
     html = cli.render_improve()
-    assert "AI-Ready Improvements" in html
+    assert "Improve this crate" in html
     assert 'id="data-crate">null<' in html
     html = cli.render_improve(crate=CRATE, crate_label="x")
     assert "ark:59853/rocrate-demo-000" in html

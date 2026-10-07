@@ -3,26 +3,45 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI-Ready Improvements{% if crate %} — {{ crate_label | default("") | replace("/ro-crate-metadata.json", "") }}{% endif %}</title>
+<title>AI-readiness improvements{% if crate %} — {{ crate_label | default("") | replace("/ro-crate-metadata.json", "") }}{% endif %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1a1a1a; --muted: #6b6b6b; --line: #d9d9d9; --bg: #fafaf8;
-    --card: #ffffff; --accent: #b45309; --ok: #15803d; --bad: #b91c1c;
-    --unknown: #6b6b6b; --gate: #7c2d12; --edit: #1d4ed8;
+    --ink: #1a1714; --muted: #6b6258; --line: #e4ddd3; --bg: #f3efe7;
+    --card: #fffcf7; --accent: #215c5c; --accent-soft: #e4f0ee;
+    --est: #b45309; --est-soft: #fdf4e7; --ok: #157a43; --ok-soft: #e7f6ee;
+    --bad: #b42318; --bad-soft: #fdeceb; --gate: #9a3412; --gate-soft: #fff4ed;
+    --unknown: #6b7280; --edit: #1d4ed8; --edit-soft: #eef2ff;
+    --shadow: 0 1px 2px rgba(28, 24, 20, 0.06), 0 8px 24px rgba(28, 24, 20, 0.04);
+    --radius: 12px;
+    --font: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+    --appbar-h: 56px;
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink);
-         font: 14px/1.45 "Source Sans 3", "Segoe UI", system-ui, sans-serif; }
-  .mono { font-family: "JetBrains Mono", "SFMono-Regular", Consolas, monospace; font-size: 0.86em; }
+         font: 15px/1.45 var(--font); }
+  .mono { font-family: var(--mono); font-size: 0.86em; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .kbd { font-family: var(--mono); font-size: 0.72rem; border: 1px solid var(--line);
+         border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; color: var(--ink); }
   a { color: var(--accent); }
-  header { border-bottom: 2px solid var(--ink); padding: 16px 0 12px; background: var(--card); }
+  header { border-bottom: 1px solid var(--line); padding: 0; background: rgba(255,252,247,0.92);
+           backdrop-filter: blur(10px); }
   footer { border-top: 1px solid var(--line); margin-top: 28px; padding: 10px 0 24px;
            color: var(--muted); font-size: 0.8rem; }
-  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
-  h1 { font-size: 1.25rem; margin: 0 0 2px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  header .wrap, .summarybar .wrap, .exportbar .wrap { max-width: 1280px; }
+  h1 { font-size: 0.92rem; margin: 0; font-weight: 600; }
+  .brand { display: flex; align-items: baseline; gap: 10px; min-width: 0; flex: 1; }
+  .brand .kicker { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;
+                   color: var(--accent); font-weight: 700; white-space: nowrap; }
+  .brand h1 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   h2 { font-size: 1.05rem; border-bottom: 1px solid var(--line); padding-bottom: 4px; margin: 26px 0 10px;
        display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap;
-       scroll-margin-top: 58px; }
+       scroll-margin-top: 72px; }
   .meta { color: var(--muted); font-size: 0.85rem; }
   .badge { display: inline-block; border: 1px solid var(--gate); color: var(--gate); border-radius: 2px;
            font-size: 0.68rem; padding: 0 5px; margin-left: 8px; vertical-align: 2px;
@@ -31,16 +50,14 @@
   nav.toc { margin: 14px 0; font-size: 0.88rem; }
   nav.toc a { margin-right: 12px; white-space: nowrap; }
 
-  .loadbox { background: var(--card); border: 1px dashed var(--line); border-radius: 2px; padding: 10px 12px;
+  .loadbox { background: var(--card); border: 1px dashed var(--line); border-radius: var(--radius); padding: 12px 14px;
              margin: 12px 0; font-size: 0.88rem; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-  .loadbox.drag { border-color: var(--accent); background: #fdf6ec; }
-  .loadbox label { cursor: pointer; color: var(--accent); }
+  .loadbox.drag { border-color: var(--accent); background: var(--accent-soft); }
+  .loadbox label { cursor: pointer; color: var(--accent); font-weight: 600; }
   .loadbox input[type=file] { display: none; }
-  .intro { background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 8px 12px; margin: 12px 0; font-size: 0.88rem; }
-  .intro ul { margin: 4px 0 0; padding-left: 18px; }
 
-  .criterion { background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 10px 14px 8px; margin: 0 0 10px;
-               scroll-margin-top: 58px; }
+  .criterion { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px 12px; margin: 0 0 12px;
+               scroll-margin-top: 72px; box-shadow: var(--shadow); }
   .criterion h3 { margin: 0; font-size: 0.98rem; display: inline; }
   .practice { color: var(--muted); font-style: italic; margin: 2px 0 6px; font-size: 0.85rem; }
   details.rules { margin: 0 0 6px; font-size: 0.85rem; }
@@ -54,25 +71,25 @@
   .status { display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 6px; margin-top: 4px; font-size: 0.82rem; }
   .status .est { flex: 1 1 320px; }
   .status ul { margin: 2px 0 0; padding-left: 18px; color: #555; }
-  .chip { display: inline-block; min-width: 22px; text-align: center; border: 1px dashed var(--line); border-radius: 2px;
-          font-size: 0.72rem; line-height: 1.5; text-decoration: none; color: var(--muted); padding: 0 3px;
-          font-family: "JetBrains Mono", Consolas, monospace; }
-  .chip.s2 { border: 1px solid var(--ok); color: var(--ok); background: #edf7ef; font-weight: 700; }
-  .chip.s1 { border: 1px solid var(--accent); color: var(--accent); background: #fdf3e7; font-weight: 700; }
-  .chip.s0 { border: 1px solid var(--bad); color: var(--bad); background: #fbeeee; font-weight: 700; }
+  .chip { display: inline-block; min-width: 22px; text-align: center; border: 1px dashed var(--line); border-radius: 5px;
+          font-size: 0.72rem; line-height: 1.5; text-decoration: none; color: var(--muted); padding: 0 4px;
+          font-family: var(--mono); }
+  .chip.s2 { border: 1px solid var(--ok); color: var(--ok); background: var(--ok-soft); font-weight: 700; }
+  .chip.s1 { border: 1px solid var(--est); color: var(--est); background: var(--est-soft); font-weight: 700; }
+  .chip.s0 { border: 1px solid var(--bad); color: var(--bad); background: var(--bad-soft); font-weight: 700; }
   .chip.sq { border: 1px solid var(--unknown); color: var(--unknown); background: #f1f1ef; font-weight: 700; }
   .yes { color: var(--ok); font-weight: 600; }
   .no { color: var(--bad); font-weight: 600; }
   .dim { color: var(--muted); }
-  .est-badge { display: inline-block; border: 1px solid var(--accent); color: var(--accent); border-radius: 2px; font-size: 0.68rem; padding: 0 5px; margin-right: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .est-badge { display: inline-block; border: 1px solid var(--est); color: var(--est); border-radius: 999px; font-size: 0.68rem; padding: 0 7px; margin-right: 6px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
   .prior { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
 
   .fields { margin-top: 8px; }
-  .field { display: grid; grid-template-columns: 250px 1fr; gap: 4px 14px; padding: 7px 0; border-top: 1px dotted #ececea; font-size: 0.86rem; }
+  .field { display: grid; grid-template-columns: 250px 1fr; gap: 4px 14px; padding: 10px 0; border-top: 1px dotted #e4ddd3; font-size: 0.88rem; }
   .field .label { font-weight: 600; }
   .field .label .prop { display: block; font-weight: 400; color: var(--muted); }
   .field .ctl input[type=text], .field .ctl textarea, .field .ctl select {
-    width: 100%; border: 1px solid var(--line); border-radius: 2px; padding: 4px 7px; font: inherit; font-size: 0.86rem; background: var(--card); }
+    width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; font: inherit; font-size: 0.88rem; background: var(--card); }
   .field .ctl textarea { min-height: 58px; resize: vertical; }
   .field .ctl textarea.list { min-height: 46px; font-family: "JetBrains Mono", Consolas, monospace; font-size: 0.8rem; }
   .field.edited .ctl input, .field.edited .ctl textarea, .field.edited .ctl select { border-color: var(--edit); box-shadow: inset 2px 0 0 var(--edit); }
@@ -108,8 +125,10 @@
   table.sw .applyall button { font-size: 0.7rem; padding: 0 5px; }
   .swwrap { overflow-x: auto; }
 
-  .summarybar { position: sticky; top: 0; z-index: 10; background: var(--card); border-bottom: 1px solid var(--line); padding: 7px 0; font-size: 0.86rem; }
-  .summarybar .wrap { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .summarybar { position: sticky; top: 0; z-index: 10; background: rgba(255,252,247,0.94);
+                backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); padding: 8px 0; font-size: 0.82rem; }
+  .summarybar .wrap { display: flex; align-items: center; gap: 12px; flex-wrap: nowrap; overflow-x: auto; }
+  .summarybar .wrap > * { flex-shrink: 0; white-space: nowrap; }
   .pct-bar { display: inline-block; width: 120px; height: 9px; background: #eee; border-radius: 2px; margin: 0 6px; vertical-align: 1px; }
   .pct-bar span { display: block; height: 100%; background: var(--accent); border-radius: 2px; }
   .pct-bar span.base { background: #c9c9c5; position: relative; }
@@ -131,15 +150,16 @@
   .secrow .sec-stat { flex: 1; color: var(--muted); font-size: 0.78rem; white-space: nowrap; }
   .chips { display: inline-flex; gap: 4px; }
   .chip-key { margin-top: 6px; color: var(--muted); font-size: 0.75rem; }
-  .btn { background: none; border: 1px solid var(--line); border-radius: 2px; padding: 3px 10px; font: inherit; font-size: 0.82rem; cursor: pointer; color: var(--ink); }
+  .btn { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; font: inherit; font-size: 0.85rem; cursor: pointer; color: var(--ink); }
   .btn:hover { border-color: var(--accent); color: var(--accent); }
   .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .btn.primary:hover { background: #9a4607; color: #fff; }
+  .btn.primary:hover { filter: brightness(1.08); color: #fff; }
   .btn.danger:hover { border-color: var(--bad); color: var(--bad); }
   .axis-score { font-size: 0.75rem; font-weight: 400; color: var(--muted); border: 1px solid var(--line); border-radius: 2px; padding: 1px 8px; background: var(--card); white-space: nowrap; }
   .axis-score b { color: var(--ink); }
 
-  .exportbar { position: sticky; bottom: 0; background: var(--card); border-top: 1px solid var(--line); padding: 8px 0; margin-top: 28px; z-index: 10; }
+  .exportbar { position: sticky; bottom: 0; background: rgba(255,252,247,0.95); backdrop-filter: blur(10px);
+               border-top: 1px solid var(--line); padding: 8px 0; margin-top: 28px; z-index: 10; }
   .exportbar .wrap { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .exportbar .msg { color: var(--muted); font-size: 0.82rem; }
   .valid { font-size: 0.82rem; }
@@ -151,8 +171,8 @@
   #changes { background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 8px 12px; margin: 12px 0; font-size: 0.85rem; }
   #changes ul { margin: 4px 0 0; padding-left: 18px; }
   .hidden { display: none !important; }
-  .viewtoggle { display: inline-flex; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; }
-  .viewtoggle button { background: none; border: 0; padding: 3px 10px; font: inherit; font-size: 0.82rem; cursor: pointer; color: var(--muted); }
+  .viewtoggle { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .viewtoggle button { background: none; border: 0; padding: 5px 10px; font: inherit; font-size: 0.82rem; cursor: pointer; color: var(--muted); }
   .viewtoggle button.on { background: var(--accent); color: #fff; }
   .filterbox { font-size: 0.82rem; color: var(--muted); cursor: pointer; white-space: nowrap; }
   .progress { font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
@@ -161,7 +181,7 @@
   .group h2 { margin-bottom: 2px; }
   .group .gdesc { color: var(--muted); font-size: 0.85rem; margin: 0 0 8px; }
   .group .gcount { font-size: 0.75rem; font-weight: 400; color: var(--muted); border: 1px solid var(--line); border-radius: 2px; padding: 1px 8px; background: var(--card); }
-  .glist { background: var(--card); border: 1px solid var(--line); border-radius: 2px; padding: 2px 14px 6px; }
+  .glist { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 4px 16px 10px; box-shadow: var(--shadow); }
   .glist .field:first-child { border-top: 0; }
   .glist .field.field-sw { display: block; }
   .why { font-size: 0.76rem; color: var(--muted); margin-top: 3px; }
@@ -169,54 +189,107 @@
   .why a:hover { color: var(--accent); }
   .why .chip { margin-right: 3px; }
   .empty-note { color: var(--muted); font-size: 0.85rem; padding: 8px 0; }
-  .done-banner { background: #edf7ef; border: 1px solid var(--ok); color: var(--ok); border-radius: 2px; padding: 6px 12px; margin: 12px 0; font-size: 0.88rem; }
-  @media (max-width: 720px) { .field { grid-template-columns: 1fr; } }
+  .done-banner { background: var(--ok-soft); border: 1px solid var(--ok); color: var(--ok); border-radius: var(--radius); padding: 8px 14px; margin: 12px 0; font-size: 0.88rem; }
+  .win-badge { display: inline-block; margin-left: 6px; font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase;
+               color: var(--ok); border: 1px solid var(--ok); border-radius: 999px; padding: 0 6px; font-weight: 700; vertical-align: 1px; }
+  .field.win { background: linear-gradient(90deg, var(--ok-soft), transparent 28px); }
+  .field.next-target { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; background: var(--accent-soft); }
+  .banner { display: none; padding: 8px 16px; font-size: 0.85rem; background: var(--gate-soft); color: var(--gate);
+            border-bottom: 1px solid #f0d0b8; }
+  .banner.show { display: block; }
+  .banner.ok { background: var(--ok-soft); color: var(--ok); border-bottom-color: #b7e0c5; }
+  .workbench { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px;
+               margin: 14px 0; box-shadow: var(--shadow); scroll-margin-top: 72px; }
+  .workbench .pane-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+                         color: var(--muted); margin-bottom: 4px; }
+  .workbench h2 { border: 0; margin: 0 0 6px; padding: 0; font-size: 1.25rem; }
+  .workbench .lift { font-size: 0.9rem; margin: 0 0 10px; }
+  .workbench .lift strong { font-weight: 650; }
+  .overlay { position: fixed; inset: 0; background: rgba(26,23,20,0.45); z-index: 50;
+             display: none; align-items: center; justify-content: center; padding: 24px; }
+  .overlay.show { display: flex; }
+  .sheet { background: var(--card); border-radius: 16px; max-width: 640px; width: 100%;
+           padding: 24px; box-shadow: var(--shadow); max-height: 90vh; overflow: auto; }
+  .sheet h2 { margin: 0 0 8px; border: 0; padding: 0; }
+  .sheet .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 14px 0; }
+  .sheet .step { background: var(--accent-soft); border-radius: 10px; padding: 10px; font-size: 0.82rem; }
+  .sheet .step .n { display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center;
+                    background: var(--accent); color: #fff; border-radius: 999px; font-size: 0.72rem; font-weight: 700; margin-right: 4px; }
+  .sheet .step p { margin: 4px 0 0; color: var(--muted); }
+  .pct-wrap .cur { background: var(--accent); }
+  .pct-wrap .base { background: #d4cbbd; }
+  .header-row { display: flex; align-items: center; gap: 14px; padding: 10px 0; min-height: var(--appbar-h); }
+  .brand { flex: 0 0 auto; }
+  #crate-line { min-width: 0; flex: 1; font-size: 0.8rem; color: var(--muted);
+                overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-align: right; }
+  #crate-line strong { color: var(--ink); }
+  #replace-crate { flex: 0 0 auto; font-size: 0.78rem; padding: 4px 10px; }
+  @media (max-width: 720px) {
+    .field { grid-template-columns: 1fr; }
+    .sheet .steps { grid-template-columns: 1fr 1fr; }
+    .header-row { flex-wrap: wrap; }
+    #crate-line { text-align: left; flex: 1 1 100%; }
+    .summarybar .wrap { flex-wrap: wrap; overflow: visible; }
+    .summarybar .wrap > * { flex-shrink: 1; white-space: normal; }
+    .exportbar { position: static; }
+    .exportbar #download-patch,
+    .exportbar #reset,
+    .exportbar .dim,
+    .exportbar .valid { display: none; }
+    .exportbar { padding: 6px 0; }
+    .exportbar .wrap { gap: 6px; }
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="wrap">
-    <h1>AI-Ready Improvements</h1>
-    <div id="crate-line" style="margin-top:6px"><span class="dim">No crate loaded — drop a ro-crate-metadata.json below.</span></div>
+  <div class="wrap header-row">
+    <div class="brand">
+      <div class="kicker">AI-readiness</div>
+      <h1>Improve this crate</h1>
+    </div>
+    <div id="crate-line"><span class="dim">No crate loaded — drop a ro-crate-metadata.json below.</span></div>
+    <button class="btn hidden" id="replace-crate" type="button">Replace file</button>
   </div>
 </header>
 
 <div class="summarybar">
   <div class="wrap">
-    <span title="Mechanical rubric estimate (aireadiness_evidence estimate_ rules, no network)">Rubric est.
+    <span title="Mechanical estimate from extracted facts. A human still grades the rest.">Estimate
       <span class="pct-wrap"><span class="base" id="est-base"></span><span class="cur" id="est-fill"></span></span>
       <span class="score" id="est-score">–</span><span class="delta" id="est-delta"></span></span>
     <span class="dim" id="gate-line"></span>
     <span class="viewtoggle" role="group" aria-label="View">
-      <button type="button" id="view-checklist" class="on">Checklist</button>
+      <button type="button" id="view-checklist" class="on">Fields</button>
       <button type="button" id="view-criteria">By criterion</button>
     </span>
-    <label class="filterbox"><input type="checkbox" id="hide-filled"> hide filled</label>
+    <label class="filterbox"><input type="checkbox" id="hide-filled"> Hide filled</label>
     <span class="progress" id="field-progress"></span>
     <details class="secmenu" id="secmenu">
       <summary>By section</summary>
       <div class="secpanel" id="secpanel"></div>
     </details>
-    <button class="btn" id="next-empty" type="button">Next empty ↓</button>
-    <button class="btn primary" id="download-top" type="button">Download crate</button>
+    <button class="btn" id="next-empty" type="button" title="Jump to the next empty field. Keyboard shortcut: G">Next empty <span class="kbd">G</span></button>
+    <button class="btn" id="help-btn" type="button" title="Keyboard shortcuts">Shortcuts</button>
+    <button class="btn primary hidden" id="download-top" type="button">Download crate</button>
   </div>
 </div>
+<div class="banner" id="gate-banner"></div>
 
 <div class="wrap">
 
-  <div class="loadbox" id="loadbox">
-    <span><label>📂 Load ro-crate-metadata.json <input type="file" id="file-crate" accept=".json,application/json"></label> (or drop it anywhere on this box)</span>
+  <div class="loadbox{% if crate %} hidden{% endif %}" id="loadbox">
+    <span><label>Load ro-crate-metadata.json <input type="file" id="file-crate" accept=".json,application/json"></label> — or drop the file on this box</span>
     <span class="dim">·</span>
-    <span><label>Load a prior score <input type="file" id="file-score" accept=".json,application/json"></label> <span class="dim">aggregated_score.json</span></span>
+    <span><label>Load a prior grade <input type="file" id="file-score" accept=".json,application/json"></label> <span class="dim">aggregated_score.json</span></span>
   </div>
 
-  <div class="intro">
-    <strong>How this works.</strong> The <em>checklist</em> lists every metadata field the AI-Ready graders read,
-    easiest first. Fill in what you know, skip the rest, tick <em>hide filled</em> to see only what is left, and download the
-    improved <span class="mono">ro-crate-metadata.json</span> whenever you like — every edit is validated against the
-    fairscape_models schema{% if schemas %} (fairscape-models {{ schemas.version }}){% endif %} first.
-    <em>By criterion</em> shows the same fields grouped under the 28 rubric criteria with the scoring rules and evidence.
+  <div class="workbench" id="workbench">
+    <div class="pane-lbl">Fix this next</div>
+    <h2 id="workbench-title">Load a crate to see the next lift</h2>
+    <p class="lift" id="workbench-why">The page fills empty fields that can raise a gate or the mechanical estimate. Skip anything you do not know.</p>
+    <button class="btn primary" id="workbench-jump" type="button">Go to the field</button>
   </div>
 
   <div id="validation" class="hidden"></div>
@@ -237,6 +310,7 @@
       <button class="btn" id="copy" type="button">Copy JSON</button>
       <button class="btn" id="download-patch" type="button">Download edits only</button>
       <button class="btn danger" id="reset" type="button">Discard all edits</button>
+      <span class="dim" style="margin-left:auto;font-size:0.75rem"><span class="kbd">G</span> next empty field · <span class="kbd">?</span> help</span>
       <span class="valid" id="valid-line"></span>
       <span class="msg" id="export-msg"></span>
     </div>
@@ -249,6 +323,35 @@
     <span id="footer-prior"></span>
   </div>
 </footer>
+
+<div class="overlay" id="welcome" role="dialog" aria-labelledby="welcome-title">
+  <div class="sheet">
+    <h2 id="welcome-title">Fill the gaps the graders read</h2>
+    <p>This page edits <span class="mono">ro-crate-metadata.json</span> in the browser. The estimate is mechanical — it only moves when a field the extractors read is filled. A gate failure still means the dataset is not AI-ready.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><strong>Next lift</strong><p>The card names the empty field that would help a failing gate.</p></div>
+      <div class="step"><span class="n">2</span><strong>Type and skip</strong><p>Easiest fields first. Hide filled when you want a short list.</p></div>
+      <div class="step"><span class="n">3</span><strong>Watch gates</strong><p>The banner says whether the dataset can pass, not only the percentage.</p></div>
+      <div class="step"><span class="n">4</span><strong>Download</strong><p>Replace the file in the crate. Schema issues are listed, never blocking.</p></div>
+    </div>
+    <p class="dim">Green <strong>lifts score</strong> badges move a mechanical estimate. Other fields help a human grader.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn primary" id="start-improve" type="button">Start with the next lift</button>
+      <button class="btn" id="hide-welcome" type="button">Skip intro</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="help" role="dialog" aria-labelledby="help-title">
+  <div class="sheet">
+    <h2 id="help-title">Keyboard shortcuts</h2>
+    <p>These keys work when you are not typing in a field.</p>
+    <p><span class="kbd">G</span> Next empty field<br>
+       <span class="kbd">?</span> Open or close this list<br>
+       <span class="kbd">Esc</span> Close this panel, or leave a field</p>
+    <button class="btn primary" id="help-close" type="button">Close</button>
+  </div>
+</div>
 
 <script type="application/json" id="data-sections">{{ sections | embed_json }}</script>
 <script type="application/json" id="data-fields">{{ fields | embed_json }}</script>
@@ -337,6 +440,8 @@
     state.crate = I.loadCrate(I.applyEdits(doc, {}));
     state.base = { est: I.aggregate(I.estimateAll(crate, { hasDatasheet: state.hasDatasheet })) };
     renderHeader(label);
+    $('#loadbox').classList.add('hidden');
+    $('#replace-crate').classList.remove('hidden');
     renderAll();
   }
   function currentDoc() { return I.applyEdits(state.orig, state.edits); }
@@ -345,10 +450,7 @@
     var root = state.crate.root;
     $('#crate-line').innerHTML = '';
     $('#crate-line').appendChild(el('strong', { text: root.name || '(unnamed crate)' }));
-    $('#crate-line').appendChild(el('span', { class: 'mono', text: ' ' + root['@id'] }));
-    $('#crate-line').appendChild(el('span', { class: 'meta', text: (root.identifier ? ' · ' + root.identifier : '') + (root.datePublished ? ' · published ' + root.datePublished : '') + (label ? ' · ' + label : '') }));
-    var st = state.crate.stats;
-    $('#crate-line').appendChild(el('div', { class: 'meta', text: st.entityTotal + ' entities — Dataset: ' + st.datasetTotal + ', Software: ' + st.softwareTotal + ', Computation: ' + st.computationTotal + ', Schema: ' + st.schemaTotal + (st.subcratesReferenced ? ', sub-crates referenced: ' + st.subcratesReferenced + ' (not read here)' : '') }));
+    $('#crate-line').title = (root['@id'] || '') + (label ? ' · ' + label : '');
   }
 
   // ------------------------------------------------ static structure
@@ -380,8 +482,12 @@
     var box = $('#checklist');
     [1, 2, 3].forEach(function (level) {
       var lab = EFFORT_LABELS[String(level)] || ('Level ' + level);
+      var gdesc = level === 1
+        ? 'Paste a value you already know — PID, license, publisher, keywords.'
+        : (level === 2 ? 'A sentence or two of context the extractors can read.' : 'Paragraphs a human grader still has to judge.');
       var g = el('div', { class: 'group', id: 'effort' + level, 'data-effort': level }, [
         el('h2', {}, [el('span', { text: level + '. ' + lab }), el('span', { class: 'gcount', 'data-gcount': level })]),
+        el('div', { class: 'gdesc', text: gdesc }),
         el('div', { class: 'glist', 'data-glist': level }),
         el('div', { class: 'empty-note hidden', 'data-gempty': level, text: 'Nothing left here.' })
       ]);
@@ -490,7 +596,8 @@
 
   function buildField(f) {
     var row = el('div', { class: 'field empty', 'data-prop': f.prop, 'data-effort': f.effort, 'data-home': f.criteria[0] });
-    var why = el('span', { class: 'why' }, [document.createTextNode('for ')].concat(f.criteria.map(function (cid) {
+    if (f.win) row.classList.add('win');
+    var why = el('span', { class: 'why' }, [document.createTextNode(f.win ? 'lifts ' : 'helps ')].concat(f.criteria.map(function (cid) {
       var c = CRITERIA[cid];
       return el('a', { href: '#' + anchorId(cid), 'data-why': cid, title: c ? c.practice : '' }, [
         el('span', { class: 'chip', 'data-whychip': cid, text: '·' }), ' ' + cid + ' ' + (c ? c.name : '')
@@ -498,6 +605,7 @@
     })));
     var label = el('div', { class: 'label' }, [
       f.label,
+      f.win ? el('span', { class: 'win-badge', text: 'lifts score' }) : null,
       el('span', { class: 'prop mono', text: f.prop }),
       why
     ]);
@@ -776,8 +884,9 @@
     $('#est-fill').style.width = (agg.max ? 100 * agg.points / agg.max : 0) + '%';
     $('#est-base').style.width = (base.est.max ? 100 * base.est.points / base.est.max : 0) + '%';
     $('#est-delta').textContent = agg.points > base.est.points ? ' +' + (agg.points - base.est.points) : (agg.points < base.est.points ? ' ' + (agg.points - base.est.points) : '');
-    $('#gate-line').textContent = agg.gateFailures.length ? '⚠ gate: ' + agg.gateFailures.join('; ') : 'estimated gates pass';
-    $('#gate-line').style.color = agg.gateFailures.length ? 'var(--bad)' : 'var(--ok)';
+    $('#gate-line').textContent = agg.gateFailures.length ? 'gates failing' : 'gates pass';
+    $('#gate-line').style.color = agg.gateFailures.length ? 'var(--gate)' : 'var(--ok)';
+    updateWorkbench(est, agg);
     renderFooterPrior();
     renderValidation(doc);
     renderChanges();
@@ -895,6 +1004,9 @@
     else { alert('Unrecognised score file (expected aggregated_score.json)'); return; }
     if (state.orig) renderScores();
   }
+  $('#replace-crate').addEventListener('click', function () {
+    $('#loadbox').classList.toggle('hidden');
+  });
   $('#file-crate').addEventListener('change', function (ev) { if (ev.target.files[0]) readFile(ev.target.files[0], function (d) { loadDoc(d, ev.target.files[0].name); }); });
   $('#file-score').addEventListener('change', function (ev) { if (ev.target.files[0]) readFile(ev.target.files[0], ingestScore); });
   var lb = $('#loadbox');
@@ -903,6 +1015,101 @@
   lb.addEventListener('drop', function (e) {
     var f = e.dataTransfer.files[0]; if (!f) return;
     readFile(f, function (d) { if (d && d['@graph']) loadDoc(d, f.name); else ingestScore(d); });
+  });
+
+  function failingGateIds(agg) {
+    return (agg.gateFailures || []).map(function (s) { return s.split(' ')[0]; });
+  }
+  function updateWorkbench(est, agg) {
+    var banner = $('#gate-banner');
+    var title = $('#workbench-title');
+    var why = $('#workbench-why');
+    var jump = $('#workbench-jump');
+    document.querySelectorAll('.field.next-target').forEach(function (r) { r.classList.remove('next-target'); });
+    if (!state.orig) {
+      banner.classList.remove('show', 'ok');
+      title.textContent = 'Load a crate to see the next lift';
+      why.textContent = 'The page fills empty fields that can raise a gate or the mechanical estimate.';
+      jump.classList.add('hidden');
+      return;
+    }
+    var fails = failingGateIds(agg);
+    if (fails.length) {
+      banner.className = 'banner show';
+      banner.textContent = 'Not AI-ready on the mechanical estimate — ' + agg.gateFailures.join('; ') +
+        (agg.overall !== null && agg.overall !== undefined ? ' · overall still ' + agg.overall + '%' : '');
+    } else {
+      banner.className = 'banner show ok';
+      banner.textContent = 'Estimated gates pass' + (agg.overall !== null && agg.overall !== undefined ? ' · overall ' + agg.overall + '%' : '');
+    }
+    var rows = Array.prototype.slice.call(document.querySelectorAll('.field[data-prop]'));
+    var empty = rows.filter(function (r) { return r.classList.contains('empty'); });
+    var pick = empty.filter(function (r) {
+      var f = FIELD_BY_PROP['root:' + r.getAttribute('data-prop')];
+      return f && f.win && f.criteria.some(function (cid) { return fails.indexOf(cid) >= 0; });
+    })[0] || empty.filter(function (r) {
+      var f = FIELD_BY_PROP['root:' + r.getAttribute('data-prop')];
+      return f && f.win;
+    })[0] || empty[0];
+    if (!pick) {
+      title.textContent = 'Every listed field is filled';
+      why.textContent = 'Switch to By criterion for remaining human-judged gaps, or download the crate.';
+      jump.classList.add('hidden');
+      return;
+    }
+    var f = FIELD_BY_PROP['root:' + pick.getAttribute('data-prop')];
+    pick.classList.add('next-target');
+    jump.classList.remove('hidden');
+    jump._target = pick;
+    var gateHit = (f.criteria || []).filter(function (cid) { return fails.indexOf(cid) >= 0; })[0];
+    var primary = gateHit || f.criteria[0];
+    var c = CRITERIA[primary];
+    var e = est[primary] || {};
+    title.textContent = f.label;
+    var bits = [];
+    if (gateHit) bits.push(primary + ' ' + (c ? c.name : '') + ' is a gate at ' + (e.score === null ? '?' : e.score) +
+      (c && c.gate_min === 2 ? ' (needs 2)' : ' (needs at least 1)'));
+    else bits.push('Helps ' + primary + (c ? ' ' + c.name : ''));
+    if (e.basis && e.basis.length) bits.push(String(e.basis[0]).split(/[.!?]/)[0]);
+    if (f.win) bits.push('Filling this can move the mechanical estimate');
+    else bits.push('This field helps a human grader; it may not move the estimate');
+    why.textContent = bits.map(function (b) { return String(b).replace(/[\s.]+$/g, ''); }).filter(Boolean).join('. ') + '.';
+  }
+  function jumpWorkbench() {
+    var pick = $('#workbench-jump')._target;
+    if (!pick) return;
+    if (view !== 'checklist') setView('checklist');
+    if (pick.scrollIntoView) pick.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var inp = pick.querySelector('input, textarea, select');
+    if (inp) setTimeout(function () { inp.focus(); }, 350);
+  }
+  $('#workbench-jump').addEventListener('click', jumpWorkbench);
+
+  function showOverlay(id, on) {
+    var n = document.getElementById(id);
+    if (n) n.classList.toggle('show', on !== false);
+  }
+  function dismissWelcome() {
+    showOverlay('welcome', false);
+    try { localStorage.setItem('improve:howto', 'hidden'); } catch (err) {}
+  }
+  $('#start-improve').addEventListener('click', dismissWelcome);
+  $('#hide-welcome').addEventListener('click', dismissWelcome);
+  $('#help-btn').addEventListener('click', function () { showOverlay('help', true); });
+  $('#help-close').addEventListener('click', function () { showOverlay('help', false); });
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    var typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
+    if (e.key === 'Escape') {
+      showOverlay('help', false);
+      showOverlay('welcome', false);
+      if (typing) t.blur();
+      return;
+    }
+    if (typing) return;
+    if (e.key === '?' || e.key === '/') { e.preventDefault(); var h = document.getElementById('help'); showOverlay('help', !h.classList.contains('show')); }
+    if (e.key === 'g' || e.key === 'G') { e.preventDefault(); $('#next-empty').click(); }
   });
 
   // ------------------------------------------------ views & filter
@@ -921,6 +1128,9 @@
   $('#hide-filled').checked = savedHide;
   setView(savedView === 'criteria' ? 'criteria' : 'checklist');
   if (EMBEDDED && EMBEDDED['@graph']) loadDoc(EMBEDDED, LABEL);
+  try {
+    if (state.orig && localStorage.getItem('improve:howto') !== 'hidden') showOverlay('welcome', true);
+  } catch (err) { if (state.orig) showOverlay('welcome', true); }
 })();
 </script>
 </body>
